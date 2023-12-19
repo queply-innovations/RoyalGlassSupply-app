@@ -1,21 +1,31 @@
 {
+    "name": "royalglasssupply",
+    "version": "1.0.0",
+    "author": "Queply Innovations",
+    "description": "test app build",
     "private": true,
     "type": "module",
+    "main": "electron/main.cjs",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
         "electron": "electron . ",
-        "start": "concurrently \"php artisan serve\" \"npm run dev\" \"npm run electron\""
+        "start": "concurrently \"php artisan serve\" \"npm run dev\" \"npm run electron\"",
+        "dist": "electron-builder --win --mac"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.16",
         "axios": "^1.6.1",
         "concurrently": "^8.2.2",
         "electron": "^28.0.0",
+        "electron-builder": "^24.9.1",
         "laravel-vite-plugin": "^0.8.0",
         "postcss": "^8.4.32",
         "tailwindcss": "^3.3.7",
         "vite": "^4.0.0"
     },
-	"main": "electron/main.cjs"
+    "build": {
+        "appId": "com.electron.royalglasssupply",
+        "productName": "RoyalGlassSupply"
+    }
 }
