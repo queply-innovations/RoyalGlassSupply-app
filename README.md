@@ -6,9 +6,9 @@
         <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo" />
     </a>
     <a href="https://www.electronjs.org/" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Electron_Software_Framework_Logo.svg" width="400" alt="Electron Logo" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Electron_Software_Framework_Logo.svg" width="180" alt="Electron Logo" />
     </a>
-    <img src="public/RGS-logo.png" width="400" alt="RoyalGlassSupply Logo"/>
+    <img src="public/RGS-logo.png" width="180" alt="RoyalGlassSupply Logo"/>
 </p>
 
 ## About Laravel Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common
