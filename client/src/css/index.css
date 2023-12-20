@@ -1,3 +1,21 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer base {
+	:root {
+		--primary-blue: 66 110 199;
+		--primary-red: 230 19 19;
+		--primary-green: 22 161 22;
+		--primary-yellow: 255 191 0;
+		--primary-gray: 100 100 100;
+		--primary-dark-gray: 88 87 81;
+		--primary-white: 250 250 249;
+		--primary-background: 238 238 238;
+		--border-color: 0 0 0;
+	}
+
+	body {
+		@apply max-w-screen-3xl h-screen max-h-screen w-screen;
+	}
+}
