@@ -30,5 +30,5 @@ To run development mode in electron
 ```
 
 <p align="center">
-![Logo](https://queplyinnovations.com/wp-content/uploads/elementor/thumbs/Queply-Logo-Design-08-q7tblqbvd5u3zvu6gsfaibo8rsxuazty6pbfzf1w4u.png)
+    <img width="75" src="https://queplyinnovations.com/wp-content/uploads/elementor/thumbs/Queply-Logo-Design-08-q7tblqbvd5u3zvu6gsfaibo8rsxuazty6pbfzf1w4u.png" alt="Queply Logo">
 </p>
