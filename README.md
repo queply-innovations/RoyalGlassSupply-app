@@ -13,7 +13,7 @@
 
 
 ## 🛠️ CLI Laravel
-# Work In Progress
+### Work In Progress
 Install composer
 
 ```bash
@@ -31,7 +31,7 @@ To run development mode in electron (laravel)
 ```
 
 ## 🛠️ CLI Electron (Client)
-# Work In Progress
+### Work In Progress
 Install packages
 
 ```bash
