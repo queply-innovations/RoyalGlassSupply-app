@@ -1,12 +1,9 @@
-import { Button } from '@components/Button';
+import RoutesWrapper from '@utils/Routes';
 
 function App() {
 	return (
 		<>
-			<div>
-				<h1>App</h1>
-				<Button>Test</Button>
-			</div>
+			<RoutesWrapper />
 		</>
 	);
 }
