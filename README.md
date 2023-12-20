@@ -12,8 +12,9 @@
 </p>
 
 
-## CLI
-Instal composer
+## 🛠️ CLI Laravel
+# Work In Progress
+Install composer
 
 ```bash
   composer i
@@ -24,9 +25,23 @@ To copy .env.example file and setup your own .env file
   cp .env.example .env
 ```
 
-To run development mode in electron
+To run development mode in electron (laravel)
 ```bash
   npm run start
+```
+
+## 🛠️ CLI Electron (Client)
+# Work In Progress
+Install packages
+
+```bash
+  npm i
+```
+
+Run Development Mode
+
+```bash
+  npm run dev
 ```
 
 <p align="center">
