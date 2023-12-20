@@ -8,12 +8,23 @@ const buttonVariants = cva('button', {
 			default: 'gap-2 rounded-full px-3 py-1 gap-x-2',
 		},
 		fill: {
-			default: 'bg-gray-200',
-			primary: 'bg-blue-500',
+			default: 'bg-gray-200 hover:bg-gray-400',
+			primary: 'bg-blue-300 hover:bg-blue-400',
+			red: 'bg-primary-red hover:bg-primary-red/80',
+			green: 'bg-primary-green hover:bg-primary-green/80',
+			yellow: 'bg-primary-yellow hover:bg-primary-yellow/80',
+		},
+		textColor: {
+			default: 'text-white',
+			black: 'text-black',
+			green: 'text-green',
+			yellow: 'text-yellow',
 		},
 	},
 	defaultVariants: {
 		variant: 'default',
+		fill: 'default',
+		textColor: 'default',
 	},
 });
 
