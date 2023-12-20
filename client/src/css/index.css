@@ -16,6 +16,9 @@
 	}
 
 	body {
-		@apply max-w-screen-3xl h-screen max-h-screen w-screen;
+		@apply max-w-screen-3xl bg-primary-background h-screen max-h-screen w-screen;
+	}
+	div {
+		@apply box-border;
 	}
 }
