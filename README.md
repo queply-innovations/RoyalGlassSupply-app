@@ -32,6 +32,10 @@ To run development mode in electron (laravel)
 
 ## 🛠️ CLI Electron (Client)
 ### Work In Progress
+Change Directory to client
+```bash
+  cd client
+```
 Install packages
 
 ```bash
