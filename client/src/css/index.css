@@ -4,6 +4,7 @@
 
 @layer base {
 	:root {
+		font-family: 'Inter', sans-serif, 'Lato', 'sans-serif';
 		--primary-blue: 66 110 199;
 		--primary-red: 230 19 19;
 		--primary-green: 22 161 22;
