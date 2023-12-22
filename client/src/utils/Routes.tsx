@@ -1,4 +1,4 @@
-import Login from '@/pages/Login';
+import Login from '@pages/Login';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 export const RoutesWrapper = () => {
