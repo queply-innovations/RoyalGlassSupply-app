@@ -5,7 +5,7 @@ interface LayoutProps {
 }
 
 const LayoutWrapper: FC<LayoutProps> = ({ children }) => {
-	return <div className="flex flex-row">{children}</div>;
+	return <div className="">{children}</div>;
 };
 
 export default LayoutWrapper;

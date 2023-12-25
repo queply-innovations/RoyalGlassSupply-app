@@ -1,4 +1,5 @@
 import { InfoCard } from '@/components/InfoCard';
+import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
 
 const Dashboard = () => {
@@ -15,29 +16,27 @@ const Dashboard = () => {
 						</span>
 						<span className="text-2xl font-bold text-white">999</span>
 					</InfoCard>
-					{/* <InfoBox
-					title="Net Profit"
-					amount="999.00"
-					bgColor="white"
-					titleTextColor="black"
-					amountTextColor="black"
-				/>
-				<InfoBox
-					title="Sales Return"
-					amount="999.00"
-					bgColor="white"
-					titleTextColor="black"
-					amountTextColor="red"
-				/>
-				<InfoBox
-					title="Total Capital"
-					amount="999.00"
-					bgColor="gray"
-					titleTextColor="white"
-					amountTextColor="white"
-				/> */}
+					<InfoCard background={'default'}>
+						<span className="text-sm font-bold uppercase text-white">
+							Gross Income
+						</span>
+						<span className="text-2xl font-bold text-white">999</span>
+					</InfoCard>
+					<InfoCard background={'default'}>
+						<span className="text-sm font-bold uppercase text-white">
+							Gross Income
+						</span>
+						<span className="text-2xl font-bold text-white">999</span>
+					</InfoCard>
+					<InfoCard background={'default'}>
+						<span className="text-sm font-bold uppercase text-white">
+							Gross Income
+						</span>
+						<span className="text-2xl font-bold text-white">999</span>
+					</InfoCard>
 				</div>
 				<div className="row-container flex flex-row justify-between gap-8">
+					<Inputbox variant={'searchbar'} buttonIcon={'outside'} />
 					{/* <GrossAndNetProfit /> */}
 				</div>
 			</div>
