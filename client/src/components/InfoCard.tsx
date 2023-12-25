@@ -9,10 +9,9 @@ const infoCardVariants = cva('info-card', {
 				'flex w-1/4  flex-col items-center justify-between gap-y-1 rounded-md px-6 py-5',
 		},
 		background: {
-			default: 'bg-gray-200 hover:bg-gray-400',
+			default: 'bg-primary-gray',
 			gradient: 'bg-gradient-to-bl from-yellow-500 via-red-500 to-red-600',
 			white: 'bg-white',
-			gray: 'bg-primary-gray',
 		},
 	},
 	defaultVariants: {
