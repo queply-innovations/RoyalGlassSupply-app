@@ -6,6 +6,7 @@ const buttonVariants = cva('button', {
 	variants: {
 		variant: {
 			default: 'gap-2 rounded-full px-4 py-1 gap-x-2',
+			empty: '',
 		},
 		fill: {
 			default: 'bg-gray-200 hover:bg-gray-400',
