@@ -36,7 +36,9 @@ const Inputbox: FC<InputboxProps> = ({
 	return (
 		<>
 			{variant === 'searchbar' ? (
-				<div className={cn(inputVariants({ variant, buttonIcon }))}>
+				<div
+					className={cn(inputVariants({ variant, buttonIcon, className }))}
+				>
 					{buttonIcon === 'default' && (
 						<>
 							<HiOutlineMagnifyingGlass className="searchbar-icon text-2xl" />
