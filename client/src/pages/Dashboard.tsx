@@ -4,7 +4,7 @@ import LayoutWrapper from '@/layouts/Layout';
 
 const Dashboard = () => {
 	return (
-		<LayoutWrapper className="block">
+		<LayoutWrapper>
 			<div className="flex flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard
