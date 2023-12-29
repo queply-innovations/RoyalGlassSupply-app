@@ -1,3 +1,5 @@
+import { Navbar } from '@/components/Navbar/Navbar';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { cn } from '@/utils/cn.utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import { FC, HTMLAttributes, ReactNode } from 'react';
@@ -5,7 +7,7 @@ import { FC, HTMLAttributes, ReactNode } from 'react';
 const layoutVariants = cva('layout', {
 	variants: {
 		variant: {
-			default: 'flex',
+			default: 'flex flex-auto p-5 flex-col',
 		},
 	},
 	defaultVariants: {
@@ -26,9 +28,18 @@ const LayoutWrapper: FC<LayoutProps> = ({
 	...props
 }) => {
 	return (
-		<div className={cn(layoutVariants({ className, variant }))} {...props}>
-			{children}
-		</div>
+		<>
+			<div className="flex w-screen">
+				<Sidebar />
+				<div
+					className={cn(layoutVariants({ className, variant }))}
+					{...props}
+				>
+					<Navbar />
+					{children}
+				</div>
+			</div>
+		</>
 	);
 };
 
