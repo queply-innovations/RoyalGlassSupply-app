@@ -12,6 +12,7 @@ export const Navbar = () => {
 				variant={'searchbar'}
 				buttonIcon={'outside'}
 				placeholder="Search"
+				className="w-1/2"
 			/>
 			<div className="nav-icon flex flex-row items-center justify-center gap-x-5">
 				<Link to="/Dashboard">
