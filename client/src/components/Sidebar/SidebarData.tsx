@@ -16,7 +16,7 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'User Information',
-				link: '/user/info',
+				link: '/user/information',
 			},
 			{
 				title: 'User Sales',
