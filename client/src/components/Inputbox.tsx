@@ -35,34 +35,39 @@ const Inputbox: FC<InputboxProps> = ({
 }) => {
 	return (
 		<>
-			<div className={cn(inputVariants({ variant, className }))}>
-				{variant === 'searchbar' ? (
-					<div className={cn(inputVariants({ variant, buttonIcon }))}>
-						{buttonIcon === 'default' && (
-							<>
-								<HiOutlineMagnifyingGlass className="searchbar-icon text-2xl" />
-								<input
-									className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
-									{...props}
-								/>
-							</>
-						)}
-						{buttonIcon === 'outside' && (
-							<>
-								<input
-									className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
-									{...props}
-								/>
-								<Button variant={'empty'} className="rounded-r-full">
-									<HiOutlineMagnifyingGlass className="searchbar-icon bg-primary-gray/50 rounded-br-full rounded-tr-full p-2 text-4xl" />
-								</Button>
-							</>
-						)}
-					</div>
-				) : (
-					<input className={cn(inputVariants({ variant }))} {...props} />
-				)}
-			</div>
+			{variant === 'searchbar' ? (
+				<div className={cn(inputVariants({ variant, buttonIcon }))}>
+					{buttonIcon === 'default' && (
+						<>
+							<HiOutlineMagnifyingGlass className="searchbar-icon text-2xl" />
+							<input
+								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
+								{...props}
+							/>
+						</>
+					)}
+					{buttonIcon === 'outside' && (
+						<>
+							<input
+								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
+								{...props}
+							/>
+							<Button
+								variant={'empty'}
+								className="rounded-r-full"
+								type="submit"
+							>
+								<HiOutlineMagnifyingGlass className="searchbar-icon bg-primary-gray/50 rounded-br-full rounded-tr-full p-2 text-4xl" />
+							</Button>
+						</>
+					)}
+				</div>
+			) : (
+				<input
+					className={cn(inputVariants({ variant, className }))}
+					{...props}
+				/>
+			)}
 		</>
 	);
 };
