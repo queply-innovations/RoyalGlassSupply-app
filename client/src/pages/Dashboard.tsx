@@ -1,10 +1,10 @@
+import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
 import { InfoCard } from '@/components/InfoCard';
-import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
 
 const Dashboard = () => {
 	return (
-		<LayoutWrapper>
+		<LayoutWrapper className="block">
 			<div className="flex flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard
@@ -35,9 +35,10 @@ const Dashboard = () => {
 						<span className="text-2xl font-bold text-white">999</span>
 					</InfoCard>
 				</div>
-				<div className="row-container flex flex-row justify-between gap-8">
-					<Inputbox variant={'searchbar'} buttonIcon={'outside'} />
-					{/* <GrossAndNetProfit /> */}
+				<div className="row-container flex h-full flex-col gap-6 ">
+					<div className="row-container flex flex-row justify-between gap-8">
+						<GrossAndNetProfit />
+					</div>
 				</div>
 			</div>
 		</LayoutWrapper>
