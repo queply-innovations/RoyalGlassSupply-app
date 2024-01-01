@@ -29,7 +29,7 @@ const LayoutWrapper: FC<LayoutProps> = ({
 }) => {
 	return (
 		<>
-			<div className="flex w-screen">
+			<div className="flex w-screen overflow-hidden">
 				<Sidebar />
 				<div
 					className={cn(layoutVariants({ className, variant }))}
