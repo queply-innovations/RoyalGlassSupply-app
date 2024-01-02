@@ -33,10 +33,16 @@ interface ButtonProps
 	extends ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof buttonVariants> {}
 
-const Button: FC<ButtonProps> = ({ className, fill, variant, ...props }) => {
+const Button: FC<ButtonProps> = ({
+	className,
+	fill,
+	textColor,
+	variant,
+	...props
+}) => {
 	return (
 		<button
-			className={cn(buttonVariants({ variant, fill, className }))}
+			className={cn(buttonVariants({ variant, fill, textColor, className }))}
 			{...props}
 		/>
 	);
