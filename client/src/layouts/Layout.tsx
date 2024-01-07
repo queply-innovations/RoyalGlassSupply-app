@@ -7,7 +7,7 @@ import { FC, HTMLAttributes, ReactNode } from 'react';
 const layoutVariants = cva('layout', {
 	variants: {
 		variant: {
-			default: 'flex flex-auto p-5 flex-col',
+			default: 'flex flex-auto p-5 flex-col max-h-screen',
 		},
 	},
 	defaultVariants: {
@@ -29,7 +29,7 @@ const LayoutWrapper: FC<LayoutProps> = ({
 }) => {
 	return (
 		<>
-			<div className="flex w-screen overflow-hidden">
+			<div className="flex max-h-screen w-screen overflow-hidden">
 				<Sidebar />
 				<div
 					className={cn(layoutVariants({ className, variant }))}
