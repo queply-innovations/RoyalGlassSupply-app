@@ -86,6 +86,16 @@ export const SidebarData = [
 		icon: <TransferIcon />,
 		link: '/warehouse',
 	},
+	{
+		title: 'Supplier',
+		icon: <UserIcon />,
+		link: '/supplier',
+	},
+	{
+		title: 'Products',
+		icon: <InventoryIcon />,
+		link: '/products',
+	},
 ];
 
 export default SidebarData;
