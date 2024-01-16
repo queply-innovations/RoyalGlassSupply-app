@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import RoutesWrapper from '@utils/Routes';
 
 const queryClient = new QueryClient();
@@ -9,7 +9,7 @@ function App() {
 		<>
 			<QueryClientProvider client={queryClient}>
 				<RoutesWrapper />
-				{/* <ReactQueryDevtools /> */}
+				<ReactQueryDevtools />
 			</QueryClientProvider>
 		</>
 	);
