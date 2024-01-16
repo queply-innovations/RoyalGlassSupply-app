@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class InvoiceTax extends Model
 {
     use HasFactory;
 
-    public function inventoryProducts(): HasMany
+    public function invoice(): BelongsTo
     {
-        return $this->hasMany(InventoryProduct::class);
+        return $this->belongsTo(Invoice::class);
     }
 }
