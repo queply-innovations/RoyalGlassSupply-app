@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/Button';
-import { fetchWarehouses } from '@/utils/api/Warehouse';
 import { useQuery } from '@tanstack/react-query';
+
+import axios from 'axios';
 
 export const WarehouseTable = () => {
 	const WarehouseTableHeader: string[] = [
@@ -14,9 +14,16 @@ export const WarehouseTable = () => {
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['warehouse'],
-		queryFn: () => fetchWarehouses(),
+		queryFn: () =>
+			axios
+				.get(
+					'https://65956d2504335332df82b67a.mockapi.io/rgs/api/Warehouse',
+				)
+				.then(data => {
+					console.log(data);
+					return data;
+				}),
 	});
-	console.log(data);
 
 	return (
 		<>
@@ -35,7 +42,7 @@ export const WarehouseTable = () => {
 				</thead>
 
 				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.map((warehouse: any) => {
+					{data?.data.map((warehouse: any) => {
 						return (
 							<tr key={warehouse.id} className="text-center">
 								<td className="w-16">

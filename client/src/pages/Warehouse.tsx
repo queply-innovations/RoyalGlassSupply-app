@@ -1,17 +1,20 @@
 import { Button } from '@/components/Button';
 import { Inputbox } from '@/components/Inputbox';
 import Modal from '@/components/Modal';
-import WarehouseTable from '@/components/Tables/Warehouse/WarehouseTable';
+import WarehouseTable from '@/components/warehouse/tables/WarehouseTable';
 import WarehouseForm from '@/components/warehouse/forms/WarehouseForm';
 import LayoutWrapper from '@/layouts/Layout';
-import { useModal } from '@/utils/modalUtils';
+import { useWarehouses } from '@/utils/api/Warehouse';
+import { useModal } from '@/utils/Modal';
 
 const Warehouse = () => {
 	const { isOpen, openModal, closeModal } = useModal();
+	const { data } = useWarehouses();
+
 	return (
 		<>
 			<LayoutWrapper>
-				<div className="flex flex-col gap-y-4">
+				<div className="flex h-screen flex-col gap-y-4">
 					<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 						Warehouse
 					</h1>
@@ -30,12 +33,17 @@ const Warehouse = () => {
 							</div>
 						</div>
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<WarehouseTable />
+							<WarehouseTable data={data} />
 						</div>
 					</div>
 				</div>
-				<Modal title={'Add Warehouse'} isOpen={isOpen} onClose={closeModal}>
-					<WarehouseForm />
+				<Modal
+					title={'Add Warehouse'}
+					isOpen={isOpen}
+					onClose={closeModal}
+					closeButton
+				>
+					<WarehouseForm data={data} onClose={closeModal} />
 				</Modal>
 			</LayoutWrapper>
 		</>

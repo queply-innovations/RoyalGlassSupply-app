@@ -1,9 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/Button';
-import { useQuery } from '@tanstack/react-query';
+import Modal from '@/components/Modal';
+import { removeWarehouse, useWarehouses } from '@/utils/api/Warehouse';
+import { useModal } from '@/utils/Modal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ChangeEvent, FC, useState } from 'react';
 
-import axios from 'axios';
+interface WarehouseTableProps {
+	data: any;
+}
 
-export const WarehouseTable = () => {
+const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
+	const queryClient = useQueryClient();
 	const WarehouseTableHeader: string[] = [
 		'',
 		'Warehouse ID',
@@ -11,19 +19,38 @@ export const WarehouseTable = () => {
 		'Location',
 		'Action',
 	];
+	const removeModal = useModal();
+	const updateModal = useModal();
+	const [selectedWarehouse, setSelectedWarehouse] = useState<any | null>(null);
+	const { isLoading } = useWarehouses();
 
-	const { data, isLoading } = useQuery({
-		queryKey: ['warehouse'],
-		queryFn: () =>
-			axios
-				.get(
-					'https://65956d2504335332df82b67a.mockapi.io/rgs/api/Warehouse',
-				)
-				.then(data => {
-					console.log(data);
-					return data;
-				}),
+	const { mutateAsync: removeWarehouseMutation } = useMutation({
+		mutationKey: ['removeWarehouse:', selectedWarehouse],
+		mutationFn: removeWarehouse,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+			console.log('Warehouse removed');
+			removeModal.closeModal();
+		},
+		onError: error => {
+			console.error('Warehouse Data submission failed', error);
+		},
 	});
+
+	const handleUpdateModal = (warehouse: any) => {
+		setSelectedWarehouse(warehouse);
+		updateModal.openModal();
+		console.log('Update Warehouse Name:', warehouse.warehouse_name);
+	};
+	const handleRemoveWarehouse = (warehouse: any) => {
+		setSelectedWarehouse(warehouse);
+		removeModal.openModal();
+		console.log(warehouse.id);
+	};
+
+	const setData = (data: any) => {
+		console.log(data);
+	};
 
 	return (
 		<>
@@ -40,13 +67,26 @@ export const WarehouseTable = () => {
 						))}
 					</tr>
 				</thead>
-
 				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.data.map((warehouse: any) => {
+					{data?.map((warehouse: any) => {
+						const handleCheckboxChange = (
+							event: ChangeEvent<HTMLInputElement>,
+						) => {
+							if (event.target.checked) {
+								console.log(
+									'Checkbox checked for warehouse ID:',
+									warehouse,
+								);
+							}
+						};
+
 						return (
 							<tr key={warehouse.id} className="text-center">
 								<td className="w-16">
-									<input type="checkbox" />
+									<input
+										type="checkbox"
+										onChange={handleCheckboxChange}
+									/>
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
 									<span>{warehouse.id}</span>
@@ -58,16 +98,86 @@ export const WarehouseTable = () => {
 									{warehouse.location}
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
-									<Button fill={'yellow'} textColor={'black'}>
+									<Button
+										fill={'yellow'}
+										textColor={'black'}
+										onClick={() => handleUpdateModal(warehouse)}
+									>
 										Edit
 									</Button>
-									<Button fill={'red'}>Remove</Button>
+									<Button
+										fill={'red'}
+										onClick={() => handleRemoveWarehouse(warehouse)}
+									>
+										Remove
+									</Button>
 								</td>
 							</tr>
 						);
 					})}
 				</tbody>
 			</table>
+			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
+				<>
+					<div className="flex flex-col gap-4">
+						<p>Are you sure you want to remove?</p>
+						<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
+						<span>{`Warehouse Name: ${selectedWarehouse?.warehouse_name}`}</span>
+
+						<div className="flex flex-row justify-center gap-1">
+							<Button
+								fill={'green'}
+								className=""
+								type="submit"
+								onClick={() =>
+									removeWarehouseMutation(selectedWarehouse.id)
+								}
+							>
+								Remove Warehouse
+							</Button>
+							<Button
+								fill={'red'}
+								className=""
+								type="reset"
+								onClick={removeModal.closeModal}
+							>
+								Cancel
+							</Button>
+						</div>
+					</div>
+				</>
+			</Modal>
+			<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
+				<>
+					<div className="flex flex-col gap-4">
+						<p className="text-center font-bold uppercase">{`Update ${selectedWarehouse?.warehouse_name}`}</p>
+						<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
+						<span>{`Warehouse Name: ${selectedWarehouse?.warehouse_name}`}</span>
+
+						<div className="flex flex-row justify-center gap-1">
+							<Button
+								fill={'green'}
+								className=""
+								type="submit"
+								onClick={() =>
+									removeWarehouseMutation(selectedWarehouse.id)
+								}
+							>
+								Remove Warehouse
+							</Button>
+							<Button
+								fill={'red'}
+								className=""
+								type="reset"
+								onClick={updateModal.closeModal}
+							>
+								Cancel
+							</Button>
+						</div>
+					</div>
+				</>
+			</Modal>
+
 			{isLoading && (
 				<div className="flex items-center justify-center">
 					Fetching Warehouse Information Data...
