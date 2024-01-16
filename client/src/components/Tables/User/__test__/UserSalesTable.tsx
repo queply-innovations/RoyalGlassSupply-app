@@ -13,7 +13,7 @@ export const UserSalesTable = () => {
 	];
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['userInformation'],
+		queryKey: ['userSales'],
 		queryFn: () =>
 			axios
 				.get(
