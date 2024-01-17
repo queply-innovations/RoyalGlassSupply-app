@@ -5,7 +5,8 @@ import { ButtonHTMLAttributes, FC } from 'react';
 const buttonVariants = cva('button', {
 	variants: {
 		variant: {
-			default: 'gap-2 rounded-full px-3 py-1 gap-x-2',
+			default: 'gap-2 rounded-full px-4 py-1 gap-x-2',
+			empty: '',
 		},
 		fill: {
 			default: 'bg-gray-200 hover:bg-gray-400',
@@ -32,10 +33,16 @@ interface ButtonProps
 	extends ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof buttonVariants> {}
 
-const Button: FC<ButtonProps> = ({ className, fill, variant, ...props }) => {
+const Button: FC<ButtonProps> = ({
+	className,
+	fill,
+	textColor,
+	variant,
+	...props
+}) => {
 	return (
 		<button
-			className={cn(buttonVariants({ variant, fill, className }))}
+			className={cn(buttonVariants({ variant, fill, textColor, className }))}
 			{...props}
 		/>
 	);
