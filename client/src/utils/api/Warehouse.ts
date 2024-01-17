@@ -43,6 +43,11 @@ export const getNextId = (data: any[] | undefined) => {
 		return highestId + 1;
 	}
 };
+
+export const getWarehouseById = (data: any[], id: number) => {
+	const warehouse = data.find(warehouse => warehouse.id === id);
+	return warehouse;
+};
 export const addWarehouse = (data: any) => {
 	const response = axios.post(`${API_BASE_URL}/Warehouse`, data);
 	return response;

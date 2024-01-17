@@ -5,6 +5,7 @@ import { removeWarehouse, useWarehouses } from '@/utils/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
+import WarehouseForm from '@/components/warehouse/forms/WarehouseForm';
 
 interface WarehouseTableProps {
 	data: any;
@@ -42,7 +43,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 	const handleUpdateModal = (warehouse: any) => {
 		setSelectedWarehouse(warehouse);
 		updateModal.openModal();
-		console.log('Update Warehouse Name:', warehouse.warehouse_name);
+		console.log('Update Warehouse', warehouse);
 	};
 	const handleRemoveWarehouse = (warehouse: any) => {
 		setSelectedWarehouse(warehouse);
@@ -150,32 +151,11 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 			</Modal>
 			<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
 				<>
-					<div className="flex flex-col gap-4">
-						<p className="text-center font-bold uppercase">{`Update ${selectedWarehouse?.warehouse_name}`}</p>
-						<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
-						<span>{`Warehouse Name: ${selectedWarehouse?.warehouse_name}`}</span>
-
-						<div className="flex flex-row justify-center gap-1">
-							<Button
-								fill={'green'}
-								className=""
-								type="submit"
-								onClick={() =>
-									removeWarehouseMutation(selectedWarehouse.id)
-								}
-							>
-								Remove Warehouse
-							</Button>
-							<Button
-								fill={'red'}
-								className=""
-								type="reset"
-								onClick={updateModal.closeModal}
-							>
-								Cancel
-							</Button>
-						</div>
-					</div>
+					<WarehouseForm
+						data={selectedWarehouse}
+						onClose={updateModal.closeModal}
+						isUpdate={true}
+					/>
 				</>
 			</Modal>
 			<Modal

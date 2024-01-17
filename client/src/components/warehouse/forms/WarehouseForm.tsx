@@ -5,20 +5,27 @@ import {
 	getNextId,
 	updateWarehouse,
 } from '@/utils/api/Warehouse';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { WarehouseData } from '@/entities/Warehouse';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseModalProps, useModal } from '@/utils/Modal';
 import Modal from '@/components/Modal';
 
 interface WarehouseFormProps extends WarehouseData {
+	isUpdate?: boolean;
 	onClose: UseModalProps['closeModal'];
 }
 
-const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
+const WarehouseForm: FC<WarehouseFormProps> = ({
+	data,
+	onClose,
+	isUpdate = false,
+}) => {
 	const queryClient = useQueryClient();
-	const warehouseNextId = getNextId(data);
+
 	const { closeModal } = useModal();
+
+	const warehouseNextId = isUpdate ? data?.id || '' : getNextId(data);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [warehouseId, setWarehouseId] = useState(warehouseNextId);
@@ -31,9 +38,15 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 		location: warehouseLocation,
 	};
 
-	const { mutateAsync: addWarehouseMutation } = useMutation({
-		mutationKey: ['addWarehouse:', formData.id],
-		mutationFn: addWarehouse,
+	useEffect(() => {
+		if (isUpdate && data) {
+			setWarehouseId(data.id);
+			setWarehouseName(data.warehouse_name);
+			setWarehouseLocation(data.location);
+		}
+	}, [isUpdate, data]);
+
+	const mutationConfig = {
 		onSuccess: async () => {
 			setIsLoading(false);
 			setWarehouseId(warehouseNextId);
@@ -43,33 +56,33 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 			onClose();
 		},
 		onError: error => {
+			setIsLoading(false);
 			console.error('Warehouse Data submission failed', error);
 		},
+	};
+
+	const { mutateAsync: addWarehouseMutation } = useMutation({
+		mutationKey: ['addWarehouse:', formData.id],
+		mutationFn: addWarehouse,
+		...mutationConfig,
 	});
 
 	const { mutateAsync: updateWarehouseMutation } = useMutation({
 		mutationKey: ['updateWarehouse:', formData.id],
 		mutationFn: updateWarehouse,
-		onSuccess: async () => {
-			setIsLoading(false);
-			setWarehouseId(warehouseNextId);
-			setWarehouseName('');
-			setWarehouseLocation('');
-			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
-			onClose();
-		},
-		onError: error => {
-			console.error('Warehouse Data submission failed', error);
-		},
+		...mutationConfig,
 	});
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		try {
 			await new Promise(resolve => setTimeout(resolve, 1000));
-			await addWarehouseMutation(formData);
+			if (isUpdate) {
+				await updateWarehouseMutation(formData);
+			} else {
+				await addWarehouseMutation(formData);
+			}
 		} catch (error) {
-			setIsLoading(false);
 			console.error('Warehouse Data submission failed', error);
 		}
 	};
@@ -90,7 +103,7 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 							</span>
 							<Inputbox
 								name="id"
-								value={warehouseId}
+								value={warehouseId || ''}
 								type="number"
 								disabled={true}
 							/>
@@ -102,6 +115,7 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 							<Inputbox
 								name="warehouse_name"
 								placeholder="Warehouse Name"
+								value={warehouseName || ''}
 								onChange={e => setWarehouseName(e.target.value)}
 								required
 							/>
@@ -112,9 +126,10 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 							Warehouse Location
 						</span>
 						<Inputbox
-							name="warehouse_location"
+							name="location"
 							placeholder="Warehouse Location"
 							type="string"
+							value={warehouseLocation || ''}
 							onChange={e => setWarehouseLocation(e.target.value)}
 							required
 						/>
@@ -126,7 +141,7 @@ const WarehouseForm: FC<WarehouseFormProps> = ({ data, onClose }) => {
 							type="submit"
 							// onClick={handleSubmit}
 						>
-							Add Warehouse
+							{isUpdate ? 'Update Warehouse' : 'Add Warehouse'}
 						</Button>
 						<Button
 							fill={'red'}
