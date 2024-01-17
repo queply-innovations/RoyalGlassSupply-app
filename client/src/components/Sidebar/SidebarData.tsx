@@ -30,15 +30,15 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'Pending Inventory',
-				link: '/pendinginventory',
+				link: '/pending/pendinginventory',
 			},
 			{
 				title: 'Pending Transfer',
-				link: '/pendingtransfer',
+				link: '/pending/pendingtransfer',
 			},
 			{
 				title: 'Pending Return',
-				link: '/pendingreturn',
+				link: '/pending/pendingreturn',
 			},
 		],
 	},
@@ -48,11 +48,11 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'Transaction',
-				link: '/transaction',
+				link: '/transactions/transaction',
 			},
 			{
 				title: 'Expenses',
-				link: '/expenses',
+				link: '/transactions/expenses',
 			},
 		],
 	},
