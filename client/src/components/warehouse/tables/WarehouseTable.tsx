@@ -20,6 +20,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 		'Action',
 	];
 	const removeModal = useModal();
+	const successModal = useModal();
 	const updateModal = useModal();
 	const [selectedWarehouse, setSelectedWarehouse] = useState<any | null>(null);
 	const { isLoading } = useWarehouses();
@@ -31,6 +32,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
 			console.log('Warehouse removed');
 			removeModal.closeModal();
+			successModal.openModal();
 		},
 		onError: error => {
 			console.error('Warehouse Data submission failed', error);
@@ -46,10 +48,6 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 		setSelectedWarehouse(warehouse);
 		removeModal.openModal();
 		console.log(warehouse.id);
-	};
-
-	const setData = (data: any) => {
-		console.log(data);
 	};
 
 	return (
@@ -120,9 +118,12 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
 					<div className="flex flex-col gap-4">
-						<p>Are you sure you want to remove?</p>
+						<p className="text-center font-bold uppercase">
+							Are you sure you want to remove?
+						</p>
 						<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
 						<span>{`Warehouse Name: ${selectedWarehouse?.warehouse_name}`}</span>
+						<span>{`Warehouse Location: ${selectedWarehouse?.location}`}</span>
 
 						<div className="flex flex-row justify-center gap-1">
 							<Button
@@ -133,7 +134,7 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 									removeWarehouseMutation(selectedWarehouse.id)
 								}
 							>
-								Remove Warehouse
+								{`Remove ${selectedWarehouse?.warehouse_name}`}
 							</Button>
 							<Button
 								fill={'red'}
@@ -176,6 +177,24 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 						</div>
 					</div>
 				</>
+			</Modal>
+			<Modal
+				isOpen={successModal.isOpen}
+				onClose={() => {
+					successModal.closeModal();
+					setTimeout(() => {
+						successModal.closeModal();
+					}, 50000);
+				}}
+			>
+				<div className="flex flex-col items-center justify-center gap-2">
+					<p>
+						{`Warehouse ${selectedWarehouse?.warehouse_name} successfully removed`}
+					</p>
+					<Button fill={'green'} onClick={successModal.closeModal}>
+						Close
+					</Button>
+				</div>
 			</Modal>
 
 			{isLoading && (

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Warehouse } from '@/entities/Warehouse';
 import axios from 'axios';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
@@ -17,6 +17,21 @@ export const useWarehouses = () => {
 		queryKey: ['warehouses'],
 		queryFn: () => fetchWarehouses(),
 		refetchOnWindowFocus: false,
+	});
+};
+
+export const useWarehouseMutation = (selectedWarehouse: any) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationKey: ['removeWarehouse:', selectedWarehouse],
+		mutationFn: removeWarehouse,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+			console.log('Warehouse removed');
+		},
+		onError: error => {
+			console.error('Warehouse Data submission failed', error);
+		},
 	});
 };
 
