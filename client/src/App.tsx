@@ -1,9 +1,9 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { UserInfo } from '@/pages/User/UserInfo';
 import Dashboard from '@/pages/Dashboard';
 import Login from '@/pages/Login';
 import Page404 from '@/pages/Page404';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { UserInfo } from '@/pages/User/UserInfo';
 import { PendingInventory } from '@/pages/Pending/PendingInventory';
 import { PendingReturn } from '@/pages/Pending/PendingReturn';
 import { UserSales } from '@/pages/User/UserSales';
@@ -16,8 +16,6 @@ import { Inventory } from '@/pages/Inventory';
 import { Return } from '@/pages/Return';
 import { Products } from '@/pages/Products/Products';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-
-const queryClient = new QueryClient();
 
 const routesConfig = [
 	{ path: '/', element: <Login /> },
@@ -38,6 +36,8 @@ const routesConfig = [
 
 	// ... other routes
 ];
+
+const queryClient = new QueryClient();
 
 function App() {
 	return (
