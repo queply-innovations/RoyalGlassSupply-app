@@ -16,6 +16,7 @@ import { Inventory } from '@/pages/Inventory';
 import { Return } from '@/pages/Return';
 import { Products } from '@/pages/Products/Products';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import Warehouse from './pages/Warehouse/Warehouse';
 
 const routesConfig = [
 	{ path: '/', element: <Login /> },
@@ -32,6 +33,7 @@ const routesConfig = [
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/finance', element: <Finance /> },
 	{ path: '/reports', element: <Reports /> },
+	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
 
 	// ... other routes
