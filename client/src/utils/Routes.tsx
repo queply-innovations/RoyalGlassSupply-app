@@ -28,10 +28,22 @@ export const RoutesWrapper = () => {
 					<Route path="/user/sales" element={<UserSales />} />
 					<Route path="/Warehouse" element={<Warehouse />} />
 					<Route path="/transfer" element={<Transfer />} />
-					<Route path="/pending/PendingInventory" element={<PendingInventory />}/>
-					<Route path="/pending/PendingReturn" element={<PendingReturn />}/>
-					<Route path="/pending/PendingTransfer" element={<PendingTransfer />}/>
-					<Route path="/transactions/transaction" element={<Transaction />} />
+					<Route
+						path="/pending/PendingInventory"
+						element={<PendingInventory />}
+					/>
+					<Route
+						path="/pending/PendingReturn"
+						element={<PendingReturn />}
+					/>
+					<Route
+						path="/pending/PendingTransfer"
+						element={<PendingTransfer />}
+					/>
+					<Route
+						path="/transactions/transaction"
+						element={<Transaction />}
+					/>
 					<Route path="/transactions/expenses" element={<Expenses />} />
 					<Route path="/return" element={<Return />} />
 					<Route path="/inventory" element={<Inventory />} />
