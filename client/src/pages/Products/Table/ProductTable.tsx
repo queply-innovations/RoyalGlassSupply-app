@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from '@/components/Button';
 import React, { FC } from 'react';
 
 interface ProductsTableProps {
@@ -47,6 +48,12 @@ const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
 									<span>{product.color}</span>
+								</td>
+								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
+									<Button fill={'yellow'} textColor={'black'}>
+										Edit
+									</Button>
+									<Button fill={'red'}>Remove</Button>
 								</td>
 							</tr>
 						);

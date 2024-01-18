@@ -2,8 +2,10 @@ import { Button } from '@/components/Button';
 import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
 import ProductTable from './Table/ProductTable';
+import { useProducts } from '@/utils/api/Products';
 
 export const Products = () => {
+	const { data: products } = useProducts();
 	return (
 		<>
 			<LayoutWrapper>
