@@ -35,15 +35,6 @@ export const useWarehouseMutation = (selectedWarehouse: any) => {
 	});
 };
 
-export const getNextId = (data: any[] | undefined) => {
-	if (!data || data.length === 0) {
-		return 1;
-	} else {
-		const highestId = Math.max(...data.map((warehouse: any) => warehouse.id));
-		return highestId + 1;
-	}
-};
-
 export const getWarehouseById = (data: any[], id: number) => {
 	const warehouse = data.find(warehouse => warehouse.id === id);
 	return warehouse;

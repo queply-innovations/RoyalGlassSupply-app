@@ -1,22 +1,26 @@
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import Page404 from '@/pages/Page404';
+import {
+	Login,
+	Finance,
+	Inventory,
+	Reports,
+	Return,
+	Supplier,
+	Page404,
+	Dashboard,
+	Warehouse,
+	UserInfo,
+	UserSales,
+	Transaction,
+	Expenses,
+	PendingInventory,
+	PendingReturn,
+	PendingTransfer,
+	Products,
+} from '@/pages';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { UserInfo } from '@/pages/User/UserInfo';
-import { PendingInventory } from '@/pages/Pending/PendingInventory';
-import { PendingReturn } from '@/pages/Pending/PendingReturn';
-import { UserSales } from '@/pages/User/UserSales';
-import { PendingTransfer } from '@/pages/Pending/PendingTransfer';
-import { Transaction } from '@/pages/Transactions/Transaction';
-import { Expenses } from '@/pages/Transactions/Expenses';
-import { Reports } from '@/pages/Reports';
-import { Finance } from '@/pages/Finance';
-import { Inventory } from '@/pages/Inventory';
-import { Return } from '@/pages/Return';
-import { Products } from '@/pages/Products/Products';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Warehouse from './pages/Warehouse/Warehouse';
 
 const routesConfig = [
 	{ path: '/', element: <Login /> },
@@ -35,8 +39,7 @@ const routesConfig = [
 	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
-
-	// ... other routes
+	{ path: '/supplier', element: <Supplier /> },
 ];
 
 const queryClient = new QueryClient();

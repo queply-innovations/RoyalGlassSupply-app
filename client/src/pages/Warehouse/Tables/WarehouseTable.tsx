@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from '@/components/Button';
-import Modal from '@/components/Modal';
+import { Button, Modal } from '@/components';
 import { removeWarehouse, useWarehouses } from '@/utils/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
-import WarehouseForm from '@/pages/Warehouse/Forms/WarehouseForm';
+import { WarehouseForm } from '@pages/Warehouse';
 
 interface WarehouseTableProps {
 	data: any;
 }
 
-const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
+export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 	const queryClient = useQueryClient();
 	const WarehouseTableHeader: string[] = [
 		'',
@@ -185,5 +184,3 @@ const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 		</>
 	);
 };
-
-export default WarehouseTable;
