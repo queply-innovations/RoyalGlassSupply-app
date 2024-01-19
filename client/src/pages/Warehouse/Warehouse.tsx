@@ -1,13 +1,10 @@
-import { Button } from '@/components/Button';
-import { Inputbox } from '@/components/Inputbox';
-import Modal from '@/components/Modal';
-import WarehouseTable from '@/components/Warehouse/Tables/WarehouseTable';
-import WarehouseForm from '@/components/Warehouse/Forms/WarehouseForm';
+import { Modal, Button, Inputbox } from '@/components';
+import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
 import { useWarehouses } from '@/utils/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 
-const Warehouse = () => {
+export const Warehouse = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const { data } = useWarehouses();
 
@@ -49,5 +46,3 @@ const Warehouse = () => {
 		</>
 	);
 };
-
-export default Warehouse;

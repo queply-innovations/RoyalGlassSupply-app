@@ -5,7 +5,7 @@ import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellin
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
 
-const Dashboard = () => {
+export const Dashboard = () => {
 	return (
 		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
@@ -52,4 +52,3 @@ const Dashboard = () => {
 		</LayoutWrapper>
 	);
 };
-export default Dashboard;

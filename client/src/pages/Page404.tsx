@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
 
-const NotFound = () => {
+export const Page404 = () => {
 	return (
 		<>
 			<div className="flex h-screen w-screen flex-col items-center justify-center">
@@ -18,5 +18,3 @@ const NotFound = () => {
 		</>
 	);
 };
-
-export default NotFound;

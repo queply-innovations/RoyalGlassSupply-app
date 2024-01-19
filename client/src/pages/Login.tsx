@@ -1,9 +1,7 @@
-import { Button } from '@/components/Button';
-import { Form } from '@/components/Form';
-import { Inputbox } from '@/components/Inputbox';
+import { Button, Form, Inputbox } from '@/components';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+export const Login = () => {
 	return (
 		<>
 			<div className="flex h-screen w-screen items-center justify-center">
@@ -31,5 +29,3 @@ const Login = () => {
 		</>
 	);
 };
-
-export default Login;

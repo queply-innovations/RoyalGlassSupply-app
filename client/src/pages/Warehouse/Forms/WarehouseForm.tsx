@@ -1,22 +1,17 @@
-import { Button } from '@/components/Button';
-import { Inputbox } from '@/components/Inputbox';
-import {
-	addWarehouse,
-	getNextId,
-	updateWarehouse,
-} from '@/utils/api/Warehouse';
+import { Modal, Inputbox, Button } from '@/components';
+import { addWarehouse, updateWarehouse } from '@/utils/api/Warehouse';
 import { FC, useEffect, useState } from 'react';
 import { WarehouseData } from '@/entities/Warehouse';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseModalProps, useModal } from '@/utils/Modal';
-import Modal from '@/components/Modal';
+import { getNextId } from '@/utils/api/Helpers';
 
 interface WarehouseFormProps extends WarehouseData {
 	isUpdate?: boolean;
 	onClose: UseModalProps['closeModal'];
 }
 
-const WarehouseForm: FC<WarehouseFormProps> = ({
+export const WarehouseForm: FC<WarehouseFormProps> = ({
 	data,
 	onClose,
 	isUpdate = false,
@@ -169,5 +164,3 @@ const WarehouseForm: FC<WarehouseFormProps> = ({
 		</>
 	);
 };
-
-export default WarehouseForm;
