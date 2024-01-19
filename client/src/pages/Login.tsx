@@ -1,7 +1,28 @@
 import { Button, Form, Inputbox } from '@/components';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { loginUser, useUserInfo } from '@/utils/api/User';
+import { useNavigate } from 'react-router-dom';
 
-export const Login = () => {
+const Login = () => {
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const navigate = useNavigate();
+
+	const { data } = useUserInfo();
+
+	const handleLogin = async () => {
+		if (username && password) {
+			const data = await loginUser(username, password);
+			if (data) {
+				alert('Welcome, ' + data.datas[0]['first_name'] + '!');
+				navigate('/Dashboard');
+			} else {
+				alert('Invalid username or password');
+			}
+		}
+	};
+
 	return (
 		<>
 			<div className="flex h-screen w-screen items-center justify-center">
@@ -14,16 +35,42 @@ export const Login = () => {
 						/>
 					</div>
 					<div className="text-3xl font-bold">Royal Glass Supply</div>
-					<Form>
-						<Inputbox placeholder={'Username'} required />
-						<Inputbox placeholder={'Password'} type="password" required />
-						<Button className="w-1/2" fill={'green'} type="submit">
+					<Form
+						className="py-6"
+						onSubmit={e => {
+							e.preventDefault();
+						}}
+					>
+						<Inputbox
+							id="username"
+							name="username"
+							placeholder={'Username'}
+							value={username}
+							required
+							onChange={e => setUsername(e.target.value)}
+						/>
+						<Inputbox
+							id="password"
+							name="password"
+							placeholder={'Password'}
+							type="password"
+							value={password}
+							required
+							onChange={e => setPassword(e.target.value)}
+						/>
+						<Button
+							className="w-1/2"
+							fill={'green'}
+							onClick={handleLogin}
+						>
+							{/* This part, specifically. Need i-insert type="button" and delete again to run. */}
+							{/* onClick={handleLogin} */}
 							Login
 						</Button>
 					</Form>
-					<Link to="/Dashboard">
+					{/* <Link to="/Dashboard">
 						<Button>Register</Button>
-					</Link>
+					</Link> */}
 				</div>
 			</div>
 		</>
