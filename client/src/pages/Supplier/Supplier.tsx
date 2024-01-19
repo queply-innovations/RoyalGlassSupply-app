@@ -1,7 +1,13 @@
-import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
+import { useSupplier } from '@/utils/api/Supplier';
+import { Button, Modal, Inputbox } from '@/components';
+import { useModal } from '@/utils/Modal';
+import { SupplierForm, SupplierTable } from '@/pages';
 
 export const Supplier = () => {
+	const { data: supplier } = useSupplier();
+	const { isOpen, openModal, closeModal } = useModal();
+
 	return (
 		<>
 			<LayoutWrapper>
@@ -17,12 +23,25 @@ export const Supplier = () => {
 								buttonIcon={'outside'}
 								className="w-1/2"
 							/>
+							<div className="flex flex-row gap-3">
+								<Button fill={'green'} onClick={openModal}>
+									Add Supplier
+								</Button>
+							</div>
 						</div>
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							{/* <UserSalesTable /> */}
+							<SupplierTable data={supplier} />
 						</div>
 					</div>
 				</div>
+				<Modal
+					title={'Add Warehouse'}
+					isOpen={isOpen}
+					onClose={closeModal}
+					closeButton
+				>
+					<SupplierForm data={supplier} onClose={closeModal} />
+				</Modal>
 			</LayoutWrapper>
 		</>
 	);
