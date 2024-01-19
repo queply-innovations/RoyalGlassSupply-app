@@ -1,7 +1,2 @@
-import {
-    Pending,
-    Products,
-    Transactions,
-    User,
-    Warehouse,
-} from '@/pages';
+export * from './UserInfo';
+export * from './UserSales';

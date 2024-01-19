@@ -3,7 +3,7 @@ import { Form } from '@/components/Form';
 import { Inputbox } from '@/components/Inputbox';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
-import { loginUser } from '@/utils/api/User';
+import { loginUser, useUserInfo } from '@/utils/api/User';
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -12,34 +12,19 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
 
+	const { data } = useUserInfo();
+
 	const handleLogin = async () => {
-		//For some reason, this function and/or the button breaks after launching for the first time.
 		if (username && password){
 			const data = await loginUser(username, password);
 			if (data){
-				// console.log(data.datas[0]["first_name"]); 
-				//Also for some reason, above line is marked as an error. Working tho.
 				alert("Welcome, " + data.datas[0]["first_name"] + "!");
 				navigate("/Dashboard");
 			} else {
 				alert("Invalid username or password");
 			}
 		}
-		// console.log(data);
-
-		// if (data != null){
-		// 	alert("Welcome!");
-		// 	navigate("/Dashboard");
-		// }
-		// else if (data == null) {
-		// 	alert("Invalid username or password");
-		// }
 	}
-
-	// const handleLogin = getUserInfo(username, password);
-
-	// const { data } = getUserInfo(username, password);
-	// console.log(handleLogin.result);
 
 	return (
 		<>
@@ -53,7 +38,11 @@ const Login = () => {
 						/>
 					</div>
 					<div className="text-3xl font-bold">Royal Glass Supply</div>
-					<Form className="py-6">
+					<Form 
+						className="py-6" 
+						onSubmit={e => {
+							e.preventDefault();}}>
+
 						<Inputbox 
 							id="username" 
 							name="username"
@@ -72,6 +61,7 @@ const Login = () => {
 							onChange={(e) => setPassword(e.target.value)} 
 						/>
 						<Button className="w-1/2" fill={'green'} onClick={handleLogin}> 
+						{/* This part, specifically. Need i-insert type="button" and delete again to run. */}
 						{/* onClick={handleLogin} */}
 							Login
 						</Button>

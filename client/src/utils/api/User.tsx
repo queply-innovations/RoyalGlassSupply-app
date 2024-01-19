@@ -22,6 +22,21 @@ const fetchUserInfo = async (query = ''): Promise<User[]> => {
 	return response.data;
 };
 
+export const useUserInfo = () => {
+	return useQuery({
+		queryKey: ['userInfo'],
+		queryFn: () => fetchUserInfo(),
+		refetchOnWindowFocus: false,
+	});
+};
+
+export const useLoginUser = (data: any) => {
+	const username = data.username;
+	const password = data.password;
+	const role = data.role;
+	console.log(`Username: ${username}, Password: ${password}, Role: ${role}`);
+};
+
 export const loginUser = async (username: String, password: String) => {
 	try{
 		const result = await axios.get((`${API_BASE_URL}/UserInfo`), {
