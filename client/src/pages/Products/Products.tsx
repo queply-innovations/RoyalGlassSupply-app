@@ -1,11 +1,14 @@
-import { Button } from '@/components/Button';
-import { Inputbox } from '@/components/Inputbox';
+import { Button, Modal, Inputbox } from '@/components';
 import LayoutWrapper from '@/layouts/Layout';
-import ProductTable from './Table/ProductTable';
+import { ProductForm, ProductTable } from '@pages/Products';
 import { useProducts } from '@/utils/api/Products';
+import { useModal } from '@/utils/Modal';
+import { ProductPricesForm } from './Forms/ProductPricesForm';
 
 export const Products = () => {
 	const { data: products } = useProducts();
+	const { isOpen, openModal, closeModal } = useModal();
+
 	return (
 		<>
 			<LayoutWrapper>
@@ -22,14 +25,25 @@ export const Products = () => {
 								className="w-1/2"
 							/>
 							<div className="flex flex-row gap-3">
-								<Button fill={'green'}>Add Products</Button>
+								<Button fill={'green'} onClick={openModal}>
+									Add Products
+								</Button>
 							</div>
 						</div>
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<ProductTable data={products} />
+						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
+							{/* <ProductTable data={products} /> */}
+							<ProductPricesForm />
 						</div>
 					</div>
 				</div>
+				<Modal
+					title={'Add Products'}
+					isOpen={isOpen}
+					onClose={closeModal}
+					closeButton
+				>
+					<ProductForm data={products} onClose={closeModal} />
+				</Modal>
 			</LayoutWrapper>
 		</>
 	);

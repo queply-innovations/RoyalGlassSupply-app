@@ -6,3 +6,7 @@ export interface Product {
 	color: string;
 	note: string;
 }
+
+export interface ProductData {
+	data: any;
+}
