@@ -1,8 +1,8 @@
 import { Button } from '@/components/Button';
 import { Inputbox } from '@/components/Inputbox';
 import Modal from '@/components/Modal';
-import WarehouseTable from '@/components/Warehouse/Tables/WarehouseTable';
-import WarehouseForm from '@/components/Warehouse/Forms/WarehouseForm';
+import WarehouseTable from '@/pages/Warehouse/Tables/WarehouseTable';
+import WarehouseForm from '@/pages/Warehouse/Forms/WarehouseForm';
 import LayoutWrapper from '@/layouts/Layout';
 import { useWarehouses } from '@/utils/api/Warehouse';
 import { useModal } from '@/utils/Modal';

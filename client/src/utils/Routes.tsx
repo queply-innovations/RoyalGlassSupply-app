@@ -6,7 +6,7 @@ import { PendingReturn } from '@/pages/Pending/PendingReturn';
 import Transfer from '@/pages/Transfer';
 import { UserInfo } from '@/pages/User/UserInfo';
 import { UserSales } from '@/pages/User/UserSales';
-import Warehouse from '@/pages/Warehouse';
+import Warehouse from '@/pages/Warehouse/Warehouse';
 import Login from '@pages/Login';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { Transaction } from '@/pages/Transactions/Transaction';

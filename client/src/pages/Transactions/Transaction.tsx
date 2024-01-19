@@ -2,8 +2,16 @@ import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
 import TransactionTable from '@/components/Tables/Transaction/Transaction';
 import { Button } from '@/components/Button';
+import { useState } from "react";
 
 export const Transaction = () => {
+	//Test code for searching stuff
+	const [Inputbox, setInputText] = useState("");
+	let inputHandler = (e) => {
+		//convert input text to lower case
+		var lowerCase = e.target.value.toLowerCase();
+		setInputText(lowerCase);
+	};
 	return (
 		<>
 			<LayoutWrapper>
@@ -18,6 +26,7 @@ export const Transaction = () => {
 								variant={'searchbar'}
 								buttonIcon={'outside'}
 								className="w-1/2"
+								onChange={inputHandler}
 							/>
 						</div>
 					</div>

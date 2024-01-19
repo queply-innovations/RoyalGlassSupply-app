@@ -5,7 +5,7 @@ import { removeWarehouse, useWarehouses } from '@/utils/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
-import WarehouseForm from '@/components/Warehouse/Forms/WarehouseForm';
+import WarehouseForm from '@/pages/Warehouse/Forms/WarehouseForm';
 
 interface WarehouseTableProps {
 	data: any;
