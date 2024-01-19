@@ -16,7 +16,7 @@ const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 const fetchUserInfo = async (query = ''): Promise<User[]> => {
 	await new Promise(resolve => setTimeout(resolve, 100));
-	const response = await axios.get(`${API_BASE_URL}/UserInfo`);
+	const response = await axios.get(`${API_BASE_URL}/users`);
 	console.log('Fetched Users');
 	console.log(response.data);
 	return response.data;
@@ -38,22 +38,22 @@ export const useLoginUser = (data: any) => {
 };
 
 export const loginUser = async (username: String, password: String) => {
-	try{
-		const result = await axios.get((`${API_BASE_URL}/UserInfo`), {
+	try {
+		const result = await axios.get(`${API_BASE_URL}/users`, {
 			headers: {
-				"Content-Type": "application/json"
+				'Content-Type': 'application/json',
 			},
 			params: {
 				username: username,
-				password: password
-			}
-		})
-		const data = {datas: Object.values(result.data)};
+				password: password,
+			},
+		});
+		const data = { datas: Object.values(result.data) };
 		return data;
-	}catch (e){
-		return null
+	} catch (e) {
+		return null;
 	}
-}
+};
 
 // export const getUserInfo = async (username: string, password: string) => {
 // 	await axios.get(`${API_BASE_URL}/UserInfo`)
@@ -66,28 +66,28 @@ export const loginUser = async (username: String, password: String) => {
 // 		})
 // };
 
-	// await new Promise(resolve => setTimeout(resolve, 1000));
-	// try {
-	// 	const response = await axios.get(
-	// 		'https://my.api.mockaroo.com/rgs/user_information?key=a499edc0',
-	// 		{ params: { query } },
-	// 	);
-	// 	return response.data;
-	// } catch (error) {
-	// 	console.error('Error fetching user information:', error);
-	// 	throw error;
-	// }
-	// await new Promise(resolve => setTimeout(resolve, 1000));
-		
-	// alert(response);
-	// return response.data;
-	// return response;
-	// return response.data;
-	// return useQuery({
-	// 	queryKey: ['user_info'],
-	// 	queryFn: () => fetchUserInfo(),
-	// 	refetchOnWindowFocus: false,
-	// });
+// await new Promise(resolve => setTimeout(resolve, 1000));
+// try {
+// 	const response = await axios.get(
+// 		'https://my.api.mockaroo.com/rgs/user_information?key=a499edc0',
+// 		{ params: { query } },
+// 	);
+// 	return response.data;
+// } catch (error) {
+// 	console.error('Error fetching user information:', error);
+// 	throw error;
+// }
+// await new Promise(resolve => setTimeout(resolve, 1000));
+
+// alert(response);
+// return response.data;
+// return response;
+// return response.data;
+// return useQuery({
+// 	queryKey: ['user_info'],
+// 	queryFn: () => fetchUserInfo(),
+// 	refetchOnWindowFocus: false,
+// });
 
 // export const fetchUserInfo = async () => {
 // 	const result = await axios.get(

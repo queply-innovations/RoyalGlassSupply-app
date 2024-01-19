@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/utils/api/User';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+export const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Login = () => {
 		if (username && password) {
 			const data = await loginUser(username, password);
 			if (data) {
-				alert('Welcome, ' + data.datas[0]['first_name'] + '!');
+				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
 				navigate('/Dashboard');
 			} else {
 				alert('Invalid username or password');
