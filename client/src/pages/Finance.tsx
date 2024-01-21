@@ -1,7 +1,13 @@
 import { Inputbox } from '@/components/Inputbox';
 import LayoutWrapper from '@/layouts/Layout';
+import {
+	useProductsAndPricesQuery,
+	useProductsQuery,
+} from '@/utils/api/testProducts';
 
 export const Finance = () => {
+	const { data: products } = useProductsAndPricesQuery();
+	console.log('products:', products);
 	return (
 		<>
 			<LayoutWrapper>
