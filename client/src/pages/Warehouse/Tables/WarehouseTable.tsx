@@ -5,6 +5,7 @@ import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
 import { WarehouseForm } from '@pages/Warehouse';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface WarehouseTableProps {
 	data: any;
@@ -97,11 +98,12 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
 									<Button
-										fill={'yellow'}
+										fill={'empty'}
 										textColor={'black'}
 										onClick={() => handleUpdateModal(warehouse)}
+										className="flex flex-row items-center gap-2"
 									>
-										Edit
+										<FaPencilAlt /> Edit
 									</Button>
 									<Button
 										fill={'red'}

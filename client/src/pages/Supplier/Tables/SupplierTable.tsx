@@ -5,6 +5,7 @@ import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
 import { SupplierForm } from '@/pages';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface SupplierTableProps {
 	data: any;
@@ -101,11 +102,12 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data }) => {
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
 									<Button
-										fill={'yellow'}
+										fill={'empty'}
 										textColor={'black'}
 										onClick={() => handleUpdateModal(supplier)}
+										className="flex flex-row gap-2"
 									>
-										Edit
+										<FaPencilAlt /> Edit
 									</Button>
 									<Button
 										fill={'red'}

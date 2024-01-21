@@ -1,5 +1,6 @@
 import { Button } from '@/components';
 import { FC } from 'react';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface ProductFormTableProps {
 	data?: any;
@@ -70,7 +71,12 @@ export const ProductFormTable: FC<ProductFormTableProps> = ({ data }) => {
 							<td className="py-5 text-xs font-bold uppercase">
 								<div className="flex flex-row gap-3">
 									<div className="flex flex-row gap-3">
-										<Button fill={'yellow'}>Edit</Button>
+										<Button
+											fill={'empty'}
+											className="flex flex-row items-center gap-2"
+										>
+											<FaPencilAlt /> Edit
+										</Button>
 										<Button fill={'red'}>Remove</Button>
 									</div>
 								</div>

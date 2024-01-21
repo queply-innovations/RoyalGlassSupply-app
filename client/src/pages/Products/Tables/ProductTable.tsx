@@ -9,6 +9,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 import { ProductForm } from '@pages/Products';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface ProductsTableProps {
 	data: any;
@@ -111,11 +112,12 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
 									<Button
-										fill={'yellow'}
+										fill={'empty'}
+										className="flex flex-row items-center gap-2"
 										textColor={'black'}
 										onClick={() => handleUpdateModal(product)}
 									>
-										Edit
+										<FaPencilAlt /> Edit
 									</Button>
 									<Button
 										fill={'red'}
