@@ -87,18 +87,18 @@ export const useProductsAndPricesQuery = () => {
 
 export const useProductMutation = (data: Product, os: object) => {
 	const queryClient = useQueryClient();
-	const invalidateData = queryClient.invalidateQueries({
+	const invalidateProducts = queryClient.invalidateQueries({
 		queryKey: ['products'],
 	});
 
 	const onSuccessOptions = {
 		...os,
-		invalidateData,
+		invalidateProducts,
 	};
 
 	const { mutateAsync: addProductMutation } = useMutation({
-		mutationKey: ['addProduct'],
-		mutationFn: addProduct(data),
+		mutationKey: ['addProduct', data.id],
+		mutationFn: addProduct,
 		onSuccess: () => {
 			onSuccessOptions;
 		},

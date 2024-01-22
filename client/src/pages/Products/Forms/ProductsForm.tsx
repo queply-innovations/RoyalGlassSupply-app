@@ -1,7 +1,8 @@
-import { Form } from '@/components';
+import { Form, Inputbox } from '@/components';
 import { Product, ProductData } from '@/entities/Products';
 import { useProducts } from '@/utils/api/Products';
 import { useProductMutation } from '@/utils/api/testProducts';
+import { getDate } from '@/utils/timeUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { parse } from 'postcss';
 import { FC, useEffect, useState } from 'react';
@@ -63,7 +64,65 @@ export const ProductsForm: FC<ProductsFormProps> = ({
 	};
 	return (
 		<>
-			<Form onSubmit={handleSubmit} className="flex-col gap-5"></Form>
+			<Form onSubmit={handleSubmit} className="flex-col gap-5">
+				<div className="flex flex-col gap-5">
+					<div className="flex flex-row justify-between gap-4">
+						<div>
+							{/* <p>
+								Created by:
+								<span>{createdBy}</span>
+							</p> */}
+						</div>
+						<div>
+							<span>{getDate()}</span>
+						</div>
+					</div>
+					<div className="flex flex-row gap-4">
+						<div className="flex flex-col gap-2">
+							<span className="text-sm font-bold uppercase">
+								Product ID
+							</span>
+							<Inputbox
+								name="id"
+								value={id}
+								type="number"
+								disabled={true}
+								className="rounded-full"
+							/>
+						</div>
+						<div className="flex flex-col gap-2">
+							<span className="text-sm font-bold uppercase">
+								Serial Number
+							</span>
+							<Inputbox
+								name="serial_number"
+								value={serialNumber || ''}
+								type="number"
+								onChange={e =>
+									setSerialNumber(parseInt(e.target.value))
+								}
+								placeholder="E.g 123456789"
+								className="rounded-full"
+							/>
+						</div>
+					</div>
+					<div className="flex flex-row gap-4">
+						<div className="flex w-full flex-col gap-2">
+							<span className="text-sm font-bold uppercase">
+								Product Name
+							</span>
+							<Inputbox
+								name="product_name"
+								value={name || ''}
+								type="text"
+								onChange={e => setName(e.target.value)}
+								placeholder="E.g Nails"
+								className="rounded-full"
+							/>
+						</div>
+					</div>
+				</div>
+			</Form>
 		</>
 	);
 };
