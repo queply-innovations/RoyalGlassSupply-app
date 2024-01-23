@@ -1,13 +1,13 @@
 import { Button, Inputbox, Modal, Selectbox } from '@/components';
 import { ProductData } from '@/entities/Products';
 import { UseModalProps, useModal } from '@/utils/Modal';
-import { getNextId } from '@/utils/api/Helpers';
+import { getNextId } from '@/utils/Helpers';
 import {
 	addProduct,
 	addProductPrice,
 	updateProduct,
 	updateProductPrice,
-} from '@/utils/api/Products';
+} from '@/api/Products';
 import { getDate } from '@/utils/timeUtils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useEffect, useState } from 'react';

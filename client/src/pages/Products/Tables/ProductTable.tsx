@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal } from '@/components';
 import { useModal } from '@/utils/Modal';
-import {
-	removeProduct,
-	useProducts,
-	useProductsPrices,
-} from '@/utils/api/Products';
+import { removeProduct, useProducts, useProductsPrices } from '@/api/Products';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 import { ProductForm } from '@pages/Products';

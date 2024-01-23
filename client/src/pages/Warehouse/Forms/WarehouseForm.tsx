@@ -1,10 +1,10 @@
 import { Modal, Inputbox, Button } from '@/components';
-import { addWarehouse, updateWarehouse } from '@/utils/api/Warehouse';
+import { addWarehouse, updateWarehouse } from '@/api/Warehouse';
 import { FC, useEffect, useState } from 'react';
 import { WarehouseData } from '@/entities/Warehouse';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseModalProps, useModal } from '@/utils/Modal';
-import { getNextId } from '@/utils/api/Helpers';
+import { getNextId } from '@/utils/Helpers';
 
 interface WarehouseFormProps extends WarehouseData {
 	isUpdate?: boolean;

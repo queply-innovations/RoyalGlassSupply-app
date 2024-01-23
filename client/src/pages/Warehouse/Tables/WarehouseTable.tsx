@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal } from '@/components';
-import { removeWarehouse, useWarehouses } from '@/utils/api/Warehouse';
+import { removeWarehouse, useWarehouses } from '@/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';

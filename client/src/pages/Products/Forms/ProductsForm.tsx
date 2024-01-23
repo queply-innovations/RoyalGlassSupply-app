@@ -1,7 +1,7 @@
 import { Form, Inputbox } from '@/components';
 import { Product, ProductData } from '@/entities/Products';
-import { useProducts } from '@/utils/api/Products';
-import { useProductMutation } from '@/utils/api/testProducts';
+import { useProducts } from '@/api/Products';
+import { useProductMutation } from '@/api/testProducts';
 import { getDate } from '@/utils/timeUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { parse } from 'postcss';

@@ -1,7 +1,7 @@
 import { Button, Modal, Inputbox } from '@/components';
 import LayoutWrapper from '@/layouts/Layout';
 import { ProductForm, ProductTable } from '@pages/Products';
-import { useProducts, useProductsPrices } from '@/utils/api/Products';
+import { useProducts, useProductsPrices } from '@/api/Products';
 import { useModal } from '@/utils/Modal';
 
 export const Products = () => {

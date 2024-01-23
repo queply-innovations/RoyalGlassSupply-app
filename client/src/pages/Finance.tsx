@@ -3,7 +3,7 @@ import LayoutWrapper from '@/layouts/Layout';
 import {
 	useProductsAndPricesQuery,
 	useProductsQuery,
-} from '@/utils/api/testProducts';
+} from '@/api/testProducts';
 
 export const Finance = () => {
 	const { data: products } = useProductsAndPricesQuery();

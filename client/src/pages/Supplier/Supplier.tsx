@@ -1,5 +1,5 @@
 import LayoutWrapper from '@/layouts/Layout';
-import { useSupplier } from '@/utils/api/Supplier';
+import { useSupplier } from '@/api/Supplier';
 import { Button, Modal, Inputbox } from '@/components';
 import { useModal } from '@/utils/Modal';
 import { SupplierForm, SupplierTable } from '@/pages';

@@ -1,8 +1,9 @@
 import { Button, Form, Inputbox } from '@/components';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { loginUser, useUserInfo } from '@/utils/api/User';
+import { loginUser, useUserInfo } from '@/api/User';
 import { useNavigate } from 'react-router-dom';
+import { fetchUserInformation } from '@/api/User/Users';
 
 export const Login = () => {
 	const [username, setUsername] = useState('');
@@ -10,7 +11,6 @@ export const Login = () => {
 	const navigate = useNavigate();
 
 	const { data } = useUserInfo();
-
 	const handleLogin = async () => {
 		if (username && password) {
 			const data = await loginUser(username, password);
@@ -19,7 +19,6 @@ export const Login = () => {
 				navigate('/Dashboard');
 			} else {
 				alert('Invalid username or password');
-				uuuuuuuuuuuuuuuuurrrrrrrrrrrrrrrrrrrrrr;
 			}
 		}
 	};
