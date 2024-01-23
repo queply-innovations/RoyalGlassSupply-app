@@ -19,6 +19,7 @@ export const Login = () => {
 				navigate('/Dashboard');
 			} else {
 				alert('Invalid username or password');
+				uuuuuuuuuuuuuuuuurrrrrrrrrrrrrrrrrrrrrr;
 			}
 		}
 	};
@@ -68,6 +69,9 @@ export const Login = () => {
 							Login
 						</Button>
 					</Form>
+					<Link to="/Dashboard">
+						<Button>Dashboard</Button>
+					</Link>
 					{/* <Link to="/Dashboard">
 						<Button>Register</Button>
 					</Link> */}

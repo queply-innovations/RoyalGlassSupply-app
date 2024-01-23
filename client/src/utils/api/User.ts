@@ -1,18 +1,47 @@
 import axios from 'axios';
-import { UserInfo } from '@/pages/User/UserInfo';
-import { User } from '@/entities/User';
+import { RolePermissions, Roles, User, UserRoles } from '@/entities/User';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
-// export interface UserInfo {
-// 	first_name: string;
-// 	last_name: string;
-// 	role: string;
-// 	username: string;
-// 	contact_number: string;
-// 	emergency_number: string;
-// }
+const fetchUserInformation = async (): Promise<{
+	user: User[];
+	user_roles: UserRoles[];
+	roles: Roles[];
+	role_permissions: RolePermissions[];
+}> => {
+	try {
+		await new Promise(resolve => setTimeout(resolve, 100));
+		const responseUser = await axios.get(`${API_BASE_URL}/users`);
+		const responseUserRoles = await axios.get(`${API_BASE_URL}/user_roles`);
+		const reponseRoles = await axios.get(`${API_BASE_URL}/roles`);
+		const responseRolePermissions = await axios.get(
+			`${API_BASE_URL}/role_permissions`,
+		);
+		if (
+			responseUser.data &&
+			responseUserRoles.data &&
+			reponseRoles.data &&
+			responseRolePermissions.data
+		) {
+			return {
+				user: responseUser.data as User[],
+				user_roles: responseUserRoles.data as UserRoles[],
+				roles: reponseRoles.data as Roles[],
+				role_permissions: responseRolePermissions.data as RolePermissions[],
+			};
+		} else {
+			throw new Error('Empty response User Information');
+		}
+	} catch (error) {
+		console.error('Error fetching user:', error);
+		throw error;
+	}
+};
+
+fetchUserInformation().then(UserInfo => {
+	console.log('Combined User', UserInfo);
+});
 
 const fetchUserInfo = async (query = ''): Promise<User[]> => {
 	await new Promise(resolve => setTimeout(resolve, 100));
