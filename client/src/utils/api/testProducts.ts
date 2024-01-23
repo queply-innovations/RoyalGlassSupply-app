@@ -2,9 +2,9 @@ import { Product, ProductPrices } from '@/entities/Products';
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
-const API_PRODUCT_URL = `${API_BASE_URL}/products`;
-const API_PRODUCT_PRICES_URL = `${API_BASE_URL}/product-prices`;
+// const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// const API_PRODUCT_URL = `${API_BASE_URL}/products`;
+// const API_PRODUCT_PRICES_URL = `${API_BASE_URL}/product-prices`;
 
 const MOCK_API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 const MOCK_API_PRODUCT_URL = `${MOCK_API_BASE_URL}/products`;
@@ -26,6 +26,7 @@ const fetchProducts = async (): Promise<Product[]> => {
 		throw error;
 	}
 };
+
 const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 	try {
 		await new Promise(resolve => setTimeout(resolve, 100));
@@ -61,6 +62,33 @@ const fetchProductsAndPrices = async (): Promise<{
 	}
 };
 
+const combineProductsAndPrices = async () => {
+	try {
+		const { products, prices } = await fetchProductsAndPrices();
+
+		const combinedArray = products.map(product => {
+			const productId = product.id.toString();
+			const price = prices.find(
+				price => price.product_id.toString() === productId,
+			);
+
+			return {
+				...product,
+				price,
+			};
+		});
+
+		return combinedArray;
+	} catch (error) {
+		console.error('Error combining products and prices:', error);
+		throw error;
+	}
+};
+
+combineProductsAndPrices().then(combinedArray => {
+	console.log('Combined array:', combinedArray);
+});
+
 export const useProductsQuery = () => {
 	return useQuery({
 		queryKey: ['products'],
@@ -79,8 +107,8 @@ export const useProductsPricesQuery = () => {
 
 export const useProductsAndPricesQuery = () => {
 	return useQuery({
-		queryKey: ['products_and_prices'],
-		queryFn: () => fetchProductsAndPrices(),
+		queryKey: ['ProductsAndPrices'],
+		queryFn: () => combineProductsAndPrices(),
 		refetchOnWindowFocus: false,
 	});
 };
