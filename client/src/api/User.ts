@@ -39,15 +39,58 @@ const fetchUserInformation = async (): Promise<{
 	}
 };
 
-fetchUserInformation().then(UserInfo => {
-	console.log('Combined User', UserInfo);
-});
+const combineUserInformation = async () => {
+	try {
+		const userInformation = await fetchUserInformation();
+		const user = userInformation.user;
+		const user_roles = userInformation.user_roles;
+		const roles = userInformation.roles;
+		const role_permissions = userInformation.role_permissions;
+		const combinedUser = user.map((user: User) => {
+			// 	const userRole = user_roles.find(
+			// 		(user_role: UserRoles) => user_role.userId === user.id,
+			// 	);
+			// 	const role = roles.find((role: Roles) => role.id === userRole?.roleId);
+			// 	const rolePermission = role_permissions.find(
+			// 		(role_permission: RolePermissions) =>
+			// 			role_permission.roleId === role?.id,
+			// 	);
+			// 	return {
+			// 		...user,
+			// 		role: role,
+			// 		rolePermission: rolePermission,
+			// 	};
+			// });
+			const userRole = user_roles.find(
+				user_role => user_role.userId === user.id,
+			);
+			console.log(userRole);
+			const role = roles.find(role => role.id === userRole?.roleId);
+			const rolePermission = role_permissions.find(
+				role_permission => role_permission.roleId === role?.id,
+			);
+			return {
+				...user,
+				role: role,
+				rolePermission: rolePermission,
+			};
+		});
+		return combinedUser;
+	} catch (error) {
+		console.error('Error fetching user information:', error);
+		throw error;
+	}
+};
+
+// combineUserInformation().then(UserInfo => {
+// 	console.log('Combined User', UserInfo);
+// });
 
 const fetchUserInfo = async (query = ''): Promise<User[]> => {
 	await new Promise(resolve => setTimeout(resolve, 100));
 	const response = await axios.get(`${API_BASE_URL}/users`);
-	console.log('Fetched Users');
-	console.log(response.data);
+	// console.log('Fetched Users');
+	// console.log(response.data);
 	return response.data;
 };
 

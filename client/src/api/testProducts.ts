@@ -85,9 +85,9 @@ const combineProductsAndPrices = async () => {
 	}
 };
 
-combineProductsAndPrices().then(combinedArray => {
-	console.log('Combined array:', combinedArray);
-});
+// combineProductsAndPrices().then(combinedArray => {
+// 	console.log('Combined array:', combinedArray);
+// });
 
 export const useProductsQuery = () => {
 	return useQuery({
