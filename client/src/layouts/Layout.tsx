@@ -3,6 +3,7 @@ import Sidebar from '@/components/Sidebar/Sidebar';
 import { cn } from '@/utils/cn.utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import { FC, HTMLAttributes, ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const layoutVariants = cva('layout', {
 	variants: {
@@ -19,18 +20,23 @@ interface LayoutProps
 	extends HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof layoutVariants> {
 	children: ReactNode;
+	state: Array<unknown>;
 }
 
 const LayoutWrapper: FC<LayoutProps> = ({
 	className,
 	variant,
 	children,
+	state,
 	...props
 }) => {
+	console.log(state);
+	console.log("layout");
+	
 	return (
 		<>
 			<div className="flex h-screen w-screen overflow-hidden">
-				<Sidebar />
+				<Sidebar state={state} />
 				<div
 					className={cn(layoutVariants({ className, variant }))}
 					{...props}

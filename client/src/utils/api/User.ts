@@ -16,7 +16,7 @@ const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 const fetchUserInfo = async (query = ''): Promise<User[]> => {
 	await new Promise(resolve => setTimeout(resolve, 100));
-	const response = await axios.get(`${API_BASE_URL}/UserInfo`);
+	const response = await axios.get(`${API_BASE_URL}/users`);
 	console.log('Fetched Users');
 	console.log(response.data);
 	return response.data;
@@ -39,7 +39,7 @@ export const useLoginUser = (data: any) => {
 
 export const loginUser = async (username: String, password: String) => {
 	try{
-		const result = await axios.get((`${API_BASE_URL}/UserInfo`), {
+		const result = await axios.get((`${API_BASE_URL}/users`), {
 			headers: {
 				"Content-Type": "application/json"
 			},
@@ -49,6 +49,7 @@ export const loginUser = async (username: String, password: String) => {
 			}
 		})
 		const data = {datas: Object.values(result.data)};
+		// console.log(data);
 		return data;
 	}catch (e){
 		return null

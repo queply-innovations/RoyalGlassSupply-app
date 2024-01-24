@@ -2,21 +2,31 @@ import { Button, Form, Inputbox } from '@/components';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/utils/api/User';
+import { useWarehouses } from '@/utils/api/Warehouse';
+import { useProducts } from '@/utils/api/Products';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+export const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
 
 	const { data } = useUserInfo();
+	const { data : data2 } = useWarehouses();
+	const { data: data3 } = useProducts();
 
 	const handleLogin = async () => {
 		if (username && password) {
 			const data = await loginUser(username, password);
 			if (data) {
-				alert('Welcome, ' + data.datas[0]['first_name'] + '!');
-				navigate('/Dashboard');
+				console.log(data);
+				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
+				navigate('/Dashboard', {
+					state: {
+						warehouseList: data2,
+						productList: data3,
+					}
+				});
 			} else {
 				alert('Invalid username or password');
 			}

@@ -114,6 +114,12 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 						);
 					})}
 				</tbody>
+				{/* <Pagination
+					currentPage={currentPage}
+					lastPage={lastPage}
+					maxLength={7}
+					setCurrentPage={setCurrentPage}
+					/> */}
 			</table>
 			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
