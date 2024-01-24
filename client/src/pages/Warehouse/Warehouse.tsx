@@ -2,7 +2,7 @@ import { Modal, Button, Inputbox } from '@/components';
 import Pagination from '@/components/Pagination';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
-import { useWarehouses } from '@/utils/api/Warehouse';
+import { useWarehouses } from '@/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { FC, useEffect, useState } from 'react';
 import axios from 'axios';

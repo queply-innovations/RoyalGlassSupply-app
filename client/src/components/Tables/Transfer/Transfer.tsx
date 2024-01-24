@@ -15,25 +15,25 @@ export const TransferStatus: FC = () => {
 							</th>
 							<th className="border-b p-2 text-[15px]">Action</th>
 						</tr>
-						<tr>
-							<td id="Transfer_ID" className="table-data text-center">
+						{/* <tr>
+							<td id="Transfer_ID" className="text-center table-data">
 								001
 							</td>
 							<td
 								id="Transfer_Status"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								Arrived at warehouse
 							</td>
 							<td
 								id="Transfer_Action"
-								className="table-data text-center"
+								className="text-center table-data"
 							>
 								<div className="flex justify-center">
 									<BsFillEyeFill className="text-[15px] text-black" />
 								</div>
 							</td>
-						</tr>
+						</tr> */}
 					</tbody>
 				</table>
 			</div>

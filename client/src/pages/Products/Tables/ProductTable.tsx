@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal } from '@/components';
 import { useModal } from '@/utils/Modal';
-import { removeProduct, useProducts } from '@/utils/api/Products';
+import { removeProduct, useProducts, useProductsPrices } from '@/api/Products';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 import { ProductForm } from '@pages/Products';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface ProductsTableProps {
 	data: any;
@@ -16,8 +17,13 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 		'Product ID',
 		'Product Name',
 		'Serial Number',
-		'Size',
-		'Color',
+		'Quantity',
+		'Capital Price',
+		'Retail Price',
+		'Markup Price',
+		'On Sale',
+		'Sale Price',
+		'Approval Status',
 		'Action',
 	];
 
@@ -53,7 +59,7 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 	});
 	return (
 		<>
-			<table className="w-full overflow-y-scroll">
+			<table className="w-full overflow-y-scroll ">
 				<thead className="table-head border-b border-black/10 bg-white ">
 					<tr>
 						{ProductsTableHeader.map(header => (
@@ -80,18 +86,34 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 									<span>{product.serial_number}</span>
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
-									<span>{product.size}</span>
+									<span>{product?.quantity}</span>
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
-									<span>{product.color}</span>
+									<span>{product?.capital_price}</span>
+								</td>
+								<td className="py-2 text-xs font-normal uppercase">
+									<span>{product?.retail_price}</span>
+								</td>
+								<td className="py-2 text-xs font-normal uppercase">
+									<span>{product?.markup_price}</span>
+								</td>
+								<td className="py-2 text-xs font-normal uppercase">
+									<span>{product?.on_sale}</span>
+								</td>
+								<td className="py-2 text-xs font-normal uppercase">
+									<span>{product?.sale_price}</span>
+								</td>
+								<td className="py-2 text-xs font-normal uppercase">
+									<span>{product?.approval_status}</span>
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
 									<Button
-										fill={'yellow'}
+										fill={'empty'}
+										className="flex flex-row items-center gap-2"
 										textColor={'black'}
 										onClick={() => handleUpdateModal(product)}
 									>
-										Edit
+										<FaPencilAlt /> Edit
 									</Button>
 									<Button
 										fill={'red'}

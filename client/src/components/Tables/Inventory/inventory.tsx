@@ -17,38 +17,38 @@ export const InventoryTable: FC = () => {
 							<th className="p-2 text-[15px]">QTY</th>
 							<th className="p-2 text-[15px]">Alert Qty</th>
 						</tr>
-						<tr>
-							<td id="Product_ID" className="table-data text-center">
+						{/* <tr>
+							<td id="Product_ID" className="text-center table-data">
 								001
 							</td>
 							<td
 								id="Product_Name"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								10pcs
 							</td>
 							<td
 								id="Product_Dimensions"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								6x12
 							</td>
 							<td
 								id="Product_Warehouse"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								CDO
 							</td>
 							<td
 								id="Product_Quantity"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								10pcs
 							</td>
-							<td id="Product_Alert" className="table-data text-center">
+							<td id="Product_Alert" className="text-center table-data">
 								10pcs
 							</td>
-						</tr>
+						</tr> */}
 					</tbody>
 				</table>
 			</div>
