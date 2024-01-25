@@ -13,8 +13,8 @@ import { configureStore } from '@reduxjs/toolkit';
 // }
 
 export const Dashboard = () => {
-	// const { state } = useLocation();
-	// console.log(state);
+	const { state } = useLocation();
+	console.log(state);
 	
 	return (
 		<LayoutWrapper >

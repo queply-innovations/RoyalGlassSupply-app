@@ -13,22 +13,13 @@ export const Login = () => {
 	const navigate = useNavigate();
 
 	const { data } = useUserInfo();
-	const { data: data2 } = useWarehouses();
-	const { data: data3 } = useProducts();
 	const handleLogin = async () => {
 		if (username && password) {
 			const data = await loginUser(username, password);
 			if (data) {
 				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
 				console.log(data);
-				navigate('/Dashboard',
-				// {
-				// 	state: {
-				// 		warehouseList: data2,
-				// 		productList: data3,
-				// 	}
-				// }
-				);
+				navigate('/Dashboard', {state: data.datas[0]});
 			} else {
 				alert('Invalid username or password');
 			}
