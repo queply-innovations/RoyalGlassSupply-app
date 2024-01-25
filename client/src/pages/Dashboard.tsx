@@ -8,16 +8,16 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
 
-interface DashboardProps {
-	state: Array<unknown>;
-}
+// interface DashboardProps {
+// 	state: Array<unknown>;
+// }
 
-export const Dashboard: FC<DashboardProps> = () => {
-	const { state } = useLocation();
-	console.log(state);
+export const Dashboard = () => {
+	// const { state } = useLocation();
+	// console.log(state);
 	
 	return (
-		<LayoutWrapper state={state}>
+		<LayoutWrapper >
 			<div className="flex h-screen flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard

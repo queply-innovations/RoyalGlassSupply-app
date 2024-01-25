@@ -20,23 +20,22 @@ interface LayoutProps
 	extends HTMLAttributes<HTMLDivElement>,
 		VariantProps<typeof layoutVariants> {
 	children: ReactNode;
-	state: Array<unknown>;
 }
 
 const LayoutWrapper: FC<LayoutProps> = ({
 	className,
 	variant,
 	children,
-	state,
+	//state,
 	...props
 }) => {
-	console.log(state);
-	console.log("layout");
+	// console.log(state);
+	// console.log("layout");
 	
 	return (
 		<>
 			<div className="flex h-screen w-screen overflow-hidden">
-				<Sidebar state={state} />
+				<Sidebar />
 				<div
 					className={cn(layoutVariants({ className, variant }))}
 					{...props}

@@ -4,14 +4,14 @@ import SidebarData from './SidebarData';
 import { FC, useEffect, useState } from 'react';
 import { BiSolidRightArrow } from 'react-icons/bi';
 
-interface SidebarProps {
-	state: Array<unknown>;
-}
+// interface SidebarProps {
+// 	state: Array<unknown>;
+// }
 
-export const Sidebar: FC<SidebarProps> = () => {
-	const { state } = useLocation();
-	console.log(state);
-	console.log("sidebar");
+export const Sidebar = () => {
+	// const { state } = useLocation();
+	// console.log(state);
+	// console.log("sidebar");
 	
 	const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
 	const [isOverlayHidden, setIsOverlayHidden] = useState(true);
@@ -64,7 +64,7 @@ export const Sidebar: FC<SidebarProps> = () => {
 							{item.link ? (
 								<Link
 									to={item.link}
-									state={state}
+									//state={state}
 									className="flex w-full cursor-pointer flex-row "
 								>
 									<div className="sidebar-row-container flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm">
@@ -92,7 +92,7 @@ export const Sidebar: FC<SidebarProps> = () => {
 												<Link
 													className="submenu-link flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm hover:bg-gray-200"
 													to={subItem.link}
-													state={state}
+													//state={state}
 												>
 													{subItem.title}
 												</Link>

@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/api/User';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserInformation } from '@/api/User/Users';
+import { fetchUser } from '@/api/User/Users';
+import { useWarehouses } from '@/api/Warehouse';
+import { useProducts } from '@/api/Products';
 
 export const Login = () => {
 	const [username, setUsername] = useState('');
@@ -11,18 +13,22 @@ export const Login = () => {
 	const navigate = useNavigate();
 
 	const { data } = useUserInfo();
+	const { data: data2 } = useWarehouses();
+	const { data: data3 } = useProducts();
 	const handleLogin = async () => {
 		if (username && password) {
 			const data = await loginUser(username, password);
 			if (data) {
-				console.log(data);
 				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
-				navigate('/Dashboard', {
-					state: {
-						warehouseList: data2,
-						productList: data3,
-					}
-				});
+				console.log(data);
+				navigate('/Dashboard',
+				// {
+				// 	state: {
+				// 		warehouseList: data2,
+				// 		productList: data3,
+				// 	}
+				// }
+				);
 			} else {
 				alert('Invalid username or password');
 			}
@@ -74,12 +80,6 @@ export const Login = () => {
 							Login
 						</Button>
 					</Form>
-<<<<<<< HEAD
-=======
-					<Link to="/Dashboard">
-						<Button>Dashboard</Button>
-					</Link>
->>>>>>> ef36e6dc9133ce8cfc252830e8a196712511fe83
 					{/* <Link to="/Dashboard">
 						<Button>Register</Button>
 					</Link> */}
