@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/api/User';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserInformation } from '@/api/User/Users';
+import { useFetchUserInformation } from '@/api/User/hooks/useFetchUserInformation';
 
 export const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
+
+	const { data: userInformation } = useFetchUserInformation();
+	console.log(userInformation);
 
 	const { data } = useUserInfo();
 	const handleLogin = async () => {
