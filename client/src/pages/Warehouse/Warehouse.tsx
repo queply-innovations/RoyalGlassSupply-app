@@ -1,15 +1,15 @@
 import { Modal, Button, Inputbox } from '@/components';
 import Pagination from '@/components/Pagination';
+import Loading from '@/components/Loading';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
-import { useWarehouses, getWarehouses } from '@/api/Warehouse';
+import { getWarehouses } from '@/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { FC, useEffect, useState } from 'react';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+// import axios from 'axios';
+// import { useLocation } from 'react-router-dom';
 
 export const Warehouse = () => {
-	const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 	const { isOpen, openModal, closeModal } = useModal();
 	const [data, setData] = useState(Array<unknown>);
@@ -83,6 +83,7 @@ export const Warehouse = () => {
 	return (
 		<>
 			<LayoutWrapper >
+				{!notLoading && <Loading />}
 				{notLoading && layout}
 				{notLoading && modal}
 			</LayoutWrapper>

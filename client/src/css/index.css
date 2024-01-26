@@ -44,4 +44,10 @@
 		background-color: #ddd;
 		border-radius: 5px;
 	}
+
+	.loading {
+		display: inline-block;
+		margin: auto;
+		width: auto;
+	}
 }
