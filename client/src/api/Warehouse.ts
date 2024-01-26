@@ -20,6 +20,10 @@ export const useWarehouses = () => {
 	});
 };
 
+export const getWarehouses = () => {
+	return axios.get(`${API_BASE_URL}/Warehouse`);
+};
+
 export const useWarehouseMutation = (selectedWarehouse: any) => {
 	const queryClient = useQueryClient();
 	return useMutation({

@@ -3,6 +3,7 @@ import LayoutWrapper from '@/layouts/Layout';
 import { ProductForm, ProductTable } from '@pages/Products';
 import { useProducts, useProductsPrices } from '@/api/Products';
 import { useModal } from '@/utils/Modal';
+import Pagination from '@/components/Pagination';
 
 export const Products = () => {
 	const { data: products } = useProducts();

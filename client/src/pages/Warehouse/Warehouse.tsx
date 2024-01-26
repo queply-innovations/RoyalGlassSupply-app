@@ -2,37 +2,38 @@ import { Modal, Button, Inputbox } from '@/components';
 import Pagination from '@/components/Pagination';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
-import { useWarehouses } from '@/api/Warehouse';
+import { useWarehouses, getWarehouses } from '@/api/Warehouse';
 import { useModal } from '@/utils/Modal';
 import { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
 export const Warehouse = () => {
+	const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 	const { isOpen, openModal, closeModal } = useModal();
-	const [data, setData] = useState([]);
+	const [data, setData] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [recordsPerPage] = useState(15);
 
 	const indexOfLastRecord = currentPage * recordsPerPage;
-    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
 	useEffect(() => {
-		axios.get('https://65956d2504335332df82b67a.mockapi.io/rgs/api/Warehouse')
-			.then(res => {
-					setData(res.data);
-					setNotLoading(true);
-
-					console.log("success");
-				})
-				.catch(() => {
-					console.log('There was an error while retrieving the data')
-				})
-	}, [])
-
+		async function gettingWarehouses(){
+			try {
+				const data2 = await getWarehouses();
+				setData(data2.data);
+				setNotLoading(true);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		gettingWarehouses();
+	}, []);
+	
 	const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
 	const nPages = Math.ceil(data.length / recordsPerPage);
 
