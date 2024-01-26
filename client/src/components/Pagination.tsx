@@ -1,6 +1,12 @@
-import React from 'react'
+import { FC } from 'react';
 
-const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
+interface PaginationProps{
+	nPages: number;
+	currentPage: number;
+	setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const Pagination: FC<PaginationProps> = ({nPages, currentPage, setCurrentPage}) => {
 
 	const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
@@ -42,5 +48,3 @@ const Pagination = ({ nPages, currentPage, setCurrentPage }) => {
 		</nav>
 	)
 }
-
-export default Pagination;

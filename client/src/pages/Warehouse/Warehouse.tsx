@@ -1,6 +1,5 @@
-import { Modal, Button, Inputbox } from '@/components';
-import Pagination from '@/components/Pagination';
-import Loading from '@/components/Loading';
+import { Modal, Button, Inputbox, Pagination, Loading } from '@/components';
+// import Pagination from '@/components/Pagination';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
 import { getWarehouses } from '@/api/Warehouse';
