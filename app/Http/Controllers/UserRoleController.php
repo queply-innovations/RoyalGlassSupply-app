@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserRole;
+use App\Http\Resources\UserRoleCollection;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
@@ -12,7 +13,8 @@ class UserRoleController extends Controller
      */
     public function index()
     {
-        //
+        //return all user roles in json
+        return new UserRoleCollection(UserRole::all());
     }
 
     /**
@@ -28,7 +30,7 @@ class UserRoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return UserRole::create($request->all());
     }
 
     /**
@@ -36,7 +38,7 @@ class UserRoleController extends Controller
      */
     public function show(UserRole $userRole)
     {
-        //
+        return $userRole;
     }
 
     /**
@@ -44,7 +46,7 @@ class UserRoleController extends Controller
      */
     public function edit(UserRole $userRole)
     {
-        //
+        return $userRole;
     }
 
     /**
@@ -52,7 +54,9 @@ class UserRoleController extends Controller
      */
     public function update(Request $request, UserRole $userRole)
     {
-        //
+        $userRole->update($request->all());
+        
+        return $userRole;
     }
 
     /**
@@ -60,6 +64,8 @@ class UserRoleController extends Controller
      */
     public function destroy(UserRole $userRole)
     {
-        //
+        $userRole->delete();
+
+        return new UserRoleCollection(UserRole::all());
     }
 }

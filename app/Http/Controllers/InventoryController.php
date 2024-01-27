@@ -14,7 +14,7 @@ class InventoryController extends Controller
     public function index()
     {
         //return all inventories in json
-        return InventoryCollection::collection(Inventory::all());
+        return new InventoryCollection(Inventory::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Inventory::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class InventoryController extends Controller
      */
     public function show(Inventory $inventory)
     {
-        //
+        return $inventory;
     }
 
     /**
@@ -46,7 +46,7 @@ class InventoryController extends Controller
      */
     public function edit(Inventory $inventory)
     {
-        //
+        return $inventory;
     }
 
     /**
@@ -54,7 +54,9 @@ class InventoryController extends Controller
      */
     public function update(Request $request, Inventory $inventory)
     {
-        //
+        $inventory->update($request->all());
+
+        return $inventory;
     }
 
     /**
@@ -62,6 +64,8 @@ class InventoryController extends Controller
      */
     public function destroy(Inventory $inventory)
     {
-        //
+        $inventory->delete();
+        
+        return new InventoryCollection(Inventory::all());
     }
 }

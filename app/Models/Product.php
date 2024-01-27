@@ -9,6 +9,16 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'serial_no',
+        'size',
+        'color',
+        'notes'
+    ];
+
+    public $timestamps = false;
+
     public function inventoryProducts(): HasMany
     {
         return $this->hasMany(InventoryProduct::class);

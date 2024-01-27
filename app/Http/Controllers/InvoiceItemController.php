@@ -14,7 +14,7 @@ class InvoiceItemController extends Controller
     public function index()
     {
         //return all invoice items in json
-        return InvoiceItemCollection::collection(InvoiceItem::all());
+        return new InvoiceItemCollection(InvoiceItem::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class InvoiceItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return InvoiceItem::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class InvoiceItemController extends Controller
      */
     public function show(InvoiceItem $invoiceItem)
     {
-        //
+        return $invoiceItem;
     }
 
     /**
@@ -46,7 +46,7 @@ class InvoiceItemController extends Controller
      */
     public function edit(InvoiceItem $invoiceItem)
     {
-        //
+        return $invoiceItem;
     }
 
     /**
@@ -54,7 +54,9 @@ class InvoiceItemController extends Controller
      */
     public function update(Request $request, InvoiceItem $invoiceItem)
     {
-        //
+        $invoiceItem->update($request->all());
+
+        return $invoiceItem;
     }
 
     /**
@@ -62,6 +64,8 @@ class InvoiceItemController extends Controller
      */
     public function destroy(InvoiceItem $invoiceItem)
     {
-        //
+        $invoiceItem->delete();
+
+        return new InvoiceItemCollection(InvoiceItem::all());
     }
 }

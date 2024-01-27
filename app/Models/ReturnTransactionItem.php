@@ -9,6 +9,17 @@ class ReturnTransactionItem extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'return_transaction_id',
+        'invoice_item_id',
+        'quantity',
+        'unit',
+        'price',
+        'reason'
+    ];
+    
+    public $timestamps = false;
+
     public function returnTransaction(): BelongsTo
     {
         return $this->belongsTo(ReturnTransaction::class);

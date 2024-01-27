@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InvoiceTax;
-use App\Http\Resources\InvoiceTaxCollection;
+use App\Models\User;
+use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 
-class InvoiceTaxController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //return all invoice taxes in json
-        return new InvoiceTaxCollection(InvoiceTax::all());
+        //return all users in json
+        return new UserCollection(User::all());
     }
 
     /**
@@ -30,42 +30,42 @@ class InvoiceTaxController extends Controller
      */
     public function store(Request $request)
     {
-        return InvoiceTax::create($request->all());
+        return User::create($request->all());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(InvoiceTax $invoiceTax)
+    public function show(User $user)
     {
-        return $invoiceTax;
+        return $user;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InvoiceTax $invoiceTax)
+    public function edit(User $user)
     {
-        return $invoiceTax;
+        return $user;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, InvoiceTax $invoiceTax)
+    public function update(Request $request, User $user)
     {
-        $invoiceTax->update($request->all());
+        $user->update($request->all());
 
-        return $invoiceTax;
+        return $user;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(InvoiceTax $invoiceTax)
+    public function destroy(User $user)
     {
-        $invoiceTax->delete();
+        $user->delete();
 
-        return new InvoiceTaxCollection(InvoiceTax::all());
+        return new UserCollection(User::all());
     }
 }

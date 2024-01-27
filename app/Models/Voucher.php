@@ -9,6 +9,12 @@ class Voucher extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'code',
+        'generated_by',
+        'notes'
+    ];
+
     public function generatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'generated_by');

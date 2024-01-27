@@ -14,7 +14,7 @@ class CustomerController extends Controller
     public function index()
     {
         //return all customers in json
-        return CustomerCollection::collection(Customer::all());
+        return new CustomerCollection(Customer::all());
     }
 
     /**
@@ -29,8 +29,8 @@ class CustomerController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        return Customer::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return $customer;
     }
 
     /**
@@ -46,7 +46,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return $customer;
     }
 
     /**
@@ -54,7 +54,9 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $customer->update($request->all());
+
+        return $customer;
     }
 
     /**
@@ -62,6 +64,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        
+        return new CustomerCollection(Customer::all());
     }
 }
