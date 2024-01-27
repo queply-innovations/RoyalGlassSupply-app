@@ -16,7 +16,7 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'User Information',
-				link: '/user/info',
+				link: '/user/information',
 			},
 			{
 				title: 'User Sales',
@@ -85,6 +85,16 @@ export const SidebarData = [
 		title: 'Warehouse',
 		icon: <TransferIcon />,
 		link: '/warehouse',
+	},
+	{
+		title: 'Supplier',
+		icon: <UserIcon />,
+		link: '/supplier',
+	},
+	{
+		title: 'Products',
+		icon: <InventoryIcon />,
+		link: '/products',
 	},
 ];
 
