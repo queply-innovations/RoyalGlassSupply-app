@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -67,5 +68,79 @@ class UserController extends Controller
         $user->delete();
 
         return new UserCollection(User::all());
+    }
+
+    public function register(Request $request) {
+        $fields = $request->validate([
+            'username' => 'required|string',
+            'email' => 'required|string|unique:users,email',
+            'password' => 'required|string|confirmed',
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
+            'contact_no' => 'required|string',
+            'position' => 'required|string',
+            'active_status' => 'required|string'
+        ]);
+
+        $user = User::create([
+            'username' => $fields['username'],
+            'email' => $fields['email'],
+            'password' => bcrypt($fields['password']),
+            'firstname' => $fields['firstname'],
+            'lastname' => $fields['lastname'],
+            'contact_no' => $fields['contact_no'],
+            'position' => $fields['position'],
+            'active_status' => $fields['active_status']
+        ]);
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    public function login(Request $request) {
+        $fields = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        // Check email
+        $user = User::where('email', $fields['email'])->first();
+
+        // Check password
+        if(!$user || !Hash::check($fields['password'], $user->password)) {
+            return response([
+                'message' => 'Invalid credentials.'
+            ], 401);
+        }
+
+        //Verify account
+        if($user->active_status != 'active') {
+            return response([
+                'message' => 'Your account has been disabled. Kindly contact your administrator.'
+            ], 401);
+        }
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    public function logout(Request $request) {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Logged out.'
+        ];
     }
 }

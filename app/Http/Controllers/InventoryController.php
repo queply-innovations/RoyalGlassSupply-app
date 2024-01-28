@@ -68,4 +68,12 @@ class InventoryController extends Controller
         
         return new InventoryCollection(Inventory::all());
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showItems(Inventory $inventory)
+    {
+        return $inventory->inventoryProducts;
+    }
 }

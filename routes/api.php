@@ -20,6 +20,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\TransferProductController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WarehouseController;
@@ -35,29 +36,37 @@ use App\Http\Controllers\WarehouseController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
 
-Route::resources([
-    'customers' => CustomerController::class,
-    'inventories' => InventoryController::class,
-    'inventory-products' => InventoryProductController::class,
-    'invoices' => InvoiceController::class,
-    'invoice-discounts' => InvoiceDiscountController::class,
-    'invoice-items' => InvoiceItemController::class,
-    'invoice-taxes' => InvoiceTaxController::class,
-    'permissions' => PermissionController::class,
-    'products' => ProductController::class,
-    'product-prices' => ProductPriceController::class,
-    'return-transactions' => ReturnTransactionController::class,
-    'return-transaction-items' => ReturnTransactionItemController::class,
-    'roles' => RoleController::class,
-    'role-permissions' => RolePermissionController::class,
-    'suppliers' => SupplierController::class,
-    'transfers' => TransferController::class,
-    'transfer-products' => TransferProductController::class,
-    'user-roles' => UserRoleController::class,
-    'vouchers' => VoucherController::class,
-    'warehouses' => WarehouseController::class,
-]);
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(['middleware' => 'auth:sanctum'], function() {
+    Route::resources([
+        'customers' => CustomerController::class,
+        'inventories' => InventoryController::class,
+        'inventory-products' => InventoryProductController::class,
+        'invoices' => InvoiceController::class,
+        'invoice-discounts' => InvoiceDiscountController::class,
+        'invoice-items' => InvoiceItemController::class,
+        'invoice-taxes' => InvoiceTaxController::class,
+        'permissions' => PermissionController::class,
+        'products' => ProductController::class,
+        'product-prices' => ProductPriceController::class,
+        'return-transactions' => ReturnTransactionController::class,
+        'return-transaction-items' => ReturnTransactionItemController::class,
+        'roles' => RoleController::class,
+        'role-permissions' => RolePermissionController::class,
+        'suppliers' => SupplierController::class,
+        'transfers' => TransferController::class,
+        'transfer-products' => TransferProductController::class,
+        'user' => UserController::class,
+        'user-roles' => UserRoleController::class,
+        'vouchers' => VoucherController::class,
+        'warehouses' => WarehouseController::class,
+    ]);
+
+    Route::post('/logout', [UserController::class, 'logout']);
+});
