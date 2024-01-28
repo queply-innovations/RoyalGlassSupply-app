@@ -9,4 +9,5 @@ export const API_URLS = {
 	ROLES: `${API_BASE_URL}/roles`,
 	ROLE_PERMISSIONS: `${API_BASE_URL}/role_permissions`,
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
+	LOGIN: `${API_BASE_URL}/login`,
 };

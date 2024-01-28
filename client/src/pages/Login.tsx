@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/api/User';
 import { useNavigate } from 'react-router-dom';
 import { useFetchUserInformation } from '@/api/User/hooks/useFetchUserInformation';
+import { LoginTest } from './Login/Login';
 
 export const Login = () => {
 	const [username, setUsername] = useState('');
@@ -79,6 +80,7 @@ export const Login = () => {
 					</Link> */}
 				</div>
 			</div>
+			{/* <LoginTest /> */}
 		</>
 	);
 };
