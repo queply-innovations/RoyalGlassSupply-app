@@ -9,6 +9,16 @@ class TransferProduct extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'transfer_id',
+        'product_id',
+        'quantity',
+        'unit',
+        'source_inventory'
+    ];
+    
+    public $timestamps = false;
+
     public function transfer(): BelongsTo
     {
         return $this->belongsTo(Transfer::class);

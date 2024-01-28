@@ -14,7 +14,7 @@ class ProductPriceController extends Controller
     public function index()
     {
         //return all product prices in json
-        return ProductPriceCollection::collection(ProductPrice::all());
+        return new ProductPriceCollection(ProductPrice::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class ProductPriceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return ProductPrice::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class ProductPriceController extends Controller
      */
     public function show(ProductPrice $productPrice)
     {
-        //
+        return $productPrice;
     }
 
     /**
@@ -46,7 +46,7 @@ class ProductPriceController extends Controller
      */
     public function edit(ProductPrice $productPrice)
     {
-        //
+        return $productPrice;
     }
 
     /**
@@ -54,7 +54,9 @@ class ProductPriceController extends Controller
      */
     public function update(Request $request, ProductPrice $productPrice)
     {
-        //
+        $productPrice->update($request->all());
+
+        return $productPrice;
     }
 
     /**
@@ -62,6 +64,8 @@ class ProductPriceController extends Controller
      */
     public function destroy(ProductPrice $productPrice)
     {
-        //
+        $productPrice->delete();
+        
+        return new ProductPriceCollection(ProductPrice::all());
     }
 }

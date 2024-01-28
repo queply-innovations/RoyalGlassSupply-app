@@ -9,6 +9,13 @@ class Inventory extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'warehouse_id',
+        'created_by',
+        'type',
+        'transfer_id'
+    ];
+
     public function inventoryProducts(): HasMany
     {
         return $this->hasMany(InventoryProduct::class);

@@ -9,6 +9,18 @@ class Transfer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'created_by',
+        'source',
+        'destination',
+        'transfer_schedule',
+        'approval_status',
+        'approved_by',
+        'transfer_status',
+        'date_received',
+        'received_by'
+    ];
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

@@ -9,6 +9,14 @@ class ReturnTransaction extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'invoice_id',
+        'issued_by',
+        'refundable_amount',
+        'voucher_id',
+        'refund_status'
+    ];
+
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);

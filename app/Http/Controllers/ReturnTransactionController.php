@@ -14,7 +14,7 @@ class ReturnTransactionController extends Controller
     public function index()
     {
         //return all return transactions in json
-        return ReturnTransactionCollection::collection(ReturnTransaction::all());
+        return new ReturnTransactionCollection(ReturnTransaction::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class ReturnTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return ReturnTransaction::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class ReturnTransactionController extends Controller
      */
     public function show(ReturnTransaction $returnTransaction)
     {
-        //
+        return $returnTransaction;
     }
 
     /**
@@ -46,7 +46,7 @@ class ReturnTransactionController extends Controller
      */
     public function edit(ReturnTransaction $returnTransaction)
     {
-        //
+        return $returnTransaction;
     }
 
     /**
@@ -54,7 +54,9 @@ class ReturnTransactionController extends Controller
      */
     public function update(Request $request, ReturnTransaction $returnTransaction)
     {
-        //
+        $returnTransaction->update($request->all());
+
+        return $returnTransaction;
     }
 
     /**
@@ -62,6 +64,8 @@ class ReturnTransactionController extends Controller
      */
     public function destroy(ReturnTransaction $returnTransaction)
     {
-        //
+        $returnTransaction->delete();
+
+        return new ReturnTransactionCollection(ReturnTransaction::all());
     }
 }

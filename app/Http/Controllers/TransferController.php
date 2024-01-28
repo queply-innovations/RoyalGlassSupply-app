@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transfer;
+use App\Http\Resources\TransferCollection;
 use Illuminate\Http\Request;
 
 class TransferController extends Controller
@@ -12,7 +13,8 @@ class TransferController extends Controller
      */
     public function index()
     {
-        //
+        //return all transfers in json
+        return new TransferCollection(Transfer::all());
     }
 
     /**
@@ -28,7 +30,7 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Transfer::create($request->all());
     }
 
     /**
@@ -36,7 +38,7 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     {
-        //
+        return $transfer;
     }
 
     /**
@@ -44,7 +46,7 @@ class TransferController extends Controller
      */
     public function edit(Transfer $transfer)
     {
-        //
+        return $transfer;
     }
 
     /**
@@ -52,7 +54,9 @@ class TransferController extends Controller
      */
     public function update(Request $request, Transfer $transfer)
     {
-        //
+        $transfer->update($request->all());
+
+        return $transfer;
     }
 
     /**
@@ -60,6 +64,8 @@ class TransferController extends Controller
      */
     public function destroy(Transfer $transfer)
     {
-        //
+        $transfer->delete();
+
+        return new TransferCollection(Transfer::all());
     }
 }
