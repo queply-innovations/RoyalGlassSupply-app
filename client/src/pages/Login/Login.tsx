@@ -1,18 +1,22 @@
-import { fetchUser } from '@/api/User/Users';
 import React, { useEffect, useState } from 'react';
-import { Login } from '..';
-import { loginUser } from '@/api/User/Users';
+import LoginForm from './LoginForm';
 
 export const LoginTest = () => {
-	const [login, setLogin] = useState({ username: '', password: '' });
-
-	const handleLogin = async () => {
-		const token = await loginUser(login.username, login.password);
-
-		if (token) {
-			localStorage.setItem('token', token);
-		}
-	};
-
-	return <div>Login</div>;
+	return (
+		<>
+			<div className="flex h-screen w-screen items-center justify-center">
+				<div className="flex flex-col items-center gap-5 rounded-md border-[0.5px] bg-white px-16 py-5 shadow-md">
+					<div>
+						<img
+							src="/RGS-logo.png"
+							alt="RGS Logo"
+							className="h-20 w-20"
+						/>
+					</div>
+					<div className="text-3xl font-bold">Royal Glass Supply</div>
+					<LoginForm />
+				</div>
+			</div>
+		</>
+	);
 };

@@ -1,5 +1,5 @@
-export const API_BASE_URL =
-	'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
+export const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 export const API_URLS = {
 	PRODUCTS: `${API_BASE_URL}/products`,
