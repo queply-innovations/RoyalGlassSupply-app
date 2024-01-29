@@ -23,13 +23,14 @@ const LoginForm = () => {
 
 	const onSubmit: SubmitHandler<FormFields> = async data => {
 		try {
-			// const userData = await LoginUser(data.email, data.password);
-			// if (userData) {
-			// 	const { user, token } = userData;
-			// 	console.log('User:', user);
-			// 	console.log('Token:', token);
-			// }
-			await LoginUser(data.email, data.password);
+			const userData = await LoginUser(data.email, data.password);
+			if (userData) {
+				// TODO: save token to local storage?
+				const { user, token } = userData;
+				console.log('User:', user);
+				console.log('Token:', token);
+			}
+			// await LoginUser(data.email, data.password);
 		} catch (error) {
 			setError('root', { message: 'Invalid email or password' });
 		}
