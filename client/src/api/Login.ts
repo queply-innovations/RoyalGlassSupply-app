@@ -7,12 +7,16 @@ interface UserData {
 	token: string;
 }
 export const LoginUser = async (
-	username: string,
+	email: string,
 	password: string,
 ): Promise<UserData | null> => {
 	try {
 		const response = await axios.post(`${API_URLS.LOGIN}`, {
-			username,
+			Headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+			email,
 			password,
 		});
 		console.log('Response', response.data);
