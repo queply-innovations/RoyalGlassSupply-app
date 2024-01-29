@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Http\Resources\CustomerCollection;
+use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -30,7 +31,9 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {   
-        return Customer::create($request->all());
+        $customer = Customer::create($request->all());
+
+        return new CustomerResource($customer);
     }
 
     /**
@@ -38,7 +41,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return $customer;
+        return new CustomerResource($customer);
     }
 
     /**
@@ -46,7 +49,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return $customer;
+        return new CustomerResource($customer);
     }
 
     /**
@@ -56,7 +59,7 @@ class CustomerController extends Controller
     {
         $customer->update($request->all());
 
-        return $customer;
+        return new CustomerResource($customer);
     }
 
     /**
