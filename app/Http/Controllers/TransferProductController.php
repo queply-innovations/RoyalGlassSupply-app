@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TransferProduct;
 use App\Http\Resources\TransferProductCollection;
+use App\Http\Resources\TransferProductResource;
 use Illuminate\Http\Request;
 
 class TransferProductController extends Controller
@@ -30,7 +31,9 @@ class TransferProductController extends Controller
      */
     public function store(Request $request)
     {
-        return TransferProduct::create($request->all());
+        $transferProduct = TransferProduct::create($request->all());
+
+        return new TransferProductResource($transferProduct);
     }
 
     /**
@@ -38,7 +41,7 @@ class TransferProductController extends Controller
      */
     public function show(TransferProduct $transferProduct)
     {
-        return $transferProduct;
+        return new TransferProductResource($transferProduct);
     }
 
     /**
@@ -46,7 +49,7 @@ class TransferProductController extends Controller
      */
     public function edit(TransferProduct $transferProduct)
     {
-        return $transferProduct;
+        return new TransferProductResource($transferProduct);
     }
 
     /**
@@ -56,7 +59,7 @@ class TransferProductController extends Controller
     {
         $transferProduct->update($request->all());
 
-        return $transferProduct;
+        return new TransferProductResource($transferProduct);
     }
 
     /**

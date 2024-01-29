@@ -20,6 +20,10 @@ class TransferProduct extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'product:id,name,size,color'
+    ];
+
     public function transfer(): BelongsTo
     {
         return $this->belongsTo(Transfer::class);
