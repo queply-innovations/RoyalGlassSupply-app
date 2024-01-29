@@ -53,6 +53,4 @@ class InventoryProduct extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
-
-    //make accessor for transferred, sold and remaining count
 }

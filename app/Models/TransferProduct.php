@@ -30,8 +30,8 @@ class TransferProduct extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function inventoryItem(): BelongsTo
+    public function inventoryProduct(): BelongsTo
     {
-        return $this->belongsTo(InventoryItem::class, 'source_inventory');
+        return $this->belongsTo(InventoryProduct::class, 'source_inventory');
     }
 }

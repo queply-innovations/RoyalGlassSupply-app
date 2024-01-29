@@ -23,7 +23,10 @@ class InventoryProductResource extends JsonResource
             'stocks_count' => $this->stocks_count,
             'damage_count' => $this->damage_count,
             'total_count' => $this->total_count,
-            'unit' => $this->unit
+            'unit' => $this->unit,
+            'transferred_count' => $this->transferProducts->sum('quantity'),
+            'sold_count' => $this->invoiceItems->sum('quantity'),
+            'remaining_stocks_count' => $this->stocks_count - ($this->transferProducts->sum('quantity') + $this->invoiceItems->sum('quantity'))
         ];
     }
 }
