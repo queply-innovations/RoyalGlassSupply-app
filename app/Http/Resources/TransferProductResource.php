@@ -14,6 +14,13 @@ class TransferProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'transfer_id' => $this->transfer_id,
+            'product' => new ProductResource($this->product),
+            'quantity' => $this->quantity,
+            'unit' => $this->unit,
+            'source_inventory' => $this->source_inventory
+        ];
     }
 }

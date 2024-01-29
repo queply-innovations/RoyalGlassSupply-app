@@ -23,17 +23,25 @@ class Transfer extends Model
         'received_by'
     ];
 
+    protected $with = [
+        'createdBy:id,firstname,lastname',
+        'sourceWarehouse:id,name',
+        'destinationWarehouse:id,name',
+        'approvedBy:id,firstname,lastname',
+        'receivedBy:id,firstname,lastname'
+    ];
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function source(): BelongsTo
+    public function sourceWarehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'source');
     }
 
-    public function destination(): BelongsTo
+    public function destinationWarehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'destination');
     }

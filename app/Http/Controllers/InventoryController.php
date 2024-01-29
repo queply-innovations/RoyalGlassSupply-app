@@ -77,7 +77,6 @@ class InventoryController extends Controller
      */
     public function showItems($id)
     {
-        return new InventoryResource(
-            Inventory::with('inventoryProducts')->findOrFail($id));
+        return new InventoryResource(Inventory::with('inventoryProducts')->findOrFail($id));
     }
 }

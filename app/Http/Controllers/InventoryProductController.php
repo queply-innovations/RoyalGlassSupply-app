@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
+use App\Http\Resources\InventoryProductResource;
 use Illuminate\Http\Request;
 
 class InventoryProductController extends Controller
@@ -30,7 +31,8 @@ class InventoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        return InventoryProduct::create($request->all());
+        $inventoryProduct = InventoryProduct::create($request->all());
+        return new InventoryProductResource($inventoryProduct);
     }
 
     /**
@@ -38,7 +40,7 @@ class InventoryProductController extends Controller
      */
     public function show(InventoryProduct $inventoryProduct)
     {
-        return $inventoryProduct;
+        return new InventoryProductResource($inventoryProduct);
     }
 
     /**
@@ -46,7 +48,7 @@ class InventoryProductController extends Controller
      */
     public function edit(InventoryProduct $inventoryProduct)
     {
-        return $inventoryProduct;
+        return new InventoryProductResource($inventoryProduct);
     }
 
     /**
@@ -56,7 +58,7 @@ class InventoryProductController extends Controller
     {
         $inventoryProduct->update($request->all());
 
-        return $inventoryProduct;
+        return new InventoryProductResource($inventoryProduct);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transfer;
 use App\Http\Resources\TransferCollection;
+use App\Http\Resources\TransferResource;
 use Illuminate\Http\Request;
 
 class TransferController extends Controller
@@ -30,7 +31,9 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        return Transfer::create($request->all());
+        $transfer = Transfer::create($request->all());
+
+        return new TransferResource($transfer);
     }
 
     /**
@@ -38,7 +41,7 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     {
-        return $transfer;
+        return new TransferResource($transfer);
     }
 
     /**
@@ -46,7 +49,7 @@ class TransferController extends Controller
      */
     public function edit(Transfer $transfer)
     {
-        return $transfer;
+        return new TransferResource($transfer);
     }
 
     /**
@@ -56,7 +59,7 @@ class TransferController extends Controller
     {
         $transfer->update($request->all());
 
-        return $transfer;
+        return new TransferResource($transfer);
     }
 
     /**
@@ -67,5 +70,13 @@ class TransferController extends Controller
         $transfer->delete();
 
         return new TransferCollection(Transfer::all());
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showItems($id)
+    {
+        return new TransferResource(Transfer::with('transferProducts')->findOrFail($id));
     }
 }
