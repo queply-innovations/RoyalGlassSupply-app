@@ -20,6 +20,10 @@ class InvoiceDiscount extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'voucher:id,code'
+    ];
+
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);

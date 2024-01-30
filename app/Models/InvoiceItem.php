@@ -23,6 +23,10 @@ class InvoiceItem extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'product:id,name,size,color'
+    ];
+
     public function returnTransactionItems(): HasMany
     {
         return $this->hasMany(ReturnTransacionItem::class);

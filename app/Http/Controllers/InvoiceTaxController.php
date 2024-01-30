@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceTax;
 use App\Http\Resources\InvoiceTaxCollection;
+use App\Http\Resources\InvoiceTaxResource;
 use Illuminate\Http\Request;
 
 class InvoiceTaxController extends Controller
@@ -30,7 +31,9 @@ class InvoiceTaxController extends Controller
      */
     public function store(Request $request)
     {
-        return InvoiceTax::create($request->all());
+        $invoiceTax = InvoiceTax::create($request->all());
+
+        return new InvoiceTaxResource($invoiceTax);
     }
 
     /**
@@ -38,7 +41,7 @@ class InvoiceTaxController extends Controller
      */
     public function show(InvoiceTax $invoiceTax)
     {
-        return $invoiceTax;
+        return new InvoiceTaxResource($invoiceTax);
     }
 
     /**
@@ -46,7 +49,7 @@ class InvoiceTaxController extends Controller
      */
     public function edit(InvoiceTax $invoiceTax)
     {
-        return $invoiceTax;
+        return new InvoiceTaxResource($invoiceTax);
     }
 
     /**
@@ -56,7 +59,7 @@ class InvoiceTaxController extends Controller
     {
         $invoiceTax->update($request->all());
 
-        return $invoiceTax;
+        return new InvoiceTaxResource($invoiceTax);
     }
 
     /**

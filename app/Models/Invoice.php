@@ -25,6 +25,12 @@ class Invoice extends Model
         'or_no'
     ];
 
+    protected $with = [
+        'customer:id,firstname,lastname',
+        'warehouse:id,name',
+        'issuedBy:id,firstname,lastname'
+    ];
+
     public function invoiceItems(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);

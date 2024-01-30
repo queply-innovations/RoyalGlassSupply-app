@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceItem;
 use App\Http\Resources\InvoiceItemCollection;
+use App\Http\Resources\InvoiceItemResource;
 use Illuminate\Http\Request;
 
 class InvoiceItemController extends Controller
@@ -30,7 +31,9 @@ class InvoiceItemController extends Controller
      */
     public function store(Request $request)
     {
-        return InvoiceItem::create($request->all());
+        $invoiceItem = InvoiceItem::create($request->all());
+
+        return new InvoiceItemResource($invoiceItem);
     }
 
     /**
@@ -38,7 +41,7 @@ class InvoiceItemController extends Controller
      */
     public function show(InvoiceItem $invoiceItem)
     {
-        return $invoiceItem;
+        return new InvoiceItemResource($invoiceItem);
     }
 
     /**
@@ -46,7 +49,7 @@ class InvoiceItemController extends Controller
      */
     public function edit(InvoiceItem $invoiceItem)
     {
-        return $invoiceItem;
+        return new InvoiceItemResource($invoiceItem);
     }
 
     /**
@@ -56,7 +59,7 @@ class InvoiceItemController extends Controller
     {
         $invoiceItem->update($request->all());
 
-        return $invoiceItem;
+        return new InvoiceItemResource($invoiceItem);
     }
 
     /**

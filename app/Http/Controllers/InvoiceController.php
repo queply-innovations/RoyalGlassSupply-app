@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Http\Resources\InvoiceCollection;
+use App\Http\Resources\InvoiceResource;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -30,7 +31,9 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        return Invoice::create($request->all());
+        $invoice = Invoice::create($request->all());
+
+        return new InvoiceResource($invoice);
     }
 
     /**
@@ -38,7 +41,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        return $invoice;
+        return new InvoiceResource($invoice);
     }
 
     /**
@@ -46,7 +49,7 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        return $invoice;
+        return new InvoiceResource($invoice);
     }
 
     /**
@@ -56,7 +59,7 @@ class InvoiceController extends Controller
     {
         $invoice->update($request->all());
 
-        return $invoice;
+        return new InvoiceResource($invoice);
     }
 
     /**
@@ -67,5 +70,13 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return new InvoiceCollection(Invoice::all());
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showItems($id)
+    {
+        return new InvoiceResource(Invoice::with(['invoiceItems', 'invoiceDiscounts', 'invoiceTaxes'])->findOrFail($id));
     }
 }

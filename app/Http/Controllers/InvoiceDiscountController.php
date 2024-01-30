@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceDiscount;
 use App\Http\Resources\InvoiceDiscountCollection;
+use App\Http\Resources\InvoiceDiscountResource;
 use Illuminate\Http\Request;
 
 class InvoiceDiscountController extends Controller
@@ -30,7 +31,9 @@ class InvoiceDiscountController extends Controller
      */
     public function store(Request $request)
     {
-        return InvoiceDiscount::create($request->all());
+        $invoiceDiscount = InvoiceDiscount::create($request->all());
+
+        return new InvoiceDiscountResource($invoiceDiscount);
     }
 
     /**
@@ -38,7 +41,7 @@ class InvoiceDiscountController extends Controller
      */
     public function show(InvoiceDiscount $invoiceDiscount)
     {
-        return $invoiceDiscount;
+        return new InvoiceDiscountResource($invoiceDiscount);
     }
 
     /**
@@ -46,7 +49,7 @@ class InvoiceDiscountController extends Controller
      */
     public function edit(InvoiceDiscount $invoiceDiscount)
     {
-        return $invoiceDiscount;
+        return new InvoiceDiscountResource($invoiceDiscount);
     }
 
     /**
@@ -56,7 +59,7 @@ class InvoiceDiscountController extends Controller
     {
         $invoiceDiscount->update($request->all());
 
-        return $invoiceDiscount;
+        return new InvoiceDiscountResource($invoiceDiscount);
     }
 
     /**

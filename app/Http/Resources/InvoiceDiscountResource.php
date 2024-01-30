@@ -14,6 +14,13 @@ class InvoiceDiscountResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'invoice_id' => $this->invoice_id,
+            'item' => $this->item,
+            'voucher' => new VoucherResource($this->voucher),
+            'amount' => $this->amount,
+            'note' => $this->note
+        ];
     }
 }

@@ -67,5 +67,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/logout', [UserController::class, 'logout']);
 
     Route::get('/inventories/{inventory}/show-items', [InventoryController::class, 'showItems']);
+    Route::get('/invoices/{invoice}/show-items', [InvoiceController::class, 'showItems']);
     Route::get('/transfers/{transfer}/show-items', [TransferController::class, 'showItems']);
 });
