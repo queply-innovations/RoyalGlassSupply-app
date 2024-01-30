@@ -5,7 +5,7 @@ export const API_URLS = {
 	PRODUCTS: `${API_BASE_URL}/products`,
 	PRODUCT_PRICES: `${API_BASE_URL}/product-prices`,
 	USERS: `${API_BASE_URL}/users`,
-	USER_ROLES: `${API_BASE_URL}/user_roles`,
+	USER_ROLES: `${API_BASE_URL}/user-roles`,
 	ROLES: `${API_BASE_URL}/roles`,
 	ROLE_PERMISSIONS: `${API_BASE_URL}/role_permissions`,
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
