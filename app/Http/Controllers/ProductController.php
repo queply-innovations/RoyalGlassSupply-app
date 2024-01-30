@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -30,7 +31,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return Product::create($request->all());
+        $product = Product::create($request->all());
+
+        return new ProductResource($product);
     }
 
     /**
@@ -38,7 +41,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return $product;
+        return new ProductResource($product);
     }
 
     /**
@@ -46,7 +49,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return $product;
+        return new ProductResource($product);
     }
 
     /**
@@ -56,7 +59,7 @@ class ProductController extends Controller
     {
         $product->update($request->all());
 
-        return $product;
+        return new ProductResource($product);
     }
 
     /**

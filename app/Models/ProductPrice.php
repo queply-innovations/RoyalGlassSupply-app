@@ -27,6 +27,13 @@ class ProductPrice extends Model
         'approved_by'
     ];
 
+    protected $with = [
+        'product:id,name,size,color',
+        'createdBy:id,firstname,lastname',
+        'approvedBy:id,firstname,lastname',
+        'warehouse:id,name'
+    ];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

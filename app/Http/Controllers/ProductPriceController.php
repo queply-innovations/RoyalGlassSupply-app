@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductPrice;
 use App\Http\Resources\ProductPriceCollection;
+use App\Http\Resources\ProductPriceResource;
 use Illuminate\Http\Request;
 
 class ProductPriceController extends Controller
@@ -30,7 +31,9 @@ class ProductPriceController extends Controller
      */
     public function store(Request $request)
     {
-        return ProductPrice::create($request->all());
+        $productPrice = ProductPrice::create($request->all());
+
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -38,7 +41,7 @@ class ProductPriceController extends Controller
      */
     public function show(ProductPrice $productPrice)
     {
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -46,7 +49,7 @@ class ProductPriceController extends Controller
      */
     public function edit(ProductPrice $productPrice)
     {
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -56,7 +59,7 @@ class ProductPriceController extends Controller
     {
         $productPrice->update($request->all());
 
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
