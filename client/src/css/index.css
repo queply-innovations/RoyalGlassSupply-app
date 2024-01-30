@@ -49,5 +49,6 @@
 		display: inline-block;
 		margin: auto;
 		width: auto;
+		align-content: center;
 	}
 }

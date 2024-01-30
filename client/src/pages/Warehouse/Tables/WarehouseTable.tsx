@@ -184,11 +184,11 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 				</div>
 			</Modal>
 
-			{isLoading && (
+			{/* {isLoading && (
 				<div className="flex items-center justify-center">
 					Fetching Warehouse Information Data...
 				</div>
-			)}
+			)} */}
 		</>
 	);
 };

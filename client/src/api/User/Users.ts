@@ -16,3 +16,11 @@ export const fetchUser = async (): Promise<User[]> => {
 		throw error;
 	}
 };
+
+export const getUsers = () => {
+	return axios.get(`${API_URLS.USERS}`);
+};
+
+export const getUserRoles = () => {
+	return axios.get(`${API_URLS.USER_ROLES}`);
+};
