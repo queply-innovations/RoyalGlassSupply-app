@@ -45,7 +45,7 @@ export const Products = () => {
 			// Add other properties as needed
 		};
 	});
-	console.log('combinedData:', combinedData);
+	// console.log('combinedData:', combinedData);
 
 	return (
 		<>

@@ -14,7 +14,7 @@ class RolePermissionController extends Controller
     public function index()
     {
         //return all role permissions in json
-        return RolePermissionCollection::collection(RolePermission::all());
+        return new RolePermissionCollection(RolePermission::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class RolePermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return RolePermission::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class RolePermissionController extends Controller
      */
     public function show(RolePermission $rolePermission)
     {
-        //
+        return $rolePermission;
     }
 
     /**
@@ -46,7 +46,7 @@ class RolePermissionController extends Controller
      */
     public function edit(RolePermission $rolePermission)
     {
-        //
+        return $rolePermission;
     }
 
     /**
@@ -54,7 +54,9 @@ class RolePermissionController extends Controller
      */
     public function update(Request $request, RolePermission $rolePermission)
     {
-        //
+        $rolePermission->update($request->all());
+
+        return $rolePermission;
     }
 
     /**
@@ -62,6 +64,8 @@ class RolePermissionController extends Controller
      */
     public function destroy(RolePermission $rolePermission)
     {
-        //
+        $rolePermission->delete();
+
+        return new RolePermissionCollection(RolePermission::all());
     }
 }

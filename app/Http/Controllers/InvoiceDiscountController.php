@@ -14,7 +14,7 @@ class InvoiceDiscountController extends Controller
     public function index()
     {
         //return all invoice discounts in json
-        return InvoiceDiscountCollection::collection(InvoiceDiscount::all());
+        return new InvoiceDiscountCollection(InvoiceDiscount::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class InvoiceDiscountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return InvoiceDiscount::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class InvoiceDiscountController extends Controller
      */
     public function show(InvoiceDiscount $invoiceDiscount)
     {
-        //
+        return $invoiceDiscount;
     }
 
     /**
@@ -46,7 +46,7 @@ class InvoiceDiscountController extends Controller
      */
     public function edit(InvoiceDiscount $invoiceDiscount)
     {
-        //
+        return $invoiceDiscount;
     }
 
     /**
@@ -54,7 +54,9 @@ class InvoiceDiscountController extends Controller
      */
     public function update(Request $request, InvoiceDiscount $invoiceDiscount)
     {
-        //
+        $invoiceDiscount->update($request->all());
+
+        return $invoiceDiscount;
     }
 
     /**
@@ -62,6 +64,8 @@ class InvoiceDiscountController extends Controller
      */
     public function destroy(InvoiceDiscount $invoiceDiscount)
     {
-        //
+        $invoiceDiscount->delete();
+
+        return new InvoiceDiscountCollection(InvoiceDiscount::all());
     }
 }

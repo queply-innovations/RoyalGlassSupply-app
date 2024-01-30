@@ -21,9 +21,10 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import { LoginTest } from './pages/Login/Login';
 
 const routesConfig = [
-	{ path: '/', element: <Login /> },
+	{ path: '/', element: <LoginTest /> },
 	{ path: '*', element: <Page404 /> },
 	{ path: '/dashboard', element: <Dashboard /> },
 	{ path: '/user/information', element: <UserInfo /> },

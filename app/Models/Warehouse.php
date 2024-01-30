@@ -9,6 +9,13 @@ class Warehouse extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'location'
+    ];
+    
+    public $timestamps = false;
+
     public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class);

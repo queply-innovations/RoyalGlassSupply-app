@@ -9,6 +9,18 @@ class InvoiceItem extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'invoice_id',
+        'product_id',
+        'product_price_id',
+        'quantity',
+        'unit',
+        'price',
+        'source_inventory'
+    ];
+    
+    public $timestamps = false;
+
     public function returnTransactionItems(): HasMany
     {
         return $this->hasMany(ReturnTransacionItem::class);

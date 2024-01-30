@@ -14,7 +14,7 @@ class InventoryProductController extends Controller
     public function index()
     {
         //return all inventory products in json
-        return InventoryProductCollection::collection(InventoryProduct::all());
+        return new InventoryProductCollection(InventoryProduct::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class InventoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return InventoryProduct::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class InventoryProductController extends Controller
      */
     public function show(InventoryProduct $inventoryProduct)
     {
-        //
+        return $inventoryProduct;
     }
 
     /**
@@ -46,7 +46,7 @@ class InventoryProductController extends Controller
      */
     public function edit(InventoryProduct $inventoryProduct)
     {
-        //
+        return $inventoryProduct;
     }
 
     /**
@@ -54,7 +54,9 @@ class InventoryProductController extends Controller
      */
     public function update(Request $request, InventoryProduct $inventoryProduct)
     {
-        //
+        $inventoryProduct->update($request->all());
+
+        return $inventoryProduct;
     }
 
     /**
@@ -62,6 +64,8 @@ class InventoryProductController extends Controller
      */
     public function destroy(InventoryProduct $inventoryProduct)
     {
-        //
+        $inventoryProduct->delete();
+
+        return new InventoryProductCollection(InventoryProduct::all());
     }
 }
