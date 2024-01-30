@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TransferProduct;
+use App\Http\Resources\TransferProductCollection;
 use Illuminate\Http\Request;
 
 class TransferProductController extends Controller
@@ -12,7 +13,8 @@ class TransferProductController extends Controller
      */
     public function index()
     {
-        //
+        //return all transfer products in json
+        return new TransferProductCollection(TransferProduct::all());
     }
 
     /**
@@ -28,7 +30,7 @@ class TransferProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return TransferProduct::create($request->all());
     }
 
     /**
@@ -36,7 +38,7 @@ class TransferProductController extends Controller
      */
     public function show(TransferProduct $transferProduct)
     {
-        //
+        return $transferProduct;
     }
 
     /**
@@ -44,7 +46,7 @@ class TransferProductController extends Controller
      */
     public function edit(TransferProduct $transferProduct)
     {
-        //
+        return $transferProduct;
     }
 
     /**
@@ -52,7 +54,9 @@ class TransferProductController extends Controller
      */
     public function update(Request $request, TransferProduct $transferProduct)
     {
-        //
+        $transferProduct->update($request->all());
+
+        return $transferProduct;
     }
 
     /**
@@ -60,6 +64,8 @@ class TransferProductController extends Controller
      */
     public function destroy(TransferProduct $transferProduct)
     {
-        //
+        $transferProduct->delete();
+
+        return new TransferProductCollection(TransferProduct::all());
     }
 }

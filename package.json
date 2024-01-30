@@ -10,7 +10,7 @@
         "dev": "vite",
         "build": "vite build",
         "electron": "electron . ",
-        "start": "concurrently \"php artisan serve\" \"npm run dev\" \"npm run electron\"",
+        "start": "concurrently \"php artisan serve\" \"cd client && npm run dev\"",
         "dist": "electron-builder --win --mac"
     },
     "devDependencies": {

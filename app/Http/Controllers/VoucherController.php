@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Voucher;
+use App\Http\Resources\VoucherCollection;
 use Illuminate\Http\Request;
 
 class VoucherController extends Controller
@@ -12,7 +13,8 @@ class VoucherController extends Controller
      */
     public function index()
     {
-        //
+        //return all vouchers in json
+        return new VoucherCollection(Voucher::all());
     }
 
     /**
@@ -28,7 +30,7 @@ class VoucherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Voucher::create($request->all());
     }
 
     /**
@@ -36,7 +38,7 @@ class VoucherController extends Controller
      */
     public function show(Voucher $voucher)
     {
-        //
+        return $voucher;
     }
 
     /**
@@ -44,7 +46,7 @@ class VoucherController extends Controller
      */
     public function edit(Voucher $voucher)
     {
-        //
+        return $voucher;
     }
 
     /**
@@ -52,7 +54,9 @@ class VoucherController extends Controller
      */
     public function update(Request $request, Voucher $voucher)
     {
-        //
+        $voucher->update($request->all());
+
+        return $voucher;
     }
 
     /**
@@ -60,6 +64,8 @@ class VoucherController extends Controller
      */
     public function destroy(Voucher $voucher)
     {
-        //
+        $voucher->delete();
+
+        return new VoucherCollection(Voucher::all());
     }
 }

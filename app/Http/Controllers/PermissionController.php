@@ -14,7 +14,7 @@ class PermissionController extends Controller
     public function index()
     {
         //return all permissions in json
-        return PermissionCollection::collection(Permission::all());
+        return new PermissionCollection(Permission::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Permission::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        return $permission;
     }
 
     /**
@@ -46,7 +46,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        //
+        return $permission;
     }
 
     /**
@@ -54,7 +54,9 @@ class PermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
-        //
+        $permission->update($request->all());
+
+        return $permission;
     }
 
     /**
@@ -62,6 +64,8 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+
+        return new PermissionCollection(Permission::all());
     }
 }

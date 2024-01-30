@@ -23,4 +23,26 @@ export const getUsers = () => {
 
 export const getUserRoles = () => {
 	return axios.get(`${API_URLS.USER_ROLES}`);
+}
+
+export const loginUser = async (
+	username: string,
+	password: string,
+): Promise<string | null> => {
+	try {
+		const response = await axios.post(`${API_URLS.LOGIN}`, {
+			username,
+			password,
+		});
+		const { token } = response.data;
+		return token;
+	} catch (error) {
+		console.log('Error logging in:', error);
+		throw error;
+	}
+};
+
+export const isAuthenticated = (): boolean => {
+	const token = localStorage.getItem('token');
+	return !!token;
 };

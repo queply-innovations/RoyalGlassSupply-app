@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginUser, useUserInfo } from '@/api/User';
 import { useNavigate } from 'react-router-dom';
-import { fetchUser } from '@/api/User/Users';
-import { useWarehouses } from '@/api/Warehouse';
-import { useProducts } from '@/api/Products';
+import { useFetchUserInformation } from '@/api/User/hooks/useFetchUserInformation';
+import { LoginTest } from './Login/Login';
 
 export const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
+
+	const { data: userInformation } = useFetchUserInformation();
+	console.log(userInformation);
 
 	const { data } = useUserInfo();
 	const handleLogin = async () => {
@@ -19,7 +21,7 @@ export const Login = () => {
 			if (data) {
 				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
 				console.log(data);
-				navigate('/Dashboard', {state: data.datas[0]});
+				navigate('/Dashboard', { state: data.datas[0] });
 			} else {
 				alert('Invalid username or password');
 			}
@@ -76,6 +78,7 @@ export const Login = () => {
 					</Link> */}
 				</div>
 			</div>
+			{/* <LoginTest /> */}
 		</>
 	);
 };

@@ -9,6 +9,19 @@ class InventoryProduct extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'inventory_id',
+        'product_id',
+        'supplier_id',
+        'capital_price',
+        'stocks_count',
+        'damage_count',
+        'total_count',
+        'unit'
+    ];
+
+    public $timestamps = false;
+
     public function transferProducts(): HasMany
     {
         return $this->hasMany(TransferProduct::class, 'source_inventory');

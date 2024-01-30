@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Warehouse;
+use App\Http\Resources\WarehouseCollection;
 use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
@@ -12,7 +13,8 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        //
+        //return all warehouses in json
+        return new WarehouseCollection(Warehouse::all());
     }
 
     /**
@@ -28,7 +30,7 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Warehouse::create($request->all());
     }
 
     /**
@@ -36,7 +38,7 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
-        //
+        return $warehouse;
     }
 
     /**
@@ -44,7 +46,7 @@ class WarehouseController extends Controller
      */
     public function edit(Warehouse $warehouse)
     {
-        //
+        return $warehouse;
     }
 
     /**
@@ -52,7 +54,9 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, Warehouse $warehouse)
     {
-        //
+        $warehouse->update($request->all());
+
+        return $warehouse;
     }
 
     /**
@@ -60,6 +64,8 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        //
+        $warehouse->delete();
+
+        return new WarehouseCollection(Warehouse::all());
     }
 }

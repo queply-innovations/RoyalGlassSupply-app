@@ -14,7 +14,7 @@ class InvoiceTaxController extends Controller
     public function index()
     {
         //return all invoice taxes in json
-        return InvoiceTaxCollection::collection(InvoiceTax::all());
+        return new InvoiceTaxCollection(InvoiceTax::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class InvoiceTaxController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return InvoiceTax::create($request->all());
     }
 
     /**
@@ -38,7 +38,7 @@ class InvoiceTaxController extends Controller
      */
     public function show(InvoiceTax $invoiceTax)
     {
-        //
+        return $invoiceTax;
     }
 
     /**
@@ -46,7 +46,7 @@ class InvoiceTaxController extends Controller
      */
     public function edit(InvoiceTax $invoiceTax)
     {
-        //
+        return $invoiceTax;
     }
 
     /**
@@ -54,7 +54,9 @@ class InvoiceTaxController extends Controller
      */
     public function update(Request $request, InvoiceTax $invoiceTax)
     {
-        //
+        $invoiceTax->update($request->all());
+
+        return $invoiceTax;
     }
 
     /**
@@ -62,6 +64,8 @@ class InvoiceTaxController extends Controller
      */
     public function destroy(InvoiceTax $invoiceTax)
     {
-        //
+        $invoiceTax->delete();
+
+        return new InvoiceTaxCollection(InvoiceTax::all());
     }
 }

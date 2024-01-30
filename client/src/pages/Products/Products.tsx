@@ -48,7 +48,7 @@ export const Products = () => {
 		};
 		setNotLoading(true);
 	});
-	console.log('combinedData:', combinedData);
+	// console.log('combinedData:', combinedData);
 
 	const layout = (
 		<div className="flex h-full flex-col gap-y-4">
