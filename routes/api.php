@@ -68,5 +68,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     Route::get('/inventories/{inventory}/show-items', [InventoryController::class, 'showItems']);
     Route::get('/invoices/{invoice}/show-items', [InvoiceController::class, 'showItems']);
+    Route::get('/return-transactions/{returnTransaction}/show-items', [ReturnTransactionController::class, 'showItems']);
     Route::get('/transfers/{transfer}/show-items', [TransferController::class, 'showItems']);
 });

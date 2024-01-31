@@ -16,7 +16,7 @@ class ReturnTransactionItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'return_id' => $this->return_id,
+            'return_transction_id' => $this->return_transaction_id,
             'invoice_item' => new InvoiceItemResource($this->invoiceItem),
             'quantity' => $this->quantity,
             'unit' => $this->unit,

@@ -23,7 +23,8 @@ class ReturnTransactionResource extends JsonResource
             'refund_status' => $this->refund_status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'return_transaction_items' => new ReturnTransactionCollection($this->whenLoaded('returnTransactionItems')),
+            'return_transaction_items' => new ReturnTransactionItemCollection($this->whenLoaded('returnTransactionItems'))
+            // 'return_transaction_items' => new ReturnTransactionItemCollection($this->returnTransactionItems)
         ];
     }
 }
