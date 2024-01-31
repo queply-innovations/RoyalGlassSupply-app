@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use App\Http\Resources\SupplierCollection;
+use App\Http\Resources\SupplierResource;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -30,7 +31,9 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        return Supplier::create($request->all());
+        $supplier = Supplier::create($request->all());
+
+        return new SupplierResource($supplier);
     }
 
     /**
@@ -38,7 +41,7 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        return $supplier;
+        return new SupplierResource($supplier);
     }
 
     /**
@@ -46,7 +49,7 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        return $supplier;
+        return new SupplierResource($supplier);
     }
 
     /**
@@ -56,7 +59,7 @@ class SupplierController extends Controller
     {
         $supplier->update($request->all());
 
-        return $supplier;
+        return new SupplierResource($supplier);
     }
 
     /**

@@ -14,6 +14,14 @@ class ReturnTransactionItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'return_id' => $this->return_id,
+            'invoice_item' => new InvoiceItemResource($this->invoiceItem),
+            'quantity' => $this->quantity,
+            'unit' => $this->unit,
+            'price' => $this->price,
+            'reason' => $this->reason
+        ];
     }
 }

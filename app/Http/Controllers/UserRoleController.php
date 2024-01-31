@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserRole;
 use App\Http\Resources\UserRoleCollection;
+use App\Http\Resources\UserRoleResource;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
@@ -30,7 +31,9 @@ class UserRoleController extends Controller
      */
     public function store(Request $request)
     {
-        return UserRole::create($request->all());
+        $userRole = UserRole::create($request->all());
+
+        return new UserRoleResource($userRole);
     }
 
     /**
@@ -38,7 +41,7 @@ class UserRoleController extends Controller
      */
     public function show(UserRole $userRole)
     {
-        return $userRole;
+        return new UserRoleResource($userRole);
     }
 
     /**
@@ -46,7 +49,7 @@ class UserRoleController extends Controller
      */
     public function edit(UserRole $userRole)
     {
-        return $userRole;
+        return new UserRoleResource($userRole);
     }
 
     /**
@@ -56,7 +59,7 @@ class UserRoleController extends Controller
     {
         $userRole->update($request->all());
         
-        return $userRole;
+        return new UserRoleResource($userRole);
     }
 
     /**

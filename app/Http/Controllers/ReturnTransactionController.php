@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ReturnTransaction;
 use App\Http\Resources\ReturnTransactionCollection;
+use App\Http\Resources\ReturnTransactionResource;
 use Illuminate\Http\Request;
 
 class ReturnTransactionController extends Controller
@@ -30,7 +31,9 @@ class ReturnTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        return ReturnTransaction::create($request->all());
+        $returnTransaction = ReturnTransaction::create($request->all());
+
+        return new ReturnTransactionResource($returnTransaction);
     }
 
     /**
@@ -38,7 +41,7 @@ class ReturnTransactionController extends Controller
      */
     public function show(ReturnTransaction $returnTransaction)
     {
-        return $returnTransaction;
+        return new ReturnTransactionResource($returnTransaction);
     }
 
     /**
@@ -46,7 +49,7 @@ class ReturnTransactionController extends Controller
      */
     public function edit(ReturnTransaction $returnTransaction)
     {
-        return $returnTransaction;
+        return new ReturnTransactionResource($returnTransaction);
     }
 
     /**
@@ -56,7 +59,7 @@ class ReturnTransactionController extends Controller
     {
         $returnTransaction->update($request->all());
 
-        return $returnTransaction;
+        return new ReturnTransactionResource($returnTransaction);
     }
 
     /**
@@ -67,5 +70,13 @@ class ReturnTransactionController extends Controller
         $returnTransaction->delete();
 
         return new ReturnTransactionCollection(ReturnTransaction::all());
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showItems($id)
+    {
+        return new ReturnTransactionResource(ReturnTransaction::with('returnTransactionItems')->findOrFail($id));
     }
 }

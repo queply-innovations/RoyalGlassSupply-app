@@ -19,6 +19,12 @@ class ReturnTransaction extends Model
         'refund_status'
     ];
 
+    protected $with = [
+        'invoice',
+        'issuedBy:id,firstname,lastname',
+        'voucher:id,code'
+    ];
+
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);

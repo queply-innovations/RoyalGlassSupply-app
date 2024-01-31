@@ -21,6 +21,10 @@ class ReturnTransactionItem extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'invoiceItem'
+    ];
+
     public function returnTransaction(): BelongsTo
     {
         return $this->belongsTo(ReturnTransaction::class);

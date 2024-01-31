@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Http\Resources\PermissionCollection;
+use App\Http\Resources\PermissionResource;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -30,7 +31,9 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        return Permission::create($request->all());
+        $permission = Permission::create($request->all());
+
+        return new PermissionResource($permission);
     }
 
     /**
@@ -38,7 +41,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        return $permission;
+        return new PermissionResource($permission);
     }
 
     /**
@@ -46,7 +49,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        return $permission;
+        return new PermissionResource($permission);
     }
 
     /**
@@ -56,7 +59,7 @@ class PermissionController extends Controller
     {
         $permission->update($request->all());
 
-        return $permission;
+        return new PermissionResource($permission);
     }
 
     /**

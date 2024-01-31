@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,7 +32,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return User::create($request->all());
+        $user = User::create($request->all());
+
+        return new UserResource($user);
     }
 
     /**
@@ -39,7 +42,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+        return new UserResource($user);
     }
 
     /**
@@ -47,7 +50,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return $user;
+        return new UserResource($user);
     }
 
     /**
@@ -57,7 +60,7 @@ class UserController extends Controller
     {
         $user->update($request->all());
 
-        return $user;
+        return new UserResource($user);
     }
 
     /**

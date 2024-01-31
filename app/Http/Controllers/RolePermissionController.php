@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RolePermission;
 use App\Http\Resources\RolePermissionCollection;
+use App\Http\Resources\RolePermissionResource;
 use Illuminate\Http\Request;
 
 class RolePermissionController extends Controller
@@ -30,7 +31,9 @@ class RolePermissionController extends Controller
      */
     public function store(Request $request)
     {
-        return RolePermission::create($request->all());
+        $rolePermission = RolePermission::create($request->all());
+
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -38,7 +41,7 @@ class RolePermissionController extends Controller
      */
     public function show(RolePermission $rolePermission)
     {
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -46,7 +49,7 @@ class RolePermissionController extends Controller
      */
     public function edit(RolePermission $rolePermission)
     {
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -56,7 +59,7 @@ class RolePermissionController extends Controller
     {
         $rolePermission->update($request->all());
 
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
