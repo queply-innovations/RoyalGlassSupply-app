@@ -70,4 +70,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('/invoices/{invoice}/show-items', [InvoiceController::class, 'showItems']);
     Route::get('/return-transactions/{returnTransaction}/show-items', [ReturnTransactionController::class, 'showItems']);
     Route::get('/transfers/{transfer}/show-items', [TransferController::class, 'showItems']);
+
+    //Inventory Displays and Filters
+    //Display all by assigned warehouse of logged user
+    //Filter by Warehouse and Type
+    //Dynamic Filter
+    Route::post('/inventories/filters-sorts', [InventoryController::class, 'filterAndSort']);
 });

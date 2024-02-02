@@ -79,4 +79,26 @@ class InventoryController extends Controller
     {
         return new InventoryResource(Inventory::with('inventoryProducts')->findOrFail($id));
     }
+
+    /**
+     * Display a listing of the filtered resource.
+     */
+    public function filterAndSort(Request $request)
+    {
+        $query = Inventory::whereNotNull('id');
+
+        if(!empty($request->filter)){
+            foreach($request->filter as $filter_key => $filter_value){
+                $query->where($filter_key, $filter_value);
+            }
+        }
+
+        if(!empty($request->sort)){
+            foreach($request->sort as $sort_key => $sort_value){
+                $query->orderBy($sort_key, $sort_value);
+            }
+        }
+
+        return new InventoryCollection($query->get());
+    }
 }
