@@ -83,10 +83,16 @@ class InventoryController extends Controller
     /**
      * Display a listing of the filtered resource.
      */
-    public function filterAndSort(Request $request)
+    public function searchFilterAndSort(Request $request)
     {
         $query = Inventory::whereNotNull('id');
 
+        if(!empty($request->search)){
+            foreach($request->search as $search_key => $search_value){
+                $query->where($search_key, 'like', '%'.$search_value.'%');
+            }
+        }
+        
         if(!empty($request->filter)){
             foreach($request->filter as $filter_key => $filter_value){
                 $query->where($filter_key, $filter_value);
