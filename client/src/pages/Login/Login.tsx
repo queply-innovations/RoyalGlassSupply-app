@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LoginForm from './LoginForm';
+import { Button } from '@/components';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginTest = () => {
+	const navigate = useNavigate();
+
 	return (
 		<>
 			<div className="flex h-screen w-screen items-center justify-center">
@@ -15,6 +19,8 @@ export const LoginTest = () => {
 					</div>
 					<div className="text-3xl font-bold">Royal Glass Supply</div>
 					<LoginForm />
+
+					<Button onClick={() => navigate('/dashboard')}>Login</Button>
 				</div>
 			</div>
 		</>
