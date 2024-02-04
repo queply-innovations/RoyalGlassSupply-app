@@ -1,14 +1,10 @@
-import { Button } from '@/components';
 import { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface LayoutProps {
 	children: ReactNode;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
-	const navigate = useNavigate();
-
 	return (
 		<>
 			<div className="flex h-screen w-screen items-center justify-center">
@@ -22,9 +18,6 @@ export const Layout = ({ children }: LayoutProps) => {
 					</div>
 					<div className="text-3xl font-bold">Royal Glass Supply</div>
 					{children}
-					<Button onClick={() => navigate('/dashboard')} fill={'yellow'}>
-						Dashboard
-					</Button>
 				</div>
 			</div>
 		</>

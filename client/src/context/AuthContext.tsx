@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { User, UserResponse, UserRole, getUserRole } from '@/features/auth';
+import { UserResponse, getUserRole } from '@/features/auth';
 import { ReactNode, createContext, useContext, useState } from 'react';
 
 interface AuthContextProps {
@@ -7,7 +7,7 @@ interface AuthContextProps {
 	token: string | null;
 	authenticated: boolean | null;
 	role: string | null;
-	login?: (credentials: LoginCredentials) => Promise<UserResponse>;
+	login: (credentials: LoginCredentials) => Promise<UserResponse | null>;
 }
 
 interface AuthProviderProps {
@@ -22,31 +22,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		token: null,
 		authenticated: false,
 		role: null,
-	});
+		login: async (credentials: LoginCredentials) => {
+			try {
+				const userResponse = await LoginUser(credentials);
 
-	const login = async (credentials: LoginCredentials) => {
-		const userResponse = await LoginUser(credentials);
-		const userRole = await getUserRole(userResponse.user.id);
-		console.log('userRole:', userRole);
-		if (userResponse && userRole) {
-			setAuth(prev => {
-				const newAuth = {
-					...prev,
-					user: userResponse.user.id,
-					token: userResponse.token,
-					authenticated: true,
-					role: userRole.title,
-				};
-				console.log('LOGGED IN:', newAuth);
-				return newAuth;
-			});
-		}
-		return userResponse;
-	};
+				if (!userResponse) {
+					console.error('Login failed: userResponse is undefined');
+					return null;
+				}
+
+				const userRole = await getUserRole(userResponse.user.id);
+
+				console.log('userRole:', userRole);
+
+				if (userRole) {
+					setAuth(prev => {
+						const newAuth = {
+							...prev,
+							user: userResponse.user.id,
+							token: userResponse.token,
+							authenticated: true,
+							role: userRole.title,
+						};
+						console.log('LOGGED IN:', newAuth);
+						return newAuth;
+					});
+				}
+
+				return userResponse;
+			} catch (error) {
+				console.error('Login failed:', error);
+				return null;
+			}
+		},
+	});
 
 	const value: AuthContextProps = {
 		...auth,
-		login,
 	};
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

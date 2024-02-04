@@ -2,8 +2,6 @@ import { Button, Form } from '@/components';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { fetchUserRoles } from '@/api/UserRole/UserRole';
-import { LoginUser } from '../api/Login';
 import { useAuth } from '@/context/AuthContext';
 
 const schema = z.object({
@@ -29,9 +27,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 	});
 
 	const onSubmit: SubmitHandler<FormFields> = async data => {
-		const credentials = data;
 		try {
-			await login(credentials);
+			await login(data);
 			onSuccess();
 		} catch (error) {
 			setError('root', { message: 'Invalid email or password' });
