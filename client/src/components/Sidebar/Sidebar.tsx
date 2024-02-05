@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '/RGS-logo.png';
 import SidebarData from './SidebarData';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { BiSolidRightArrow } from 'react-icons/bi';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '..';
@@ -11,6 +11,10 @@ interface SidebarProps {
 	overlay: boolean;
 	width: number;
 }
+
+// interface SidebarProps {
+// 	state: Array<unknown>;
+// }
 
 export const Sidebar = () => {
 	const auth = useAuth();
@@ -71,6 +75,7 @@ export const Sidebar = () => {
 							{item.link ? (
 								<Link
 									to={item.link}
+									//state={state}
 									className="flex w-full cursor-pointer flex-row "
 								>
 									<div className="sidebar-row-container flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm">
@@ -98,6 +103,7 @@ export const Sidebar = () => {
 												<Link
 													className="submenu-link flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm hover:bg-gray-200"
 													to={subItem.link}
+													//state={state}
 												>
 													{subItem.title}
 												</Link>

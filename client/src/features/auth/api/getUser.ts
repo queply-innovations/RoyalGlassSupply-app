@@ -15,7 +15,7 @@ export const getUser = async (id: number): Promise<User[]> => {
 
 export const getUserRole = async (id: number): Promise<Roles> => {
 	try {
-		const response = await axios.get(`${API_URLS.ROLES}/${id}`, {
+		const response = await axios.get(`${API_URLS.ROLES}?user_id=${id}`, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',

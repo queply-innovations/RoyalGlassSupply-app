@@ -34,6 +34,14 @@ export const useProductsPrices = () => {
 	});
 };
 
+export const getProducts = () => {
+	return axios.get(`${API_BASE_URL}/products`);
+};
+
+export const getProductPrices = () => {
+	return axios.get(`${API_BASE_URL}/product_prices`);
+};
+
 // export const useProductsAndPrices = () => {
 // 	const { data: productsQuery } = useProducts();
 

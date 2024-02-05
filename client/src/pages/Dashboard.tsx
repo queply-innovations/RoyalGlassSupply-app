@@ -4,10 +4,20 @@ import InventoryTable from '@/components/Tables/Inventory/inventory';
 import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
+import { FC } from 'react';
+import { useLocation } from 'react-router-dom';
+import { configureStore } from '@reduxjs/toolkit';
+
+// interface DashboardProps {
+// 	state: Array<unknown>;
+// }
 
 export const Dashboard = () => {
+	const { state } = useLocation();
+	console.log(state);
+	
 	return (
-		<LayoutWrapper>
+		<LayoutWrapper >
 			<div className="flex h-screen flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard

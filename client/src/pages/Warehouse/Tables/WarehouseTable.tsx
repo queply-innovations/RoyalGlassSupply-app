@@ -116,6 +116,12 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 						);
 					})}
 				</tbody>
+				{/* <Pagination
+					currentPage={currentPage}
+					lastPage={lastPage}
+					maxLength={7}
+					setCurrentPage={setCurrentPage}
+					/> */}
 			</table>
 			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
@@ -178,11 +184,11 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 				</div>
 			</Modal>
 
-			{isLoading && (
+			{/* {isLoading && (
 				<div className="flex items-center justify-center">
 					Fetching Warehouse Information Data...
 				</div>
-			)}
+			)} */}
 		</>
 	);
 };

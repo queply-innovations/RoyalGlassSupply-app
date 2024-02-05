@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LoginForm from './LoginForm';
-import { Button } from '@/components';
+import { Button, Loading } from '@/components';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginTest = () => {

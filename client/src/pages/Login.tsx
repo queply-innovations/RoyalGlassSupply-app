@@ -20,7 +20,8 @@ export const Login = () => {
 			const data = await loginUser(username, password);
 			if (data) {
 				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
-				navigate('/Dashboard');
+				console.log(data);
+				navigate('/Dashboard', { state: data.datas[0] });
 			} else {
 				alert('Invalid username or password');
 			}
@@ -72,9 +73,6 @@ export const Login = () => {
 							Login
 						</Button>
 					</Form>
-					<Link to="/Dashboard">
-						<Button>Dashboard</Button>
-					</Link>
 					{/* <Link to="/Dashboard">
 						<Button>Register</Button>
 					</Link> */}

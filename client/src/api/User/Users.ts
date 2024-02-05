@@ -17,6 +17,14 @@ export const fetchUser = async (): Promise<User[]> => {
 	}
 };
 
+export const getUsers = () => {
+	return axios.get(`${API_URLS.USERS}`);
+};
+
+export const getUserRoles = () => {
+	return axios.get(`${API_URLS.USER_ROLES}`);
+}
+
 const fetchUserInformation = async (): Promise<{
 	user: User[];
 	user_roles: UserRoles[];

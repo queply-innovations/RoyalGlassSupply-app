@@ -1,14 +1,17 @@
-import { Button, Modal, Inputbox } from '@/components';
+import { Button, Modal, Inputbox, Pagination } from '@/components';
 import LayoutWrapper from '@/layouts/Layout';
 import { ProductForm, ProductTable } from '@pages/Products';
 import { useProducts, useProductsPrices } from '@/api/Products';
 import { useModal } from '@/utils/Modal';
+import { useState } from 'react';
+import { Loading } from '@/components/Loading';
 
 export const Products = () => {
 	const { data: products } = useProducts();
 	const { data: productPrices } = useProductsPrices();
 	// console.log('Product Data:', productPrices?.map(price => price.product_id));
 	// console.log('Product ID:', products?.map(product => product.id));
+	const [ notLoading, setNotLoading ] = useState(false);
 
 	const { isOpen, openModal, closeModal } = useModal();
 	// const mappedData = products?.map(product => {
@@ -43,45 +46,55 @@ export const Products = () => {
 
 			// Add other properties as needed
 		};
+		setNotLoading(true);
 	});
 	// console.log('combinedData:', combinedData);
+
+	const layout = (
+		<div className="flex h-full flex-col gap-y-4">
+			<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
+				Products
+			</h1>
+			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+				<div className="flex flex-row justify-between">
+					<Inputbox
+						placeholder="Search"
+						variant={'searchbar'}
+						buttonIcon={'outside'}
+						className="w-1/2"
+					/>
+					<div className="flex flex-row gap-3">
+						<Button fill={'green'} onClick={openModal}>
+							Add Products
+						</Button>
+					</div>
+				</div>
+				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+					<ProductTable data={combinedData} />
+					{/* <ProductPricesForm /> */}
+				</div>
+			</div>
+		</div>
+	);
+
+	const modal = (
+		<Modal
+			title={'Add Products'}
+			isOpen={isOpen}
+			onClose={closeModal}
+			closeButton
+		>
+			<ProductForm data={products} onClose={closeModal} />
+			{/* <ProductFormTable /> */}
+		</Modal>
+	);
 
 	return (
 		<>
 			<LayoutWrapper>
-				<div className="flex h-full flex-col gap-y-4">
-					<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
-						Products
-					</h1>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="flex flex-row justify-between">
-							<Inputbox
-								placeholder="Search"
-								variant={'searchbar'}
-								buttonIcon={'outside'}
-								className="w-1/2"
-							/>
-							<div className="flex flex-row gap-3">
-								<Button fill={'green'} onClick={openModal}>
-									Add Products
-								</Button>
-							</div>
-						</div>
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<ProductTable data={combinedData} />
-							{/* <ProductPricesForm /> */}
-						</div>
-					</div>
-				</div>
-				<Modal
-					title={'Add Products'}
-					isOpen={isOpen}
-					onClose={closeModal}
-					closeButton
-				>
-					<ProductForm data={products} onClose={closeModal} />
-					{/* <ProductFormTable /> */}
-				</Modal>
+				{!notLoading && <Loading />}
+				{notLoading && layout}
+				{notLoading && modal}
 			</LayoutWrapper>
 		</>
 	);
