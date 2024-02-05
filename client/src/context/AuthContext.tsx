@@ -1,19 +1,24 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
 import { UserResponse, getUserRole } from '@/features/auth';
 import { ReactNode, createContext, useContext, useState } from 'react';
+import storage from '@/utils/storage';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextProps {
 	user: number | null;
 	token: string | null;
 	authenticated: boolean | null;
 	role: string | null;
+	isLoggedIn: boolean;
 	login: (credentials: LoginCredentials) => Promise<UserResponse | null>;
+	logout: () => void;
 }
 
 interface AuthProviderProps {
 	children: ReactNode;
 }
 
+storage.clearLogIn();
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -22,12 +27,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		token: null,
 		authenticated: false,
 		role: null,
+		isLoggedIn: storage.getLogIn(),
 		login: async (credentials: LoginCredentials) => {
 			try {
 				const userResponse = await LoginUser(credentials);
 
 				if (!userResponse) {
-					console.error('Login failed: userResponse is undefined');
+					console.error('Login failed: userResponse is null');
 					return null;
 				}
 
@@ -43,17 +49,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 							token: userResponse.token,
 							authenticated: true,
 							role: userRole.title,
+							isLoggedIn: storage.setLogIn(),
 						};
-						console.log('LOGGED IN:', newAuth);
+						// console.log('LOGGED IN:', newAuth);
 						return newAuth;
 					});
 				}
-
 				return userResponse;
 			} catch (error) {
 				console.error('Login failed:', error);
 				return null;
 			}
+		},
+		logout: () => {
+			setAuth(prev => {
+				const newAuth = {
+					...prev,
+					user: null,
+					token: null,
+					authenticated: false,
+					role: null,
+					isLoggedIn: storage.clearLogIn(),
+				};
+				return newAuth;
+			});
 		},
 	});
 

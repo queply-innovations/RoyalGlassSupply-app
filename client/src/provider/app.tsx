@@ -2,7 +2,7 @@ import { Spinner } from '@/components/Loader';
 import { AuthProvider } from '@/context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense } from 'react';
-import { HashRouter, Routes } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 interface AppProviderProps {
 	children: ReactNode;
