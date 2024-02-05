@@ -32,7 +32,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 		{
 			title: 'Logout',
 			icon: <RiLogoutBoxRLine />,
-			link: '/',
+			link: '/app/dashboard',
 		},
 	];
 	const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -53,12 +53,12 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 						{icon}
 					</div>
 					<div className="navicon-dropdown flex flex-row items-center">
-						<span className="nav-title text-xs font-bold text-primary-dark-gray">
+						<span className="nav-title text-primary-dark-gray text-xs font-bold">
 							{title}
 						</span>
 						{dropdownVisible ? (
 							<>
-								<BiSolidUpArrow className="dropdown-arrow text-xs text-primary-dark-gray" />
+								<BiSolidUpArrow className="dropdown-arrow text-primary-dark-gray text-xs" />
 								<div className="dropdown-container absolute right-5 top-20 flex flex-col rounded-md bg-white p-4">
 									<ul className="dropdown-menu flex flex-col gap-y-2">
 										{accountMenu.map((item, index) => (
@@ -78,7 +78,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 								</div>
 							</>
 						) : (
-							<BiSolidDownArrow className="dropdown-arrow text-xs text-primary-dark-gray " />
+							<BiSolidDownArrow className="dropdown-arrow text-primary-dark-gray text-xs " />
 						)}
 					</div>
 				</>
@@ -87,7 +87,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 					<div className="navicon-container flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white hover:bg-gray-200">
 						{icon}
 					</div>
-					<span className="nav-title text-xs font-bold text-primary-dark-gray">
+					<span className="nav-title text-primary-dark-gray text-xs font-bold">
 						{title}
 					</span>
 				</>

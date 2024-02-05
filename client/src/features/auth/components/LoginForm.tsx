@@ -29,7 +29,13 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 	const onSubmit: SubmitHandler<FormFields> = async data => {
 		try {
 			await login(data);
-			onSuccess();
+
+			//TODO FIX AUTHENTICATION SETTING
+			if (login(data) === null) {
+				setError('password', { message: 'Invalid email or password' });
+			} else {
+				onSuccess();
+			}
 		} catch (error) {
 			setError('root', { message: 'Invalid email or password' });
 		}
