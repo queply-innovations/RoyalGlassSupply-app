@@ -3,8 +3,23 @@ import Logo from '/RGS-logo.png';
 import SidebarData from './SidebarData';
 import { useEffect, useState } from 'react';
 import { BiSolidRightArrow } from 'react-icons/bi';
+import { useAuth } from '@/context/AuthContext';
+import { Button } from '..';
+
+interface SidebarProps {
+	sidemenu: string;
+	overlay: boolean;
+	width: number;
+}
 
 export const Sidebar = () => {
+	const auth = useAuth();
+	const [sidebarProperties, setSidebarProperties] = useState<SidebarProps>({
+		sidemenu: 'hidden',
+		overlay: true,
+		width: 0,
+	});
+
 	const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
 	const [isOverlayHidden, setIsOverlayHidden] = useState(true);
 	const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -42,7 +57,7 @@ export const Sidebar = () => {
 		<div className="relative flex w-1/6 max-w-[250px] flex-row">
 			<aside className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-16 pt-10 shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
 				<div className="">
-					<Link to="/Dashboard">
+					<Link to="/app/dashboard">
 						<img src={Logo} alt="RoyalGlassSupply Logo" />
 					</Link>
 				</div>
@@ -93,6 +108,15 @@ export const Sidebar = () => {
 							)}
 						</li>
 					))}
+					<li className="sidebar-menu-row relative w-full cursor-pointer px-4 py-2 hover:bg-gray-200">
+						<div className="sidebar-row-container flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm">
+							<Link to={'/'}>
+								<Button fill={'red'} onClick={auth.logout}>
+									logout
+								</Button>
+							</Link>
+						</div>
+					</li>
 				</ul>
 			</aside>
 			<div
