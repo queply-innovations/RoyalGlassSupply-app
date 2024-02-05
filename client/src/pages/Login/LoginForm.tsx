@@ -1,8 +1,9 @@
 import { Button, Form } from '@/components';
-import { LoginUser } from '@/api/Login';
+import { LoginUser } from '@/features/auth/api/Login';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { fetchUserRoles } from '@/api/UserRole/UserRole';
 
 const schema = z.object({
 	email: z.string().email(),
@@ -23,14 +24,15 @@ const LoginForm = () => {
 
 	const onSubmit: SubmitHandler<FormFields> = async data => {
 		try {
-			const userData = await LoginUser(data.email, data.password);
+			const userData = await LoginUser(data);
 			if (userData) {
-				// TODO: save token to local storage?
-				const { user, token } = userData;
-				console.log('User:', user);
-				console.log('Token:', token);
+				const { user } = userData;
+				const userId = user.id;
+				const userRoles = await fetchUserRoles(userId);
+				console.log('User Roles:', userRoles);
+
+				//TODO: set userRoles to context and navigate to specific page per role
 			}
-			// await LoginUser(data.email, data.password);
 		} catch (error) {
 			setError('root', { message: 'Invalid email or password' });
 		}

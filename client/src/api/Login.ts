@@ -19,8 +19,11 @@ export const LoginUser = async (
 			email,
 			password,
 		});
-		console.log('Response', response.data);
-		return response.data as UserData;
+		const userData = response.data as UserData;
+
+		localStorage.setItem('BearerToken', userData.token);
+
+		return userData;
 	} catch (error) {
 		console.log('Error logging in:', error);
 		throw error;
