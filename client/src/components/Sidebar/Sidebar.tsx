@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from 'react';
 import { BiSolidRightArrow } from 'react-icons/bi';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '..';
+// import { useAuth } from '@/context/__test__AuthContext';
 
 interface SidebarProps {
 	sidemenu: string;
@@ -17,7 +18,7 @@ interface SidebarProps {
 // }
 
 export const Sidebar = () => {
-	const auth = useAuth();
+	const { logout } = useAuth();
 	const [sidebarProperties, setSidebarProperties] = useState<SidebarProps>({
 		sidemenu: 'hidden',
 		overlay: true,
@@ -117,7 +118,7 @@ export const Sidebar = () => {
 					<li className="sidebar-menu-row relative w-full cursor-pointer px-4 py-2 hover:bg-gray-200">
 						<div className="sidebar-row-container flex cursor-pointer items-center gap-x-4 p-2 px-5 text-sm">
 							<Link to={'/'}>
-								<Button fill={'red'} onClick={auth.logout}>
+								<Button fill={'red'} onClick={logout}>
 									logout
 								</Button>
 							</Link>

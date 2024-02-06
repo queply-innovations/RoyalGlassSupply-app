@@ -1,20 +1,27 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Layout } from '../components/Layout';
 import { LoginForm } from '../components/LoginForm';
-import storage from '@/utils/storage';
+// import storage from '@/utils/storage';
+// import { useAuth } from '@/context/__test__AuthContext';
+import { useAuth } from '@/context/AuthContext';
+import { useEffect } from 'react';
 
 export const Login = () => {
 	const navigate = useNavigate();
-	const loggedIn = storage.getLogIn();
-	console.log('loggedIn:', loggedIn);
+	const { auth, logout } = useAuth();
+	// logout;
+	// const location = useLocation();
+	// useEffect(() => {
+	// console.log('location:', location);
+	// 	console.log('user:', auth.user);
+	// }, [auth, location]);
+
 	return (
 		<Layout>
 			<LoginForm
 				onSuccess={() => {
-					if (loggedIn === true) {
-						navigate('/app/dashboard');
-					}
+					navigate('/dashboard');
 				}}
 			/>
 		</Layout>

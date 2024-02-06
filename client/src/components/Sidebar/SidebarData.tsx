@@ -16,11 +16,11 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'User Information',
-				link: '/app/user/information',
+				link: 'user/information',
 			},
 			{
 				title: 'User Sales',
-				link: '/app/user/sales',
+				link: 'user/sales',
 			},
 		],
 	},
@@ -30,15 +30,15 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'Pending Inventory',
-				link: '/app/pending/inventory',
+				link: 'pending/inventory',
 			},
 			{
 				title: 'Pending Transfer',
-				link: '/app/pending/transfer',
+				link: 'pending/transfer',
 			},
 			{
 				title: 'Pending Return',
-				link: '/app/pending/return',
+				link: 'pending/return',
 			},
 		],
 	},
@@ -48,53 +48,53 @@ export const SidebarData = [
 		subMenu: [
 			{
 				title: 'Transaction',
-				link: '/app/transaction',
+				link: 'transaction',
 			},
 			{
 				title: 'Expenses',
-				link: '/app/transaction/expenses',
+				link: 'transaction/expenses',
 			},
 		],
 	},
 	{
 		title: 'Transfer',
 		icon: <TransferIcon />,
-		link: '/app/transfer',
+		link: 'transfer',
 	},
 	{
 		title: 'Return',
 		icon: <ReturnIcon />,
-		link: '/app/return',
+		link: 'return',
 	},
 	{
 		title: 'Inventory',
 		icon: <InventoryIcon />,
-		link: '/app/inventory',
+		link: 'inventory',
 	},
 	{
 		title: 'Finance',
 		icon: <FinanceIcon />,
-		link: '/app/finance',
+		link: 'finance',
 	},
 	{
 		title: 'Reports',
 		icon: <ReportIcon />,
-		link: '/app/reports',
+		link: 'reports',
 	},
 	{
 		title: 'Warehouse',
 		icon: <TransferIcon />,
-		link: '/app/warehouse',
+		link: 'warehouse',
 	},
 	{
 		title: 'Supplier',
 		icon: <UserIcon />,
-		link: '/app/supplier',
+		link: 'supplier',
 	},
 	{
 		title: 'Products',
 		icon: <InventoryIcon />,
-		link: '/app/products',
+		link: 'products',
 	},
 ];
 

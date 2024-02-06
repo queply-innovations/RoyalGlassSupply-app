@@ -9,10 +9,10 @@ import { LoginTest } from './Login/Login';
 export const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
-	const { data: userInformation } = useFetchUserInformation();
-	console.log(userInformation);
+	// const { data: userInformation } = useFetchUserInformation();
+	// console.log(userInformation);
 
 	const { data } = useUserInfo();
 	const handleLogin = async () => {
