@@ -11,13 +11,13 @@ const AppRoute = () => {
 	// const location = useLocation();
 	// console.log('location:', location);
 
-	useEffect(() => {
-		if (!auth.isLoggedIn) {
-			navigate('/');
-		} else {
-			navigate('/app/dashboard');
-		}
-	}, [auth.isLoggedIn, navigate]);
+	// useEffect(() => {
+	// 	if (!auth.isLoggedIn) {
+	// 		navigate('/');
+	// 	} else {
+	// 		navigate('/app/dashboard');
+	// 	}
+	// }, [auth.isLoggedIn, navigate]);
 
 	const commonRoute = [{ path: '/', element: <Login /> }];
 	const routes = auth.isLoggedIn ? protectedRoutes : commonRoute;
