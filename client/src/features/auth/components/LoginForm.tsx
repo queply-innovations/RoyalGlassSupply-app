@@ -2,6 +2,7 @@ import { Button, Form } from '@/components';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+// import { useAuth } from '@/context/__test__AuthContext';
 import { useAuth } from '@/context/AuthContext';
 
 const schema = z.object({
@@ -16,29 +17,19 @@ interface LoginFormProps {
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 	const { login } = useAuth();
-
 	const {
 		register,
 		handleSubmit,
 		setError,
+		reset,
 		formState: { errors, isSubmitting },
 	} = useForm<FormFields>({
 		resolver: zodResolver(schema),
 	});
 
-	const onSubmit: SubmitHandler<FormFields> = async data => {
-		try {
-			await login(data);
-
-			//TODO FIX AUTHENTICATION SETTING
-			if (login(data) === null) {
-				setError('password', { message: 'Invalid email or password' });
-			} else {
-				onSuccess();
-			}
-		} catch (error) {
-			setError('root', { message: 'Invalid email or password' });
-		}
+	const onSubmit: SubmitHandler<FormFields> = async (data: FormFields) => {
+		await login(data);
+		onSuccess();
 	};
 
 	return (

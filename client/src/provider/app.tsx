@@ -1,5 +1,7 @@
 import { Spinner } from '@/components/Loader';
-import { AuthProvider } from '@/context/AuthContext';
+// import { AuthProvider } from '@/context/__test__AuthContext';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense } from 'react';
 import { HashRouter } from 'react-router-dom';

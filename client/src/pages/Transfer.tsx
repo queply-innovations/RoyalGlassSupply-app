@@ -4,7 +4,7 @@ import UserInfoTable from '@/components/Tables/User/__test__/UserInfoTable';
 import LayoutWrapper from '@/layouts/Layout';
 import React from 'react';
 
-const Transfer = () => {
+export const Transfer = () => {
 	return (
 		<LayoutWrapper>
 			<div className="flex flex-auto flex-col gap-y-4">
@@ -45,5 +45,3 @@ const Transfer = () => {
 		</LayoutWrapper>
 	);
 };
-
-export default Transfer;
