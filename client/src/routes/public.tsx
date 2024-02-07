@@ -1,4 +1,5 @@
 import { Spinner } from '@/components/Loader';
+import { Loading } from '@/components/Loading';
 import { useAuth } from '@/context/AuthContext';
 import { Login } from '@/features/auth';
 import { Suspense, useEffect } from 'react';
@@ -15,7 +16,8 @@ const App = () => {
 		<Suspense
 			fallback={
 				<div className="flex h-full w-full items-center justify-center">
-					<Spinner size="xl" />
+					{/* <Spinner size="xl" /> */}
+					<Loading />
 				</div>
 			}
 		>

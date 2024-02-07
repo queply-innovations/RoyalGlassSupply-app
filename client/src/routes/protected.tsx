@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import { Spinner } from '@/components/Loader';
+import { Loading } from '@/components/Loading';
 import { lazyImport } from '@/utils/lazyImport';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
@@ -32,7 +33,8 @@ const App = () => {
 		<Suspense
 			fallback={
 				<div className="flex h-full w-full items-center justify-center">
-					<Spinner size="xl" />
+					{/* <Spinner size="xl" /> */}
+					<Loading />
 				</div>
 			}
 		>

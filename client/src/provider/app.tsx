@@ -1,4 +1,5 @@
 import { Spinner } from '@/components/Loader';
+import { Loading } from '@/components/Loading';
 // import { AuthProvider } from '@/context/__test__AuthContext';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 
@@ -16,7 +17,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		<Suspense
 			fallback={
 				<div className="flex h-screen w-screen items-center justify-center">
-					<Spinner size="xl" />
+					{/* <Spinner size="xl" /> */}
+					<Loading />
 				</div>
 			}
 		>
