@@ -84,10 +84,12 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/return-transactions/searches-filters-sorts', [ReturnTransactionController::class, 'searchFilterAndSort']);
     Route::post('/return-transaction-items/searches-filters-sorts', [ReturnTransactionItemController::class, 'searchFilterAndSort']);
     Route::post('/roles/searches-filters-sorts', [RoleController::class, 'searchFilterAndSort']);
+    Route::post('/role-permissions/searches-filters-sorts', [RolePermissionController::class, 'searchFilterAndSort']);
     Route::post('/suppliers/searches-filters-sorts', [SupplierController::class, 'searchFilterAndSort']);
     Route::post('/transfers/searches-filters-sorts', [TransferController::class, 'searchFilterAndSort']);
     Route::post('/transfer-products/searches-filters-sorts', [TransferProductController::class, 'searchFilterAndSort']);
     Route::post('/users/searches-filters-sorts', [UserController::class, 'searchFilterAndSort']);
+    Route::post('/user-roles/searches-filters-sorts', [UserRoleController::class, 'searchFilterAndSort']);
     Route::post('/vouchers/searches-filters-sorts', [VoucherController::class, 'searchFilterAndSort']);
     Route::post('/warehouses/searches-filters-sorts', [WarehouseController::class, 'searchFilterAndSort']);
 });

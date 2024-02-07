@@ -17,6 +17,11 @@ class UserRole extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'user:id,firstname,lastname,position',
+        'role'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
