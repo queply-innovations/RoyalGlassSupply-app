@@ -41,14 +41,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 		// 	ref.current.complete();
 		// 	// setLoading(false);
 		// }, 4000);
-
-		
 	};
 
 	const loading = (
-		<div className="flex flex-col w-full px-20 space-y-0 justify-center items-center">
+		<div className="flex w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className='text-primary-dark-gray text-2xl font-bold'>Checking you in....</h2>
+			<h2 className="text-primary-dark-gray text-2xl font-bold">
+				Checking you in....
+			</h2>
 		</div>
 	);
 
@@ -61,9 +61,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 				placeholder="Email"
 			/>
 			{errors.email && (
-				<div className="text-base text-red-500">
-					{errors.email.message}
-				</div>
+				<div className="text-base text-red-500">{errors.email.message}</div>
 			)}
 			<input
 				className="w-full rounded-lg border border-gray-300 p-2"
@@ -76,20 +74,20 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 					{errors.password.message}
 				</div>
 			)}
-			<Button type="submit" disabled={isSubmitting} fill={'green'}>
-				Login
+			<Button
+				type="submit"
+				disabled={isSubmitting}
+				fill={'green'}
+				className="mt-3 w-full"
+			>
+				Log In
+				<input type="submit" hidden />
 			</Button>
 			{errors.root && (
-				<div className="text-base text-red-500">
-					{errors.root.message}
-				</div>
+				<div className="text-base text-red-500">{errors.root.message}</div>
 			)}
 		</Form>
 	);
 
-	return (
-		<>
-			{isSubmitting ? loading : layout}
-		</>
-	);
+	return <>{isSubmitting ? loading : layout}</>;
 };
