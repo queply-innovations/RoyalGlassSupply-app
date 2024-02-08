@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export const ProgressBar = () => {
-	const [completed, setCompleted] = useState(30);
+	const [completed, setCompleted] = useState(Math.floor(Math.random() * 10) + 1);
 
 	const containerStyles = {
 		height: 20,
@@ -28,14 +28,11 @@ export const ProgressBar = () => {
 
 	useEffect(() => {
 		const changing = setInterval(() => {
-			setCompleted(completed + Math.floor(Math.random() * 10));
+			setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
 		}, 2000);
 
 		return () => clearInterval(changing);
 
-		// if (completed === 100) {
-		// 	return setCompleted(0);
-		// }
 	}, [completed]);
 
 	return (
