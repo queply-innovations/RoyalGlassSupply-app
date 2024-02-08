@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RolePermission;
 use App\Http\Resources\RolePermissionCollection;
+use App\Http\Resources\RolePermissionResource;
 use Illuminate\Http\Request;
 
 class RolePermissionController extends Controller
@@ -30,7 +31,9 @@ class RolePermissionController extends Controller
      */
     public function store(Request $request)
     {
-        return RolePermission::create($request->all());
+        $rolePermission = RolePermission::create($request->all());
+
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -38,7 +41,7 @@ class RolePermissionController extends Controller
      */
     public function show(RolePermission $rolePermission)
     {
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -46,7 +49,7 @@ class RolePermissionController extends Controller
      */
     public function edit(RolePermission $rolePermission)
     {
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -56,7 +59,7 @@ class RolePermissionController extends Controller
     {
         $rolePermission->update($request->all());
 
-        return $rolePermission;
+        return new RolePermissionResource($rolePermission);
     }
 
     /**
@@ -67,5 +70,41 @@ class RolePermissionController extends Controller
         $rolePermission->delete();
 
         return new RolePermissionCollection(RolePermission::all());
+    }
+
+    /**
+     * Display a listing of the filtered collection.
+     */
+    public function searchFilterAndSort(Request $request)
+    {
+
+        //returns a filtered list of permissions of a particular role
+        $query = RolePermission::where('role_id', $request->role_id);
+
+        if(!empty($request->search)){
+            foreach($request->search as $search_key => $search_value){
+                $query->where($search_key, 'like', '%'.$search_value.'%');
+            }
+        }
+        
+        if(!empty($request->filter)){
+            foreach($request->filter as $filter_key => $filter_value){
+                $query->where($filter_key, $filter_value);
+            }
+        }
+
+        if(!empty($request->date_range)){
+            foreach($request->date_range as $date_range_key => $date_range_value){
+                $query->whereBetween($date_range_key, [$date_range_value['from'].' 00:00:00', $date_range_value['to'].' 23:59:59']);
+            }
+        }
+
+        if(!empty($request->sort)){
+            foreach($request->sort as $sort_key => $sort_value){
+                $query->orderBy($sort_key, $sort_value);
+            }
+        }
+
+        return new RolePermissionCollection($query->get());
     }
 }

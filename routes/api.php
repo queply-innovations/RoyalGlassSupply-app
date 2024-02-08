@@ -39,10 +39,6 @@ use App\Http\Controllers\WarehouseController;
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::resources([
         'customers' => CustomerController::class,
@@ -62,11 +58,38 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         'suppliers' => SupplierController::class,
         'transfers' => TransferController::class,
         'transfer-products' => TransferProductController::class,
-        'user' => UserController::class,
+        'users' => UserController::class,
         'user-roles' => UserRoleController::class,
         'vouchers' => VoucherController::class,
         'warehouses' => WarehouseController::class,
     ]);
 
     Route::post('/logout', [UserController::class, 'logout']);
+
+    Route::get('/inventories/{inventory}/show-items', [InventoryController::class, 'showItems']);
+    Route::get('/invoices/{invoice}/show-items', [InvoiceController::class, 'showItems']);
+    Route::get('/return-transactions/{returnTransaction}/show-items', [ReturnTransactionController::class, 'showItems']);
+    Route::get('/transfers/{transfer}/show-items', [TransferController::class, 'showItems']);
+
+    Route::post('/customers/searches-filters-sorts', [CustomerController::class, 'searchFilterAndSort']);
+    Route::post('/inventories/searches-filters-sorts', [InventoryController::class, 'searchFilterAndSort']);
+    Route::post('/inventory-products/searches-filters-sorts', [InventoryProductController::class, 'searchFilterAndSort']);
+    Route::post('/invoices/searches-filters-sorts', [InvoiceController::class, 'searchFilterAndSort']);
+    Route::post('/invoice-discounts/searches-filters-sorts', [InvoiceDiscountController::class, 'searchFilterAndSort']);
+    Route::post('/invoice-items/searches-filters-sorts', [InvoiceItemController::class, 'searchFilterAndSort']);
+    Route::post('/invoice-taxes/searches-filters-sorts', [InvoiceTaxController::class, 'searchFilterAndSort']);
+    Route::post('/permissions/searches-filters-sorts', [PermissionController::class, 'searchFilterAndSort']);
+    Route::post('/products/searches-filters-sorts', [ProductController::class, 'searchFilterAndSort']);
+    Route::post('/product-prices/searches-filters-sorts', [ProductPriceController::class, 'searchFilterAndSort']);
+    Route::post('/return-transactions/searches-filters-sorts', [ReturnTransactionController::class, 'searchFilterAndSort']);
+    Route::post('/return-transaction-items/searches-filters-sorts', [ReturnTransactionItemController::class, 'searchFilterAndSort']);
+    Route::post('/roles/searches-filters-sorts', [RoleController::class, 'searchFilterAndSort']);
+    Route::post('/role-permissions/searches-filters-sorts', [RolePermissionController::class, 'searchFilterAndSort']);
+    Route::post('/suppliers/searches-filters-sorts', [SupplierController::class, 'searchFilterAndSort']);
+    Route::post('/transfers/searches-filters-sorts', [TransferController::class, 'searchFilterAndSort']);
+    Route::post('/transfer-products/searches-filters-sorts', [TransferProductController::class, 'searchFilterAndSort']);
+    Route::post('/users/searches-filters-sorts', [UserController::class, 'searchFilterAndSort']);
+    Route::post('/user-roles/searches-filters-sorts', [UserRoleController::class, 'searchFilterAndSort']);
+    Route::post('/vouchers/searches-filters-sorts', [VoucherController::class, 'searchFilterAndSort']);
+    Route::post('/warehouses/searches-filters-sorts', [WarehouseController::class, 'searchFilterAndSort']);
 });

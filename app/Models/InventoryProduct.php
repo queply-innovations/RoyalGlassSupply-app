@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InventoryProduct extends Model
 {
@@ -21,6 +23,11 @@ class InventoryProduct extends Model
     ];
 
     public $timestamps = false;
+
+    protected $with = [
+        'product:id,name,size,color',
+        'supplier:id,name'
+    ];
 
     public function transferProducts(): HasMany
     {

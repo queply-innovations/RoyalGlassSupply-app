@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductPrice;
 use App\Http\Resources\ProductPriceCollection;
+use App\Http\Resources\ProductPriceResource;
 use Illuminate\Http\Request;
 
 class ProductPriceController extends Controller
@@ -30,7 +31,9 @@ class ProductPriceController extends Controller
      */
     public function store(Request $request)
     {
-        return ProductPrice::create($request->all());
+        $productPrice = ProductPrice::create($request->all());
+
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -38,7 +41,7 @@ class ProductPriceController extends Controller
      */
     public function show(ProductPrice $productPrice)
     {
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -46,7 +49,7 @@ class ProductPriceController extends Controller
      */
     public function edit(ProductPrice $productPrice)
     {
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -56,7 +59,7 @@ class ProductPriceController extends Controller
     {
         $productPrice->update($request->all());
 
-        return $productPrice;
+        return new ProductPriceResource($productPrice);
     }
 
     /**
@@ -67,5 +70,39 @@ class ProductPriceController extends Controller
         $productPrice->delete();
         
         return new ProductPriceCollection(ProductPrice::all());
+    }
+
+    /**
+     * Display a listing of the filtered collection.
+     */
+    public function searchFilterAndSort(Request $request)
+    {
+        $query = ProductPrice::whereNotNull('id');
+
+        if(!empty($request->search)){
+            foreach($request->search as $search_key => $search_value){
+                $query->where($search_key, 'like', '%'.$search_value.'%');
+            }
+        }
+        
+        if(!empty($request->filter)){
+            foreach($request->filter as $filter_key => $filter_value){
+                $query->where($filter_key, $filter_value);
+            }
+        }
+
+        if(!empty($request->date_range)){
+            foreach($request->date_range as $date_range_key => $date_range_value){
+                $query->whereBetween($date_range_key, [$date_range_value['from'].' 00:00:00', $date_range_value['to'].' 23:59:59']);
+            }
+        }
+
+        if(!empty($request->sort)){
+            foreach($request->sort as $sort_key => $sort_value){
+                $query->orderBy($sort_key, $sort_value);
+            }
+        }
+
+        return new ProductPriceCollection($query->get());
     }
 }
