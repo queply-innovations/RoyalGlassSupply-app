@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconPending = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconPending = () => {
 		</svg>
 	);
 };
-
 export default iconPending;

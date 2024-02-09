@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconUser = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconUser = () => {
 		</svg>
 	);
 };
-
 export default iconUser;

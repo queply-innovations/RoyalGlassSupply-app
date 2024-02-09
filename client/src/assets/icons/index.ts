@@ -1,0 +1,9 @@
+export { default as FinanceIcon } from './iconFinance';
+export { default as InventoryIcon } from './iconInventory';
+export { default as PendingIcon } from './iconPending';
+export { default as ReportIcon } from './iconReports';
+export { default as ReturnIcon } from './iconReturn';
+export { default as SuccessIcon } from './iconSuccess';
+export { default as TransactionIcon } from './iconTransaction';
+export { default as TransferIcon } from './iconTransfer';
+export { default as UserIcon } from './iconUser';
