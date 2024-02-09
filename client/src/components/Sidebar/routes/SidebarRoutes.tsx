@@ -106,4 +106,25 @@ export const SidebarRoute: SidebarRoutes[] = [
 			icon: <ReportIcon />,
 		},
 	},
+	{
+		path: '/warehouse',
+		sidebarProps: {
+			displayText: 'Warehouse',
+			icon: <TransferIcon />,
+		},
+	},
+	{
+		path: '/supplier',
+		sidebarProps: {
+			displayText: 'Supplier',
+			icon: <UserIcon />,
+		},
+	},
+	{
+		path: '/products',
+		sidebarProps: {
+			displayText: 'Products',
+			icon: <InventoryIcon />,
+		},
+	},
 ];
