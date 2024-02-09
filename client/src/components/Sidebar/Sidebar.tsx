@@ -18,7 +18,7 @@ interface SidebarProps {
 // }
 
 export const Sidebar = () => {
-	const { logout } = useAuth();
+	const { auth, logout } = useAuth();
 	const [sidebarProperties, setSidebarProperties] = useState<SidebarProps>({
 		sidemenu: 'hidden',
 		overlay: true,
@@ -122,6 +122,12 @@ export const Sidebar = () => {
 									logout
 								</Button>
 							</Link>
+							<Button
+								fill={'green'}
+								onClick={() => {
+									console.log('auth:', auth);
+								}}
+							></Button>
 						</div>
 					</li>
 				</ul>
