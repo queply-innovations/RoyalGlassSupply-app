@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconInventory = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconInventory = () => {
 		</svg>
 	);
 };
-
 export default iconInventory;

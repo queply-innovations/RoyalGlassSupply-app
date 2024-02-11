@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconTransaction = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconTransaction = () => {
 		</svg>
 	);
 };
-
 export default iconTransaction;

@@ -10,5 +10,4 @@ const iconSuccess = () => {
 		</svg>
 	);
 };
-
 export default iconSuccess;
