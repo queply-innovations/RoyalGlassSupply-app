@@ -41,34 +41,9 @@ const App = () => {
 	);
 };
 
-// export const protectedRoutes = [
-// 	{
-// 		path: '/app',
-// 		element: <App />,
-// 		children: [
-// 			{ path: '*', element: <Navigate to="." /> },
-// 			{ path: 'dashboard', element: <Dashboard /> },
-// 			{ path: 'user/information', element: <UserInfo /> },
-// 			{ path: 'user/sales', element: <UserSales /> },
-// 			{ path: 'pending/inventory', element: <PendingInventory /> },
-// 			{ path: 'pending/return', element: <PendingReturn /> },
-// 			{ path: 'pending/transfer', element: <PendingTransfer /> },
-// 			{ path: 'transfer', element: <Transfer /> },
-// 			{ path: 'transaction', element: <Transaction /> },
-// 			{ path: 'transaction/expenses', element: <Expenses /> },
-// 			{ path: 'return', element: <Return /> },
-// 			{ path: 'inventory', element: <Inventory /> },
-// 			{ path: 'finance', element: <Finance /> },
-// 			{ path: 'reports', element: <Reports /> },
-// 			{ path: 'warehouse', element: <Warehouse /> },
-// 			{ path: 'products', element: <Products /> },
-// 			{ path: 'supplier', element: <Supplier /> },
-// 		],
-// 	},
-// ];
-
 const protectedRoutesConfig = [
 	// { path: '*', element: <Navigate to="." /> },
+	{ path: '/', element: <Navigate to="/dashboard" /> },
 	{ path: '/dashboard', element: <Dashboard /> },
 	{ path: '/user/information', element: <UserInfo /> },
 	{ path: '/user/sales', element: <UserSales /> },

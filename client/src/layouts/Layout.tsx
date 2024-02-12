@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/Navbar/Navbar';
-import Sidebar from '@/components/Sidebar/Sidebar';
+import Sidebar from '@/components/Sidebar/__test__/Sidebar';
+// import Sidebar from '@/components/Sidebar/Sidebar';
 import { cn } from '@/utils/cn.utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import { FC, HTMLAttributes, ReactNode } from 'react';
@@ -31,7 +32,7 @@ const LayoutWrapper: FC<LayoutProps> = ({
 }) => {
 	// console.log(state);
 	// console.log("layout");
-	
+
 	return (
 		<>
 			<div className="flex h-screen w-screen overflow-hidden">

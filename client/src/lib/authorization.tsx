@@ -1,4 +1,4 @@
-import { useUserContext } from '@/features/auth/context/AuthContext';
+// import { useUserContext } from '@/features/auth/context/AuthContext';
 import { Roles } from '@/features/auth/types';
 import { useCallback } from 'react';
 
@@ -121,22 +121,22 @@ export const POLICIES = {
 		),
 };
 
-export const useAuthorization = () => {
-	const user = useUserContext();
+// export const useAuthorization = () => {
+// 	const user = useUserContext();
 
-	if (!user) {
-		throw Error('User does not exist!');
-	}
-	const checkAccess = useCallback(
-		({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
-			if (allowedRoles && allowedRoles.length > 0) {
-				return allowedRoles?.includes(user.title as RoleTypes);
-			}
+// 	if (!user) {
+// 		throw Error('User does not exist!');
+// 	}
+// 	const checkAccess = useCallback(
+// 		({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
+// 			if (allowedRoles && allowedRoles.length > 0) {
+// 				return allowedRoles?.includes(user.title as RoleTypes);
+// 			}
 
-			return true;
-		},
-		[user.title],
-	);
+// 			return true;
+// 		},
+// 		[user.title],
+// 	);
 
-	return { checkAccess, role: user.title };
-};
+// 	return { checkAccess, role: user.title };
+// };

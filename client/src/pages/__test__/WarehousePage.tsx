@@ -1,12 +1,12 @@
-import { WarehouseProvider } from '../context/WarehouseContext';
-import { ContentLayout } from '@/components/Layout/ContentLayout';
 import { Button, Inputbox } from '@/components';
-import WarehouseTable from '../components/WarehouseTable';
+import { WarehouseTable } from '@/features/warehouse/__test__/components/WarehouseTable';
+import { WarehouseProvider } from '@/features/warehouse/__test__/context/WarehouseContext';
+import { MainLayout } from '@/layouts/MainLayout';
 
 export const Warehouse = () => {
 	return (
 		<>
-			<ContentLayout title="Warehouse">
+			<MainLayout title="Warehouse">
 				<WarehouseProvider>
 					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="flex flex-row justify-between">
@@ -30,7 +30,7 @@ export const Warehouse = () => {
 						</div>
 					</div>
 				</WarehouseProvider>
-			</ContentLayout>
+			</MainLayout>
 		</>
 	);
 };

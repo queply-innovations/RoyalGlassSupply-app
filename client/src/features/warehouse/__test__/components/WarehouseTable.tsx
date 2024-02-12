@@ -4,7 +4,7 @@ import { FaPencilAlt } from 'react-icons/fa';
 
 interface WarehouseTableProps {}
 
-const WarehouseTable = ({}: WarehouseTableProps) => {
+export const WarehouseTable = ({}: WarehouseTableProps) => {
 	const warehouse = useWarehouseContext();
 
 	const WarehouseTableHeader: string[] = [
@@ -70,4 +70,3 @@ const WarehouseTable = ({}: WarehouseTableProps) => {
 		</>
 	);
 };
-export default WarehouseTable;

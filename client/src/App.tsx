@@ -1,6 +1,6 @@
 import { AppProvider } from './provider/app';
 // import AppRoutes from './routes';
-// import AppRouter from './routes/root';
+import AppRouter from './routes/root';
 import { TestRoute } from './routes/testRoute';
 
 function App() {
@@ -9,9 +9,9 @@ function App() {
 			{/* <AppRoutes /> */}
 
 			{/*
-            <AppRouter />
             uncomment this to preview the app routes
             */}
+			<AppRouter />
 
 			{/*
             added testroutes to bypass auth
@@ -20,7 +20,7 @@ function App() {
 
             //! PANG TEST LANG NI
             */}
-			<TestRoute />
+			{/* <TestRoute /> */}
 		</AppProvider>
 	);
 }

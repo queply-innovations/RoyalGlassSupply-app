@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext } from 'react';
 
 import { Warehouse } from '../types';
-import { useWarehouses } from '@/api/Warehouse';
+import { useWarehouseQuery } from '../../__test__/hooks';
 
 export const WarehouseContext = createContext<Warehouse[] | undefined>(
 	undefined,
@@ -12,7 +12,7 @@ interface WarehouseProviderProps {
 }
 
 export const WarehouseProvider = ({ children }: WarehouseProviderProps) => {
-	const { data: warehouse } = useWarehouses();
+	const { data: warehouse } = useWarehouseQuery();
 
 	return (
 		<WarehouseContext.Provider value={warehouse}>
