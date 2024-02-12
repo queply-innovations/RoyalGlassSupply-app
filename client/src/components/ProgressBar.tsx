@@ -27,17 +27,18 @@ export const ProgressBar = () => {
 	}
 
 	useEffect(() => {
-		const changing = setInterval(() => {
-			setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
-		}, 2000);
+		if (completed <= 90) {
+			const changing = setInterval(() => {
+				setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
+			}, 500); 
 
-		return () => clearInterval(changing);
-
+			return () => clearInterval(changing);
+		}
 	}, [completed]);
 
 	return (
 		<div style={containerStyles}>
-			<div style={fillerStyles}>
+			<div style={fillerStyles} className="progress-bar progress-bar-animated">
 				<span style={labelStyles}>{completed}%</span>
 			</div>
 		</div>
