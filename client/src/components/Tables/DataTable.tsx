@@ -5,7 +5,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table"
 
-	import {
+import {
 	Table,
 	TableBody,
 	TableCell,

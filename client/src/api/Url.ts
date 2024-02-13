@@ -10,4 +10,5 @@ export const API_URLS = {
 	ROLE_PERMISSIONS: `${API_BASE_URL}/role_permissions`,
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
 	LOGIN: `${API_BASE_URL}/login`,
+	WAREHOUSES: `${API_BASE_URL}/warehouses`,
 };

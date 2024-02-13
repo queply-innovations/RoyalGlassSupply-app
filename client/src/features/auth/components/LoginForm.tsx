@@ -46,7 +46,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 	const loading = (
 		<div className="flex w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className="text-primary-dark-gray text-2xl font-bold">
+			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
 				Checking you in....
 			</h2>
 		</div>

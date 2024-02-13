@@ -21,7 +21,7 @@ export const Login = () => {
 		<Layout>
 			<LoginForm
 				onSuccess={() => {
-					navigate('/dashboard');
+					navigate('/app/dashboard');
 				}}
 			/>
 		</Layout>
