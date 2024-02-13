@@ -1,8 +1,8 @@
-import { Modal, Button, Inputbox, Pagination, Loading } from '@/components';
+import { Modal, Button, Inputbox, Pagination, ProgressBar } from '@/components';
 // import Pagination from '@/components/Pagination';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
-import { getWarehouses } from '@/api/Warehouse';
+import { getWarehouses } from '@/features/auth/api/getWarehouses';
 import { useModal } from '@/utils/Modal';
 import { FC, useEffect, useState } from 'react';
 // import axios from 'axios';
@@ -24,7 +24,7 @@ export const Warehouse = () => {
 		async function gettingWarehouses(){
 			try {
 				const data2 = await getWarehouses();
-				setData(data2.data);
+				setData(data2.data.data);
 				setNotLoading(true);
 			} catch (error) {
 				console.log(error);
@@ -57,11 +57,14 @@ export const Warehouse = () => {
 				</div>
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 					<WarehouseTable data={currentRecords} />
-					<Pagination
-						nPages={nPages}
-						currentPage={currentPage}
-						setCurrentPage={setCurrentPage}
-					/>
+					{!(data.length === 0) && (
+						<Pagination
+							nPages={nPages}
+							currentPage={currentPage}
+							setCurrentPage={setCurrentPage}
+						/>
+					)}
+					
 				</div>
 			</div>
 		</div>
@@ -79,10 +82,19 @@ export const Warehouse = () => {
 		</Modal>
 	);
 
+	const loading = (
+		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+			<ProgressBar />
+			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+				Loading Warehouses...
+			</h2>
+		</div>
+	);
+
 	return (
 		<>
 			<LayoutWrapper >
-				{!notLoading && <Loading />}
+				{!notLoading && loading}
 				{notLoading && layout}
 				{notLoading && modal}
 			</LayoutWrapper>

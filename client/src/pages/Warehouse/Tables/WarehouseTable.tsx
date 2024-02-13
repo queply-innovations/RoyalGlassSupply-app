@@ -67,53 +67,61 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 					</tr>
 				</thead>
 				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.map((warehouse: any) => {
-						const handleCheckboxChange = (
-							event: ChangeEvent<HTMLInputElement>,
-						) => {
-							if (event.target.checked) {
-								console.log(
-									'Checkbox checked for warehouse ID:',
-									warehouse,
-								);
-							}
-						};
+					{data.length == 0 ? 
+						// if data is empty
+						<tr className="text-center items-center"> 
+							<td colSpan={5} className="py-4 font-bold">
+								No warehouses available.
+							</td> 
+						</tr> 
+						: //otherwise:
+						data?.map((warehouse: any) => {
+							const handleCheckboxChange = (
+								event: ChangeEvent<HTMLInputElement>,
+							) => {
+								if (event.target.checked) {
+									console.log(
+										'Checkbox checked for warehouse ID:',
+										warehouse,
+									);
+								}
+							};
 
-						return (
-							<tr key={warehouse.id} className="text-center">
-								<td className="w-16">
-									<input
-										type="checkbox"
-										onChange={handleCheckboxChange}
-									/>
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									<span>{warehouse.id}</span>
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{warehouse.warehouse_name}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{warehouse.location}
-								</td>
-								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
-									<Button
-										fill={'empty'}
-										textColor={'black'}
-										onClick={() => handleUpdateModal(warehouse)}
-										className="flex flex-row items-center gap-2"
-									>
-										<FaPencilAlt /> Edit
-									</Button>
-									<Button
-										fill={'red'}
-										onClick={() => handleRemoveWarehouse(warehouse)}
-									>
-										Remove
-									</Button>
-								</td>
-							</tr>
-						);
+							return (
+								<tr key={warehouse.id} className="text-center">
+									<td className="w-16">
+										<input
+											type="checkbox"
+											onChange={handleCheckboxChange}
+										/>
+									</td>
+									<td className="py-2 text-xs font-normal uppercase">
+										<span>{warehouse.id}</span>
+									</td>
+									<td className="py-2 text-xs font-normal uppercase">
+										{warehouse.warehouse_name}
+									</td>
+									<td className="py-2 text-xs font-normal uppercase">
+										{warehouse.location}
+									</td>
+									<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
+										<Button
+											fill={'empty'}
+											textColor={'black'}
+											onClick={() => handleUpdateModal(warehouse)}
+											className="flex flex-row items-center gap-2"
+										>
+											<FaPencilAlt /> Edit
+										</Button>
+										<Button
+											fill={'red'}
+											onClick={() => handleRemoveWarehouse(warehouse)}
+										>
+											Remove
+										</Button>
+									</td>
+								</tr>
+							);
 					})}
 				</tbody>
 				{/* <Pagination

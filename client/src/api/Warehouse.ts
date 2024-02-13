@@ -5,12 +5,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
-const fetchWarehouses = async (query = ''): Promise<Warehouse[]> => {
-	await new Promise(resolve => setTimeout(resolve, 100));
-	const response = await axios.get(`${API_BASE_URL}/Warehouse`);
-	console.log('fetched warehouses');
-	return response.data;
-};
+// const fetchWarehouses = async (query = ''): Promise<Warehouse[]> => {
+// 	await new Promise(resolve => setTimeout(resolve, 100));
+// 	const response = await axios.get(`${API_BASE_URL}/Warehouse`);
+// 	console.log('fetched warehouses');
+// 	return response.data;
+// };
 
 export const useWarehouses = () => {
 	return useQuery({
@@ -20,9 +20,9 @@ export const useWarehouses = () => {
 	});
 };
 
-export const getWarehouses = () => {
-	return axios.get(`${API_BASE_URL}/Warehouse`);
-};
+// export const getWarehouses = () => {
+// 	return axios.get(`${API_BASE_URL}/Warehouse`);
+// };
 
 export const useWarehouseMutation = (selectedWarehouse: any) => {
 	const queryClient = useQueryClient();
