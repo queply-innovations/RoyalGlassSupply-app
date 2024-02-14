@@ -38,3 +38,12 @@ export const getUserRolePermissions = async (
 		},
 	});
 };
+
+export const getUsers = async (): Promise<User[]> => {
+	return axios.get(`${API_URLS.USERS}`, {
+		headers: {
+			Authorization: `Bearer ${storage.getToken()}`,
+			'Content-Type': 'application/json',
+		},
+	});
+};

@@ -3,8 +3,8 @@ import { Button } from '@/components/Button';
 import LayoutWrapper from '@/layouts/Layout';
 import React, { useEffect, useState } from 'react';
 import UserInfoTable from '@/components/Tables/User/__test__/UserInfoTable';
-import { getUsers } from '@/api/User/Users';
-import { Loading } from '@/components/Loading';
+import { getUsers } from '@/features/auth/api/getUser';
+import { ProgressBar } from '@/components';
 
 export const UserInfo = () => {
 	const [data, setData] = useState(Array<unknown>);
@@ -14,9 +14,9 @@ export const UserInfo = () => {
 		async function gettingUsers(){
 			try {
 				const data2 = await getUsers();
-				setData(data2.data);
+				setData(data2.data.data);
 				setNotLoading(true);
-				console.log(data2.data);
+				//console.log(data2.data.data);
 			} catch (error) {
 				console.log(error);
 			}
@@ -49,10 +49,19 @@ export const UserInfo = () => {
 		</div>
 	);
 
+	const loading = (
+		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+			<ProgressBar />
+			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+				Loading Users...
+			</h2>
+		</div>
+	);
+
 	return (
 		<>
-			<LayoutWrapper>
-				{!notLoading && <Loading />}
+			<LayoutWrapper >
+				{!notLoading && loading}
 				{notLoading && layout}
 			</LayoutWrapper>
 		</>
