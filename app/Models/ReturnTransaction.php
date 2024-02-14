@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ReturnTransaction extends Model
 {
@@ -15,6 +17,12 @@ class ReturnTransaction extends Model
         'refundable_amount',
         'voucher_id',
         'refund_status'
+    ];
+
+    protected $with = [
+        'invoice',
+        'issuedBy:id,firstname,lastname',
+        'voucher:id,code'
     ];
 
     public function invoice(): BelongsTo

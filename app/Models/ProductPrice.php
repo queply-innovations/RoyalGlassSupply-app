@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductPrice extends Model
 {
@@ -23,6 +25,13 @@ class ProductPrice extends Model
         'created_by',
         'approval_status',
         'approved_by'
+    ];
+
+    protected $with = [
+        'product:id,name,size,color',
+        'createdBy:id,firstname,lastname',
+        'approvedBy:id,firstname,lastname',
+        'warehouse:id,name'
     ];
 
     public function product(): BelongsTo

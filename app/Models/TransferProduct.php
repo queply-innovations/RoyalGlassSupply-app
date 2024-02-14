@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TransferProduct extends Model
 {
@@ -19,6 +20,10 @@ class TransferProduct extends Model
     
     public $timestamps = false;
 
+    protected $with = [
+        'product:id,name,size,color'
+    ];
+
     public function transfer(): BelongsTo
     {
         return $this->belongsTo(Transfer::class);
@@ -29,8 +34,8 @@ class TransferProduct extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function inventoryItem(): BelongsTo
+    public function inventoryProduct(): BelongsTo
     {
-        return $this->belongsTo(InventoryItem::class, 'source_inventory');
+        return $this->belongsTo(InventoryProduct::class, 'source_inventory');
     }
 }

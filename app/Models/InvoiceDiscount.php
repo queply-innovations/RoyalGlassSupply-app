@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InvoiceDiscount extends Model
 {
@@ -18,6 +19,10 @@ class InvoiceDiscount extends Model
     ];
     
     public $timestamps = false;
+
+    protected $with = [
+        'voucher:id,code'
+    ];
 
     public function invoice(): BelongsTo
     {

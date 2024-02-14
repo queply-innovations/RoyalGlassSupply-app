@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InvoiceItem extends Model
 {
@@ -20,6 +22,10 @@ class InvoiceItem extends Model
     ];
     
     public $timestamps = false;
+
+    protected $with = [
+        'product:id,name,size,color'
+    ];
 
     public function returnTransactionItems(): HasMany
     {

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inventory extends Model
 {
@@ -14,6 +16,11 @@ class Inventory extends Model
         'created_by',
         'type',
         'transfer_id'
+    ];
+
+    protected $with = [
+        'warehouse:id,name',
+        'createdBy:id,firstname,lastname'
     ];
 
     public function inventoryProducts(): HasMany

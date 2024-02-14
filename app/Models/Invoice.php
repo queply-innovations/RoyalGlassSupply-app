@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Invoice extends Model
 {
@@ -21,6 +23,12 @@ class Invoice extends Model
         'paid_amount',
         'change_amount',
         'or_no'
+    ];
+
+    protected $with = [
+        'customer:id,firstname,lastname',
+        'warehouse:id,name',
+        'issuedBy:id,firstname,lastname'
     ];
 
     public function invoiceItems(): HasMany

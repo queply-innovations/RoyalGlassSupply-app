@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReturnTransactionItem extends Model
 {
@@ -19,6 +20,10 @@ class ReturnTransactionItem extends Model
     ];
     
     public $timestamps = false;
+
+    protected $with = [
+        'invoiceItem'
+    ];
 
     public function returnTransaction(): BelongsTo
     {
