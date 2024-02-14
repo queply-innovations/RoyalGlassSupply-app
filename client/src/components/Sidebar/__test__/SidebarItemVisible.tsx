@@ -22,7 +22,7 @@ const SidebarItemVisible = ({ item }: SidebarItemVisibleProps) => {
 	return item.sidebarProps ? (
 		<>
 			<li
-				className="flex w-full cursor-pointer flex-row items-center"
+				className="relative flex w-full cursor-pointer flex-row items-center"
 				onClick={() => setOpen(!open)}
 			>
 				<div
