@@ -1,14 +1,17 @@
-import { Button, Modal, Inputbox, Pagination } from '@/components';
+import { Button, Modal, Inputbox, Pagination, ProgressBar } from '@/components';
 import LayoutWrapper from '@/layouts/Layout';
 import { ProductForm, ProductTable } from '@pages/Products';
-import { useProducts, useProductsPrices } from '@/api/Products';
+import { getProducts, getProductPrices } from '@/features/auth/api/getProducts';
 import { useModal } from '@/utils/Modal';
-import { useState } from 'react';
-import { Loading } from '@/components/Loading';
+import { useEffect, useState } from 'react';
+import { Product, ProductPrices } from '@/entities';
 
 export const Products = () => {
-	const { data: products } = useProducts();
-	const { data: productPrices } = useProductsPrices();
+	// const { data: products } = getProducts();
+	const [products, setProducts] = useState(Array<Product>); //products
+	// const { data: productPrices } = getProductPrices();
+	const [productPrices, setProductPrices] = useState(Array<ProductPrices>); //product prices
+
 	// console.log('Product Data:', productPrices?.map(price => price.product_id));
 	// console.log('Product ID:', products?.map(product => product.id));
 	const [ notLoading, setNotLoading ] = useState(false);
@@ -25,14 +28,40 @@ export const Products = () => {
 	// });
 	// console.log('data:', mappedData);
 
+	useEffect(() => {
+		async function gettingProducts(){
+			try {
+				const data3 = await getProducts();
+				setProducts(data3.data.data);
+				//setNotLoading(true);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		gettingProducts();
+	}, []);
+
+	useEffect(() => {
+		async function gettingProductPrices(){
+			try {
+				const data3 = await getProductPrices();
+				setProductPrices(data3.data.data);
+				setNotLoading(true);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		gettingProductPrices();
+	}, []);
+
 	const combinedData = products?.map(product => {
 		const priceData = productPrices?.find(price => product.id === price.id);
 
 		return {
 			id: product.id,
-			product_name: product.product_name,
+			product_name: product.name,
 			product_id: priceData ? priceData.product_id : '',
-			serial_number: product.serial_number,
+			serial_number: product.serial_no,
 			size: product.size,
 			color: product.color,
 			quantity: priceData ? priceData.quantity : '',
@@ -45,10 +74,18 @@ export const Products = () => {
 			sale_price: priceData ? priceData.sale_price : '',
 
 			// Add other properties as needed
+			//TODO: Add warehouse_id?
 		};
-		setNotLoading(true);
 	});
-	// console.log('combinedData:', combinedData);
+
+	const loading = (
+		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+			<ProgressBar />
+			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+				Loading Products...
+			</h2>
+		</div>
+	);
 
 	const layout = (
 		<div className="flex h-full flex-col gap-y-4">
@@ -92,7 +129,7 @@ export const Products = () => {
 	return (
 		<>
 			<LayoutWrapper>
-				{!notLoading && <Loading />}
+				{!notLoading && loading}
 				{notLoading && layout}
 				{notLoading && modal}
 			</LayoutWrapper>

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal } from '@/components';
 import { useModal } from '@/utils/Modal';
-import { removeProduct, useProducts, useProductsPrices } from '@/api/Products';
+// import { removeProduct, useProducts, useProductsPrices } from '@/api/Products';
+import { getProducts, getProductPrices } from '@/features/auth/api/getProducts'; 
+//TODO: Create removeProduct, useProducts and useProductsPrices
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 import { ProductForm } from '@pages/Products';
@@ -32,7 +34,6 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 	const updateModal = useModal();
 
 	const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
-	const { isLoading } = useProducts();
 
 	const handleUpdateModal = (product: any) => {
 		setSelectedProduct(product);
@@ -44,19 +45,19 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 		removeModal.openModal();
 	};
 
-	const { mutateAsync: removeProductMutation } = useMutation({
-		mutationKey: ['removeProduct', selectedProduct],
-		mutationFn: removeProduct,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ['products'] });
-			console.log('Product Removed');
-			removeModal.closeModal();
-			successModal.openModal();
-		},
-		onError: (error: any) => {
-			console.error('Product Data removal failed', error);
-		},
-	});
+	// const { mutateAsync: removeProductMutation } = useMutation({
+	// 	mutationKey: ['removeProduct', selectedProduct],
+	// 	mutationFn: removeProduct,
+	// 	onSuccess: async () => {
+	// 		await queryClient.invalidateQueries({ queryKey: ['products'] });
+	// 		console.log('Product Removed');
+	// 		removeModal.closeModal();
+	// 		successModal.openModal();
+	// 	},
+	// 	onError: (error: any) => {
+	// 		console.error('Product Data removal failed', error);
+	// 	},
+	// });
 	return (
 		<>
 			<table className="w-full overflow-y-scroll ">
@@ -168,9 +169,9 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 								fill={'green'}
 								className=""
 								type="submit"
-								onClick={() =>
-									removeProductMutation(selectedProduct.id)
-								}
+								// onClick={() =>
+								// 	removeProductMutation(selectedProduct.id)
+								// }
 							>
 								{`Remove ${selectedProduct?.product_name}`}
 							</Button>
@@ -187,11 +188,11 @@ export const ProductTable: FC<ProductsTableProps> = ({ data }) => {
 				</>
 			</Modal>
 
-			{isLoading && (
+			{/* {isLoading && (
 				<div className="flex items-center justify-center">
 					Fetching Product Data...
 				</div>
-			)}
+			)} */}
 		</>
 	);
 };

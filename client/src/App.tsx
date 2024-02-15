@@ -7,6 +7,10 @@ function App() {
 	return (
 		<AppProvider>
 			{/* <AppRoutes /> */}
+			{/* Error in protectedRoutes in routes/index.tsx */}
+
+			<AppRouter />
+			{/* uncomment this to preview the app routes */}
 
 			{/*
             uncomment this to preview the app routes
