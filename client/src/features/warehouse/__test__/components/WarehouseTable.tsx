@@ -1,14 +1,13 @@
-import { useWarehouseContext } from '../context/WarehouseContext';
+import { useWarehouse } from '../context/WarehouseContext';
 import { Button } from '@/components';
 import { FaPencilAlt } from 'react-icons/fa';
 
 interface WarehouseTableProps {}
 
 export const WarehouseTable = ({}: WarehouseTableProps) => {
-	const warehouse = useWarehouseContext();
+	const warehouse = useWarehouse();
 
 	const WarehouseTableHeader: string[] = [
-		'',
 		'Warehouse ID',
 		'Warehouse Name',
 		'Location',
@@ -38,10 +37,10 @@ export const WarehouseTable = ({}: WarehouseTableProps) => {
 									<span>{warehouse.id}</span>
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
-									{warehouse.warehouse_name}
+									{warehouse.name}
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
-									{warehouse.warehouse_location}
+									{warehouse.location}
 								</td>
 								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
 									<Button
@@ -64,7 +63,6 @@ export const WarehouseTable = ({}: WarehouseTableProps) => {
 							</tr>
 						</>
 					))}
-					;
 				</tbody>
 			</table>
 		</>

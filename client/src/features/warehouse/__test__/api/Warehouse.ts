@@ -1,15 +1,21 @@
 import axios from 'axios';
 import storage from '@/utils/storage';
-import { Warehouse } from '@/entities/Warehouse';
 import { API_URLS } from '@/api';
+import { Warehouse } from '../types';
 
 export const fetchWarehouses = async (): Promise<Warehouse[]> => {
-	return axios.get(`${API_URLS.WAREHOUSE}`, {
-		headers: {
-			Authorization: `Bearer ${storage.getToken()}`,
-			'Content-Type': 'application/json',
-		},
-	});
+	try {
+		const response = await axios.get(API_URLS.WAREHOUSE, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		});
+		return response.data.data;
+	} catch (error) {
+		console.error('Error fetching warehouses:', error);
+		throw error;
+	}
 };
 
 export const getWarehouses = () => {
