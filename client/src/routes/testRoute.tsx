@@ -17,9 +17,10 @@ import {
 	Transfer,
 	UserInfo,
 	UserSales,
-	Warehouse,
+	// Warehouse,
 } from '@/pages';
 import { SupplierPage } from '@/pages/SupplierPage';
+import { Warehouse } from '@/pages/__test__';
 
 export const TestRoute = () => {
 	const { auth, logout } = useAuth();

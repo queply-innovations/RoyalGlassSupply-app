@@ -1,4 +1,5 @@
 import { Button, Inputbox } from '@/components';
+import { WarehouseModal } from '@/features/warehouse/__test__/components/WarehouseModal';
 import { WarehouseTable } from '@/features/warehouse/__test__/components/WarehouseTable';
 import { WarehouseProvider } from '@/features/warehouse/__test__/context/WarehouseContext';
 import { CommonLayout } from '@/layouts/CommonLayout';
@@ -18,10 +19,7 @@ export const Warehouse = () => {
 								className="w-1/2"
 							/>
 							<div className="flex flex-row gap-3">
-								<Button
-									fill={'green'}
-									// onClick={openModal}>
-								>
+								<Button fill={'green'} onClick={() => {}}>
 									Add Warehouse
 								</Button>
 							</div>

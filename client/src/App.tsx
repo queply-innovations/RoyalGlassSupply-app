@@ -9,13 +9,13 @@ function App() {
 			{/* <AppRoutes /> */}
 			{/* Error in protectedRoutes in routes/index.tsx */}
 
-			<AppRouter />
+			{/* <AppRouter /> */}
 			{/* uncomment this to preview the app routes */}
 
 			{/*
             uncomment this to preview the app routes
             */}
-			<AppRouter />
+			{/* <AppRouter /> */}
 
 			{/*
             added testroutes to bypass auth
@@ -24,7 +24,7 @@ function App() {
 
             //! PANG TEST LANG NI
             */}
-			{/* <TestRoute /> */}
+			<TestRoute />
 		</AppProvider>
 	);
 }

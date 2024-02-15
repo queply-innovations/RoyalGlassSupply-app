@@ -18,13 +18,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 		child: [
 			{
-				path: '/app/user/information',
+				path: '/user/information',
 				sidebarProps: {
 					displayText: 'User Information',
 				},
 			},
 			{
-				path: '/app/user/sales',
+				path: '/user/sales',
 				sidebarProps: {
 					displayText: 'User Sales',
 				},
@@ -38,13 +38,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 		child: [
 			{
-				path: '/app/user/information',
+				path: '/user/information',
 				sidebarProps: {
 					displayText: 'User Information',
 				},
 			},
 			{
-				path: '/app/user/sales',
+				path: '/user/sales',
 				sidebarProps: {
 					displayText: 'User Sales',
 				},
@@ -58,13 +58,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 		child: [
 			{
-				path: '/app/transaction',
+				path: '/transaction',
 				sidebarProps: {
 					displayText: 'Transaction',
 				},
 			},
 			{
-				path: '/app/transaction/expenses',
+				path: '/transaction/expenses',
 				sidebarProps: {
 					displayText: 'Expenses',
 				},
@@ -72,56 +72,56 @@ export const SidebarRoute: SidebarRoutes[] = [
 		],
 	},
 	{
-		path: '/app/transfer',
+		path: '/transfer',
 		sidebarProps: {
 			displayText: 'Transfer',
 			icon: <TransferIcon />,
 		},
 	},
 	{
-		path: '/app/return',
+		path: '/return',
 		sidebarProps: {
 			displayText: 'Return',
 			icon: <ReturnIcon />,
 		},
 	},
 	{
-		path: '/app/inventory',
+		path: '/inventory',
 		sidebarProps: {
 			displayText: 'Inventory',
 			icon: <InventoryIcon />,
 		},
 	},
 	{
-		path: '/app/finance',
+		path: '/finance',
 		sidebarProps: {
 			displayText: 'Finance',
 			icon: <FinanceIcon />,
 		},
 	},
 	{
-		path: '/app/reports',
+		path: '/reports',
 		sidebarProps: {
 			displayText: 'Reports',
 			icon: <ReportIcon />,
 		},
 	},
 	{
-		path: '/app/warehouse',
+		path: '/warehouse',
 		sidebarProps: {
 			displayText: 'Warehouse',
 			icon: <TransferIcon />,
 		},
 	},
 	{
-		path: '/app/supplier',
+		path: '/supplier',
 		sidebarProps: {
 			displayText: 'Supplier',
 			icon: <UserIcon />,
 		},
 	},
 	{
-		path: '/app/products',
+		path: '/products',
 		sidebarProps: {
 			displayText: 'Products',
 			icon: <InventoryIcon />,
