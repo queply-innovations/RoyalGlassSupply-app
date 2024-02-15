@@ -17,7 +17,7 @@ export const ProgressBar = () => {
 		backgroundColor: "#16A116",
 		borderRadius: 'inherit',
 		textAlign: 'right' as const,
-		transition: 'width 1s ease-in-out',
+		transition: 'width 500ms ease-in-out',
 	}
 
 	const labelStyles = {

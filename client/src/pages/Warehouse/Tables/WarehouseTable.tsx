@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
 import { WarehouseForm } from '@pages/Warehouse';
 import { FaPencilAlt } from 'react-icons/fa';
+import { DataTable } from '@/components/Tables/DataTable';
 
 interface WarehouseTableProps {
 	data: any;
