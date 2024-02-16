@@ -38,52 +38,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
 
-	console.log('LOCAL-STORAGE AUTH', localStorage.getItem('auth'));
-	console.log('AUTH:', JSON.parse(localStorage.getItem('auth') || '{}'));
-
 	async function login(credentials: LoginCredentials) {
 		try {
+			// Log user in using credentials
 			const userResponse = await LoginUser(credentials);
 			if (userResponse) {
-				//TODO 1 get user role
-				// const userRole = await getUserRole(userResponse.user.id);
-				// console.log('USER-ROLE:', userRole);
+				// Set user token
+				storage.setToken(userResponse.token);
+				// Get user role and store to local storage
+				const userRole = await getUserRole(userResponse.user.id);
+				if (userRole) {
+					storage.setUserRole(userRole);
+				}
+
 				setAuth({
-					user: userResponse.user.id,
+					username: userResponse.user.username,
+					id: userResponse.user.id,
 					token: userResponse.token,
 					authenticated: true,
-					//TODO 2 user role
-					// role: userRole.title,
+					role: userRole,
 				});
 			} //TODO 3 catch server errors
-
-			// console.log('userResponse:', userResponse);
-			// setAuth({
-			// 	user: userResponse.user.id,
-			// 	token: userResponse.token,
-			// 	authenticated: true,
-			// 	role: null,
-			// 	isLoggedIn: true,
-			// });
-			// storage.setToken(userResponse.token);
-
-			// const userRole = await getUserRole(userResponse.user.id);
-			// console.log('userRole:', userRole);
-
-			// if (userRole) {
-			// 	setAuth({
-			// 		...auth,
-			// 		role: userRole.title,
-			// 		isLoggedIn: storage.setLogIn(),
-			// 	});
-			// 	storage.setUserSession(`${userRole.title} | ${userResponse.token}`);
-			// 	storage.setToken(userResponse.token);
-			// }
 			return userResponse;
 		} catch (error) {
 			console.error('Login failed:', error);
 		}
 	}
+
+	// Nullify user data and clear local storage
 	function logout() {
 		setAuth({
 			user: null,
@@ -93,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			isLoggedIn: false,
 		});
 		storage.clearUserSession();
-		storage.clearToken();
+		storage.clearLogIn();
 	}
 
 	const value: AuthContextProps = {
