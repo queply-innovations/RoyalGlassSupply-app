@@ -8,7 +8,7 @@ import { WarehouseForm } from '@pages/Warehouse';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { ColumnDef } from '@tanstack/react-table';
-import SortIcon from '@assets/icons/iconUpDown';
+import { SortIcon } from '@assets/icons';
 
 interface WarehouseTableProps {
 	data: any;
@@ -102,6 +102,7 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 	const successModal = useModal();
 	const updateModal = useModal();
 	const [selectedWarehouse, setSelectedWarehouse] = useState<any | null>(null);
+	const { isOpen, openModal, closeModal } = useModal();
 
 	const { mutateAsync: removeWarehouseMutation } = useMutation({
 		mutationKey: ['removeWarehouse:', selectedWarehouse],
@@ -129,12 +130,18 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 		console.log(warehouse.id);
 	};
 
+	//TODO: Clean Warehouse Modals
+
 	return (
 		<>
 		<DataTable
 			data={data}
 			columns={tableHeader}
 			filterWhat={"location"}
+			dataType={"Warehouse"}
+			isOpen={isOpen}
+			openModal={openModal}
+			closeModal={closeModal}
 		/>
 
 		<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
@@ -170,6 +177,7 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 				</div>
 			</>
 		</Modal>
+
 		<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
 			<>
 				<WarehouseForm
@@ -179,6 +187,7 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 				/>
 			</>
 		</Modal>
+
 		<Modal
 			isOpen={successModal.isOpen}
 			onClose={() => {
@@ -196,6 +205,15 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 					Close
 				</Button>
 			</div>
+		</Modal>
+
+		<Modal
+			title={'Add Warehouse'}
+			isOpen={isOpen}
+			onClose={closeModal}
+			closeButton
+		>
+			<WarehouseForm data={data} onClose={closeModal} />
 		</Modal>
 		</>
 	);

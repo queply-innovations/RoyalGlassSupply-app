@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Inputbox, Pagination } from "@/components";
+import { Button, Inputbox, Pagination } from "@/components";
 
 import {
 	ColumnDef,
@@ -26,12 +26,20 @@ interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
 	filterWhat: string
+	dataType: string
+	isOpen: any
+	openModal: any
+	closeModal: any
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
-	filterWhat
+	filterWhat,
+	dataType,
+	isOpen,
+	openModal,
+	closeModal
 	}: DataTableProps<TData, TValue>) {
 		const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -55,18 +63,30 @@ export function DataTable<TData, TValue>({
 		})
 		
 		const placeholderLabel = `Filter ${filterWhat}...`;
+
+		// TODO: Clean Pagination props and Modal contexts
+		// In line with inserting changes in dev-frontend branch
+		// (Careful on the Context and Provider)
+
 		return (
 			<>
-			<div className="flex w-1/2 p-4">
-				<Inputbox
-					placeholder={placeholderLabel}
-					value={(table.getColumn(filterWhat)?.getFilterValue() as string) ?? ""}
-					onChange={(event) =>
-						table.getColumn(filterWhat)?.setFilterValue(event.target.value)
-					}
-					variant={"searchbar"}
-					buttonIcon={"outside"}
-				/>
+			<div className="flex p-4 justify-between">
+				<div className="w-1/2">
+					<Inputbox
+						placeholder={placeholderLabel}
+						value={(table.getColumn(filterWhat)?.getFilterValue() as string) ?? ""}
+						onChange={(event) =>
+							table.getColumn(filterWhat)?.setFilterValue(event.target.value)
+						}
+						variant={"searchbar"}
+						buttonIcon={"outside"}
+					/>
+				</div>
+				<div className="flex flex-row-reverse gap-3">
+					<Button fill={'green'} onClick={openModal}>
+						{`Add ${dataType}`}
+					</Button>
+				</div>
 			</div>
 			<div className="rounded-md border">
 				<Table>
@@ -112,12 +132,8 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
+			<div className="flex justify-end space-x-2 py-4">
 				<Pagination
-					currentPage={table.getState().pagination.pageIndex + 1}
-					nPages={table.getPageCount()}
-					canPrevPage={!table.getCanPreviousPage()}
-					canNextPage={!table.getCanNextPage()}
 					onClickPrev={() => table.previousPage()}
 					onClickNext={() => table.nextPage()}
 					table={table}

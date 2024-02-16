@@ -14,12 +14,6 @@ export const Warehouse = () => {
 	const [data, setData] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
-	const [currentPage, setCurrentPage] = useState(1);
-	const [recordsPerPage] = useState(15);
-
-	const indexOfLastRecord = currentPage * recordsPerPage;
-	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-
 	useEffect(() => {
 		async function gettingWarehouses(){
 			try {
@@ -32,9 +26,6 @@ export const Warehouse = () => {
 		}
 		gettingWarehouses();
 	}, []);
-	
-	const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-	const nPages = Math.ceil(data.length / recordsPerPage);
 
 	const layout = (
 		<div className="flex h-screen flex-col gap-y-4">
@@ -42,29 +33,8 @@ export const Warehouse = () => {
 				Warehouse
 			</h1>
 			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-				{/* <div className="flex flex-row justify-between">
-					<Inputbox
-						placeholder="Search"
-						variant={'searchbar'}
-						buttonIcon={'outside'}
-						className="w-1/2"
-					/>
-					<div className="flex flex-row gap-3">
-						<Button fill={'green'} onClick={openModal}>
-							Add Warehouse
-						</Button>
-					</div>
-				</div> */}
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-					<WarehouseTable data={currentRecords} />
-					{/* {!(data.length === 0) && (
-						<Pagination
-							nPages={nPages}
-							currentPage={currentPage}
-							setCurrentPage={setCurrentPage}
-						/>
-					)} */}
-					
+					<WarehouseTable data={data} />
 				</div>
 			</div>
 		</div>
@@ -96,7 +66,7 @@ export const Warehouse = () => {
 			<LayoutWrapper >
 				{!notLoading && loading}
 				{notLoading && layout}
-				{notLoading && modal}
+				{/* {notLoading && modal} */}
 			</LayoutWrapper>
 		</>
 	);
