@@ -42,7 +42,7 @@ export const Warehouse = () => {
 				Warehouse
 			</h1>
 			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-				<div className="flex flex-row justify-between">
+				{/* <div className="flex flex-row justify-between">
 					<Inputbox
 						placeholder="Search"
 						variant={'searchbar'}
@@ -54,16 +54,16 @@ export const Warehouse = () => {
 							Add Warehouse
 						</Button>
 					</div>
-				</div>
+				</div> */}
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 					<WarehouseTable data={currentRecords} />
-					{!(data.length === 0) && (
+					{/* {!(data.length === 0) && (
 						<Pagination
 							nPages={nPages}
 							currentPage={currentPage}
 							setCurrentPage={setCurrentPage}
 						/>
-					)}
+					)} */}
 					
 				</div>
 			</div>

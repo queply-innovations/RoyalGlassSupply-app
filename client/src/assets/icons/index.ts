@@ -7,3 +7,4 @@ export { default as SuccessIcon } from './iconSuccess';
 export { default as TransactionIcon } from './iconTransaction';
 export { default as TransferIcon } from './iconTransfer';
 export { default as UserIcon } from './iconUser';
+export { default as SortIcon } from './iconUpDown';

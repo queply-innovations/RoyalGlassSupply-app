@@ -3,26 +3,32 @@ import { FC } from 'react';
 interface PaginationProps{
 	nPages: number;
 	currentPage: number;
-	setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+	canPrevPage: boolean;
+	canNextPage: boolean;
+	onClickPrev: any;
+	onClickNext: any;
+	table: any;
 }
 
-export const Pagination: FC<PaginationProps> = ({nPages, currentPage, setCurrentPage}) => {
+export const Pagination: FC<PaginationProps> = ({
+	nPages, currentPage, canPrevPage, canNextPage, onClickPrev, onClickNext, table
+}) => {
 
 	const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
 	const goToNextPage = () => {
-		if(currentPage !== nPages) setCurrentPage(currentPage + 1)
+		onClickNext();
 	}
 	const goToPrevPage = () => {
-		if(currentPage !== 1) setCurrentPage(currentPage - 1)
+		onClickPrev();
 	}
+
 	return (
 		<nav className='d-flex p-4'>
 			<ul className='pagination justify-content-center'>
-				<li className="page-item">
-					<a className="page-link" 
+				<li className={`page-item ${canPrevPage ? 'bg-slate-300' : ''}`}>
+					<a className={`page-link ${canPrevPage ? 'text-white' : ''}`}
 						onClick={goToPrevPage} >
-						
 						Previous
 					</a>
 				</li>
@@ -30,17 +36,16 @@ export const Pagination: FC<PaginationProps> = ({nPages, currentPage, setCurrent
 					<li key={pgNumber} 
 						className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
-						<a onClick={() => setCurrentPage(pgNumber)}  
+						<a onClick={() => table.setPageIndex(pgNumber - 1)} 
 							className='page-link' >
 							
 							{pgNumber}
 						</a>
 					</li>
 				))}
-				<li className="page-item">
-					<a className="page-link" 
+				<li className={`page-item ${canNextPage ? 'bg-slate-300' : ''}`}>
+					<a className={`page-link ${canNextPage ? 'text-white' : ''}`}
 						onClick={goToNextPage} >
-						
 						Next
 					</a>
 				</li>
