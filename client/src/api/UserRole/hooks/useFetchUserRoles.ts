@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchUserRoles } from '../UserRole';
 
-export const useFetchUserRoles = () => {
+export const useFetchUserRoles = (id: number) => {
 	return useQuery({
 		queryKey: ['UserRoles'],
-		queryFn: () => fetchUserRoles(),
+		queryFn: () => fetchUserRoles(id),
 		refetchOnWindowFocus: false,
 	});
 };
