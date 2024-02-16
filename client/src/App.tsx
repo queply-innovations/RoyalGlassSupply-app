@@ -15,7 +15,7 @@ function App() {
 			{/*
             uncomment this to preview the app routes
             */}
-			{/* <AppRouter /> */}
+			<AppRouter />
 
 			{/*
             added testroutes to bypass auth
@@ -24,7 +24,7 @@ function App() {
 
             //! PANG TEST LANG NI
             */}
-			<TestRoute />
+			{/* <TestRoute /> */}
 		</AppProvider>
 	);
 }

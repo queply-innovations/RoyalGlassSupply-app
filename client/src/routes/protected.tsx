@@ -26,7 +26,8 @@ const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
 const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
-const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
+// const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
+const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 
 const App = () => {

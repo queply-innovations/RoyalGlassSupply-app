@@ -21,7 +21,7 @@ export const getUserRole = async (id: number): Promise<Roles> => {
 				'Content-Type': 'application/json',
 			},
 		});
-		return response.data;
+		return response.data.data;
 	} catch (e) {
 		console.log(e);
 		throw e;

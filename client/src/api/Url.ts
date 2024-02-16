@@ -1,3 +1,5 @@
+import storage from '@/utils/storage';
+
 export const API_BASE_URL = 'http://127.0.0.1:8000/api';
 // 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
@@ -11,4 +13,9 @@ export const API_URLS = {
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
 	LOGIN: `${API_BASE_URL}/login`,
 	WAREHOUSES: `${API_BASE_URL}/warehouses`,
+};
+
+export const API_HEADERS = {
+	Authorization: `Bearer ${storage.getToken()}`,
+	'Content-Type': 'application/json',
 };

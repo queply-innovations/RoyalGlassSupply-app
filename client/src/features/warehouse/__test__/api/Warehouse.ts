@@ -1,6 +1,6 @@
 import axios from 'axios';
 import storage from '@/utils/storage';
-import { API_URLS } from '@/api';
+import { API_HEADERS, API_URLS } from '@/api';
 import { Warehouse } from '../types';
 
 export const fetchWarehouses = async (): Promise<Warehouse[]> => {
@@ -28,12 +28,16 @@ export const getWarehouseById = (data: Warehouse[], id: number) => {
 };
 
 export const addWarehouse = (data: Warehouse) => {
-	const response = axios.post(`${API_URLS.WAREHOUSES}`, data);
+	const response = axios.post(API_URLS.WAREHOUSES, data, {
+		headers: API_HEADERS,
+	});
 	return response;
 };
 
 export const updateWarehouse = (data: Warehouse) => {
-	const response = axios.put(`${API_URLS.WAREHOUSES}/${data.id}`, data);
+	const response = axios.put(`${API_URLS.WAREHOUSES}/${data.id}`, data, {
+		headers: API_HEADERS,
+	});
 	return response;
 };
 
