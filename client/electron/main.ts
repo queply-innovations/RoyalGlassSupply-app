@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import path from 'node:path';
 
 // The built directory structure
@@ -56,6 +56,21 @@ app.on('window-all-closed', () => {
 	}
 });
 
+app.on('browser-window-focus', () => {
+	globalShortcut.register('CommandOrControl+R', () => {
+		console.log('Command/Control+R is pressed: Shortcut Disabled');
+	});
+	globalShortcut.register('Control+Shift+R', () => {
+		console.log('Command/Control SHIFT+R is pressed: Shortcut Disabled');
+	});
+	globalShortcut.register('Alt+F4', () => {
+		console.log('ALT F4 DISABLED');
+		return false;
+	});
+	globalShortcut.register('Control+W', () => {
+		console.log('DISABLE Ctrl + W');
+	});
+});
 app.on('activate', () => {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
