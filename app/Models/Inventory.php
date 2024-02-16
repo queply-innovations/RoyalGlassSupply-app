@@ -12,14 +12,17 @@ class Inventory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'warehouse_id',
         'created_by',
+        'date_received',
         'type',
-        'transfer_id'
+        'transfer_id',
+        'notes'
     ];
 
     protected $with = [
-        'warehouse:id,name',
+        'warehouse:id,code,name',
         'createdBy:id,firstname,lastname'
     ];
 
