@@ -13,15 +13,16 @@ export const getUser = async (id: number): Promise<User[]> => {
 	});
 };
 
-export const getUserRole = async (id: number): Promise<Roles> => {
+export const getUserRole = async (id: number): Promise<Roles["title"]> => {
 	try {
-		const response = await axios.get(`${API_URLS.USER_ROLES}?user_id:${id}`, {
+		const response = await axios.post(`${API_URLS.USER_ROLES}/searches-filters-sorts`,{"user_id": id}, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
 			},
 		});
-		return response.data;
+		// Data contains object with an array of one object
+		return response.data.data[0].role.title;
 	} catch (e) {
 		console.log(e);
 		throw e;
