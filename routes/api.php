@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InvoiceDiscountController;
 use App\Http\Controllers\InvoiceItemController;
 use App\Http\Controllers\InvoiceTaxController;
+use App\Http\Controllers\OperationExpenseController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPriceController;
@@ -48,6 +49,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         'invoice-discounts' => InvoiceDiscountController::class,
         'invoice-items' => InvoiceItemController::class,
         'invoice-taxes' => InvoiceTaxController::class,
+        'operation_expenses' => OperationExpenseController::class,
         'permissions' => PermissionController::class,
         'products' => ProductController::class,
         'product-prices' => ProductPriceController::class,
@@ -78,6 +80,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/invoice-discounts/searches-filters-sorts', [InvoiceDiscountController::class, 'searchFilterAndSort']);
     Route::post('/invoice-items/searches-filters-sorts', [InvoiceItemController::class, 'searchFilterAndSort']);
     Route::post('/invoice-taxes/searches-filters-sorts', [InvoiceTaxController::class, 'searchFilterAndSort']);
+    Route::post('/operation-expenses/searches-filters-sorts', [OperationExpenseController::class, 'searchFilterAndSort']);
     Route::post('/permissions/searches-filters-sorts', [PermissionController::class, 'searchFilterAndSort']);
     Route::post('/products/searches-filters-sorts', [ProductController::class, 'searchFilterAndSort']);
     Route::post('/product-prices/searches-filters-sorts', [ProductPriceController::class, 'searchFilterAndSort']);
