@@ -11,12 +11,16 @@ const storage = {
 		window.localStorage.removeItem('user');
 	},
 
+	setUserRole: (role: string) => {
+		window.localStorage.setItem('user_role', role);
+	},
+
 	setToken: (token: string) => {
-		window.localStorage.setItem('token', JSON.stringify(token));
+		window.localStorage.setItem('token', token);
 	},
 
 	getToken: () => {
-		return JSON.parse(window.localStorage.getItem('token') as string);
+		return window.localStorage.getItem('token');
 	},
 
 	clearToken: () => {
@@ -37,7 +41,7 @@ const storage = {
 	},
 
 	clearLogIn: () => {
-		window.localStorage.removeItem('isLoggedIn');
+		window.localStorage.clear();
 		return false;
 	},
 };
