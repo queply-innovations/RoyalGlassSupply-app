@@ -30,43 +30,55 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-	const [auth, setAuth] = useState<AuthProps>({
-		user: null,
-		token: null,
-		authenticated: false,
-		role: null,
-		isLoggedIn: false,
+	const [auth, setAuth] = useState(() => {
+		return JSON.parse(localStorage.getItem('auth') || '{}');
 	});
+
 	useEffect(() => {
-		console.log('Updated Auth:', auth);
+		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
+
+	console.log('LOCAL-STORAGE AUTH', localStorage.getItem('auth'));
+	console.log('AUTH:', JSON.parse(localStorage.getItem('auth') || '{}'));
 
 	async function login(credentials: LoginCredentials) {
 		try {
 			const userResponse = await LoginUser(credentials);
-			console.log('userResponse:', userResponse);
-			setAuth({
-				user: userResponse.user.id,
-				token: userResponse.token,
-				authenticated: true,
-				role: null,
-				isLoggedIn: true,
-			});
-			storage.setToken(userResponse.token);
+			if (userResponse) {
+				//TODO 1 get user role
+				// const userRole = await getUserRole(userResponse.user.id);
+				// console.log('USER-ROLE:', userRole);
+				setAuth({
+					user: userResponse.user.id,
+					token: userResponse.token,
+					authenticated: true,
+					//TODO 2 user role
+					// role: userRole.title,
+				});
+			} //TODO 3 catch server errors
 
-			const userRole = await getUserRole(userResponse.user.id);
-			console.log('userRole:', userRole);
+			// console.log('userResponse:', userResponse);
+			// setAuth({
+			// 	user: userResponse.user.id,
+			// 	token: userResponse.token,
+			// 	authenticated: true,
+			// 	role: null,
+			// 	isLoggedIn: true,
+			// });
+			// storage.setToken(userResponse.token);
 
-			if (userRole) {
-				setAuth(prev => ({
-					...prev,
-					role: userRole.title,
-					isLoggedIn: storage.setLogIn(),
-				}));
-				storage.setUserSession(`${userRole.title} | ${userResponse.token}`);
-				storage.setToken(userResponse.token);
-			}
+			// const userRole = await getUserRole(userResponse.user.id);
+			// console.log('userRole:', userRole);
 
+			// if (userRole) {
+			// 	setAuth({
+			// 		...auth,
+			// 		role: userRole.title,
+			// 		isLoggedIn: storage.setLogIn(),
+			// 	});
+			// 	storage.setUserSession(`${userRole.title} | ${userResponse.token}`);
+			// 	storage.setToken(userResponse.token);
+			// }
 			return userResponse;
 		} catch (error) {
 			console.error('Login failed:', error);
