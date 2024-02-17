@@ -25,10 +25,11 @@ function createWindow() {
 		icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
+			// devTools: false, //TODO: Remove on Production
 		},
 	});
-	// win.removeMenu(); // Remove default menu
-	win.webContents.openDevTools(); // Devtools on Open
+	// win.removeMenu(); // Remove default menu //TODO: Uncomment on Production
+	win.webContents.openDevTools(); // Devtools on Open //TODO: Remove on Production
 
 	// Test active push message to Renderer-process.
 	win.webContents.on('did-finish-load', () => {
