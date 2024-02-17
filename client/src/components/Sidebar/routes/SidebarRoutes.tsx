@@ -12,18 +12,21 @@ import { SidebarRoutes } from '../types';
 
 export const SidebarRoute: SidebarRoutes[] = [
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager'],
 		sidebarProps: {
 			displayText: 'User',
 			icon: <UserIcon />,
 		},
 		child: [
 			{
+				allowedRoles: ['super_admin', 'admin', 'manager'],
 				path: '/user/information',
 				sidebarProps: {
 					displayText: 'User Information',
 				},
 			},
 			{
+				allowedRoles: ['super_admin', 'admin', 'manager'],
 				path: '/user/sales',
 				sidebarProps: {
 					displayText: 'User Sales',
@@ -32,38 +35,63 @@ export const SidebarRoute: SidebarRoutes[] = [
 		],
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager'],
 		sidebarProps: {
 			displayText: 'Pending',
 			icon: <PendingIcon />,
 		},
 		child: [
 			{
-				path: '/user/information',
+				allowedRoles: ['super_admin', 'admin', 'manager'],
+				path: '/pending/inventory',
 				sidebarProps: {
-					displayText: 'User Information',
+					displayText: 'Pending Inventory',
 				},
 			},
 			{
-				path: '/user/sales',
+				allowedRoles: ['super_admin', 'admin', 'manager'],
+				path: '/pending/transfer',
 				sidebarProps: {
-					displayText: 'User Sales',
+					displayText: 'Pending Transfer',
+				},
+			},
+			{
+				allowedRoles: ['super_admin', 'admin', 'manager'],
+				path: '/pending/return',
+				sidebarProps: {
+					displayText: 'Pending Return',
 				},
 			},
 		],
 	},
 	{
+		allowedRoles: [
+			'super_admin',
+			'admin',
+			'manager',
+			'encoder',
+			'sales_person',
+		],
 		sidebarProps: {
 			displayText: 'Transaction',
 			icon: <TransactionIcon />,
 		},
 		child: [
 			{
+				allowedRoles: [
+					'super_admin',
+					'admin',
+					'manager',
+					'encoder',
+					'sales_person',
+				],
 				path: '/transaction',
 				sidebarProps: {
 					displayText: 'Transaction',
 				},
 			},
 			{
+				allowedRoles: ['super_admin', 'admin'],
 				path: '/transaction/expenses',
 				sidebarProps: {
 					displayText: 'Expenses',
@@ -72,6 +100,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		],
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
 		path: '/transfer',
 		sidebarProps: {
 			displayText: 'Transfer',
@@ -79,6 +108,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: [
+			'super_admin',
+			'admin',
+			'manager',
+			'encoder',
+			'sales_person',
+		],
 		path: '/return',
 		sidebarProps: {
 			displayText: 'Return',
@@ -86,6 +122,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
 		path: '/inventory',
 		sidebarProps: {
 			displayText: 'Inventory',
@@ -93,6 +130,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager'],
 		path: '/finance',
 		sidebarProps: {
 			displayText: 'Finance',
@@ -100,6 +138,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager'],
 		path: '/reports',
 		sidebarProps: {
 			displayText: 'Reports',
@@ -107,6 +146,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin'],
 		path: '/warehouse',
 		sidebarProps: {
 			displayText: 'Warehouse',
@@ -114,6 +154,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin'],
 		path: '/supplier',
 		sidebarProps: {
 			displayText: 'Supplier',
@@ -121,6 +162,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
+		allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
 		path: '/products',
 		sidebarProps: {
 			displayText: 'Products',
