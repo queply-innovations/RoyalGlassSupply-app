@@ -6,52 +6,49 @@ import { z } from 'zod';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 
+// Define the form schema
 const schema = z.object({
 	email: z.string().email(),
 	password: z.string().min(4),
 });
 
+// Infer the `FormFields` type using zod
 type FormFields = z.infer<typeof schema>;
-interface LoginFormProps {
-	onSuccess: () => void;
-}
 
-export const LoginForm = ({ onSuccess }: LoginFormProps) => {
+export const LoginForm = () => {
+	// Import login method from useAuth hook
 	const { login } = useAuth();
+	// React-hook-form methods
 	const {
 		register,
 		handleSubmit,
 		setError,
-		reset,
 		formState: { errors, isSubmitting },
 	} = useForm<FormFields>({
 		resolver: zodResolver(schema),
 	});
 
-	//const [ completed, setCompleted ] = useState(1);
-	//const ref = useRef(null);
-
+	// Function to authenticate using form fields
 	const onSubmit: SubmitHandler<FormFields> = async (data: FormFields) => {
-		await login(data).then(() => {
-			onSuccess();
+		await login(data).catch(error => {
+			// Catch error on authentication and set error message
+			setError('root', {
+				message: error.message,
+			});
 		});
-		// setLoading(true);
-		// ref.current.continuousStart();
-		// setTimeout(() => {
-		// 	ref.current.complete();
-		// 	// setLoading(false);
-		// }, 4000);
 	};
 
+	// Loading state
 	const loading = (
 		<div className="flex w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
 				Checking you in....
 			</h2>
 		</div>
 	);
 
+	// Login form layout
 	const layout = (
 		<Form onSubmit={handleSubmit(onSubmit)}>
 			<input
@@ -84,7 +81,9 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 				<input type="submit" hidden />
 			</Button>
 			{errors.root && (
-				<div className="text-base text-red-500">{errors.root.message}</div>
+				<div className="pt-3 text-base font-bold text-red-700">
+					{errors.root.message}
+				</div>
 			)}
 		</Form>
 	);

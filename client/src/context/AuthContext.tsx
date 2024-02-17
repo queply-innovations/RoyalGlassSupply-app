@@ -19,7 +19,7 @@ interface AuthProps {
 }
 interface AuthContextProps {
 	auth: AuthProps;
-	login(credentials: LoginCredentials): void;
+	login(credentials: LoginCredentials): Promise<UserResponse>;
 	logout(): void;
 }
 
@@ -38,30 +38,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
 
-	async function login(credentials: LoginCredentials) {
+	async function login(credentials: LoginCredentials): Promise<UserResponse> {
 		try {
 			// Log user in using credentials
-			const userResponse = await LoginUser(credentials);
-			if (userResponse) {
+			const response = await LoginUser(credentials);
+			if (response) {
 				// Set user token
-				storage.setToken(userResponse.token);
+				storage.setToken(response.token);
 				// Get user role and store to local storage
-				const userRole = await getUserRole(userResponse.user.id);
+				const userRole = await getUserRole(response.user.id);
 				if (userRole) {
 					storage.setUserRole(userRole);
 				}
 
 				setAuth({
-					username: userResponse.user.username,
-					id: userResponse.user.id,
-					token: userResponse.token,
+					username: response.user.username,
+					id: response.user.id,
+					token: response.token,
 					authenticated: true,
 					role: userRole,
 				});
-			} //TODO 3 catch server errors
-			return userResponse;
-		} catch (error) {
-			console.error('Login failed:', error);
+			}
+			return response;
+		} catch (error: any) {
+			throw new Error(error);
 		}
 	}
 
