@@ -2,6 +2,7 @@ import { Navbar } from '@/components';
 import Sidebar from '@/components/Sidebar/__test__/Sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { ReactNode } from 'react';
+import { CommonLayout } from './CommonLayout';
 
 interface MainLayoutProps {
 	children: ReactNode;
@@ -12,18 +13,13 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 	const auth = useAuth();
 	return (
 		<>
-			{auth.auth.isLoggedIn ? ( //checks if logged in
+			{auth.auth.authenticated ? ( //checks if logged in
 				<>
 					<div className="flex h-screen w-screen overflow-hidden">
 						<Sidebar />
 						<div className="flex h-screen max-h-screen flex-auto flex-col p-5">
 							<Navbar />
-							<div className="flex h-screen flex-col gap-y-4">
-								<h1 className="text-primary-dark-gray text-3xl font-bold">
-									{title}
-								</h1>
-								{children}
-							</div>
+							<CommonLayout title={title!}>{children}</CommonLayout>
 						</div>
 					</div>
 				</>
