@@ -3,7 +3,6 @@ import { ModalTest } from '@/components/__test__/Modal/Modal';
 import WarehouseForm from '@/features/warehouse/__test__/components/WarehouseForm';
 import { WarehouseTable } from '@/features/warehouse/__test__/components/WarehouseTable';
 import { WarehouseProvider } from '@/features/warehouse/__test__/context/WarehouseContext';
-import { CommonLayout } from '@/layouts/CommonLayout';
 import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
 // import { MainLayout } from '@/layouts/MainLayout';
