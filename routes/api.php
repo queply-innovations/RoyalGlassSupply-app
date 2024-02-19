@@ -14,6 +14,7 @@ use App\Http\Controllers\OperationExpenseController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPriceController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnTransactionController;
 use App\Http\Controllers\ReturnTransactionItemController;
 use App\Http\Controllers\RoleController;
@@ -95,4 +96,8 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/user-roles/searches-filters-sorts', [UserRoleController::class, 'searchFilterAndSort']);
     Route::post('/vouchers/searches-filters-sorts', [VoucherController::class, 'searchFilterAndSort']);
     Route::post('/warehouses/searches-filters-sorts', [WarehouseController::class, 'searchFilterAndSort']);
+
+    Route::post('/reports/sales', [ReportController::class, 'sales']);
+    Route::post('/reports/top-paying-customers', [ReportController::class, 'topPayingCustomers']);
+    Route::post('/reports/most-bought-products', [ReportController::class, 'mostBoughtProducts']);
 });
