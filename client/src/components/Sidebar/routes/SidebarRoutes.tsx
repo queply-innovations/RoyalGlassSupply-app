@@ -29,6 +29,9 @@ export const SidebarRoute: SidebarRoutes[] = [
 				allowedRoles: ['super_admin', 'admin', 'manager'],
 				path: '/user/sales',
 				sidebarProps: {
+					displayText: 'User Sales',
+				},
+			},
 		],
 	},
 	{
