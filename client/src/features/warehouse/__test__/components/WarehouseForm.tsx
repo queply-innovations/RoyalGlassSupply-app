@@ -12,12 +12,13 @@ interface WarehouseFormProps {
 
 const WarehouseForm = ({ isUpdate = false, onClose }: WarehouseFormProps) => {
 	const warehouse = useWarehouse();
-	const [warehouseForm, setWarehouseForm] = useState<Warehouse>(
-		{} as Warehouse,
-	);
+	const [warehouseForm, setWarehouseForm] = useState<Warehouse>({
+		id: warehouse.length + 1 || 0,
+	} as Warehouse);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
+
 		setWarehouseForm(prevWarehouseForm => ({
 			...(prevWarehouseForm as Warehouse),
 			[name]: value,
@@ -25,16 +26,27 @@ const WarehouseForm = ({ isUpdate = false, onClose }: WarehouseFormProps) => {
 	};
 
 	const handleSubmit = async () => {
-		if (isUpdate) {
-			await updateWarehouse(warehouseForm);
-		} else {
-			await addWarehouse(warehouseForm);
+		console.log('warehouseForm:', warehouseForm);
+		try {
+			await new Promise(resolve => setTimeout(resolve, 1000));
+			if (isUpdate) {
+				await updateWarehouse(warehouseForm);
+			} else {
+				await addWarehouse(warehouseForm);
+			}
+		} catch (error) {
+			console.error('Warehouse Data submission failed', error);
 		}
 	};
 
 	return (
 		<>
-			<form>
+			<form
+				onSubmit={e => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+			>
 				<div className="flex flex-col gap-5">
 					<div className="flex flex-row gap-3">
 						<div className="flex flex-col gap-1">
@@ -43,7 +55,7 @@ const WarehouseForm = ({ isUpdate = false, onClose }: WarehouseFormProps) => {
 							</span>
 							<Inputbox
 								name="id"
-								value={warehouse.length + 1 || 0}
+								value={warehouseForm?.id || 0}
 								type="number"
 								disabled={true}
 							/>
@@ -79,7 +91,7 @@ const WarehouseForm = ({ isUpdate = false, onClose }: WarehouseFormProps) => {
 							fill={'green'}
 							className=""
 							type="submit"
-							onClick={handleSubmit}
+							// onClick={handleSubmit}
 						>
 							{isUpdate ? 'Update Warehouse' : 'Add Warehouse'}
 						</Button>
@@ -90,6 +102,12 @@ const WarehouseForm = ({ isUpdate = false, onClose }: WarehouseFormProps) => {
 							type="reset"
 						>
 							Cancel
+						</Button>
+						<Button
+							onClick={() => console.log(warehouseForm)}
+							type="button"
+						>
+							console form
 						</Button>
 					</div>
 				</div>
