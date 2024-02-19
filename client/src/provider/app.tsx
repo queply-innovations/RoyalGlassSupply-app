@@ -2,7 +2,7 @@ import { Spinner } from '@/components/Loader';
 import { Loading } from '@/components/Loading';
 import { ProgressBar } from '@/components/ProgressBar';
 // import { AuthProvider } from '@/context/__test__AuthContext';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense, useEffect, useState } from 'react';
@@ -25,11 +25,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	return (
 		<Suspense
 			fallback={
-				<div className="flex flex-col w-full h-screen px-20 space-y-0 justify-center items-center">
+				<div className="flex h-screen w-full flex-col items-center justify-center space-y-0 px-20">
 					{/* <Spinner size="xl" /> */}
 					{/* <Loading /> */}
 					<ProgressBar />
-					<h2 className='text-primary-dark-gray text-2xl font-bold'>Loading Dashboard....</h2>
+					<h2 className="text-primary-dark-gray text-2xl font-bold">
+						Loading Dashboard....
+					</h2>
 				</div>
 			}
 		>
