@@ -32,7 +32,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 		{
 			title: 'Logout',
 			icon: <RiLogoutBoxRLine />,
-			link: '/app/dashboard',
+			link: '/dashboard',
 		},
 	];
 	const [dropdownVisible, setDropdownVisible] = useState(false);
