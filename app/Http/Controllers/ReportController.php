@@ -30,17 +30,18 @@ class ReportController extends Controller
 
     public function mostBoughtProducts(Request $request)
     {
-        $result = InvoiceItem::selectRaw('invoice_items.product_id, sum(invoice_items.quantity * product_prices.stocks_quantity) as sold_count')
+        $result = InvoiceItem::selectRaw('invoice_items.product_id, sum(invoice_items.quantity * product_prices.stocks_quantity) as sold_count, product_prices.stocks_unit')
                             ->leftJoin('product_prices', function($join) {
                                 $join->on('invoice_items.product_price_id', '=', 'product_prices.id');
                             })
                             ->whereHas('invoice', function (Builder $query) {
                                 $query->where('type', 'payment');
                             })
-                            ->groupBy('product_id')
+                            ->groupBy('invoice_items.product_id')
+                            ->groupBy('product_prices.stocks_unit')
                             ->orderBy('sold_count', 'desc')
                             ->take(10)
-                            ->get();           
+                            ->get();
                             
         return new ReportCollection($result);
     }
