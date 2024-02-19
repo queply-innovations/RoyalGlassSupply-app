@@ -2,16 +2,17 @@ import { Inputbox } from '@/components/Inputbox';
 import { Button } from '@/components/Button';
 import LayoutWrapper from '@/layouts/Layout';
 import React, { useEffect, useState } from 'react';
-import UserInfoTable from '@/components/Tables/User/__test__/UserInfoTable';
-import { getUsers } from '@/features/auth/api/getUser';
+import UserInfoTable from '@/components/Tables/User/UserInfoTable';
+import { getRoles, getUsers } from '@/features/auth/api/getUser';
 import { ProgressBar } from '@/components';
 
 export const UserInfo = () => {
 	const [data, setData] = useState(Array<unknown>);
+	const [roles, setRoles] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
 	useEffect(() => {
-		async function gettingUsers(){
+		async function gettingUsers() {
 			try {
 				const data2 = await getUsers();
 				setData(data2.data.data);
@@ -43,16 +44,16 @@ export const UserInfo = () => {
 					</div>
 				</div>
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-					<UserInfoTable data={data} />
+					<UserInfoTable data={data} roles={roles} />
 				</div>
 			</div>
 		</div>
 	);
 
 	const loading = (
-		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+		<div className="flex h-full w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
 				Loading Users...
 			</h2>
 		</div>
@@ -60,7 +61,7 @@ export const UserInfo = () => {
 
 	return (
 		<>
-			<LayoutWrapper >
+			<LayoutWrapper>
 				{!notLoading && loading}
 				{notLoading && layout}
 			</LayoutWrapper>

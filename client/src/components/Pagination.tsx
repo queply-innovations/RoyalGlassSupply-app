@@ -1,47 +1,105 @@
-import { FC } from 'react';
+import { EllipsisIcon } from '@/assets/icons';
+import { FC, useState } from 'react';
 
 interface PaginationProps{
-	nPages: number;
-	currentPage: number;
-	setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+	onClickPrev: any;
+	onClickNext: any;
+	table: any;
 }
 
-export const Pagination: FC<PaginationProps> = ({nPages, currentPage, setCurrentPage}) => {
+export const Pagination: FC<PaginationProps> = ({
+	onClickPrev, onClickNext, table
+}) => {
 
+	const currentPage = table.getState().pagination.pageIndex + 1;
+	const nPages = table.getPageCount();
+	const canPrevPage = !table.getCanPreviousPage();
+	const canNextPage = !table.getCanNextPage();
 	const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
 	const goToNextPage = () => {
-		if(currentPage !== nPages) setCurrentPage(currentPage + 1)
+		onClickNext();
 	}
+
 	const goToPrevPage = () => {
-		if(currentPage !== 1) setCurrentPage(currentPage - 1)
+		onClickPrev();
 	}
+
+	//TODO: Clean out error "each child in a list should have a unique key prop"
+
 	return (
-		<nav className='d-flex p-4'>
-			<ul className='pagination justify-content-center'>
-				<li className="page-item">
-					<a className="page-link" 
-						onClick={goToPrevPage} >
-						
-						Previous
+		<nav className='flex flex-row p-4' key="navigation">
+			<ul className='flex flex-row content-center pagination' key="pagination">
+				<li className={`page-item ${canPrevPage ? 'bg-slate-200' : ''}`} key="first">
+					<a className={`font-semibold page-link ${canPrevPage ? 'text-white' : ''}`}
+						onClick={() => table.setPageIndex(0)} key="firstBttn" >
+						{`<<`}
 					</a>
 				</li>
-				{pageNumbers.map(pgNumber => (
-					<li key={pgNumber} 
-						className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
-						<a onClick={() => setCurrentPage(pgNumber)}  
-							className='page-link' >
-							
-							{pgNumber}
-						</a>
-					</li>
+				<li className={`page-item ${canPrevPage ? 'bg-slate-200' : ''}`} key="previous">
+					<a className={`page-link ${canPrevPage ? 'text-white' : ''}`}
+						onClick={goToPrevPage} key="previousBttn" >
+						{`< Previous`}
+					</a>
+				</li>
+
+				{ pageNumbers.length > 3 
+					&& currentPage != 1 
+					&& currentPage != 2 ? 
+						<li key="ellipsisStart"><EllipsisIcon /></li> : 
+						<li key="ellipsisStart"></li> }
+				{pageNumbers.map((pgNumber, i) => (
+					pageNumbers.length > 3 ? (
+						<>
+							{(currentPage == pgNumber 
+							|| currentPage - 1 == pgNumber 
+							|| currentPage + 1 == pgNumber 
+							|| (currentPage == 1 && pgNumber == currentPage + 2)
+							|| (currentPage == table.getPageCount() && pgNumber == currentPage - 2) ? (
+								<li key={pgNumber} 
+									className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
+
+									<a onClick={() => table.setPageIndex(pgNumber - 1)} 
+										className='page-link'
+										key={i} >
+										
+										{pgNumber}
+
+									</a>
+								</li>
+							) : (''))}
+						</>
+					) : (
+						<li key={pgNumber} 
+							className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
+
+							<a onClick={() => table.setPageIndex(pgNumber - 1)} 
+								className='page-link' 
+								key={i} >
+								
+								{pgNumber}
+							</a>
+						</li>
+					)
 				))}
-				<li className="page-item">
-					<a className="page-link" 
-						onClick={goToNextPage} >
-						
-						Next
+				{ pageNumbers.length > 3 
+					&& !canNextPage 
+					&& currentPage != table.getPageCount() - 1 ? 
+						<li key="ellipsisEnd"><EllipsisIcon /></li> : 
+						<li key="ellipsisEnd"></li> }
+
+				<li className={`page-item ${canNextPage ? 'bg-slate-200' : ''}`} key="next">
+					<a className={`page-link ${canNextPage ? 'text-white' : ''}`}
+						onClick={goToNextPage} key="nextBttn" >
+						{`Next >`}
+					</a>
+				</li>
+
+				<li className={`page-item ${canNextPage ? 'bg-slate-200' : ''}`} key="last">
+					<a className={`font-semibold page-link ${canNextPage ? 'text-white' : ''}`}
+						onClick={() => table.setPageIndex(table.getPageCount() - 1)} key="lastBttn" >
+						{`>>`}
 					</a>
 				</li>
 			</ul>
