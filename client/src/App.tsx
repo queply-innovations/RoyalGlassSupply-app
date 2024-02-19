@@ -8,7 +8,7 @@ function App() {
 		<AppProvider>
 			{/* uncomment this to preview the app routes*/}
 			<AppRouter />
-			//! PANG TEST LANG NI
+			{/* //! PANG TEST LANG NI */}
 			{/* <TestRoute /> */}
 		</AppProvider>
 	);
