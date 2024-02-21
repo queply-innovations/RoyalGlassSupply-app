@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-import { useWarehouseContext } from '../context/WarehouseContext';
-import { Button, ProgressBar } from '@/components';
-=======
 import { useWarehouse } from '../context/WarehouseContext';
-import { Button } from '@/components';
-import { useState } from 'react';
->>>>>>> 0469bf843dc39374849c78161e6829dd3da817e3
+import { Button, ProgressBar } from '@/components';
+//import { useWarehouse } from '../context/WarehouseContext';
+//import { Button } from '@/components';
+//import { useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { SortIcon } from '@/assets/icons';
