@@ -16,17 +16,16 @@ const ProductContext = createContext<ProductContextProps | undefined>(
 	undefined,
 );
 
-export const WarehouseProvider = ({ children }: ProductProviderProps) => {
-	const { warehouses } = useWarehouseQuery();
-
+export const ProductsProvider = ({ children }: ProductProviderProps) => {
+	const value = {};
 	return (
-		<ProductContext.Provider value={warehouses}>
+		<ProductContext.Provider value={value}>
 			{children}
 		</ProductContext.Provider>
 	);
 };
 
-export function useWarehouse() {
+export function useProducts() {
 	const context = useContext(ProductContext);
 
 	if (!context) {
