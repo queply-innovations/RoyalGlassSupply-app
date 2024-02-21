@@ -11,15 +11,17 @@ export interface Product {
 export interface ProductPrices {
 	id: number;
 	product_id: number;
-	type: 'retail' | 'wholesale';
+	product: Product;
+	type: 'retail' | 'wholesale' | string;
 	unit: string;
 	stocks_quantity: number;
 	stocks_unit: string;
 	capital_price: number;
 	markup_price: number;
+	retail_price: number;
 	tax_amount: number;
 	cost: number;
-	on_sale: boolean;
+	on_sale: number;
 	sale_price: number;
 	price: number;
 	warehouse_id: number;
