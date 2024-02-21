@@ -1,13 +1,14 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import { Product, ProductPrices } from '../types';
+import { useProductQuery } from '../hooks';
 
 interface ProductContextProps {
-	products: Product[];
-	productPrices: ProductPrices[];
+	productsData: ProductPrices[];
+	// productPrices: ProductPrices[];
 	selectedProduct: Product;
 	setSelectedProduct: (product: Product) => void;
-	selectedProductPrice: ProductPrices;
-	setSelectedProductPrice: (productPrice: ProductPrices) => void;
+	// selectedProductPrice: ProductPrices;
+	// setSelectedProductPrice: (productPrice: ProductPrices) => void;
 }
 interface ProductProviderProps {
 	children: ReactNode;
@@ -17,7 +18,18 @@ const ProductContext = createContext<ProductContextProps | undefined>(
 );
 
 export const ProductsProvider = ({ children }: ProductProviderProps) => {
-	const value = {};
+	const [selectedProduct, setSelectedProduct] = useState<Product>({
+		id: 0,
+		name: '',
+		serial_no: 0,
+		brand: '',
+		size: '',
+		color: '',
+		notes: '',
+	});
+	const { productsData } = useProductQuery();
+	console.log('products', productsData);
+	const value = { productsData, selectedProduct, setSelectedProduct };
 	return (
 		<ProductContext.Provider value={value}>
 			{children}
