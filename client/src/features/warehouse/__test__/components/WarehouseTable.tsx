@@ -11,14 +11,16 @@ import { useState } from 'react';
 import { removeWarehouse } from '../api/Warehouse';
 
 interface WarehouseTableProps {
+	openModal: (data: Warehouse, action: string) => void;
 	isUpdate?: boolean;
 }
 
-export const WarehouseTable = ({ isUpdate = false }: WarehouseTableProps) => {
-	const [update, setUpdate] = useState<boolean>(isUpdate);
+export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 	const warehouse = useWarehouse();
+
 	const WarehouseTableHeader = [
 		'Warehouse ID',
+		'Warehouse Code',
 		'Warehouse Name',
 		'Location',
 		'Action',
@@ -82,7 +84,7 @@ export const WarehouseTable = ({ isUpdate = false }: WarehouseTableProps) => {
 						<Button
 							fill="empty"
 							textColor={'black'}
-							onClick={() => handleUpdateModal(warehouseRow)}
+							onClick={() => handleEditWarehouse(warehouseRow)}
 							className="flex flex-row items-center gap-2"
 						>
 							<FaPencilAlt /> Edit
@@ -120,16 +122,29 @@ export const WarehouseTable = ({ isUpdate = false }: WarehouseTableProps) => {
 		},
 	});
 
-	const handleUpdateModal = (warehouse: any) => {
-		setSelectedWarehouse(warehouse);
-		updateModal.openModal();
-		console.log('Update Warehouse', warehouse);
+	// const handleUpdateModal = (warehouse: any) => {
+	// 	setSelectedWarehouse(warehouse);
+	// 	updateModal.openModal();
+	// 	console.log('Update Warehouse', warehouse);
+	// };
+
+	// const handleRemoveWarehouse = (warehouse: any) => {
+	// 	setSelectedWarehouse(warehouse);
+	// 	removeModal.openModal();
+	// 	console.log(warehouse.id);
+	// };
+
+	// * This function is used to handle the edit warehouse
+	const handleEditWarehouse = (warehouses: Warehouse) => {
+		console.log('Edit Warehouse Clicked:', warehouses);
+		// * This function will open the modal with the warehouse data
+		openModal(warehouses, 'edit');
 	};
 
-	const handleRemoveWarehouse = (warehouse: any) => {
-		setSelectedWarehouse(warehouse);
-		removeModal.openModal();
-		console.log(warehouse.id);
+	// * This function is used to handle the remove warehouse
+	const handleRemoveWarehouse = (warehouses: Warehouse) => {
+		console.log('Remove Warehouse Clicked:', warehouses);
+		openModal(warehouses, 'remove');
 	};
 
 	return (

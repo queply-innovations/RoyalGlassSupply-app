@@ -13,14 +13,17 @@ export const useWarehouseMutation = () => {
 	const warehouse = useWarehouse();
 
 	// State to store warehouse form data
-	const [warehouseForm, setWarehouseForm] = useState<Warehouse>({
+	const [value, setValue] = useState<Warehouse>({
 		id: warehouse.length + 1 || 0,
+		code: '',
+		name: '',
+		location: '',
 	} as Warehouse);
 
 	// Function to handle form input changes
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setWarehouseForm(prevWarehouseForm => ({
+		setValue(prevWarehouseForm => ({
 			...(prevWarehouseForm as Warehouse),
 			[name]: value,
 		}));
@@ -32,8 +35,9 @@ export const useWarehouseMutation = () => {
 			// Reset loading state
 			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
 			// Reset form data
-			setWarehouseForm({
+			setValue({
 				id: warehouse.length + 1 || 0,
+				code: '',
 				name: '',
 				location: '',
 			} as Warehouse);
@@ -45,23 +49,29 @@ export const useWarehouseMutation = () => {
 
 	const { mutateAsync: removeWarehouseMutation } = useMutation({
 		mutationKey: ['removeWarehouse'],
+		// * This function will call removeWarehouse from API to remove the warehouse
 		mutationFn: removeWarehouse,
 		...mutationConfig,
 	});
 
 	const { mutateAsync: addWarehouseMutation } = useMutation({
 		mutationKey: ['addWarehouse'],
+		// * This function will call addWarehouse from API to add the warehouse
 		mutationFn: addWarehouse,
 		...mutationConfig,
 	});
 
 	const { mutateAsync: updateWarehouseMutation } = useMutation({
 		mutationKey: ['updateWarehouse'],
+		// * This function will call updateWarehouse from API to update the warehouse
 		mutationFn: updateWarehouse,
 		...mutationConfig,
 	});
 
 	return {
+		value,
+		setValue,
+		handleChange,
 		removeWarehouseMutation,
 		addWarehouseMutation,
 		updateWarehouseMutation,
