@@ -5,7 +5,7 @@ import { Warehouse } from '../types';
 
 export const fetchWarehouses = async (): Promise<Warehouse[]> => {
 	return await axios
-		.get(API_URLS.WAREHOUSES, {
+		.get(API_URLS.WAREHOUSE, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export const fetchWarehouses = async (): Promise<Warehouse[]> => {
 };
 
 export const getWarehouses = () => {
-	return axios.get(`${API_URLS.WAREHOUSES}`);
+	return axios.get(`${API_URLS.WAREHOUSE}`);
 };
 
 export const getWarehouseById = (data: Warehouse[], id: number) => {
@@ -31,7 +31,7 @@ export const getWarehouseById = (data: Warehouse[], id: number) => {
 
 export const addWarehouse = (data: Warehouse) => {
 	return axios
-		.post(API_URLS.WAREHOUSES, data, {
+		.post(API_URLS.WAREHOUSE, data, {
 			headers: API_HEADERS,
 		})
 		.then(response => {
@@ -45,7 +45,7 @@ export const addWarehouse = (data: Warehouse) => {
 
 export const updateWarehouse = (data: Warehouse) => {
 	return axios
-		.put(`${API_URLS.WAREHOUSES}/${data.id}`, data, {
+		.put(`${API_URLS.WAREHOUSE}/${data.id}`, data, {
 			headers: API_HEADERS,
 		})
 		.then(response => {
@@ -58,6 +58,6 @@ export const updateWarehouse = (data: Warehouse) => {
 };
 
 export const removeWarehouse = (id: number) => {
-	const response = axios.delete(`${API_URLS.WAREHOUSES}/${id}`);
+	const response = axios.delete(`${API_URLS.WAREHOUSE}/${id}`);
 	return response;
 };

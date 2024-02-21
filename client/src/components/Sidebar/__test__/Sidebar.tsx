@@ -19,10 +19,10 @@ const Sidebar = ({}: SidebarProps) => {
 						{SidebarRoute.map((route, index) => {
 							// Check if currently authenticated user's role is in allowedRoles
 
-							if (
-								auth.auth.role &&
-								route.allowedRoles.includes(auth.auth.role as Role)
-							) {
+							// if (
+							// 	auth.auth.role &&
+							// 	route.allowedRoles.includes(auth.auth.role as Role)
+							// ) {
 								// Check if route has sidebarProps
 								if (route.sidebarProps) {
 									// Check if route has children
@@ -39,9 +39,9 @@ const Sidebar = ({}: SidebarProps) => {
 									// Return null if route doesn't have sidebarProps
 									return null;
 								}
-							} else {
-								return null;
-							}
+							// } else {
+							// 	return null;
+							// }
 						})}
 					</ul>
 				</aside>

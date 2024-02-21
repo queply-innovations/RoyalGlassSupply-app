@@ -49,7 +49,7 @@ export const Pagination: FC<PaginationProps> = ({
 					&& currentPage != 2 ? 
 						<li key="ellipsisStart"><EllipsisIcon /></li> : 
 						<li key="ellipsisStart"></li> }
-				{pageNumbers.map((pgNumber, i) => (
+				{ pageNumbers.map((pgNumber, i) => (
 					pageNumbers.length > 3 ? (
 						<>
 							{(currentPage == pgNumber 
@@ -82,7 +82,7 @@ export const Pagination: FC<PaginationProps> = ({
 							</a>
 						</li>
 					)
-				))}
+				)) }
 				{ pageNumbers.length > 3 
 					&& !canNextPage 
 					&& currentPage != table.getPageCount() - 1 ? 

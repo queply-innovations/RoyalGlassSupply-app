@@ -1,8 +1,5 @@
 import { useWarehouse } from '../context/WarehouseContext';
 import { Button, ProgressBar } from '@/components';
-//import { useWarehouse } from '../context/WarehouseContext';
-//import { Button } from '@/components';
-//import { useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { SortIcon } from '@/assets/icons';
