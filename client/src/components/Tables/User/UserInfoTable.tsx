@@ -20,8 +20,87 @@ export const UserInfoTable: FC<UserTableProps> = ({ data, roles }) =>{
 		'Action',
 	];
 
-	// console.log(roles.role);
-	// console.log(data);
+	type UserInfo = {
+		id: number;
+		name: string;
+		location: string;
+	};
+
+	const UserInfoTableHeader: ColumnDef<Warehouse>[] = [
+		{
+			id: "select",
+			header: ({ table }) => (
+				<input type="checkbox" 
+					checked={table.getIsAllPageRowsSelected()}
+					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+					aria-label="Select all"
+				/>
+			),
+			cell: ({ row }) => (
+				<input type="checkbox" 
+					checked={row.getIsSelected()}
+					onChange={(e) => row.toggleSelected(!!e.target.checked)}
+					aria-label="Select row"
+					className="justify-center"
+				/>
+			),
+			enableSorting: false,
+			enableHiding: false,
+		},
+
+		{
+			accessorKey: 'id',
+			header:	() => <div className='justify-center'>WAREHOUSE ID</div>,
+		},
+
+		{
+			accessorKey: 'name',
+			header: ({ column }) => {
+				return (
+					<div className='justify-center'>
+						<Button
+							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							className="bg-transparent text-black flex flex-row"
+						>
+							WAREHOUSE NAME <SortIcon />
+						</Button>
+					</div>
+				)
+			},
+		},
+
+		{
+			accessorKey: 'location',
+			header:	() => <div className='justify-center'>LOCATION</div>,
+		},
+
+		{
+			id: 'actions',
+			header:	() => <div className='flex flex-row justify-center'>ACTIONS</div>,
+			cell: ({ row }) => {
+				const warehouseRow = row.original;
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<Button
+							fill="empty"
+							textColor={'black'}
+							onClick={() => handleEditWarehouse(warehouseRow)}
+							className="flex flex-row items-center gap-2"
+						>
+							<FaPencilAlt /> Edit
+						</Button>
+						<Button
+							fill={'red'}
+							onClick={() => handleRemoveWarehouse(warehouseRow)}
+						>
+							Remove
+						</Button>
+					</div>
+				);
+			}
+		}
+
+	];
 
 	return (
 		<>

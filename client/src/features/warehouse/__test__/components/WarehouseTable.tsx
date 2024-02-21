@@ -5,10 +5,6 @@ import { DataTable } from '@/components/Tables/DataTable';
 import { SortIcon } from '@/assets/icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { Warehouse } from '../types';
-import { useModal } from '@/utils/Modal';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import { removeWarehouse } from '../api/Warehouse';
 
 interface WarehouseTableProps {
 	openModal: (data: Warehouse, action: string) => void;
@@ -18,15 +14,7 @@ interface WarehouseTableProps {
 export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 	const warehouse = useWarehouse();
 
-	const WarehouseTableHeader = [
-		'Warehouse ID',
-		'Warehouse Code',
-		'Warehouse Name',
-		'Location',
-		'Action',
-	];
-
-	const tableHeader: ColumnDef<Warehouse>[] = [
+	const WarehouseTableHeader: ColumnDef<Warehouse>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -102,38 +90,6 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 
 	];
 
-	const removeModal = useModal();
-	const successModal = useModal();
-	const updateModal = useModal();
-	const [selectedWarehouse, setSelectedWarehouse] = useState<any | null>(null);
-	const { isOpen, openModal, closeModal } = useModal();
-
-	const { mutateAsync: removeWarehouseMutation } = useMutation({
-		mutationKey: ['removeWarehouse:', selectedWarehouse],
-		mutationFn: removeWarehouse,
-		onSuccess: async () => {
-			// await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
-			console.log('Warehouse removed');
-			removeModal.closeModal();
-			successModal.openModal();
-		},
-		onError: error => {
-			console.error('Warehouse Data submission failed', error);
-		},
-	});
-
-	// const handleUpdateModal = (warehouse: any) => {
-	// 	setSelectedWarehouse(warehouse);
-	// 	updateModal.openModal();
-	// 	console.log('Update Warehouse', warehouse);
-	// };
-
-	// const handleRemoveWarehouse = (warehouse: any) => {
-	// 	setSelectedWarehouse(warehouse);
-	// 	removeModal.openModal();
-	// 	console.log(warehouse.id);
-	// };
-
 	// * This function is used to handle the edit warehouse
 	const handleEditWarehouse = (warehouses: Warehouse) => {
 		console.log('Edit Warehouse Clicked:', warehouses);
@@ -151,12 +107,10 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 		<>
 			<DataTable
 				data={warehouse}
-				columns={tableHeader}
+				columns={WarehouseTableHeader}
 				filterWhat={"location"}
 				dataType={"Warehouse"}
-				isOpen={isOpen}
 				openModal={openModal}
-				closeModal={closeModal}
 			/>
 		</>
 	);
