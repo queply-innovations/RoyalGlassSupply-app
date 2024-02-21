@@ -58,6 +58,15 @@ export const updateWarehouse = (data: Warehouse) => {
 };
 
 export const removeWarehouse = (id: number) => {
-	const response = axios.delete(`${API_URLS.WAREHOUSES}/${id}`);
-	return response;
+	return axios
+		.delete(`${API_URLS.WAREHOUSES}/${id}`, {
+			headers: API_HEADERS,
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error removing warehouse:', error);
+			throw error;
+		});
 };
