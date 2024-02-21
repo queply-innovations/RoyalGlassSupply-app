@@ -19,7 +19,7 @@ const { PendingTransfer } = lazyImport(
 	() => import('@/pages'),
 	'PendingTransfer',
 );
-const { Products } = lazyImport(() => import('@/pages'), 'Products');
+const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
 const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
 const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');

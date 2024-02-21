@@ -46,6 +46,7 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 			header: () => <div className="justify-center">ID</div>,
 		},
 		{
+			id: 'name',
 			accessorKey: 'product.name',
 			header: ({ column }) => {
 				return (
@@ -172,6 +173,7 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 					</div>
 				);
 			},
+			enableGlobalFilter: false,
 		},
 	];
 
