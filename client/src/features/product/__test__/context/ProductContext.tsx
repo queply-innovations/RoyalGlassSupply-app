@@ -1,13 +1,20 @@
 import { ReactNode, createContext, useContext } from 'react';
-import { Product } from '../types';
-import { useWarehouseQuery } from '../../__test__/hooks';
+import { Product, ProductPrices } from '../types';
 
-const ProductContext = createContext<Product[] | undefined>(undefined);
-
-interface ProductContextProps {}
+interface ProductContextProps {
+	products: Product[];
+	productPrices: ProductPrices[];
+	selectedProduct: Product;
+	setSelectedProduct: (product: Product) => void;
+	selectedProductPrice: ProductPrices;
+	setSelectedProductPrice: (productPrice: ProductPrices) => void;
+}
 interface ProductProviderProps {
 	children: ReactNode;
 }
+const ProductContext = createContext<ProductContextProps | undefined>(
+	undefined,
+);
 
 export const WarehouseProvider = ({ children }: ProductProviderProps) => {
 	const { warehouses } = useWarehouseQuery();
