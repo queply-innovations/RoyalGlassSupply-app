@@ -5,6 +5,7 @@ import { UseModalProps } from '@/utils/Modal';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
 import { useWarehouseMutation } from '../hooks';
 import { Warehouse } from '../types';
+import { useWarehouse } from '..';
 
 interface WarehouseFormProps {
 	isUpdate?: boolean;
@@ -12,11 +13,12 @@ interface WarehouseFormProps {
 	isDelete?: boolean;
 }
 
-const WarehouseForm = ({
+export const WarehouseForm = ({
 	isUpdate = false,
 	onClose,
 	isDelete,
 }: WarehouseFormProps) => {
+	const { warehouseSelected } = useWarehouse();
 	const {
 		value: warehouseForm,
 		setValue: setWarehouseForm,
@@ -26,8 +28,13 @@ const WarehouseForm = ({
 		removeWarehouseMutation,
 	} = useWarehouseMutation();
 
-	// TODO: Need to handle setValue when isUpdate and isDelete is true to pass data to form
-	// TODO: maybe need to pass WarehouseData selected from Context to setValue
+	// TODO TEST FOR BUGS
+	useEffect(() => {
+		if (isUpdate || isDelete) {
+			setWarehouseForm(warehouseSelected);
+			console.log(isUpdate, isDelete);
+		}
+	}, [isUpdate, isDelete, warehouseSelected, setWarehouseForm]);
 
 	const handleSubmit = async () => {
 		console.log('warehouseForm:', warehouseForm);
@@ -35,18 +42,18 @@ const WarehouseForm = ({
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			if (isUpdate) {
 				// * call updateWarehouseMutation to Update Warehouse
-				// TODO: TEST IF WORKING
+				console.log('Update Warehouse:', warehouseForm.id);
 				await updateWarehouseMutation(warehouseForm);
 				onClose();
 			}
 			if (isDelete) {
 				// * call removeWarehouseMutation to Remove Warehouse
-				// TODO: TEST IF WORKING
-
+				console.log('Remove Warehouse:', warehouseForm.id);
 				await removeWarehouseMutation(warehouseForm.id);
 				onClose();
-			} else {
+			} else if (!isUpdate && !isDelete) {
 				// * call addWarehouseMutation to Add Warehouse
+				console.log('Add Warehouse:', warehouseForm.id);
 				await addWarehouseMutation(warehouseForm);
 				onClose();
 			}
@@ -93,7 +100,11 @@ const WarehouseForm = ({
 										disabled={true}
 									/>
 								</div>
-								<div className="flex flex-col gap-1">
+								{/*
+                                //TODO UNCOMMENT IF CODE IS FILLABLE IN
+								// ! WAREHOUSE CONTROLLER (BACKEND)
+                                */}
+								{/* <div className="flex flex-col gap-1">
 									<span className="text-sm font-bold uppercase">
 										Warehouse Code
 									</span>
@@ -104,7 +115,7 @@ const WarehouseForm = ({
 										onChange={handleChange}
 										required
 									/>
-								</div>
+								</div> */}
 								<div className="flex flex-col gap-1">
 									<span className="text-sm font-bold uppercase">
 										Warehouse Name
@@ -162,5 +173,3 @@ const WarehouseForm = ({
 		</>
 	);
 };
-
-export default WarehouseForm;

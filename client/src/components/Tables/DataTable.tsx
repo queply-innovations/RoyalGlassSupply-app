@@ -27,9 +27,7 @@ interface DataTableProps<TData, TValue> {
 	data: TData[]
 	filterWhat: string
 	dataType: string
-	isOpen: any
 	openModal: any
-	closeModal: any
 }
 
 export function DataTable<TData, TValue>({
@@ -37,9 +35,7 @@ export function DataTable<TData, TValue>({
 	data,
 	filterWhat,
 	dataType,
-	isOpen,
 	openModal,
-	closeModal
 	}: DataTableProps<TData, TValue>) {
 		const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -132,12 +128,19 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex justify-end space-x-2 py-4">
-				<Pagination
-					onClickPrev={() => table.previousPage()}
-					onClickNext={() => table.nextPage()}
-					table={table}
-					/>
+			<div className="flex flex-row justify-between space-x-2 py-4">
+				<div className="font-semibold p-4">
+					{table.getFilteredSelectedRowModel().rows.length} of{" "}
+					{table.getFilteredRowModel().rows.length} row(s) selected.
+				</div>
+
+				<div>
+					<Pagination
+						onClickPrev={() => table.previousPage()}
+						onClickNext={() => table.nextPage()}
+						table={table}
+						/>
+				</div>
 			</div>
 			</>
 		)

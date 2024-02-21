@@ -1,45 +1,36 @@
 import { useWarehouse } from '../context/WarehouseContext';
-import { Button, ProgressBar } from '@/components';
+import { Button } from '@/components';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { SortIcon } from '@/assets/icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { Warehouse } from '../types';
-import { useModal } from '@/utils/Modal';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import { removeWarehouse } from '../api/Warehouse';
 
 interface WarehouseTableProps {
 	openModal: (data: Warehouse, action: string) => void;
-	isUpdate?: boolean;
 }
 
 export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
-	const warehouse = useWarehouse();
+	const { warehouses, setWarehouseSelected } = useWarehouse();
 
-	const WarehouseTableHeader = [
-		'Warehouse ID',
-		'Warehouse Code',
-		'Warehouse Name',
-		'Location',
-		'Action',
-	];
-
-	const tableHeader: ColumnDef<Warehouse>[] = [
+	const WarehouseTableHeader: ColumnDef<Warehouse>[] = [
 		{
-			id: "select",
+			id: 'select',
 			header: ({ table }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+					onChange={e =>
+						table.toggleAllPageRowsSelected(!!e.target.checked)
+					}
 					aria-label="Select all"
 				/>
 			),
 			cell: ({ row }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
+					onChange={e => row.toggleSelected(!!e.target.checked)}
 					aria-label="Select row"
 					className="justify-center"
 				/>
@@ -50,33 +41,37 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 
 		{
 			accessorKey: 'id',
-			header:	() => <div className='justify-center'>WAREHOUSE ID</div>,
+			header: () => <div className="justify-center">WAREHOUSE ID</div>,
 		},
 
 		{
 			accessorKey: 'name',
 			header: ({ column }) => {
 				return (
-					<div className='justify-center'>
+					<div className="justify-center">
 						<Button
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row"
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black"
 						>
 							WAREHOUSE NAME <SortIcon />
 						</Button>
 					</div>
-				)
+				);
 			},
 		},
 
 		{
 			accessorKey: 'location',
-			header:	() => <div className='justify-center'>LOCATION</div>,
+			header: () => <div className="justify-center">LOCATION</div>,
 		},
 
 		{
 			id: 'actions',
-			header:	() => <div className='flex flex-row justify-center'>ACTIONS</div>,
+			header: () => (
+				<div className="flex flex-row justify-center">ACTIONS</div>
+			),
 			cell: ({ row }) => {
 				const warehouseRow = row.original;
 				return (
@@ -97,66 +92,38 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 						</Button>
 					</div>
 				);
-			}
-		}
-
+			},
+		},
 	];
-
-	const removeModal = useModal();
-	const successModal = useModal();
-	const updateModal = useModal();
-	const [selectedWarehouse, setSelectedWarehouse] = useState<any | null>(null);
-	const { isOpen, openModal, closeModal } = useModal();
-
-	const { mutateAsync: removeWarehouseMutation } = useMutation({
-		mutationKey: ['removeWarehouse:', selectedWarehouse],
-		mutationFn: removeWarehouse,
-		onSuccess: async () => {
-			// await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
-			console.log('Warehouse removed');
-			removeModal.closeModal();
-			successModal.openModal();
-		},
-		onError: error => {
-			console.error('Warehouse Data submission failed', error);
-		},
-	});
-
-	// const handleUpdateModal = (warehouse: any) => {
-	// 	setSelectedWarehouse(warehouse);
-	// 	updateModal.openModal();
-	// 	console.log('Update Warehouse', warehouse);
-	// };
-
-	// const handleRemoveWarehouse = (warehouse: any) => {
-	// 	setSelectedWarehouse(warehouse);
-	// 	removeModal.openModal();
-	// 	console.log(warehouse.id);
-	// };
 
 	// * This function is used to handle the edit warehouse
 	const handleEditWarehouse = (warehouses: Warehouse) => {
-		console.log('Edit Warehouse Clicked:', warehouses);
-		// * This function will open the modal with the warehouse data
+		// console.log('Edit Warehouse Clicked:', warehouses);
+
+		// * Set the warehouse selected from props to the warehouse selected state
+		setWarehouseSelected(warehouses);
+		// * Then open modal edit with the warehouse data
 		openModal(warehouses, 'edit');
 	};
 
 	// * This function is used to handle the remove warehouse
 	const handleRemoveWarehouse = (warehouses: Warehouse) => {
-		console.log('Remove Warehouse Clicked:', warehouses);
+		// console.log('Remove Warehouse Clicked:', warehouses);
+
+		// * Set the warehouse selected from props to the warehouse selected state
+		setWarehouseSelected(warehouses);
+		// * Then open modal remove with the warehouse data
 		openModal(warehouses, 'remove');
 	};
 
 	return (
 		<>
 			<DataTable
-				data={warehouse}
-				columns={tableHeader}
-				filterWhat={"location"}
-				dataType={"Warehouse"}
-				isOpen={isOpen}
+				data={warehouses}
+				columns={WarehouseTableHeader}
+				filterWhat={'location'}
+				dataType={'Warehouse'}
 				openModal={openModal}
-				closeModal={closeModal}
 			/>
 		</>
 	);
