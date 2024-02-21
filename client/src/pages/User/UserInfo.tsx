@@ -31,18 +31,6 @@ export const UserInfo = () => {
 				User Info
 			</h1>
 			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-				<div className="flex flex-row justify-between">
-					<Inputbox
-						placeholder="Search"
-						variant={'searchbar'}
-						buttonIcon={'outside'}
-						className="w-1/2"
-					/>
-					<div className="flex flex-row gap-3">
-						<Button fill={'green'}>Add User</Button>
-						<Button fill={'red'}>Remove User</Button>
-					</div>
-				</div>
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 					<UserInfoTable data={data} roles={roles} />
 				</div>
