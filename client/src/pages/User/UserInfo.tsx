@@ -12,14 +12,10 @@ export const UserInfo = () => {
 	const [notLoading, setNotLoading] = useState(false);
 
 	useEffect(() => {
-		async function gettingUsers(){
+		async function gettingUsers() {
 			try {
 				const data2 = await getUsers();
 				setData(data2.data.data);
-
-				const data3 = await getRoles();
-				setRoles(data3.data);
-
 				setNotLoading(true);
 				//console.log(data2.data.data);
 			} catch (error) {
@@ -55,9 +51,9 @@ export const UserInfo = () => {
 	);
 
 	const loading = (
-		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+		<div className="flex h-full w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
 				Loading Users...
 			</h2>
 		</div>
@@ -65,7 +61,7 @@ export const UserInfo = () => {
 
 	return (
 		<>
-			<LayoutWrapper >
+			<LayoutWrapper>
 				{!notLoading && loading}
 				{notLoading && layout}
 			</LayoutWrapper>

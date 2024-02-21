@@ -12,17 +12,15 @@ export interface LoginCredentials {
 export const LoginUser = async (
 	data: LoginCredentials,
 ): Promise<UserResponse> => {
-	try {
+
 		const response = await axios.post(`${API_URLS.LOGIN}`, data, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': '*',
 			},
+		}).catch((error) => {
+			throw new Error(error.response.data.message)
 		});
 
 		return response.data;
-	} catch (e) {
-		console.log('login failed:', e);
-		throw e;
-	}
 };

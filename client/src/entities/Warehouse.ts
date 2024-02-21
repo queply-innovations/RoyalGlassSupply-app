@@ -1,7 +1,7 @@
 export interface Warehouse {
 	id: number;
-	warehouse_name: string;
-	warehouse_location: string;
+	name: string;
+	location: string;
 }
 
 export interface WarehouseData {

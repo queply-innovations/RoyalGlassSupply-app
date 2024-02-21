@@ -2,9 +2,10 @@ import { ProgressBar } from '@/components';
 import { Spinner } from '@/components/Loader';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/context/AuthContext';
-import { Login } from '@/features/auth';
+// import { Login } from '@/features/auth';
+import { Login } from '@/pages/__test__';
 import { Suspense, useEffect } from 'react';
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 const App = () => {
 	// useEffect(() => {
@@ -42,6 +43,7 @@ export const PublicRoutes = () => {
 		<>
 			<Routes>
 				<Route path="/" element={<Login />} />
+				<Route path="*" element={<Navigate to="/" />} />
 			</Routes>
 		</>
 	);

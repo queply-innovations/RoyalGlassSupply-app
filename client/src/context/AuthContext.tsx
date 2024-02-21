@@ -19,7 +19,7 @@ interface AuthProps {
 }
 interface AuthContextProps {
 	auth: AuthProps;
-	login(credentials: LoginCredentials): void;
+	login(credentials: LoginCredentials): Promise<UserResponse>;
 	logout(): void;
 }
 
@@ -30,48 +30,42 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-	const [auth, setAuth] = useState<AuthProps>({
-		user: null,
-		token: null,
-		authenticated: false,
-		role: null,
-		isLoggedIn: false,
+	const [auth, setAuth] = useState(() => {
+		return JSON.parse(localStorage.getItem('auth') || '{}');
 	});
+
 	useEffect(() => {
-		console.log('Updated Auth:', auth);
+		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
 
-	async function login(credentials: LoginCredentials) {
+	async function login(credentials: LoginCredentials): Promise<UserResponse> {
 		try {
-			const userResponse = await LoginUser(credentials);
-			console.log('userResponse:', userResponse);
-			setAuth({
-				user: userResponse.user.id,
-				token: userResponse.token,
-				authenticated: true,
-				role: null,
-				isLoggedIn: true,
-			});
-			storage.setToken(userResponse.token);
+			// Log user in using credentials
+			const response = await LoginUser(credentials);
+			if (response) {
+				// Set user token
+				storage.setToken(response.token);
+				// Get user role and store to local storage
+				const userRole = await getUserRole(response.user.id);
+				if (userRole) {
+					storage.setUserRole(userRole);
+				}
 
-			const userRole = await getUserRole(userResponse.user.id);
-			console.log('userRole:', userRole);
-
-			if (userRole) {
-				setAuth(prev => ({
-					...prev,
-					role: userRole.title,
-					isLoggedIn: storage.setLogIn(),
-				}));
-				storage.setUserSession(`${userRole.title} | ${userResponse.token}`);
-				storage.setToken(userResponse.token);
+				setAuth({
+					username: response.user.username,
+					id: response.user.id,
+					token: response.token,
+					authenticated: true,
+					role: userRole,
+				});
 			}
-
-			return userResponse;
-		} catch (error) {
-			console.error('Login failed:', error);
+			return response;
+		} catch (error: any) {
+			throw new Error(error);
 		}
 	}
+
+	// Nullify user data and clear local storage
 	function logout() {
 		setAuth({
 			user: null,
@@ -81,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			isLoggedIn: false,
 		});
 		storage.clearUserSession();
-		storage.clearToken();
+		storage.clearLogIn();
 	}
 
 	const value: AuthContextProps = {

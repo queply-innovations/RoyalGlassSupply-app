@@ -17,25 +17,29 @@ interface WarehouseTableProps {
 export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 	const queryClient = useQueryClient();
 	type Warehouse = {
-		id: number
-		name: string
-		location: string
-	}
+		id: number;
+		name: string;
+		location: string;
+	};
 
 	const tableHeader: ColumnDef<Warehouse>[] = [
 		{
-			id: "select",
+			id: 'select',
 			header: ({ table }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+					onChange={e =>
+						table.toggleAllPageRowsSelected(!!e.target.checked)
+					}
 					aria-label="Select all"
 				/>
 			),
 			cell: ({ row }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
+					onChange={e => row.toggleSelected(!!e.target.checked)}
 					aria-label="Select row"
 					className="justify-center"
 				/>
@@ -46,33 +50,37 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 
 		{
 			accessorKey: 'id',
-			header:	() => <div className='justify-center'>WAREHOUSE ID</div>,
+			header: () => <div className="justify-center">WAREHOUSE ID</div>,
 		},
 
 		{
 			accessorKey: 'name',
 			header: ({ column }) => {
 				return (
-					<div className='justify-center'>
+					<div className="justify-center">
 						<Button
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row"
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black"
 						>
 							WAREHOUSE NAME <SortIcon />
 						</Button>
 					</div>
-				)
+				);
 			},
 		},
 
 		{
 			accessorKey: 'location',
-			header:	() => <div className='justify-center'>LOCATION</div>,
+			header: () => <div className="justify-center">LOCATION</div>,
 		},
 
 		{
 			id: 'actions',
-			header:	() => <div className='flex flex-row justify-center'>ACTIONS</div>,
+			header: () => (
+				<div className="flex flex-row justify-center">ACTIONS</div>
+			),
 			cell: ({ row }) => {
 				const warehouseRow = row.original;
 				return (
@@ -93,9 +101,8 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 						</Button>
 					</div>
 				);
-			}
-		}
-
+			},
+		},
 	];
 
 	const removeModal = useModal();
@@ -134,87 +141,87 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 
 	return (
 		<>
-		<DataTable
-			data={data}
-			columns={tableHeader}
-			filterWhat={"location"}
-			dataType={"Warehouse"}
-			isOpen={isOpen}
-			openModal={openModal}
-			closeModal={closeModal}
-		/>
+			<DataTable
+				data={data}
+				columns={tableHeader}
+				filterWhat={'location'}
+				dataType={'Warehouse'}
+				isOpen={isOpen}
+				openModal={openModal}
+				closeModal={closeModal}
+			/>
 
-		<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
-			<>
-				<div className="flex flex-col gap-4">
-					<p className="text-center font-bold uppercase">
-						Are you sure you want to remove?
-					</p>
-					<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
-					<span>{`Warehouse Name: ${selectedWarehouse?.name}`}</span>
-					<span>{`Warehouse Location: ${selectedWarehouse?.location}`}</span>
+			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
+				<>
+					<div className="flex flex-col gap-4">
+						<p className="text-center font-bold uppercase">
+							Are you sure you want to remove?
+						</p>
+						<span>{`Warehouse ID: ${selectedWarehouse?.id}`}</span>
+						<span>{`Warehouse Name: ${selectedWarehouse?.name}`}</span>
+						<span>{`Warehouse Location: ${selectedWarehouse?.location}`}</span>
 
-					<div className="flex flex-row justify-center gap-1">
-						<Button
-							fill={'green'}
-							className=""
-							type="submit"
-							onClick={() =>
-								removeWarehouseMutation(selectedWarehouse.id)
-							}
-						>
-							{`Remove ${selectedWarehouse?.name}`}
-						</Button>
-						<Button
-							fill={'red'}
-							className=""
-							type="reset"
-							onClick={removeModal.closeModal}
-						>
-							Cancel
-						</Button>
+						<div className="flex flex-row justify-center gap-1">
+							<Button
+								fill={'green'}
+								className=""
+								type="submit"
+								onClick={() =>
+									removeWarehouseMutation(selectedWarehouse.id)
+								}
+							>
+								{`Remove ${selectedWarehouse?.name}`}
+							</Button>
+							<Button
+								fill={'red'}
+								className=""
+								type="reset"
+								onClick={removeModal.closeModal}
+							>
+								Cancel
+							</Button>
+						</div>
 					</div>
-				</div>
-			</>
-		</Modal>
+				</>
+			</Modal>
 
-		<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
-			<>
-				<WarehouseForm
-					data={selectedWarehouse}
-					onClose={updateModal.closeModal}
-					isUpdate={true}
-				/>
-			</>
-		</Modal>
+			<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
+				<>
+					<WarehouseForm
+						data={selectedWarehouse}
+						onClose={updateModal.closeModal}
+						isUpdate={true}
+					/>
+				</>
+			</Modal>
 
-		<Modal
-			isOpen={successModal.isOpen}
-			onClose={() => {
-				successModal.closeModal();
-				setTimeout(() => {
+			<Modal
+				isOpen={successModal.isOpen}
+				onClose={() => {
 					successModal.closeModal();
-				}, 50000);
-			}}
-		>
-			<div className="flex flex-col items-center justify-center gap-2">
-				<p>
-					{`Warehouse ${selectedWarehouse?.name} successfully removed`}
-				</p>
-				<Button fill={'green'} onClick={successModal.closeModal}>
-					Close
-				</Button>
-			</div>
-		</Modal>
+					setTimeout(() => {
+						successModal.closeModal();
+					}, 50000);
+				}}
+			>
+				<div className="flex flex-col items-center justify-center gap-2">
+					<p>
+						{`Warehouse ${selectedWarehouse?.name} successfully removed`}
+					</p>
+					<Button fill={'green'} onClick={successModal.closeModal}>
+						Close
+					</Button>
+				</div>
+			</Modal>
 
-		<Modal
-			title={'Add Warehouse'}
-			isOpen={isOpen}
-			onClose={closeModal}
-			closeButton
-		>
-			<WarehouseForm data={data} onClose={closeModal} />
-		</Modal>
+			<Modal
+				title={'Add Warehouse'}
+				isOpen={isOpen}
+				onClose={closeModal}
+				closeButton
+			>
+				<WarehouseForm data={data} onClose={closeModal} />
+			</Modal>
 		</>
 	);
 };

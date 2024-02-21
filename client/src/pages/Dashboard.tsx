@@ -7,21 +7,40 @@ import LayoutWrapper from '@/layouts/Layout';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
+import { Button } from '@/components';
+import { useAuth } from '@/context/AuthContext';
 
 // interface DashboardProps {
 // 	state: Array<unknown>;
 // }
 
 export const Dashboard = () => {
+	const { auth, logout } = useAuth();
 	const { state } = useLocation();
 	console.log(state);
-	
+
 	return (
-		<LayoutWrapper >
+		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard
 				</h1>
+				<div className="flex flex-row gap-5">
+					<Button
+						className="w-1/4"
+						fill={'green'}
+						onClick={() => console.log('Check Auth', auth)}
+					>
+						check auth
+					</Button>
+					<Button
+						className="w-1/4"
+						fill={'red'}
+						onClick={() => console.log('LOGGED OUT', logout())}
+					>
+						LOGOUT
+					</Button>
+				</div>
 				<div className="infobox-container flex flex-row justify-between gap-8">
 					<InfoCard background={'gradient'}>
 						<span className="text-sm font-bold uppercase text-white">

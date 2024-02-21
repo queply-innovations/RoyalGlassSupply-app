@@ -9,13 +9,12 @@ import { FC, useEffect, useState } from 'react';
 // import { useLocation } from 'react-router-dom';
 
 export const Warehouse = () => {
-
 	const { isOpen, openModal, closeModal } = useModal();
 	const [data, setData] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
 	useEffect(() => {
-		async function gettingWarehouses(){
+		async function gettingWarehouses() {
 			try {
 				const data2 = await getWarehouses();
 				setData(data2.data.data);
@@ -48,14 +47,13 @@ export const Warehouse = () => {
 			closeButton
 		>
 			<WarehouseForm data={data} onClose={closeModal} />
-			
 		</Modal>
 	);
 
 	const loading = (
-		<div className="flex w-full h-full flex-col items-center justify-center space-y-0 px-20">
+		<div className="flex h-full w-full flex-col items-center justify-center space-y-0 px-20">
 			<ProgressBar />
-			<h2 className="text-primary-dark-gray text-2xl font-bold pb-5">
+			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
 				Loading Warehouses...
 			</h2>
 		</div>
@@ -63,7 +61,7 @@ export const Warehouse = () => {
 
 	return (
 		<>
-			<LayoutWrapper >
+			<LayoutWrapper>
 				{!notLoading && loading}
 				{notLoading && layout}
 				{/* {notLoading && modal} */}

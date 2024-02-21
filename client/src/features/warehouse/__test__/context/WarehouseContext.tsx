@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useContext } from 'react';
-
 import { Warehouse } from '../types';
-import { useWarehouses } from '@/api/Warehouse';
+import { useWarehouseQuery } from '../../__test__/hooks';
 
 export const WarehouseContext = createContext<Warehouse[] | undefined>(
 	undefined,
@@ -12,22 +11,22 @@ interface WarehouseProviderProps {
 }
 
 export const WarehouseProvider = ({ children }: WarehouseProviderProps) => {
-	const { data: warehouse } = useWarehouses();
+	const { warehouses } = useWarehouseQuery();
 
 	return (
-		<WarehouseContext.Provider value={warehouse}>
+		<WarehouseContext.Provider value={warehouses}>
 			{children}
 		</WarehouseContext.Provider>
 	);
 };
 
-export function useWarehouseContext() {
-	const warehouse = useContext(WarehouseContext);
+export function useWarehouse() {
+	const context = useContext(WarehouseContext);
 
-	if (!warehouse) {
+	if (!context) {
 		throw new Error(
 			'useWarehouseContext must be used within WarehouseContext',
 		);
 	}
-	return warehouse;
+	return context;
 }

@@ -3,6 +3,7 @@ import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoute } from '../routes/SidebarRoutes';
 import SidebarItemVisible from './SidebarItemVisible';
 import SidebarItem from './SidebarItem';
+import { Role } from '../types';
 
 interface SidebarProps {}
 
@@ -16,20 +17,29 @@ const Sidebar = ({}: SidebarProps) => {
 					<SidebarLogo />
 					<ul className="flex h-full w-full flex-col items-start">
 						{SidebarRoute.map((route, index) => {
-							// Check if route has sidebarProps
-							if (route.sidebarProps) {
-								// Check if route has children
-								if (route.child && route.child.length > 0) {
-									// Render SidebarItemVisible for routes with children
-									return (
-										<SidebarItemVisible key={index} item={route} />
-									);
+							// Check if currently authenticated user's role is in allowedRoles
+
+							if (
+								auth.auth.role &&
+								route.allowedRoles.includes(auth.auth.role as Role)
+							) {
+								// Check if route has sidebarProps
+								if (route.sidebarProps) {
+									// Check if route has children
+									if (route.child && route.child.length > 0) {
+										// Render SidebarItemVisible for routes with children
+										return (
+											<SidebarItemVisible key={index} item={route} />
+										);
+									} else {
+										// Render SidebarItem for routes without children
+										return <SidebarItem key={index} item={route} />;
+									}
 								} else {
-									// Render SidebarItem for routes without children
-									return <SidebarItem key={index} item={route} />;
+									// Return null if route doesn't have sidebarProps
+									return null;
 								}
 							} else {
-								// Return null if route doesn't have sidebarProps
 								return null;
 							}
 						})}

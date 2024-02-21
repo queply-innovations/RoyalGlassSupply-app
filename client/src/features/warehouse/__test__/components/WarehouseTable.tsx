@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 import { useWarehouseContext } from '../context/WarehouseContext';
 import { Button, ProgressBar } from '@/components';
+=======
+import { useWarehouse } from '../context/WarehouseContext';
+import { Button } from '@/components';
+import { useState } from 'react';
+>>>>>>> 0469bf843dc39374849c78161e6829dd3da817e3
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { SortIcon } from '@/assets/icons';
@@ -10,13 +16,14 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { removeWarehouse } from '../api/Warehouse';
 
-interface WarehouseTableProps {}
+interface WarehouseTableProps {
+	isUpdate?: boolean;
+}
 
-const WarehouseTable = ({}: WarehouseTableProps) => {
-	const warehouse = useWarehouseContext();
-
-	const WarehouseTableHeader: string[] = [
-		'',
+export const WarehouseTable = ({ isUpdate = false }: WarehouseTableProps) => {
+	const [update, setUpdate] = useState<boolean>(isUpdate);
+	const warehouse = useWarehouse();
+	const WarehouseTableHeader = [
 		'Warehouse ID',
 		'Warehouse Name',
 		'Location',
@@ -145,4 +152,3 @@ const WarehouseTable = ({}: WarehouseTableProps) => {
 		</>
 	);
 };
-export default WarehouseTable;

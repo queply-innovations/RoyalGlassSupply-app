@@ -11,10 +11,10 @@ const AppRouter = () => {
 	const location = useLocation();
 	console.log('location:', location);
 	useEffect(() => {
-	// 	console.log('user:', auth.user);
+		// 	console.log('user:', auth.user);
 	}, [auth, location]);
 
-	return auth.isLoggedIn ? <ProtectedRoutes /> : <PublicRoutes />;
+	return auth.authenticated ? <ProtectedRoutes /> : <PublicRoutes />;
 };
 
 export default AppRouter;
