@@ -2,7 +2,9 @@ import { Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import { Spinner } from '@/components/Loader';
+import { Loading } from '@/components/Loading';
 import { lazyImport } from '@/utils/lazyImport';
+import { ProgressBar } from '@/components';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
@@ -24,15 +26,21 @@ const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
 const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
-const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
+// const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
+const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 
 const App = () => {
 	return (
 		<Suspense
 			fallback={
-				<div className="flex h-full w-full items-center justify-center">
-					<Spinner size="xl" />
+				<div className="flex h-screen w-full flex-col items-center justify-center space-y-0 px-20">
+					{/* <Spinner size="xl" /> */}
+					{/* <Loading /> */}
+					<ProgressBar />
+					<h2 className="text-primary-dark-gray text-2xl font-bold">
+						Loading Routes....
+					</h2>
 				</div>
 			}
 		>

@@ -4,8 +4,11 @@ import { GoHomeFill } from 'react-icons/go';
 import { IoNotifications } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { Inputbox } from '../Inputbox';
+import { Button } from '..';
+import { useAuth } from '@/context/AuthContext';
 
 export const Navbar = () => {
+	const { logout } = useAuth();
 	return (
 		<div className="navbar-container flex flex-row items-center justify-between">
 			<Inputbox
@@ -36,6 +39,9 @@ export const Navbar = () => {
 					title={'Account'}
 					dropdown={true}
 				/>
+				<Button className="w-fit" fill={'red'} onClick={() => logout()}>
+					Logout
+				</Button>
 			</div>
 		</div>
 	);

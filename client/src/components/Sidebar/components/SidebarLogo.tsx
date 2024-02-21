@@ -5,7 +5,7 @@ const SidebarLogo = () => {
 	return (
 		<>
 			<div className="">
-				<Link to="/app/dashboard">
+				<Link to="/dashboard">
 					<img src={Logo} alt="RoyalGlassSupply-Logo" />
 				</Link>
 			</div>

@@ -1,30 +1,23 @@
-import { Modal, Button, Inputbox, Pagination, Loading } from '@/components';
+import { Modal, Button, Inputbox, Pagination, ProgressBar } from '@/components';
 // import Pagination from '@/components/Pagination';
 import { WarehouseTable, WarehouseForm } from '@pages/Warehouse';
 import LayoutWrapper from '@/layouts/Layout';
-import { getWarehouses } from '@/api/Warehouse';
+import { getWarehouses } from '@/features/auth/api/getWarehouses';
 import { useModal } from '@/utils/Modal';
 import { FC, useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { useLocation } from 'react-router-dom';
 
 export const Warehouse = () => {
-
 	const { isOpen, openModal, closeModal } = useModal();
 	const [data, setData] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
-	const [currentPage, setCurrentPage] = useState(1);
-	const [recordsPerPage] = useState(15);
-
-	const indexOfLastRecord = currentPage * recordsPerPage;
-	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-
 	useEffect(() => {
-		async function gettingWarehouses(){
+		async function gettingWarehouses() {
 			try {
 				const data2 = await getWarehouses();
-				setData(data2.data);
+				setData(data2.data.data);
 				setNotLoading(true);
 			} catch (error) {
 				console.log(error);
@@ -32,9 +25,6 @@ export const Warehouse = () => {
 		}
 		gettingWarehouses();
 	}, []);
-	
-	const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-	const nPages = Math.ceil(data.length / recordsPerPage);
 
 	const layout = (
 		<div className="flex h-screen flex-col gap-y-4">
@@ -42,26 +32,8 @@ export const Warehouse = () => {
 				Warehouse
 			</h1>
 			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-				<div className="flex flex-row justify-between">
-					<Inputbox
-						placeholder="Search"
-						variant={'searchbar'}
-						buttonIcon={'outside'}
-						className="w-1/2"
-					/>
-					<div className="flex flex-row gap-3">
-						<Button fill={'green'} onClick={openModal}>
-							Add Warehouse
-						</Button>
-					</div>
-				</div>
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-					<WarehouseTable data={currentRecords} />
-					<Pagination
-						nPages={nPages}
-						currentPage={currentPage}
-						setCurrentPage={setCurrentPage}
-					/>
+					<WarehouseTable data={data} />
 				</div>
 			</div>
 		</div>
@@ -75,16 +47,24 @@ export const Warehouse = () => {
 			closeButton
 		>
 			<WarehouseForm data={data} onClose={closeModal} />
-			
 		</Modal>
+	);
+
+	const loading = (
+		<div className="flex h-full w-full flex-col items-center justify-center space-y-0 px-20">
+			<ProgressBar />
+			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
+				Loading Warehouses...
+			</h2>
+		</div>
 	);
 
 	return (
 		<>
-			<LayoutWrapper >
-				{!notLoading && <Loading />}
+			<LayoutWrapper>
+				{!notLoading && loading}
 				{notLoading && layout}
-				{notLoading && modal}
+				{/* {notLoading && modal} */}
 			</LayoutWrapper>
 		</>
 	);

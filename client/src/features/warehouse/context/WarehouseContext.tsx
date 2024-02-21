@@ -1,10 +1,7 @@
 import { createContext, useContext } from 'react';
+import { Warehouse } from '../__test__/types';
 
-import { Warehouse } from '../types';
-
-export const WarehouseContext = createContext<Warehouse[] | undefined>(
-	undefined,
-);
+export const WarehouseContext = createContext<Warehouse | undefined>(undefined);
 
 export function useWarehouseContext() {
 	const warehouse = useContext(WarehouseContext);

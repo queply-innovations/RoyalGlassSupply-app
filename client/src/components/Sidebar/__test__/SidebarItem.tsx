@@ -8,11 +8,8 @@ interface SidebarItemProps {
 const SidebarItem = ({ item }: SidebarItemProps) => {
 	return item.sidebarProps && item.path ? (
 		<>
-			<li className="flex w-full cursor-pointer justify-between gap-x-4 px-10 py-4 text-sm hover:bg-gray-200">
-				<Link
-					to={item.path}
-					className="flex w-full cursor-pointer flex-row"
-				>
+			<Link to={item.path} className="flex w-full cursor-pointer flex-row">
+				<li className="flex w-full cursor-pointer justify-between gap-x-4 px-10 py-4 text-sm hover:bg-gray-200">
 					<div className="item-center flex justify-center gap-5">
 						{item.sidebarProps.icon ? (
 							<div className="flex h-6 w-6 items-center">
@@ -24,8 +21,8 @@ const SidebarItem = ({ item }: SidebarItemProps) => {
 							{item.sidebarProps.displayText}
 						</span>
 					</div>
-				</Link>
-			</li>
+				</li>
+			</Link>
 		</>
 	) : null;
 };

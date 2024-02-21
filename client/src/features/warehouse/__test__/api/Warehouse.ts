@@ -1,21 +1,23 @@
 import axios from 'axios';
 import storage from '@/utils/storage';
-import { API_URLS } from '@/api';
+import { API_HEADERS, API_URLS } from '@/api';
 import { Warehouse } from '../types';
 
 export const fetchWarehouses = async (): Promise<Warehouse[]> => {
-	try {
-		const response = await axios.get(API_URLS.WAREHOUSE, {
+	return await axios
+		.get(API_URLS.WAREHOUSE, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
 			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching warehouses:', error);
+			throw error;
 		});
-		return response.data.data;
-	} catch (error) {
-		console.error('Error fetching warehouses:', error);
-		throw error;
-	}
 };
 
 export const getWarehouses = () => {
@@ -28,16 +30,43 @@ export const getWarehouseById = (data: Warehouse[], id: number) => {
 };
 
 export const addWarehouse = (data: Warehouse) => {
-	const response = axios.post(`${API_URLS.WAREHOUSE}`, data);
-	return response;
+	return axios
+		.post(API_URLS.WAREHOUSE, data, {
+			headers: API_HEADERS,
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error adding warehouse:', error);
+			throw error;
+		});
 };
 
 export const updateWarehouse = (data: Warehouse) => {
-	const response = axios.put(`${API_URLS.WAREHOUSE}/${data.id}`, data);
-	return response;
+	return axios
+		.put(`${API_URLS.WAREHOUSE}/${data.id}`, data, {
+			headers: API_HEADERS,
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error updating warehouse:', error);
+			throw error;
+		});
 };
 
 export const removeWarehouse = (id: number) => {
-	const response = axios.delete(`${API_URLS.WAREHOUSE}/${id}`);
-	return response;
+	return axios
+		.delete(`${API_URLS.WAREHOUSE}/${id}`, {
+			headers: API_HEADERS,
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error removing warehouse:', error);
+			throw error;
+		});
 };
