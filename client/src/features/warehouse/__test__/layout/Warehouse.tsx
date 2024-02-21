@@ -1,6 +1,6 @@
 import { WarehouseProvider } from '../context/WarehouseContext';
 import { ContentLayout } from '@/components/Layout/ContentLayout';
-import { Button, Inputbox } from '@/components';
+import { Button, Inputbox, ProgressBar } from '@/components';
 import WarehouseTable from '../components/WarehouseTable';
 
 export const Warehouse = () => {
@@ -9,7 +9,7 @@ export const Warehouse = () => {
 			<ContentLayout title="Warehouse">
 				<WarehouseProvider>
 					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="flex flex-row justify-between">
+						{/* <div className="flex flex-row justify-between">
 							<Inputbox
 								placeholder="Search"
 								variant={'searchbar'}
@@ -24,7 +24,7 @@ export const Warehouse = () => {
 									Add Warehouse
 								</Button>
 							</div>
-						</div>
+						</div> */}
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<WarehouseTable />
 						</div>
