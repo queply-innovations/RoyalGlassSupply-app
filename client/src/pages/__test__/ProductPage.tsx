@@ -1,12 +1,23 @@
+import { useState } from 'react';
 import { ProductsProvider } from '@/features/product/__test__/context/ProductContext';
 import { MainLayout } from '@/layouts/MainLayout';
 import { Form } from '@/features/product/__test__/components/forms/Form';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { ProductsTable } from '@/features/product/__test__/components';
+import { ProductPrices as IProduct } from '@/features/product/__test__/types';
+import { useModal } from '@/utils/Modal';
+import { ProductDetails } from '@/features/product/__test__/components/ProductDetails';
 
 export const Products = () => {
-	const openProductModal = () => {};
-	const closeModal = () => {};
+	const { isOpen, openModal, closeModal } = useModal();
+	const [modalAction, setModalAction] = useState<string>('');
+
+	const openProductModal = (product: IProduct, action: string) => {
+		openModal();
+		setModalAction(action);
+		// console.log('action', action, '; item', product);
+	};
+
 	return (
 		<>
 			<MainLayout title="Products">
@@ -16,6 +27,21 @@ export const Products = () => {
 							<ProductsTable openModal={openProductModal} />
 						</div>
 					</div>
+					<ModalTest
+						isOpen={isOpen}
+						onClose={closeModal}
+						title={
+							modalAction === 'more_info'
+								? 'Product Details'
+								: 'This a modal'
+						}
+					>
+						{modalAction === 'more_info' ? (
+							<ProductDetails onClose={closeModal} />
+						) : (
+							<h1>Hello</h1>
+						)}
+					</ModalTest>
 					{/* <ModalTest isOpen onClose={closeModal} title="Add Products">
 						<Form onClose={closeModal} />
 					</ModalTest> */}

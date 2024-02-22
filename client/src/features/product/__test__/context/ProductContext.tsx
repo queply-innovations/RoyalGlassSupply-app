@@ -32,7 +32,7 @@ export const ProductsProvider = ({ children }: ProductProviderProps) => {
 		},
 		type: '',
 		unit: '',
-		stocks_quantity: 0,
+		quantity: 0,
 		stocks_unit: '',
 		capital_price: 0,
 		markup_price: 0,
@@ -42,15 +42,26 @@ export const ProductsProvider = ({ children }: ProductProviderProps) => {
 		on_sale: 0,
 		sale_price: 0,
 		price: 0,
-		warehouse_id: 0,
-		created_by: 0,
+		warehouse: {
+			id: 0,
+			name: '',
+		},
+		created_by: {
+			id: 0,
+			firstname: '',
+			lastname: '',
+		},
 		approval_status: '',
-		approved_by: 0,
+		approved_by: {
+			id: 0,
+			firstname: '',
+			lastname: '',
+		},
 		created_at: '',
 		updated_at: '',
+		active_status: '',
 	});
 	const { productsData } = useProductQuery();
-	console.log('products', productsData);
 	const value = { productsData, selectedProduct, setSelectedProduct };
 	return (
 		<ProductContext.Provider value={value}>

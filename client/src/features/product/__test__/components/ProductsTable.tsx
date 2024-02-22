@@ -159,6 +159,14 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 						<Button
 							fill="empty"
 							textColor={'black'}
+							onClick={() => handleProductDetails(productRow)}
+							className="flex flex-row items-center gap-2"
+						>
+							Info
+						</Button>
+						<Button
+							fill="empty"
+							textColor={'black'}
 							onClick={() => handleEditProduct(productRow)}
 							className="flex flex-row items-center gap-2"
 						>
@@ -177,12 +185,16 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 		},
 	];
 
+	const handleProductDetails = (product: ProductPrices) => {
+		setSelectedProduct(product);
+		openModal(product, 'more_info');
+	};
+
 	/**
 	 * Trigger modal for editing a product.
 	 * @param product - The product to be edited.
 	 */
 	const handleEditProduct = (product: ProductPrices) => {
-		console.log(product);
 		setSelectedProduct(product);
 		openModal(product, 'edit');
 	};
