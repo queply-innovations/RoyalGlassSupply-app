@@ -4,6 +4,23 @@ import storage from '@/utils/storage';
 import axios from 'axios';
 import { RolePermissions, Roles } from '../types';
 
+export const fetchUsers = async (): Promise<User[]> => {
+	return await axios
+		.get(API_URLS.USERS, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching users:', error);
+			throw error;
+		});
+};
+
 export const getUser = async (id: number): Promise<User[]> => {
 	return axios.get(`${API_URLS.USERS}/${id}`, {
 		headers: {

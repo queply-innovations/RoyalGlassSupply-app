@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Inputbox, Pagination } from "@/components";
+import { Button, Inputbox, Pagination, ProgressBar } from "@/components";
 
 import {
 	ColumnDef,
@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
 						<TableRow key={headerGroup.id}>
 						{headerGroup.headers.map((header) => {
 							return (
-							<TableHead key={header.id}>
+							<TableHead key={header.id} className="text-center py-5 text-xs font-bold uppercase">
 								{header.isPlaceholder
 								? null
 								: flexRender(
@@ -110,6 +110,7 @@ export function DataTable<TData, TValue>({
 						<TableRow
 							key={row.id}
 							data-state={row.getIsSelected() && "selected"}
+							className="py-2 text-xs font-normal uppercase text-center"
 						>
 							{row.getVisibleCells().map((cell) => (
 							<TableCell key={cell.id}>
@@ -120,9 +121,10 @@ export function DataTable<TData, TValue>({
 						))
 					) : (
 						<TableRow>
-						<TableCell colSpan={columns.length} className="h-24 text-center">
-							No results.
-						</TableCell>
+							<TableCell colSpan={columns.length} className="h-24 text-center">
+								<ProgressBar />
+								Loading Data....
+							</TableCell>
 						</TableRow>
 					)}
 					</TableBody>

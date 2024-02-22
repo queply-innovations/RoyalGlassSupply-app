@@ -45,10 +45,10 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 			accessorKey: 'name',
 			header: ({ column }) => {
 				return (
-					<div className='justify-center'>
+					<div className='items-center'>
 						<Button
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row"
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
 							WAREHOUSE NAME <SortIcon />
 						</Button>

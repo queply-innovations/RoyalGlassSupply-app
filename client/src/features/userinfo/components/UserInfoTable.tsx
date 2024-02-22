@@ -1,30 +1,22 @@
 import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
-import { User } from '@/entities';
+import { DataTable } from '@/components/Tables/DataTable';
+import { User } from '../types';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
 import { FC, useState } from 'react';
-import { DataTable } from '../DataTable';
 import { StringValidation } from 'zod';
+import { useUserInfo } from '../context/UserInfoContext';
 
 interface UserTableProps {
-	data: any;
 	openModal: (data: User, action: string) => void;
 }
 
-export const UserInfoTable: FC<UserTableProps> = ({ data, openModal }) =>{
-	type UserInfo = {
-		id: number;
-		lastname: string;
-		firstname: string;
-		position: string;
-		username: string;
-		contact_no: string;
-		email: string;
-	};
-
-	const UserInfoTableHeader: ColumnDef<UserInfo>[] = [
+export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps) =>{
+	const users = useUserInfo();
+	
+	const UserInfoTableHeader: ColumnDef<User>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -118,7 +110,7 @@ export const UserInfoTable: FC<UserTableProps> = ({ data, openModal }) =>{
 	return (
 		<>
 			<DataTable
-				data={data}
+				data={users}
 				columns={UserInfoTableHeader}
 				filterWhat={"lastname"}
 				dataType={"User"}
