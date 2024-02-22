@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal } from '@/components';
-import { removeSupplier, useSupplier } from '@/api/Supplier';
 import { useModal } from '@/utils/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
@@ -9,21 +8,16 @@ import { FaPencilAlt } from 'react-icons/fa';
 import { ColumnDef } from '@tanstack/react-table';
 import { SortIcon } from '@/assets/icons';
 import { DataTable } from '@/components/Tables/DataTable';
+import { Supplier } from '../../types';
+import { useSupplier } from '../context/SupplierContext';
 
 interface SupplierTableProps {
-	data: any;
-	onOpen: any;
+	openModal: (data: Supplier, action: string) => void;
+	isUpdate?: boolean;
 }
 
-export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
-	const queryClient = useQueryClient();
-
-	type Supplier = {
-		id: number;
-		name: string;
-		contact_no: string;
-		address: string;
-	};
+export const SupplierTable = ({ openModal }: SupplierTableProps) => {
+	const supplier = useSupplier();
 
 	const SupplierTableHeader: ColumnDef<Supplier>[] = [
 		{
@@ -83,7 +77,7 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 						<Button
 							fill="empty"
 							textColor={'black'}
-							onClick={() => handleUpdateModal(supplierRow)}
+							onClick={() => handleEditSupplier(supplierRow)}
 							className="flex flex-row items-center gap-2"
 						>
 							<FaPencilAlt /> Edit
@@ -101,46 +95,48 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 
 	];
 
-	const removeModal = useModal();
-	const successModal = useModal();
-	const updateModal = useModal();
-	const [selectedSupplier, setSelectedSupplier] = useState<any | null>(null);
+	// const removeModal = useModal();
+	// const successModal = useModal();
+	// const updateModal = useModal();
+	// const [selectedSupplier, setSelectedSupplier] = useState<any | null>(null);
 
-	const { mutateAsync: removeSupplierMutation } = useMutation({
-		mutationKey: ['removeSupplier:', selectedSupplier],
-		mutationFn: removeSupplier,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ['supplier'] });
-			console.log('Supplier removed');
-			removeModal.closeModal();
-			successModal.openModal();
-		},
-		onError: error => {
-			console.error('Supplier Data submission failed', error);
-		},
-	});
+	// const { mutateAsync: removeSupplierMutation } = useMutation({
+	// 	mutationKey: ['removeSupplier:', selectedSupplier],
+	// 	mutationFn: removeSupplier,
+	// 	onSuccess: async () => {
+	// 		await queryClient.invalidateQueries({ queryKey: ['supplier'] });
+	// 		console.log('Supplier removed');
+	// 		removeModal.closeModal();
+	// 		successModal.openModal();
+	// 	},
+	// 	onError: error => {
+	// 		console.error('Supplier Data submission failed', error);
+	// 	},
+	// });
 
-	const handleUpdateModal = (Supplier: any) => {
-		setSelectedSupplier(Supplier);
-		updateModal.openModal();
-		console.log('Update Supplier', Supplier);
+	// * This function is used to handle the edit warehouse
+	const handleEditSupplier = (supplier: Supplier) => {
+		console.log('Edit Supplier Clicked:', supplier);
+		// * This function will open the modal with the warehouse data
+		openModal(supplier, 'edit');
 	};
-	const handleRemoveSupplier = (Supplier: any) => {
-		setSelectedSupplier(Supplier);
-		removeModal.openModal();
-		console.log(Supplier.id);
+
+	// * This function is used to handle the remove warehouse
+	const handleRemoveSupplier = (supplier: Supplier) => {
+		console.log('Remove Supplier Clicked:', supplier);
+		openModal(supplier, 'remove');
 	};
 
 	return (
 		<>
 			<DataTable
-				data={data}
+				data={supplier}
 				columns={SupplierTableHeader}
 				filterWhat={"name"}
 				dataType={"Supplier"}
-				openModal={onOpen} />
+				openModal={openModal} />
 
-			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
+			{/* <Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
 					<div className="flex flex-col gap-4">
 						<p className="text-center font-bold uppercase">
@@ -199,7 +195,7 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 						Close
 					</Button>
 				</div>
-			</Modal>
+			</Modal> */}
 		</>
 	);
 };

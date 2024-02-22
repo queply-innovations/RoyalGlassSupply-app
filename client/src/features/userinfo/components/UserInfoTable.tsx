@@ -45,7 +45,7 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 					<div>
 						<Button
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row"
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
 							LAST NAME <SortIcon />
 						</Button>
@@ -61,7 +61,7 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 					<div>
 						<Button
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row"
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
 							FIRST NAME <SortIcon />
 						</Button>

@@ -13,6 +13,7 @@ export const API_URLS = {
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
 	LOGIN: `${API_BASE_URL}/login`,
 	WAREHOUSE: `${API_BASE_URL}/warehouses`,
+	SUPPLIERS: `${API_BASE_URL}/suppliers`,
 };
 
 export const API_HEADERS = {

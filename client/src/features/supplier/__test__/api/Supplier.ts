@@ -4,12 +4,20 @@ import { API_URLS } from '@/api';
 import { Supplier } from '../../types';
 
 export const fetchSuppliers = async (): Promise<Supplier[]> => {
-	return axios.get(`${API_URLS.SUPPLIERS}`, {
-		headers: {
-			Authorization: `Bearer ${storage.getToken()}`,
-			'Content-Type': 'application/json',
-		},
-	});
+	return await axios
+		.get(API_URLS.SUPPLIERS, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching suppliers:', error);
+			throw error;
+		});
 };
 
 export const addSupplier = (data: Supplier) => {

@@ -121,9 +121,10 @@ export function DataTable<TData, TValue>({
 						))
 					) : (
 						<TableRow>
-							<TableCell colSpan={columns.length} className="h-24 text-center">
-								<ProgressBar />
-								Loading Data....
+							<TableCell colSpan={columns.length} className="h-24 text-center px-20">
+								No results. 
+								{/* TODO: Find ways to enhance loading state 
+								while waiting for first time data to load */}
 							</TableCell>
 						</TableRow>
 					)}

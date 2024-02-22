@@ -71,7 +71,7 @@ export const Pagination: FC<PaginationProps> = ({
 							) : (''))}
 						</>
 					) : (
-						<li key={pgNumber} 
+						<li key={pgNumber + 1} 
 							className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
 							<a onClick={() => table.setPageIndex(pgNumber - 1)} 

@@ -2,23 +2,25 @@ import { ReactNode, createContext, useContext } from 'react';
 import { Supplier } from '../../types';
 import { useSupplierQuery } from '../../__test__/hooks';
 
-export const SupplierContext = createContext<Supplier[] | undefined>(undefined);
+export const SupplierContext = createContext<Supplier[] | undefined>(
+	undefined,
+);
 
 interface SupplierProviderProps {
 	children: ReactNode;
 }
 
 export const SupplierProvider = ({ children }: SupplierProviderProps) => {
-	const { data: supplier } = useSupplierQuery();
+	const { suppliers } = useSupplierQuery();
 
 	return (
-		<SupplierContext.Provider value={supplier}>
+		<SupplierContext.Provider value={suppliers}>
 			{children}
 		</SupplierContext.Provider>
 	);
 };
 
-export function useSupplierContext() {
+export function useSupplier() {
 	const supplier = useContext(SupplierContext);
 
 	if (!supplier) {

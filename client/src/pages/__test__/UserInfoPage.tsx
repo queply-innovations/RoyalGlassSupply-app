@@ -43,18 +43,18 @@ export const UserInfo = () => {
 						onClose={closeModal}
 						title={
 							modalAction === 'edit'
-								? 'Edit Warehouse'
+								? 'Edit User'
 								: modalAction === 'remove'
-									? 'Remove Warehouse'
-									: 'Add Warehouse'
+									? 'Remove User'
+									: 'Add User'
 						}
-					> */}
-						{/* <WarehouseForm
+					>
+						<UserForm
 							onClose={closeModal}
 							isUpdate={modalAction === 'edit' ? true : false}
 							isDelete={modalAction === 'remove' ? true : false}
-						/> */}
-					{/* </ModalTest> */}
+						/>
+					</ModalTest> */}
 				</UserInfoProvider>
 			</MainLayout>
 		</>

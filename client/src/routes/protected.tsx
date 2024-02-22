@@ -22,7 +22,8 @@ const { PendingTransfer } = lazyImport(
 const { Products } = lazyImport(() => import('@/pages'), 'Products');
 const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
-const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
+// const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
+const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
 const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
 // const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserInfo } = lazyImport(() => import('@/pages/__test__'), 'UserInfo');
