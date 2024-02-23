@@ -1,5 +1,6 @@
 import { Button, Inputbox } from '@/components';
 import { UserInfoTable } from '@/features/userinfo/components/UserInfoTable';
+import UserInfoForm from '@/features/userinfo/components/UserInfoForm';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { UserInfoProvider } from '@/features/userinfo/context/UserInfoContext';
 import { User as IUserInfo } from '@/features/userinfo/types';
@@ -38,7 +39,7 @@ export const UserInfo = () => {
 							<UserInfoTable openModal={openUserInfoModal} />
 						</div>
 					</div>
-					{/* <ModalTest
+					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
 						title={
@@ -49,12 +50,10 @@ export const UserInfo = () => {
 									: 'Add User'
 						}
 					>
-						<UserForm
+						<UserInfoForm
 							onClose={closeModal}
-							isUpdate={modalAction === 'edit' ? true : false}
-							isDelete={modalAction === 'remove' ? true : false}
 						/>
-					</ModalTest> */}
+					</ModalTest>
 				</UserInfoProvider>
 			</MainLayout>
 		</>

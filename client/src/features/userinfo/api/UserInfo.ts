@@ -1,4 +1,4 @@
-import { API_URLS } from '@/api';
+import { API_HEADERS, API_URLS } from '@/api';
 import { User } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
@@ -77,4 +77,18 @@ export const getRoles = async (): Promise<Roles[]> => {
 			'Content-Type': 'application/json',
 		},
 	});
+};
+
+export const addUser = (data: User) => {
+	return axios
+		.post(API_URLS.WAREHOUSE, data, {
+			headers: API_HEADERS,
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error adding user:', error);
+			throw error;
+		});
 };
