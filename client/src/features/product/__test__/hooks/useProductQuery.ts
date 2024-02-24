@@ -1,38 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchProductPrices, fetchProducts } from "../api/Products";
+import { fetchProducts } from "../api/Products";
 import { useEffect, useState } from "react";
-import { ProductPrices } from "../types";
-
+import { Product } from "../types";
 
 /**
- * Custom hook for fetching and managing product data.
- * @returns An object containing the fetched products and the query status.
+ * Custom hook for fetching and managing products.
+ * 
+ * @returns An object containing the response data and loading state.
  */
 export const useProductQuery = () => {
-  // State management of product data
-  const [productsData, setProductsData] = useState<ProductPrices[]>([]);
+  // State of the response data and loading state
+  const [data, setData] = useState<Product[]>([] as Product[]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Query for fetching product data
-  const productQuery = useQuery({
+  // Query for fetching products and isLoading state
+  const {data: result, isLoading: loading} = useQuery({
     queryKey: ['products'],
     queryFn: () => fetchProducts(),
     refetchOnWindowFocus: false,
   });
 
-  const productPriceQuery = useQuery({
-    queryKey: ['productData'],
-    queryFn: () => fetchProductPrices(),
-    refetchOnWindowFocus: false,
-  })
-
-
-  // Update state when product query changes
+  // Update states when query results changes [result, loading]
   useEffect(() => {
-    const { data: product } = productPriceQuery;
-    if (product) {
-      setProductsData(product);
-    }
-  }, [productPriceQuery]);
+    if (loading) {
+      setIsLoading(true)
+    } else if (!loading && result) {
+      setIsLoading(false)
+      setData(result);
+    };
+  }, [result, loading]);
 
-  return {productsData, productQuery, productPriceQuery};
+  return {data, isLoading};
 }
