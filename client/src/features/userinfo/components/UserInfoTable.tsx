@@ -2,11 +2,8 @@ import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
 import { User } from '../types';
-import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import axios from 'axios';
-import { FC, useState } from 'react';
-import { StringValidation } from 'zod';
+import { FC } from 'react';
 import { useUserInfo } from '../context/UserInfoContext';
 
 interface UserTableProps {

@@ -4,11 +4,16 @@ import { SidebarRoute } from '../routes/SidebarRoutes';
 import SidebarItemVisible from './SidebarItemVisible';
 import SidebarItem from './SidebarItem';
 import { Role } from '../types';
+import { SetStateAction, useState } from 'react';
 
 interface SidebarProps {}
 
 const Sidebar = ({}: SidebarProps) => {
 	const auth = useAuth();
+
+	const [open, setOpen] = useState("");
+
+	const handleClick = (itemId: string) => setOpen(itemId);
 
 	return (
 		<>
@@ -18,30 +23,52 @@ const Sidebar = ({}: SidebarProps) => {
 					<ul className="flex h-full w-full flex-col items-start">
 						{SidebarRoute.map((route, index) => {
 							// Check if currently authenticated user's role is in allowedRoles
-
-							// if (
-							// 	auth.auth.role &&
-							// 	route.allowedRoles.includes(auth.auth.role as Role)
-							// ) {
+							if (
+								auth.auth.role &&
+								route.allowedRoles.includes(auth.auth.role as Role)
+							) {
 								// Check if route has sidebarProps
 								if (route.sidebarProps) {
 									// Check if route has children
 									if (route.child && route.child.length > 0) {
 										// Render SidebarItemVisible for routes with children
 										return (
-											<SidebarItemVisible key={index} item={route} />
+											<SidebarItemVisible 
+												key={index} 
+												id={route.sidebarProps.displayText}
+												item={route}
+												handleClick={handleClick}
+												open={open} />
 										);
+										// route.child?.map((child) => {
+										// 	console.log(child.allowedRoles);
+										// 	console.log(auth.auth.role);
+										// 	console.log(child.allowedRoles.includes(auth.auth.role as Role));
+										// 	if (
+										// 		child.allowedRoles.includes(auth.auth.role as Role)
+										// 	) {
+										// 		return (
+										// 			<SidebarItemVisible key={index} item={route} />
+										// 		);
+										// 	}
+										// });
+										//TODO: Fix problem with Transaction button; 
+										//doesn't display when restricting expenses child
 									} else {
 										// Render SidebarItem for routes without children
-										return <SidebarItem key={index} item={route} />;
+										if (
+											route.allowedRoles.includes(auth.auth.role as Role)
+										) {
+											return <SidebarItem key={index} item={route} />;
+										}
 									}
 								} else {
 									// Return null if route doesn't have sidebarProps
 									return null;
 								}
-							// } else {
-							// 	return null;
-							// }
+							} else {
+								return null;
+							}
 						})}
 					</ul>
 				</aside>

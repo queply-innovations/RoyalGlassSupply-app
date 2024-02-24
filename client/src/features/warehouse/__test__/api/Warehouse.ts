@@ -2,6 +2,8 @@ import axios from 'axios';
 import storage from '@/utils/storage';
 import { API_HEADERS, API_URLS } from '@/api';
 import { Warehouse } from '../types';
+// import { ToastContainer, toast } from 'react-toastify';
+// import "react-toastify/dist/ReactToastify.css";
 
 export const fetchWarehouses = async (): Promise<Warehouse[]> => {
 	return await axios
