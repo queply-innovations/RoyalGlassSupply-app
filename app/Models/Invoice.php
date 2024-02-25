@@ -12,13 +12,17 @@ class Invoice extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'customer_id',
         'warehouse_id',
         'issued_by',
+        'type',
         'payment_method',
         'reference_no',
+        'subtotal',
         'total_tax',
         'total_discount',
+        'delivery_charge',
         'total_amount_due',
         'paid_amount',
         'change_amount',
@@ -27,7 +31,7 @@ class Invoice extends Model
 
     protected $with = [
         'customer:id,firstname,lastname',
-        'warehouse:id,name',
+        'warehouse:id,code,name',
         'issuedBy:id,firstname,lastname'
     ];
 

@@ -14,7 +14,7 @@ class InvoiceTax extends Model
         'invoice_id',
         'item',
         'amount',
-        'note'
+        'notes'
     ];
     
     public $timestamps = false;

@@ -20,7 +20,9 @@ class InvoiceDiscountResource extends JsonResource
             'item' => $this->item,
             'voucher' => new VoucherResource($this->voucher),
             'amount' => $this->amount,
-            'note' => $this->note
+            'discount_approval_status' => $this->discount_approval_status,
+            'approved_by' => new UserResource($this->approvedBy),
+            'notes' => $this->notes
         ];
     }
 }

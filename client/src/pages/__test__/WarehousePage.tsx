@@ -1,8 +1,9 @@
-import { Button, Inputbox } from '@/components';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
-import WarehouseForm from '@/features/warehouse/__test__/components/WarehouseForm';
-import { WarehouseTable } from '@/features/warehouse/__test__/components/WarehouseTable';
-import { WarehouseProvider } from '@/features/warehouse/__test__/context/WarehouseContext';
+import {
+	WarehouseForm,
+	WarehouseTable,
+} from '@/features/warehouse/__test__/components/';
+import { WarehouseProvider } from '@/features/warehouse/__test__/';
 import { Warehouse as IWarehouse } from '@/features/warehouse/__test__/types';
 import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
@@ -13,16 +14,12 @@ export const Warehouse = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
 
-	const openEditModal = (warehouses: IWarehouse, action: string) => {
-		openModal();
-		setModalAction(action);
-	};
-
-	const openAddModal = () => {
-		openModal();
-		setModalAction('add');
-	};
-
+	/**
+	 * Opens the warehouse modal and sets the modal action.
+	 *
+	 * @param warehouse - The warehouse object.
+	 * @param action - The action to be performed.
+	 */
 	const openWarehouseModal = (warehouse: IWarehouse, action: string) => {
 		openModal();
 		setModalAction(action);

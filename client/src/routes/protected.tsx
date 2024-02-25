@@ -19,7 +19,11 @@ const { PendingTransfer } = lazyImport(
 	() => import('@/pages'),
 	'PendingTransfer',
 );
-const { Products } = lazyImport(() => import('@/pages'), 'Products');
+const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
+const { ProductPrices } = lazyImport(
+	() => import('@/pages/__test__'),
+	'ProductPrices',
+);
 const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
@@ -69,6 +73,7 @@ const protectedRoutesConfig = [
 	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
+	{ path: '/products/listings', element: <ProductPrices /> },
 	{ path: '/supplier', element: <Supplier /> },
 ];
 

@@ -16,13 +16,17 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'customer' => new CustomerResource($this->customer),
             'warehouse' => new WarehouseResource($this->warehouse),
             'issued_by' => new UserResource($this->issuedBy),
+            'type', => $this->type,
             'payment_method' => $this->payment_method,
             'reference_no' => $this->reference_no,
+            'subtotal' => $this->subtotal,
             'total_tax' => $this->total_tax,
             'total_discount' => $this->total_discount,
+            'delivery_charge' => $this->delivery_charge,
             'total_amount_due' => $this->total_amount_due,
             'paid_amount' => $this->paid_amount,
             'change_amount' => $this->change_amount,

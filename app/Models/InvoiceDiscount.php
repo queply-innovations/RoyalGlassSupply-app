@@ -15,7 +15,9 @@ class InvoiceDiscount extends Model
         'item',
         'voucher_id',
         'amount',
-        'note'
+        'discount_approval_status',
+        'approved_by',
+        'notes'
     ];
     
     public $timestamps = false;
@@ -32,5 +34,10 @@ class InvoiceDiscount extends Model
     public function voucher(): BelongsTo
     {
         return $this->belongsTo(Voucher::class);
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

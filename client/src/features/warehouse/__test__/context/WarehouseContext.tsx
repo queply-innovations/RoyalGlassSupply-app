@@ -1,20 +1,36 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import { Warehouse } from '../types';
 import { useWarehouseQuery } from '../../__test__/hooks';
 
-export const WarehouseContext = createContext<Warehouse[] | undefined>(
-	undefined,
-);
-
+interface WarehouseContextProps {
+	warehouses: Warehouse[];
+	warehouseSelected: Warehouse;
+	setWarehouseSelected: (warehouse: Warehouse) => void;
+}
 interface WarehouseProviderProps {
 	children: ReactNode;
 }
+const WarehouseContext = createContext<WarehouseContextProps | undefined>(
+	undefined,
+);
 
 export const WarehouseProvider = ({ children }: WarehouseProviderProps) => {
 	const { warehouses } = useWarehouseQuery();
+	const [warehouseSelected, setWarehouseSelected] = useState<Warehouse>({
+		id: 0,
+		code: '',
+		name: '',
+		location: '',
+	});
+
+	const value = {
+		warehouses,
+		warehouseSelected,
+		setWarehouseSelected,
+	};
 
 	return (
-		<WarehouseContext.Provider value={warehouses}>
+		<WarehouseContext.Provider value={value}>
 			{children}
 		</WarehouseContext.Provider>
 	);

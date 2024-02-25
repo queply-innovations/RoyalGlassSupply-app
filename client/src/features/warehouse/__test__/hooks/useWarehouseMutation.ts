@@ -10,11 +10,11 @@ import { Warehouse } from '../types';
 
 export const useWarehouseMutation = () => {
 	const queryClient = useQueryClient();
-	const warehouse = useWarehouse();
+	const { warehouses } = useWarehouse();
 
 	// State to store warehouse form data
 	const [value, setValue] = useState<Warehouse>({
-		id: warehouse.length + 1 || 0,
+		id: warehouses.length + 1 || 0,
 		code: '',
 		name: '',
 		location: '',
@@ -36,7 +36,7 @@ export const useWarehouseMutation = () => {
 			await queryClient.invalidateQueries({ queryKey: ['warehouses'] });
 			// Reset form data
 			setValue({
-				id: warehouse.length + 1 || 0,
+				id: warehouses.length + 1 || 0,
 				code: '',
 				name: '',
 				location: '',
