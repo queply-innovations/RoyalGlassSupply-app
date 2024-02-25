@@ -79,16 +79,18 @@ export const getRoles = async (): Promise<Roles[]> => {
 	});
 };
 
-export const addUser = (data: User) => {
-	return axios
-		.post(API_URLS.WAREHOUSE, data, {
-			headers: API_HEADERS,
-		})
-		.then(response => {
-			return response.data;
-		})
-		.catch(error => {
-			console.error('Error adding user:', error);
-			throw error;
-		});
+export const addUser = async (data: User) => {
+	try {
+		const response = await axios
+			.post(API_URLS.WAREHOUSE, data, {
+				headers: {
+					Authorization: `Bearer ${storage.getToken()}`,
+					'Content-Type': 'application/json',
+				},
+			});
+		return response.data;
+	} catch (error) {
+		console.error('Error adding user:', error);
+		throw error;
+	}
 };
