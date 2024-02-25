@@ -6,21 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class InvoiceTax extends Model
+class OperationExpense extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'invoice_id',
-        'item',
+        'title',
+        'date_of_operation',
         'amount',
-        'notes'
+        'notes',
+        'created_by'
     ];
-    
-    public $timestamps = false;
 
-    public function invoice(): BelongsTo
+    public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
