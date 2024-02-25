@@ -2,8 +2,13 @@ import { useState } from 'react';
 import { ProductPricesProvider } from '@/features/product/__test__/context/ProductPricesContext';
 import { MainLayout } from '@/layouts/MainLayout';
 import { ProductPrices as ProdPriceType } from '@/features/product/__test__/types';
-import { ProductPricesTable } from '@/features/product/__test__/components';
+import {
+	ProdPriceDetails,
+	ProdPriceToggleActiveStat,
+	ProductPricesTable,
+} from '@/features/product/__test__/components';
 import { useModal } from '@/utils/Modal';
+import { ModalTest } from '@/components/__test__/Modal/Modal';
 
 export const ProductPrices = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -23,6 +28,27 @@ export const ProductPrices = () => {
 							<ProductPricesTable openModal={modalHandler} />
 						</div>
 					</div>
+					<ModalTest
+						title={
+							modalAction === 'details'
+								? 'Listing Details'
+								: modalAction === 'edit'
+									? 'Edit Listing'
+									: 'Toggle Active Status'
+						}
+						isOpen={isOpen}
+						onClose={closeModal}
+					>
+						<>
+							{modalAction === 'details' && (
+								<ProdPriceDetails onClose={closeModal} />
+							)}
+							{modalAction === 'edit' && <p>Hallo</p>}
+							{modalAction === 'toggle_active_stat' && (
+								<ProdPriceToggleActiveStat onClose={closeModal} />
+							)}
+						</>
+					</ModalTest>
 				</ProductPricesProvider>
 			</MainLayout>
 		</>

@@ -21,13 +21,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { Loader2 } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	filterWhat: string;
 	dataType: string;
-	openModal: any;
+	openModal: () => void;
 	isLoading?: boolean;
 }
 
@@ -44,6 +45,8 @@ export function DataTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
 	);
+
+	const modalHandler = openModal();
 
 	const table = useReactTable({
 		data,
@@ -89,7 +92,12 @@ export function DataTable<TData, TValue>({
 					/>
 				</div>
 				<div className="flex flex-row-reverse gap-3">
-					<Button fill={'green'} onClick={openModal}>
+					<Button
+						fill={'green'}
+						onClick={() => modalHandler}
+						disabled={isLoading}
+						className="disabled:cursor-not-allowed disabled:opacity-40"
+					>
 						{`Add ${dataType}`}
 					</Button>
 				</div>

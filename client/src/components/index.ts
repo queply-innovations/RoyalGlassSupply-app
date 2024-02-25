@@ -10,3 +10,4 @@ export * from './Sidebar/Sidebar';
 export * from './Pagination';
 export *  from './Loading';
 export * from './ProgressBar';
+export * from './DropdownMenu';

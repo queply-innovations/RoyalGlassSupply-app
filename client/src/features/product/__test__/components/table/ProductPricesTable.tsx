@@ -25,9 +25,9 @@ export const ProductPricesTable = ({ openModal }: ProductsPricesTableProps) => {
 	};
 
 	// Modal handler to remove product pricing/listing
-	const handleRemoveProdPrice = (productPrice: ProductPrices) => {
+	const handleToggleActiveStatus = (productPrice: ProductPrices) => {
 		setSelectedProductPrice(productPrice);
-		openModal(productPrice, 'remove');
+		openModal(productPrice, 'toggle_active_stat');
 	};
 
 	return (
@@ -40,14 +40,14 @@ export const ProductPricesTable = ({ openModal }: ProductsPricesTableProps) => {
 						? ProductPricesColumns({
 								handleProdPriceDetails,
 								handleEditProdPrice,
-								handleRemoveProdPrice,
+								handleToggleActiveStatus,
 							})
 						: ProductPricesColumnsLimited
 				}
 				data={data}
 				filterWhat={'name'}
 				dataType={'Listing'}
-				openModal={openModal}
+				openModal={() => openModal}
 				isLoading={isLoading}
 			/>
 		</>

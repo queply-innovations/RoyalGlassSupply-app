@@ -1,13 +1,29 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductPrices } from '../../../types';
-import { Button } from '@/components';
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components';
 import { SortIcon } from '@/assets/icons';
-import { FaPencilAlt } from 'react-icons/fa';
+import {
+	Check,
+	X,
+	MoreVertical,
+	Pencil,
+	Trash2,
+	Clock,
+	List,
+} from 'lucide-react';
 
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
 	handleEditProdPrice: (productPrice: ProductPrices) => void;
-	handleRemoveProdPrice: (productPrice: ProductPrices) => void;
+	handleToggleActiveStatus: (productPrice: ProductPrices) => void;
 }
 
 /**
@@ -15,13 +31,13 @@ interface ProductPricesColumnsProps {
  *
  * @param handleProdPriceDetails - Callback to show product price details.
  * @param handleEditProdPrice - Callback to edit product price.
- * @param handleRemoveProdPrice - Callback to remove product price.
+ * @param handleToggleActiveStatus - Callback to remove product price.
  * @returns Column definition for the ProductPrices table.
  */
 export const ProductPricesColumns = ({
 	handleProdPriceDetails,
 	handleEditProdPrice,
-	handleRemoveProdPrice,
+	handleToggleActiveStatus,
 }: ProductPricesColumnsProps): ColumnDef<ProductPrices>[] => {
 	const columnDefinition: ColumnDef<ProductPrices>[] = [
 		{
@@ -118,14 +134,26 @@ export const ProductPricesColumns = ({
 			accessorKey: 'on_sale',
 			header: () => <div className="justify-center uppercase">On sale</div>,
 			cell: ({ row }) => {
+				const onSale = row.original.on_sale;
 				return (
-					<div className="flex items-center">
-						<span>
-							{row.original.on_sale
-								? row.original.on_sale === 1
-									? `YES`
-									: `NO`
-								: `NO`}
+					<div className="group relative flex w-fit items-center">
+						{onSale === 1 ? (
+							<Check
+								size={20}
+								strokeWidth={2.5}
+								className="text-green-600"
+							/>
+						) : (
+							<span>
+								<X
+									size={20}
+									strokeWidth={2.5}
+									className="text-gray-600"
+								/>
+							</span>
+						)}
+						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+							{onSale === 1 ? 'On sale' : 'Not on sale'}
 						</span>
 					</div>
 				);
@@ -151,28 +179,66 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'approval_status',
-			header: () => <div className="justify-center uppercase">Approval</div>,
+			header: () => (
+				<div className="mx-auto w-fit text-center uppercase">Approval</div>
+			),
 			cell: ({ row }) => {
 				const status = row.original.approval_status;
 				return (
-					<div className="flex items-center">
-						<div
-							className={`${
-								status
-									? status === 'approved'
-										? 'bg-green-600'
-										: status === 'rejected'
-											? 'bg-red-600'
-											: 'bg-amber-600'
-									: ''
-							}
-          overflow-clip rounded-full px-2 py-1 text-xs font-semibold uppercase text-white`}
-						>
-							{row.original.approval_status}
+					<>
+						<div className="group relative mx-auto flex w-fit items-center justify-center">
+							{status === 'approved' ? (
+								<Check
+									size={20}
+									strokeWidth={2.5}
+									className="text-green-600"
+								/>
+							) : status === 'rejected' ? (
+								<X
+									size={20}
+									strokeWidth={2.5}
+									className="text-red-600"
+								/>
+							) : (
+								<Clock
+									size={20}
+									strokeWidth={2.5}
+									className="text-yellow-600"
+								/>
+							)}
+							<span className="absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+								{status}
+							</span>
 						</div>
+					</>
+				);
+			},
+		},
+		{
+			accessorKey: 'on_sale',
+			header: () => (
+				<div className="mx-auto w-fit text-center uppercase">Active</div>
+			),
+			cell: ({ row }) => {
+				const active = row.original.active_status;
+				return (
+					<div className="group relative mx-auto flex w-fit items-center justify-center">
+						{active === 'active' ? (
+							<Check
+								size={20}
+								strokeWidth={2.5}
+								className="text-green-600"
+							/>
+						) : (
+							<X size={20} strokeWidth={2.5} className="text-gray-600" />
+						)}
+						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+							{active === 'active' ? 'Active' : 'Inactive'}
+						</span>
 					</div>
 				);
 			},
+			enableGlobalFilter: false,
 		},
 		{
 			id: 'actions',
@@ -180,28 +246,51 @@ export const ProductPricesColumns = ({
 				const productRow = row.original;
 				return (
 					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleProdPriceDetails(productRow)}
-							className="flex flex-row items-center gap-2"
-						>
-							Info
-						</Button>
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleEditProdPrice(productRow)}
-							className="flex flex-row items-center gap-2"
-						>
-							<FaPencilAlt /> Edit
-						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveProdPrice(productRow)}
-						>
-							Remove
-						</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+								<MoreVertical size={16} strokeWidth={2.25} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleProdPriceDetails(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<List size={16} strokeWidth={2.25} />
+									</span>
+									<span>Details</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => handleEditProdPrice(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span>Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleToggleActiveStatus(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										{productRow.active_status ? (
+											productRow.active_status === 'active' ? (
+												<Check size={16} strokeWidth={2.25} />
+											) : (
+												<div></div>
+											)
+										) : (
+											<div></div>
+										)}
+									</span>
+									<span>Active</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				);
 			},
