@@ -5,7 +5,7 @@ import { Product, ProductPrices } from '../types';
 export const fetchProducts = async (): Promise<Product[]> => {
 	return await axios
 		.get(API_URLS.PRODUCTS, {
-			headers: API_HEADERS,
+			headers: API_HEADERS(),
 		})
 		.then(response => {
 			return response.data.data;
@@ -19,7 +19,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
 export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 	return await axios
 		.get(API_URLS.PRODUCT_PRICES, {
-			headers: API_HEADERS,
+			headers: API_HEADERS(),
 		})
 		.then(response => {
 			return response.data.data;

@@ -15,7 +15,9 @@ export const API_URLS = {
 	WAREHOUSE: `${API_BASE_URL}/warehouses`,
 };
 
-export const API_HEADERS = {
-	Authorization: `Bearer ${storage.getToken()}`,
-	'Content-Type': 'application/json',
+export const API_HEADERS = () => {
+	return {
+		Authorization: `Bearer ${storage.getToken()}`,
+		'Content-Type': 'application/json',
+	}
 };
