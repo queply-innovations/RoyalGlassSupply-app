@@ -9,7 +9,7 @@ export const useSupplierQuery = () => {
 	const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
 	// Query for fetching supplier data
-	const supplierQuery = useQuery({
+	const { isFetching, data: supplierQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['supplier'],
 		// Function to fetch supplier data
@@ -21,7 +21,7 @@ export const useSupplierQuery = () => {
 	// Effect to update state when supplier query changes
 	useEffect(() => {
 		// Destructure data from supplierQuery object
-		const { data: supplier } = supplierQuery;
+		const supplier = supplierQuery;
 		if (supplier) {
 			// Update state with fetched supplier data
 			setSuppliers(supplier);
@@ -30,5 +30,5 @@ export const useSupplierQuery = () => {
 	}, [supplierQuery]);
 
 	// Return state and query object
-	return { suppliers, supplierQuery };
+	return { suppliers, supplierQuery, isFetching };
 };

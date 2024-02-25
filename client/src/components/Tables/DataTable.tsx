@@ -136,12 +136,15 @@ export function DataTable<TData, TValue>({
 								</TableRow>
 							))
 						) : isLoading ? (
-							<TableRow>
+							<TableRow >
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center"
+									className="h-24 text-center items-center justify-center space-y-0 px-20"
 								>
-									Loading...
+									<ProgressBar />
+									<h2 className="text-primary-dark-gray pb-5 text-xl font-bold">
+										Fetching Data....
+									</h2>
 								</TableCell>
 							</TableRow>
 						) : (

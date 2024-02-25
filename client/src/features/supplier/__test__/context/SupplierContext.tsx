@@ -2,7 +2,12 @@ import { ReactNode, createContext, useContext } from 'react';
 import { Supplier } from '../../types';
 import { useSupplierQuery } from '../../__test__/hooks';
 
-export const SupplierContext = createContext<Supplier[] | undefined>(
+interface SupplierContextProps {
+	suppliers: Supplier[];
+	isFetching: boolean;
+}
+
+export const SupplierContext = createContext<SupplierContextProps | undefined>(
 	undefined,
 );
 
@@ -11,10 +16,12 @@ interface SupplierProviderProps {
 }
 
 export const SupplierProvider = ({ children }: SupplierProviderProps) => {
-	const { suppliers } = useSupplierQuery();
+	const { suppliers, isFetching } = useSupplierQuery();
+
+	const value = { suppliers, isFetching };
 
 	return (
-		<SupplierContext.Provider value={suppliers}>
+		<SupplierContext.Provider value={value}>
 			{children}
 		</SupplierContext.Provider>
 	);

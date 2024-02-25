@@ -9,7 +9,7 @@ export const useWarehouseQuery = () => {
 	const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
 
 	// Query for fetching warehouse data
-	const warehouseQuery = useQuery({
+	const { isFetching, data: warehouseQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['warehouses'],
 		// Function to fetch warehouse data
@@ -21,7 +21,7 @@ export const useWarehouseQuery = () => {
 	// Effect to update state when warehouse query changes
 	useEffect(() => {
 		// Destructure data from warehouseQuery object
-		const { data: warehouse } = warehouseQuery;
+		const warehouse = warehouseQuery;
 		if (warehouse) {
 			// Update state with fetched warehouse data
 			setWarehouses(warehouse);
@@ -30,5 +30,5 @@ export const useWarehouseQuery = () => {
 	}, [warehouseQuery]);
 
 	// Return state and query object
-	return { warehouses, warehouseQuery };
+	return { warehouses, warehouseQuery, isFetching };
 };

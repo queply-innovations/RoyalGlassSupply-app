@@ -2,7 +2,12 @@ import { ReactNode, createContext, useContext } from 'react';
 import { User } from '../types';
 import { useUserInfoQuery } from '../hooks';
 
-export const UserInfoContext = createContext<User[] | undefined>(
+interface UserInfoContextProps {
+	users: User[];
+	isFetching: boolean;
+}
+
+export const UserInfoContext = createContext<UserInfoContextProps | undefined>(
 	undefined,
 );
 
@@ -11,10 +16,12 @@ interface UserInfoProviderProps {
 }
 
 export const UserInfoProvider = ({ children }: UserInfoProviderProps) => {
-	const { users } = useUserInfoQuery();
+	const { users, isFetching } = useUserInfoQuery();
+
+	const value = { users, isFetching };
 
 	return (
-		<UserInfoContext.Provider value={users}>
+		<UserInfoContext.Provider value={value}>
 			{children}
 		</UserInfoContext.Provider>
 	);

@@ -17,7 +17,7 @@ interface SupplierTableProps {
 }
 
 export const SupplierTable = ({ openModal }: SupplierTableProps) => {
-	const supplier = useSupplier();
+	const { suppliers, isFetching } = useSupplier();
 
 	const SupplierTableHeader: ColumnDef<Supplier>[] = [
 		{
@@ -130,11 +130,12 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 	return (
 		<>
 			<DataTable
-				data={supplier}
+				data={suppliers}
 				columns={SupplierTableHeader}
 				filterWhat={"name"}
 				dataType={"Supplier"}
-				openModal={openModal} />
+				openModal={openModal}
+				isLoading={isFetching} />
 
 			{/* <Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>

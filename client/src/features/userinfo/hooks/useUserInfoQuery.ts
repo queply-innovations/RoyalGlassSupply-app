@@ -9,7 +9,7 @@ export const useUserInfoQuery = () => {
 	const [users, setUsers] = useState<User[]>([]);
 
 	// Query for fetching user info data
-	const userQuery = useQuery({
+	const { isFetching, data: userQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['users'],
 		// Function to fetch user info data
@@ -21,7 +21,7 @@ export const useUserInfoQuery = () => {
 	// Effect to update state when user info query changes
 	useEffect(() => {
 		// Destructure data from userQuery object
-		const { data: users } = userQuery;
+		const users = userQuery;
 		if (users) {
 			// Update state with fetched user info data
 			setUsers(users);
@@ -30,5 +30,5 @@ export const useUserInfoQuery = () => {
 	}, [userQuery]);
 
 	// Return state and query object
-	return { users, userQuery };
+	return { users, userQuery, isFetching };
 };
