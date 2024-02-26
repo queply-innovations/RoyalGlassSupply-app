@@ -215,7 +215,7 @@ export const ProductPricesColumns = ({
 			},
 		},
 		{
-			accessorKey: 'on_sale',
+			accessorKey: 'active_status',
 			header: () => (
 				<div className="mx-auto w-fit text-center uppercase">Active</div>
 			),
