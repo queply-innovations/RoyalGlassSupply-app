@@ -10,7 +10,7 @@ interface TransactionTableProps {
 	openModal: (data: Transaction, action: string) => void;
 }
 
-export const UserInfoTable: FC<TransactionTableProps> = ({ openModal }: TransactionTableProps) =>{
+export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: TransactionTableProps) =>{
 	const { transactions, isFetching } = useTransaction();
 	
 	const TransactionTableHeader: ColumnDef<Transaction>[] = [
@@ -125,4 +125,4 @@ export const UserInfoTable: FC<TransactionTableProps> = ({ openModal }: Transact
 	);
 };
 
-export default UserInfoTable;
+export default TransactionTable;

@@ -65,12 +65,12 @@ export const Pagination: FC<PaginationProps> = ({
 									<a onClick={() => table.setPageIndex(pgNumber - 1)} 
 										className='page-link'
 										key={"alink" + pgNumber} >
-										
+
 										{pgNumber}
 
 									</a>
 								</li>
-								
+
 							) : (''))}
 						</>
 					) : (
@@ -80,7 +80,7 @@ export const Pagination: FC<PaginationProps> = ({
 							<a onClick={() => table.setPageIndex(pgNumber - 1)} 
 								className='page-link' 
 								key={"alink" + pgNumber} >
-								
+
 								{pgNumber}
 							</a>
 						</li>
