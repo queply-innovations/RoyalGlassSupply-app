@@ -12,12 +12,12 @@ export const TransactionStatus: FC = () => {
 							<th className="border-b p-2 text-[15px]">Product ID</th>
 							<th className="border-b p-2 text-[15px]"> Price </th>
 							<th className="border-b p-2 text-[15px]">Product Name</th>
-                            <th className="border-b p-2 text-[15px]">Dimensions</th>
-                            <th className="border-b p-2 text-[15px]">Serial</th>
-                            <th className="border-b p-2 text-[15px]">SKU</th>
-                            <th className="border-b p-2 text-[15px]">Inventory Status</th>
-                            <th className="border-b p-2 text-[15px]">Order Type</th>
-                            <th className="border-b p-2 text-[15px]">Quantity</th>
+							<th className="border-b p-2 text-[15px]">Dimensions</th>
+							<th className="border-b p-2 text-[15px]">Serial</th>
+							<th className="border-b p-2 text-[15px]">SKU</th>
+							<th className="border-b p-2 text-[15px]">Inventory Status</th>
+							<th className="border-b p-2 text-[15px]">Order Type</th>
+							<th className="border-b p-2 text-[15px]">Quantity</th>
 						</tr>
 						<tr>
 							<td id="Product_ID" className="table-data text-center">

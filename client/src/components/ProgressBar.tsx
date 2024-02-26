@@ -32,7 +32,7 @@ export const ProgressBar = () => {
 		if (completed <= 90) {
 			const changing = setInterval(() => {
 				setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
-			}, 500);
+			}, 1000);
 
 			return () => clearInterval(changing);
 		}
