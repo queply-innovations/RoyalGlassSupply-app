@@ -61,7 +61,10 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				);
 			},
 		},
-
+		{
+			accessorKey: 'code',
+			header: () => <div className="justify-center">code</div>,
+		},
 		{
 			accessorKey: 'location',
 			header: () => <div className="justify-center">LOCATION</div>,
@@ -123,7 +126,7 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				columns={WarehouseTableHeader}
 				filterWhat={'location'}
 				dataType={'Warehouse'}
-				openModal={openModal}
+				openModal={() => openModal}
 			/>
 		</>
 	);
