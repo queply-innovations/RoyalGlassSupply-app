@@ -4,7 +4,7 @@ import { SidebarRoute } from '../routes/SidebarRoutes';
 import SidebarItemVisible from './SidebarItemVisible';
 import SidebarItem from './SidebarItem';
 import { Role } from '../types';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 
 interface SidebarProps {}
 
@@ -15,13 +15,25 @@ const Sidebar = ({}: SidebarProps) => {
 
 	const handleClick = (itemId: string) => setOpen(itemId);
 
+	const [ sidebar , setSidebar ] = useState(SidebarRoute);
+	useEffect(() => {
+		const filteredRoute = sidebar.map(route => (
+			{
+				...route, child: route.child?.filter(
+					subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
+				)
+			}
+		));
+		setSidebar(filteredRoute);
+	}, []);
+
 	return (
 		<>
 			<div className="relative flex w-1/6 max-w-[250px] flex-row">
 				<aside className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-16 pt-10 shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
 					<SidebarLogo />
 					<ul className="flex h-full w-full flex-col items-start">
-						{SidebarRoute.map((route, index) => {
+						{sidebar.map((route, index) => {
 							// Check if currently authenticated user's role is in allowedRoles
 							if (
 								auth.auth.role &&
@@ -40,20 +52,6 @@ const Sidebar = ({}: SidebarProps) => {
 												handleClick={handleClick}
 												open={open} />
 										);
-										// route.child?.map((child) => {
-										// 	console.log(child.allowedRoles);
-										// 	console.log(auth.auth.role);
-										// 	console.log(child.allowedRoles.includes(auth.auth.role as Role));
-										// 	if (
-										// 		child.allowedRoles.includes(auth.auth.role as Role)
-										// 	) {
-										// 		return (
-										// 			<SidebarItemVisible key={index} item={route} />
-										// 		);
-										// 	}
-										// });
-										//TODO: Fix problem with Transaction button; 
-										//doesn't display when restricting expenses child
 									} else {
 										// Render SidebarItem for routes without children
 										if (
