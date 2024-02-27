@@ -5,6 +5,7 @@ import { useUserInfoQuery } from '../hooks';
 interface UserInfoContextProps {
 	users: User[];
 	isFetching: boolean;
+	progress: any;
 }
 
 export const UserInfoContext = createContext<UserInfoContextProps | undefined>(
@@ -16,9 +17,9 @@ interface UserInfoProviderProps {
 }
 
 export const UserInfoProvider = ({ children }: UserInfoProviderProps) => {
-	const { users, isFetching } = useUserInfoQuery();
+	const { users, isFetching, progress } = useUserInfoQuery();
 
-	const value = { users, isFetching };
+	const value = { users, isFetching, progress };
 
 	return (
 		<UserInfoContext.Provider value={value}>

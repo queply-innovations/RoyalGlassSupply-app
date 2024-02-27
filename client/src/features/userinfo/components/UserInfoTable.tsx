@@ -11,7 +11,7 @@ interface UserTableProps {
 }
 
 export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps) =>{
-	const { users, isFetching } = useUserInfo();
+	const { users, isFetching, progress } = useUserInfo();
 	
 	const UserInfoTableHeader: ColumnDef<User>[] = [
 		{
@@ -112,7 +112,8 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 				filterWhat={"lastname"}
 				dataType={"User"}
 				openModal={openModal}
-				isLoading={isFetching} />
+				isLoading={isFetching}
+				progress={progress} />
 		</>
 	);
 };

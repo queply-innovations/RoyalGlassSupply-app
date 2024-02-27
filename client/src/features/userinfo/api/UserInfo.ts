@@ -4,12 +4,16 @@ import storage from '@/utils/storage';
 import axios from 'axios';
 import { RolePermissions, Roles } from '../types';
 
-export const fetchUsers = async (): Promise<User[]> => {
+export const fetchUsers = async (updateProgress: any): Promise<User[]> => {
 	return await axios
 		.get(API_URLS.USERS, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
+			},
+			onDownloadProgress: (progress) => {
+				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+				updateProgress(percentCompleted);
 			},
 		})
 		.then(response => {

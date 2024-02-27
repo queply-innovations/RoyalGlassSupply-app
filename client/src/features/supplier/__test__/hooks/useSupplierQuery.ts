@@ -8,12 +8,14 @@ export const useSupplierQuery = () => {
 	// State to store supplier data
 	const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
+	const [progress, setProgress] = useState(0);
+
 	// Query for fetching supplier data
 	const { isFetching, data: supplierQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['supplier'],
 		// Function to fetch supplier data
-		queryFn: () => fetchSuppliers(),
+		queryFn: () => fetchSuppliers(setProgress),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -30,5 +32,5 @@ export const useSupplierQuery = () => {
 	}, [supplierQuery]);
 
 	// Return state and query object
-	return { suppliers, supplierQuery, isFetching };
+	return { suppliers, supplierQuery, isFetching, progress };
 };

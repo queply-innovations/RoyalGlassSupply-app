@@ -13,7 +13,7 @@ export const getUser = async (id: number): Promise<User[]> => {
 	});
 };
 
-export const getUserRole = async (id: number): Promise<Roles['title']> => {
+export const getUserRole = async (id: number, updateProgress: any): Promise<Roles['title']> => {
 	try {
 		const response = await axios.post(
 			`${API_URLS.USER_ROLES}/searches-filters-sorts`,
@@ -22,6 +22,10 @@ export const getUserRole = async (id: number): Promise<Roles['title']> => {
 				headers: {
 					Authorization: `Bearer ${storage.getToken()}`,
 					'Content-Type': 'application/json',
+				},
+				onUploadProgress: (progress) => {
+					let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+					updateProgress(percentCompleted);
 				},
 			},
 		);

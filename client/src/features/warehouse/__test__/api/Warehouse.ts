@@ -5,15 +5,20 @@ import { Warehouse } from '../types';
 // import { ToastContainer, toast } from 'react-toastify';
 // import "react-toastify/dist/ReactToastify.css";
 
-export const fetchWarehouses = async (): Promise<Warehouse[]> => {
+export const fetchWarehouses = async (updateProgress: any): Promise<Warehouse[]> => {
 	return await axios
 		.get(API_URLS.WAREHOUSE, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
 			},
+			onDownloadProgress: (progress) => {
+				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+				updateProgress(percentCompleted);
+			},
 		})
 		.then(response => {
+			setTimeout(() => {updateProgress(100)}, 2000);
 			return response.data.data;
 		})
 		.catch(error => {

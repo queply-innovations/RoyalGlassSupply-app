@@ -8,12 +8,14 @@ export const useWarehouseQuery = () => {
 	// State to store warehouse data
 	const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
 
+	const [progress, setProgress] = useState(0);
+
 	// Query for fetching warehouse data
 	const { isFetching, data: warehouseQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['warehouses'],
 		// Function to fetch warehouse data
-		queryFn: () => fetchWarehouses(),
+		queryFn: () => fetchWarehouses(setProgress),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -30,5 +32,5 @@ export const useWarehouseQuery = () => {
 	}, [warehouseQuery]);
 
 	// Return state and query object
-	return { warehouses, warehouseQuery, isFetching };
+	return { warehouses, warehouseQuery, isFetching, progress };
 };

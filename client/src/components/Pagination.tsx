@@ -25,8 +25,6 @@ export const Pagination: FC<PaginationProps> = ({
 		onClickPrev();
 	}
 
-	//TODO: Clean out error "each child in a list should have a unique key prop"
-
 	return (
 		<nav className='flex flex-row p-4' key="navigation">
 			<ul className='flex flex-row content-center pagination' key="paginationUL">

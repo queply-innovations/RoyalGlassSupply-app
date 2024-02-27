@@ -11,7 +11,7 @@ interface WarehouseTableProps {
 }
 
 export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
-	const { warehouses, setWarehouseSelected, isFetching } = useWarehouse();
+	const { warehouses, setWarehouseSelected, isFetching, progress } = useWarehouse();
 
 	const WarehouseTableHeader: ColumnDef<Warehouse>[] = [
 		{
@@ -123,6 +123,7 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				dataType={'Warehouse'}
 				openModal={openModal}
 				isLoading={isFetching}
+				progress={progress}
 			/>
 		</>
 	);

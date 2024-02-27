@@ -11,7 +11,7 @@ interface TransactionTableProps {
 }
 
 export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: TransactionTableProps) =>{
-	const { transactions, isFetching } = useTransaction();
+	const { transactions, isFetching, progress } = useTransaction();
 	
 	const TransactionTableHeader: ColumnDef<Transaction>[] = [
 		{
@@ -120,7 +120,8 @@ export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: Trans
 				filterWhat={"serial"}
 				dataType={"Transaction"}
 				openModal={openModal}
-				isLoading={isFetching} />
+				isLoading={isFetching}
+				progress={progress} />
 		</>
 	);
 };

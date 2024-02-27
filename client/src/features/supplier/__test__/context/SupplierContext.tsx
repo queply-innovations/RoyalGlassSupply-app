@@ -5,6 +5,7 @@ import { useSupplierQuery } from '../../__test__/hooks';
 interface SupplierContextProps {
 	suppliers: Supplier[];
 	isFetching: boolean;
+	progress: any;
 }
 
 export const SupplierContext = createContext<SupplierContextProps | undefined>(
@@ -16,9 +17,9 @@ interface SupplierProviderProps {
 }
 
 export const SupplierProvider = ({ children }: SupplierProviderProps) => {
-	const { suppliers, isFetching } = useSupplierQuery();
+	const { suppliers, isFetching, progress } = useSupplierQuery();
 
-	const value = { suppliers, isFetching };
+	const value = { suppliers, isFetching, progress };
 
 	return (
 		<SupplierContext.Provider value={value}>

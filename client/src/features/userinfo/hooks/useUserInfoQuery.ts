@@ -8,12 +8,14 @@ export const useUserInfoQuery = () => {
 	// State to store user info data
 	const [users, setUsers] = useState<User[]>([]);
 
+	const [progress, setProgress] = useState(0);
+
 	// Query for fetching user info data
 	const { isFetching, data: userQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['users'],
 		// Function to fetch user info data
-		queryFn: () => fetchUsers(),
+		queryFn: () => fetchUsers(setProgress),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -30,5 +32,5 @@ export const useUserInfoQuery = () => {
 	}, [userQuery]);
 
 	// Return state and query object
-	return { users, userQuery, isFetching };
+	return { users, userQuery, isFetching, progress };
 };

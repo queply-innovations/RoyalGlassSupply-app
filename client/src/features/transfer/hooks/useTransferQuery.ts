@@ -8,12 +8,14 @@ export const useTransferQuery = () => {
 	// State to store data
 	const [transfers, setTransfers] = useState<Transfer[]>([]);
 
+	const [progress, setProgress] = useState(0);
+
 	// Query for fetching data
 	const { isFetching, data: transferQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['transfers'],
 		// Function to fetch data
-		queryFn: () => fetchTransfers(),
+		queryFn: () => fetchTransfers(setProgress),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -30,5 +32,5 @@ export const useTransferQuery = () => {
 	}, [transferQuery]);
 
 	// Return state and query object
-	return { transfers, transferQuery, isFetching };
+	return { transfers, transferQuery, isFetching, progress };
 };

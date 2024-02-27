@@ -5,6 +5,7 @@ import { useTransactionQuery } from '../hooks';
 interface TransactionContextProps {
 	transactions: Transaction[];
 	isFetching: boolean;
+	progress: any;
 }
 
 export const TransactionContext = createContext<TransactionContextProps | undefined>(
@@ -16,9 +17,9 @@ interface TransactionProviderProps {
 }
 
 export const TransactionProvider = ({ children }: TransactionProviderProps) => {
-	const { transactions, isFetching } = useTransactionQuery();
+	const { transactions, isFetching, progress } = useTransactionQuery();
 
-	const value = { transactions, isFetching };
+	const value = { transactions, isFetching, progress };
 
 	return (
 		<TransactionContext.Provider value={value}>

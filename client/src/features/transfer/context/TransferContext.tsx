@@ -5,6 +5,7 @@ import { useTransferQuery } from '../hooks';
 interface TransferContextProps {
 	transfers: Transfer[];
 	isFetching: boolean;
+	progress: any;
 }
 
 export const TransferContext = createContext<TransferContextProps | undefined>(
@@ -16,9 +17,9 @@ interface TransferProviderProps {
 }
 
 export const TransferProvider = ({ children }: TransferProviderProps) => {
-	const { transfers, isFetching } = useTransferQuery();
+	const { transfers, isFetching, progress } = useTransferQuery();
 
-	const value = { transfers, isFetching };
+	const value = { transfers, isFetching, progress };
 
 	return (
 		<TransferContext.Provider value={value}>

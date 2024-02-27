@@ -3,12 +3,16 @@ import storage from '@/utils/storage';
 import { API_URLS } from '@/api';
 import { Supplier } from '../../types';
 
-export const fetchSuppliers = async (): Promise<Supplier[]> => {
+export const fetchSuppliers = async (updateProgress: any): Promise<Supplier[]> => {
 	return await axios
 		.get(API_URLS.SUPPLIERS, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
+			},
+			onDownloadProgress: (progress) => {
+				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+				updateProgress(percentCompleted);
 			},
 		})
 		.then(response => {

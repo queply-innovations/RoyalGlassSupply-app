@@ -29,6 +29,7 @@ interface DataTableProps<TData, TValue> {
 	dataType: string;
 	openModal: any;
 	isLoading?: boolean;
+	progress: any;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
 	dataType,
 	openModal,
 	isLoading,
+	progress,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -141,7 +143,7 @@ export function DataTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center items-center justify-center space-y-0 px-20"
 								>
-									<ProgressBar />
+									<ProgressBar progress={progress} />
 									<h2 className="text-primary-dark-gray pb-5 text-xl font-bold">
 										Fetching Data....
 									</h2>

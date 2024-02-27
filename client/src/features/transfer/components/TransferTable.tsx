@@ -11,7 +11,7 @@ interface TransferTableProps {
 }
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, isFetching } = useTransfer();
+	const { transfers, isFetching, progress } = useTransfer();
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
@@ -120,7 +120,8 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				filterWhat={"created_by"}
 				dataType={"Transfer"}
 				openModal={openModal}
-				isLoading={isFetching} />
+				isLoading={isFetching}
+				progress={progress} />
 		</>
 	);
 };

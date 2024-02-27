@@ -8,12 +8,14 @@ export const useTransactionQuery = () => {
 	// State to store user info data
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 
+	const [progress, setProgress] = useState(0);
+
 	// Query for fetching user info data
 	const { isFetching, data: transactionQuery } = useQuery({
 		// Key for identifying this query
 		queryKey: ['transactions'],
 		// Function to fetch user info data
-		queryFn: () => fetchTransactions(),
+		queryFn: () => fetchTransactions(setProgress),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -30,5 +32,5 @@ export const useTransactionQuery = () => {
 	}, [transactionQuery]);
 
 	// Return state and query object
-	return { transactions, transactionQuery, isFetching };
+	return { transactions, transactionQuery, isFetching, progress };
 };

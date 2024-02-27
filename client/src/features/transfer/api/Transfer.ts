@@ -4,12 +4,16 @@ import storage from '@/utils/storage';
 import axios from 'axios';
 import { Transfer } from '../types';
 
-export const fetchTransfers = async (): Promise<Transfer[]> => {
+export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> => {
 	return await axios
 		.get(API_URLS.TRANSFER, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
+			},
+			onDownloadProgress: (progress) => {
+				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+				updateProgress(percentCompleted);
 			},
 		})
 		.then(response => {
