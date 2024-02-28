@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addProductListing, patchProductListing } from '../api/Products';
 import { useState } from 'react';
-import { ProductPrices, ProductPricesDatabase } from '../types';
+import { ProductPricesDatabase } from '../types';
 
 // Define type for handleSubmit args
 // If action is 'add', data is required
@@ -22,7 +22,10 @@ export const useProductPricesMutation = () => {
 	 * @param key - The key of the value to be changed.
 	 * @param _value - The new value to be assigned to the key.
 	 */
-	const handleChange = (key: string, _value: any) => {
+	const handleChange = (
+		key: string,
+		_value: ProductPricesDatabase[keyof ProductPricesDatabase],
+	) => {
 		setValue(prev => ({
 			...prev,
 			[key]: _value,

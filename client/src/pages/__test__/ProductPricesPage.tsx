@@ -4,7 +4,7 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { ProductPrices as ProdPriceType } from '@/features/product/__test__/types';
 import {
 	ProdPriceDetails,
-	ProdPriceToggleActiveStat,
+	ProdPriceActiveToggle,
 	ProductPricesTable,
 } from '@/features/product/__test__/components';
 import { useModal } from '@/utils/Modal';
@@ -48,7 +48,7 @@ export const ProductPrices = () => {
 								<ProductPricesForm onClose={closeModal} />
 							)}
 							{modalAction === 'toggle_active_stat' && (
-								<ProdPriceToggleActiveStat onClose={closeModal} />
+								<ProdPriceActiveToggle onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>
