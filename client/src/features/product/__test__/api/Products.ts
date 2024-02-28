@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { Product, ProductPrices } from '../types';
+import { Product, ProductPrices, ProductPricesDatabase } from '../types';
 
 export const fetchProducts = async (): Promise<Product[]> => {
 	return await axios
@@ -50,7 +50,10 @@ export const addProduct = async (
 };
 
 export const addProductListing = async (
-	data: Omit<ProductPrices, 'id' | 'created_at' | 'updated_at'>,
+	data: Omit<
+		Partial<ProductPricesDatabase>,
+		'id' | 'created_at' | 'updated_at'
+	>,
 ) => {
 	return await axios
 		.post(API_URLS.PRODUCT_PRICES, data, {
@@ -70,7 +73,7 @@ export const updateProductListing = async ({
 	data,
 }: {
 	id: number;
-	data: Omit<ProductPrices, 'id' | 'created_at' | 'updated_at'>;
+	data: Omit<ProductPricesDatabase, 'id' | 'created_at' | 'updated_at'>;
 }) => {
 	return await axios
 		.put(`${API_URLS.PRODUCT_PRICES}/${id}`, data, {
@@ -90,7 +93,10 @@ export const patchProductListing = async ({
 	data,
 }: {
 	id: number;
-	data: Omit<Partial<ProductPrices>, 'id' | 'created_at' | 'updated_at'>;
+	data: Omit<
+		Partial<ProductPricesDatabase>,
+		'id' | 'created_at' | 'updated_at'
+	>;
 }) => {
 	return await axios
 		.patch(`${API_URLS.PRODUCT_PRICES}/${id}`, data, {
@@ -100,7 +106,13 @@ export const patchProductListing = async ({
 			return { status: response.status, data: response.data };
 		})
 		.catch(error => {
-			console.error('Error updating product listing:', error);
-			throw error;
+			return error.response
+				? {
+						status: error.response.status as number,
+						data: error.response.data,
+					}
+				: error.request
+					? { status: 500, data: error.request }
+					: { status: 500, data: error.message };
 		});
 };

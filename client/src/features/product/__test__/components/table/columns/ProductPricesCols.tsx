@@ -13,9 +13,11 @@ import { SortIcon } from '@/assets/icons';
 import {
 	Check,
 	X,
+	Ban,
 	MoreVertical,
 	Pencil,
-	Trash2,
+	Box,
+	Boxes,
 	Clock,
 	List,
 } from 'lucide-react';
@@ -63,10 +65,6 @@ export const ProductPricesColumns = ({
 			),
 		},
 		{
-			accessorKey: 'product.id',
-			header: () => <div className="justify-center uppercase">Id</div>,
-		},
-		{
 			id: 'name',
 			accessorKey: 'product.name',
 			header: ({ column }) => {
@@ -87,26 +85,45 @@ export const ProductPricesColumns = ({
 		{
 			accessorKey: 'type',
 			header: () => <div className="justify-center uppercase">Type</div>,
+			cell: ({ row }) => {
+				const type = row.original.type;
+				return (
+					<div className="group relative flex w-fit items-center">
+						{type === 'retail' ? (
+							<Box size={20} strokeWidth={2} className="text-gray-700" />
+						) : (
+							<Boxes
+								size={20}
+								strokeWidth={1.75}
+								className="text-gray-700"
+							/>
+						)}
+						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+							{type}
+						</span>
+					</div>
+				);
+			},
 		},
 		{
-			accessorKey: 'unit',
+			accessorKey: 'stocks_quantity',
+			header: () => <div className="justify-center uppercase">QTY</div>,
+		},
+		{
+			accessorKey: 'stocks_unit',
 			header: () => <div className="justify-center uppercase">Unit</div>,
-		},
-		{
-			accessorKey: 'quantity',
-			header: () => <div className="justify-center uppercase">Quantity</div>,
 		},
 		{
 			accessorKey: 'capital_price',
 			header: () => <div className="justify-center uppercase">Capital</div>,
 			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.capital_price);
 				return (
 					<div className="flex items-center uppercase">
-						<span>
-							{row.original.capital_price
-								? `₱${row.original.capital_price.toFixed(2)}`
-								: `—`}
-						</span>
+						<span>{row.original.capital_price ? formatted : `—`}</span>
 					</div>
 				);
 			},
@@ -114,25 +131,51 @@ export const ProductPricesColumns = ({
 		{
 			accessorKey: 'markup_price',
 			header: () => <div className="justify-center uppercase">Markup</div>,
+			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.markup_price);
+				return (
+					<div className="flex items-center uppercase">
+						<span>{row.original.markup_price ? formatted : `—`}</span>
+					</div>
+				);
+			},
 		},
 		{
-			accessorKey: 'retail_price',
-			header: () => <div className="justify-center uppercase">Retail</div>,
+			accessorKey: 'tax_amount',
+			header: () => <div className="justify-center uppercase">Tax</div>,
 			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.tax_amount);
 				return (
-					<div className="flex items-center">
-						<span>
-							{row.original.retail_price
-								? `₱${row.original.retail_price.toFixed(2)})}`
-								: `—`}
-						</span>
+					<div className="flex items-center uppercase">
+						<span>{row.original.tax_amount ? formatted : `—`}</span>
+					</div>
+				);
+			},
+		},
+		{
+			accessorKey: 'cost',
+			header: () => <div className="justify-center uppercase">Cost</div>,
+			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.cost);
+				return (
+					<div className="flex items-center uppercase">
+						<span>{row.original.cost ? formatted : `—`}</span>
 					</div>
 				);
 			},
 		},
 		{
 			accessorKey: 'on_sale',
-			header: () => <div className="justify-center uppercase">On sale</div>,
+			header: () => <div className="justify-center uppercase">Sale?</div>,
 			cell: ({ row }) => {
 				const onSale = row.original.on_sale;
 				return (
@@ -140,15 +183,15 @@ export const ProductPricesColumns = ({
 						{onSale === 1 ? (
 							<Check
 								size={20}
-								strokeWidth={2.5}
+								strokeWidth={2}
 								className="text-green-600"
 							/>
 						) : (
 							<span>
 								<X
 									size={20}
-									strokeWidth={2.5}
-									className="text-gray-600"
+									strokeWidth={2}
+									className="text-gray-700"
 								/>
 							</span>
 						)}
@@ -161,21 +204,40 @@ export const ProductPricesColumns = ({
 			enableGlobalFilter: false,
 		},
 		{
-			accessorKey: 'sale_price',
+			accessorKey: 'sale_discount',
 			header: () => (
-				<div className="justify-center uppercase">Sale price</div>
+				<div className="justify-center uppercase">Disc. Price</div>
 			),
 			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.sale_discount);
 				return (
-					<div className="flex items-center">
-						<span>
-							{row.original.sale_price
-								? `₱${row.original.sale_price.toFixed(2)})}`
-								: `—`}
-						</span>
+					<div className="flex items-center uppercase">
+						<span>{row.original.sale_discount ? formatted : `—`}</span>
 					</div>
 				);
 			},
+		},
+		{
+			accessorKey: 'price',
+			header: () => <div className="justify-center uppercase">Price</div>,
+			cell: ({ row }) => {
+				const formatted = new Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'PHP',
+				}).format(row.original.price);
+				return (
+					<div className="flex items-center uppercase">
+						<span>{row.original.price ? formatted : `—`}</span>
+					</div>
+				);
+			},
+		},
+		{
+			accessorKey: 'warehouse.code',
+			header: () => <div className="justify-center uppercase">WHS</div>,
 		},
 		{
 			accessorKey: 'approval_status',
@@ -190,20 +252,20 @@ export const ProductPricesColumns = ({
 							{status === 'approved' ? (
 								<Check
 									size={20}
-									strokeWidth={2.5}
+									strokeWidth={2}
 									className="text-green-600"
 								/>
 							) : status === 'rejected' ? (
-								<X
+								<Ban
 									size={20}
-									strokeWidth={2.5}
+									strokeWidth={2}
 									className="text-red-600"
 								/>
 							) : (
 								<Clock
 									size={20}
-									strokeWidth={2.5}
-									className="text-yellow-600"
+									strokeWidth={2}
+									className="text-amber-500"
 								/>
 							)}
 							<span className="absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
@@ -226,11 +288,11 @@ export const ProductPricesColumns = ({
 						{active === 'active' ? (
 							<Check
 								size={20}
-								strokeWidth={2.5}
+								strokeWidth={2}
 								className="text-green-600"
 							/>
 						) : (
-							<X size={20} strokeWidth={2.5} className="text-gray-600" />
+							<X size={20} strokeWidth={2} className="text-gray-600" />
 						)}
 						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
 							{active === 'active' ? 'Active' : 'Inactive'}
