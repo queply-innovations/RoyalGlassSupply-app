@@ -9,6 +9,7 @@ import {
 } from '@/features/product/__test__/components';
 import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
+import { ProductPricesForm } from '../../features/product/__test__/components/forms/ProductPricesForm';
 
 export const ProductPrices = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -43,7 +44,9 @@ export const ProductPrices = () => {
 							{modalAction === 'details' && (
 								<ProdPriceDetails onClose={closeModal} />
 							)}
-							{modalAction === 'edit' && <p>Hallo</p>}
+							{modalAction === 'edit' && (
+								<ProductPricesForm onClose={closeModal} />
+							)}
 							{modalAction === 'toggle_active_stat' && (
 								<ProdPriceToggleActiveStat onClose={closeModal} />
 							)}
