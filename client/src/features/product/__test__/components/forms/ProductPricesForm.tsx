@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components';
+import { useAuth } from '@/context/AuthContext';
 
 interface ProductPricesFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -22,6 +23,7 @@ interface ProductPricesFormProps {
 // TODO: Test for bugs and errors.
 
 export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
+	const { auth } = useAuth();
 	// Mutation state and handlers
 	const {
 		value: FormValue,
@@ -498,16 +500,18 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Approval status
 							</Label>
 							<Select
-								onValueChange={value =>
-									handleChange('approval_status', value)
-								}
+								onValueChange={value => {
+									handleChange('approval_status', value);
+									value === 'approved' &&
+										handleChange('approved_by', auth.id); // if changed to 'approved', update 'approved_by'
+								}}
 								defaultValue={
 									selectedProductPrice.approval_status ?? 'pending'
 								}
 								required
 							>
 								<SelectTrigger
-									name="type"
+									name="approval_status"
 									className="flex flex-row items-center gap-3 bg-white text-sm capitalize"
 								>
 									<SelectValue

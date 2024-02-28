@@ -8,14 +8,13 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthProps {
-	user: number | null;
-	token: string | null;
 	authenticated: boolean | null;
+	id: number;
 	role: string | null;
-	isLoggedIn: boolean;
+	token: string | null;
+	username: number | null;
 }
 interface AuthContextProps {
 	auth: AuthProps;
