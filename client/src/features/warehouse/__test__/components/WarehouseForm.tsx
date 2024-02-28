@@ -4,7 +4,6 @@ import { UseModalProps } from '@/utils/Modal';
 // import { useWarehouse } from '..';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
 import { useWarehouseMutation } from '../hooks';
-import { Warehouse } from '../types';
 import { useWarehouse } from '..';
 
 interface WarehouseFormProps {
@@ -100,11 +99,7 @@ export const WarehouseForm = ({
 										disabled={true}
 									/>
 								</div>
-								{/*
-                                //TODO UNCOMMENT IF CODE IS FILLABLE IN
-								// ! WAREHOUSE CONTROLLER (BACKEND)
-                                */}
-								{/* <div className="flex flex-col gap-1">
+								<div className="flex flex-col gap-1">
 									<span className="text-sm font-bold uppercase">
 										Warehouse Code
 									</span>
@@ -113,9 +108,9 @@ export const WarehouseForm = ({
 										placeholder="Warehouse Code"
 										value={warehouseForm?.code || ''}
 										onChange={handleChange}
-										required
+										maxLength={3}
 									/>
-								</div> */}
+								</div>
 								<div className="flex flex-col gap-1">
 									<span className="text-sm font-bold uppercase">
 										Warehouse Name
