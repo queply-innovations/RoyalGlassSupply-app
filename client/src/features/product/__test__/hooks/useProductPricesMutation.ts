@@ -1,33 +1,62 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addProductListing, patchProductListing } from '../api/Products';
-// import { useProductPrices } from '../context/ProductPricesContext';
-import { useState, ChangeEvent } from 'react';
-import { ProductPrices } from '../types';
+import { useState } from 'react';
+import { ProductPrices, ProductPricesDatabase } from '../types';
 
-interface LimitedProdPrices
-	extends Omit<ProductPrices, 'created_at' | 'updated_at'> {}
+// Define type for handleSubmit args
+// If action is 'add', data is required
+// If action is 'update', id and data is required
+type handleSubmitArgs =
+	| { action: 'add'; data: Partial<ProductPricesDatabase> }
+	| { action: 'update'; id: number; data: Partial<ProductPricesDatabase> };
 
 export const useProductPricesMutation = () => {
 	const queryClient = useQueryClient();
-	// const { data } = useProductPrices();
 
-	const [value, setValue] = useState<LimitedProdPrices>(
-		{} as LimitedProdPrices,
+	const [value, setValue] = useState<Partial<ProductPricesDatabase>>(
+		{} as Partial<ProductPricesDatabase>,
 	);
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setValue(prevProductPriceForm => ({
-			...(prevProductPriceForm as LimitedProdPrices),
-			[name]: value,
+	/**
+	 * Handles the change of a key-value pair in the mutation state.
+	 * @param key - The key of the value to be changed.
+	 * @param _value - The new value to be assigned to the key.
+	 */
+	const handleChange = (key: string, _value: any) => {
+		setValue(prev => ({
+			...prev,
+			[key]: _value,
 		}));
+	};
+
+	/**
+	 * Handles the form submission for adding or updating product prices/listings.
+	 *
+	 * @param args - Object data for the form submission.
+	 * @returns Object `{status: response number, data: submitted data }`.
+	 */
+	const handleSubmit = async (args: handleSubmitArgs) => {
+		console.log('Submitting: ', args);
+		if (args.action === 'add') {
+			return await addProductPricesMutation(args.data);
+		} else if (args.action === 'update') {
+			return await patchProductPricesMutation({
+				id: args.id,
+				data: args.data,
+			});
+		} else {
+			const message =
+				'No data to submit. Function requires at least one parameter.';
+			console.error(message);
+			return { status: 400, data: message };
+		}
 	};
 
 	const mutationConfig = {
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({ queryKey: ['productPrices'] });
 
-			setValue({} as LimitedProdPrices);
+			setValue({} as Partial<ProductPricesDatabase>);
 		},
 		onError: (error: any) => {
 			console.error('Product Prices Data failed', error);
@@ -50,6 +79,7 @@ export const useProductPricesMutation = () => {
 		value,
 		setValue,
 		handleChange,
+		handleSubmit,
 		addProductPricesMutation,
 		patchProductPricesMutation,
 	};
