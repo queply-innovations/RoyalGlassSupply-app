@@ -20,6 +20,8 @@ import {
 	Boxes,
 	Clock,
 	List,
+	CircleOff,
+	CheckCircle,
 } from 'lucide-react';
 
 interface ProductPricesColumnsProps {
@@ -292,7 +294,11 @@ export const ProductPricesColumns = ({
 								className="text-green-600"
 							/>
 						) : (
-							<X size={20} strokeWidth={2} className="text-gray-600" />
+							<CircleOff
+								size={20}
+								strokeWidth={2}
+								className="text-gray-600"
+							/>
 						)}
 						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
 							{active === 'active' ? 'Active' : 'Inactive'}
@@ -338,18 +344,31 @@ export const ProductPricesColumns = ({
 									onClick={() => handleToggleActiveStatus(productRow)}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
-									<span className="flex w-6 items-center justify-center">
-										{productRow.active_status ? (
-											productRow.active_status === 'active' ? (
-												<Check size={16} strokeWidth={2.25} />
-											) : (
-												<div></div>
-											)
+									{productRow.active_status ? (
+										productRow.active_status === 'active' ? (
+											<>
+												<span className="flex w-6 items-center justify-center">
+													<CircleOff
+														size={16}
+														strokeWidth={2.25}
+													/>
+												</span>
+												<span>Set inactive</span>
+											</>
 										) : (
-											<div></div>
-										)}
-									</span>
-									<span>Active</span>
+											<>
+												<span className="flex w-6 items-center justify-center">
+													<CheckCircle
+														size={16}
+														strokeWidth={2.25}
+													/>
+												</span>
+												<span>Set active</span>
+											</>
+										)
+									) : (
+										<div></div>
+									)}
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

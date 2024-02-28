@@ -1,7 +1,8 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useProductPrices } from '../..';
-import { Button, Inputbox } from '@/components';
+import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
+import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
 
 interface ProdPriceDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -12,369 +13,243 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 
 	return (
 		<>
-			<div className="flex max-w-2xl flex-col gap-5">
-				<div className="flex flex-row gap-5">
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label htmlFor="name" className="text-sm font-bold uppercase">
-							Name
-						</label>
-						<Inputbox
-							name="name"
-							id="name"
-							value={selectedProductPrice.product.name}
-							disabled
-							readOnly
-						/>
+			<div className="flex max-w-2xl flex-col gap-4">
+				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+					<div className="col-span-6 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Name</h3>
+						<p className="text-sm">{selectedProductPrice.product.name}</p>
 					</div>
-					<div className="flex min-w-0 flex-1 flex-row gap-2">
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="type"
-								className="text-sm font-bold uppercase"
-							>
-								Type
-							</label>
-							<Inputbox
-								name="type"
-								id="type"
-								value={selectedProductPrice.type}
-								disabled
-								readOnly
-							/>
-						</div>
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="id"
-								className="text-sm font-bold uppercase"
-							>
-								Id
-							</label>
-							<Inputbox
-								name="id"
-								id="id"
-								value={selectedProductPrice.product.id}
-								disabled
-								readOnly
-							/>
-						</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Product ID
+						</h3>
+						<p className="text-sm">{selectedProductPrice.product.id}</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Listing ID
+						</h3>
+						<p className="text-sm">{selectedProductPrice.id}</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Size</h3>
+						<p className="text-sm">{selectedProductPrice.product.size}</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Color</h3>
+						<p className="text-sm">
+							{selectedProductPrice.product.color}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Warehouse Code
+						</h3>
+						<p className="text-sm">
+							{selectedProductPrice.warehouse.code}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Warehouse</h3>
+						<p className="text-sm">
+							{selectedProductPrice.warehouse.name}
+						</p>
 					</div>
 				</div>
-				<div className="flex flex-row gap-5">
-					<div className="flex min-w-0 flex-1 flex-row gap-2">
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="size"
-								className="text-sm font-bold uppercase"
-							>
-								Size
-							</label>
-							<Inputbox
-								name="size"
-								id="size"
-								value={selectedProductPrice.product.size}
-								disabled
-								readOnly
-							/>
-						</div>
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="color"
-								className="text-sm font-bold uppercase"
-							>
-								Color
-							</label>
-							<Inputbox
-								name="color"
-								id="color"
-								value={selectedProductPrice.product.color}
-								disabled
-								readOnly
-							/>
-						</div>
+				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
+				<div className="grid w-full grid-flow-row grid-cols-4 gap-4">
+					<div className="col-span-1 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Type</h3>
+						<p className="text-sm capitalize">
+							{selectedProductPrice.type}
+						</p>
 					</div>
-					<div className="flex min-w-0 flex-1 flex-row gap-2">
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="unit"
-								className="text-sm font-bold uppercase"
-							>
-								Unit
-							</label>
-							<Inputbox
-								name="unit"
-								id="unit"
-								value={selectedProductPrice.unit}
-								disabled
-								readOnly
-							/>
-						</div>
-						<div className="flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="quantity"
-								className="text-sm font-bold uppercase"
-							>
-								Quantity
-							</label>
-							<Inputbox
-								name="quantity"
-								id="quantity"
-								value={selectedProductPrice.quantity}
-								disabled
-								readOnly
-							/>
-						</div>
+					<div className="col-span-1 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Unit</h3>
+						<p className="text-sm">{selectedProductPrice.unit}</p>
+					</div>
+					<div className="col-span-1 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Stocks quantity
+						</h3>
+						<p className="text-sm">
+							{selectedProductPrice.stocks_quantity}
+						</p>
+					</div>
+					<div className="col-span-1 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Stocks unit
+						</h3>
+						<p className="text-sm">{selectedProductPrice.stocks_unit}</p>
 					</div>
 				</div>
-				<hr className="mt-2 h-px w-full border-0 bg-gray-200 " />
-				<div className="flex min-w-0 flex-1 flex-row gap-2">
-					<div className="relative flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="capital_price"
-							className="text-sm font-bold uppercase"
-						>
-							Capital Price
-						</label>
-						<Inputbox
-							name="capital_price"
-							id="capital_price"
-							value={
-								selectedProductPrice.capital_price &&
-								selectedProductPrice.capital_price.toFixed(2)
-							}
-							className="pl-8"
-							disabled
-							readOnly
-						/>
-						<span className="absolute bottom-0 left-0 pb-[0.55rem] pl-3 font-semibold text-gray-400">
-							₱
-						</span>
+				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
+				<div className="grid w-full grid-flow-row grid-cols-6 gap-4">
+					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Capital price
+						</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.capital_price)}
+						</p>
 					</div>
-					<div className="relative flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="markup_price"
-							className="text-sm font-bold uppercase"
-						>
-							Markup
-						</label>
-						<Inputbox
-							name="markup_price"
-							id="markup_price"
-							value={selectedProductPrice.markup_price}
-							disabled
-							readOnly
-						/>
-						<span className="absolute bottom-0 right-0 pb-[0.55rem] pr-3 font-semibold text-gray-400">
-							%
-						</span>
+					<div className="col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Markup price
+						</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.markup_price)}
+						</p>
 					</div>
-					<div className="relative flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="retail_price"
-							className="text-sm font-bold uppercase"
-						>
-							Retail Price
-						</label>
-						<Inputbox
-							name="retail_price"
-							id="retail_price"
-							value={
-								selectedProductPrice.retail_price &&
-								selectedProductPrice.retail_price.toFixed(2)
-							}
-							className="pl-8"
-							disabled
-							readOnly
-						/>
-						<span className="absolute bottom-0 left-0 pb-[0.55rem] pl-3 font-semibold text-gray-400">
-							₱
-						</span>
+					<div className="col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Tax amount
+						</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.tax_amount)}
+						</p>
 					</div>
-				</div>
-				<div className="flex flex-row gap-5">
-					<div className="flex min-w-0 flex-1 flex-row gap-2">
-						<div className="relative flex min-w-0 flex-1 flex-col gap-1">
-							<label
-								htmlFor="sale_price"
-								className="text-sm font-bold uppercase"
-							>
-								Sale Price
-							</label>
-							<Inputbox
-								name="sale_price"
-								id="sale_price"
-								value={
-									selectedProductPrice.sale_price &&
-									selectedProductPrice.sale_price.toFixed(2)
-								}
-								disabled
-								readOnly
-							/>
-							<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-start gap-2 pb-[0.67rem] pr-3">
-								<Inputbox
-									name="on_sale"
-									id="on_sale"
-									type="checkbox"
-									value="On Sale"
-									disabled
-									readOnly
-									checked={selectedProductPrice.on_sale ? true : false}
+					<div className="col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Cost</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.cost)}
+						</p>
+					</div>
+					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Sale discount
+						</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.sale_discount)}
+						</p>
+						<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-end gap-1 pb-[0.1rem] pr-1">
+							{selectedProductPrice.on_sale === 1 ? (
+								<Check
+									size={14}
+									strokeWidth={3.5}
+									className="text-green-600"
 								/>
-								<label
-									htmlFor="on_sale"
-									className="text-sm font-semibold text-gray-700"
-								>
-									On Sale
-								</label>
+							) : (
+								<X
+									size={14}
+									strokeWidth={3.5}
+									className="text-gray-600"
+								/>
+							)}
+							<div className="text-xs font-semibold leading-4 text-gray-700">
+								On Sale
 							</div>
 						</div>
 					</div>
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="warehouse"
-							className="text-sm font-bold uppercase"
-						>
-							Warehouse
-						</label>
-						<Inputbox
-							name="warehouse"
-							id="warehouse"
-							value={selectedProductPrice.warehouse.name}
-							disabled
-							readOnly
-						/>
+					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Price</h3>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-US', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedProductPrice.price)}
+						</p>
 					</div>
 				</div>
-				<hr className="mt-2 h-px w-full border-0 bg-gray-200 " />
-				<div className="flex min-w-0 flex-1 flex-row gap-2">
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="created_by"
-							className="text-sm font-bold uppercase"
-						>
+				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
+				<div className="grid w-full grid-flow-row grid-cols-12 gap-4">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Active status
+						</h3>
+						<span className="flex flex-row items-center gap-2">
+							{selectedProductPrice.active_status === 'active' ? (
+								<CheckCircle
+									size={16}
+									strokeWidth={2.5}
+									className="text-green-600"
+								/>
+							) : (
+								<CircleOff
+									size={16}
+									strokeWidth={2.5}
+									className="text-gray-600"
+								/>
+							)}
+							<p className="text-sm capitalize">
+								{selectedProductPrice.active_status}
+							</p>
+						</span>
+					</div>
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
 							Created by
-						</label>
-						<Inputbox
-							name="created_by"
-							id="created_by"
-							value={
-								selectedProductPrice.created_by.firstname +
+						</h3>
+						<p className="text-sm">
+							{selectedProductPrice.created_by.firstname +
 								' ' +
-								selectedProductPrice.created_by.lastname
-							}
-							disabled
-							readOnly
-						/>
+								selectedProductPrice.created_by.lastname}
+						</p>
 					</div>
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="approval_status"
-							className="text-sm font-bold uppercase"
-						>
-							Approval Status
-						</label>
-						<Inputbox
-							name="approval_status"
-							id="approval_status"
-							value={
-								selectedProductPrice.approval_status === 'approved'
-									? 'Approved'
-									: selectedProductPrice.approval_status === 'rejected'
-										? 'Rejected'
-										: 'Pending'
-							}
-							disabled
-							readOnly
-						/>
-					</div>
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="approved_by"
-							className="text-sm font-bold uppercase"
-						>
-							Approved by
-						</label>
-						<Inputbox
-							name="approved_by"
-							id="approved_by"
-							value={
-								selectedProductPrice.approved_by
-									? selectedProductPrice.approved_by.firstname +
-										' ' +
-										selectedProductPrice.approved_by.lastname
-									: ''
-							}
-							disabled
-							readOnly
-						/>
-					</div>
-				</div>
-				<div className="flex min-w-0 flex-1 flex-row gap-2">
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="active_status"
-							className="text-sm font-bold uppercase"
-						>
-							Active Status
-						</label>
-						<Inputbox
-							name="active_status"
-							id="active_status"
-							value={
-								selectedProductPrice.active_status
-									? selectedProductPrice.active_status === 'active'
-										? 'Active'
-										: 'Inactive'
-									: 'Inactive'
-							}
-							disabled
-							readOnly
-						/>
-					</div>
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="created_at"
-							className="text-sm font-bold uppercase"
-						>
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
 							Created at
-						</label>
-						<Inputbox
-							name="created_at"
-							id="created_at"
-							value={formatUTCDate(selectedProductPrice.created_at)}
-							disabled
-							readOnly
-						/>
+						</h3>
+						<p className="text-sm">
+							{formatUTCDate(selectedProductPrice.created_at)}
+						</p>
 					</div>
-					<div className="flex min-w-0 flex-1 flex-col gap-1">
-						<label
-							htmlFor="updated_at"
-							className="text-sm font-bold uppercase"
-						>
-							Update at
-						</label>
-						<Inputbox
-							name="updated_at"
-							id="updated_at"
-							value={
-								selectedProductPrice.updated_at.includes('-000001')
-									? ''
-									: formatUTCDate(selectedProductPrice.updated_at)
-							}
-							disabled
-							readOnly
-						/>
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Approval status
+						</h3>
+						<p className="text-sm">
+							{selectedProductPrice.approval_status}
+						</p>
+					</div>
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Approved by
+						</h3>
+						<p className="text-sm">
+							{selectedProductPrice.approved_by
+								? selectedProductPrice.approved_by.firstname +
+									' ' +
+									selectedProductPrice.approved_by.firstname
+								: 'N/A'}
+						</p>
+					</div>
+					<div className="col-span-4 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
+							Updated at
+						</h3>
+						<p className="text-sm">
+							{formatUTCDate(selectedProductPrice.updated_at)}
+						</p>
 					</div>
 				</div>
-				<div className="flex min-w-0 flex-1 flex-row gap-2"></div>
+				<div className="flex w-full flex-row justify-end pt-4">
+					<div className="flex flex-row gap-4 whitespace-nowrap">
+						<Button
+							fill={'default'}
+							className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
+							onClick={onClose}
+						>
+							Close
+						</Button>
+					</div>
+				</div>
 			</div>
-			<Button
-				fill={'empty'}
-				className="bg-gray-600 hover:bg-gray-800"
-				onClick={onClose}
-				type="reset"
-			>
-				Close
-			</Button>
 		</>
 	);
 };
