@@ -75,12 +75,14 @@ const Sidebar = ({}: SidebarProps) => {
 						<Button
 							fill={'empty'}
 							onClick={() => logout()}
-							className="flex w-full flex-row gap-3 rounded-md px-3 py-1 text-sm text-slate-700 hover:bg-red-100 hover:text-red-700"
+							className="flex w-full cursor-pointer flex-row rounded-md px-3 py-1 text-sm font-medium text-slate-700 hover:bg-red-100 hover:text-red-700"
 						>
-							<div className="flex h-8 w-8 items-center justify-center">
-								<LogOut size={20} strokeWidth={1.75} />
+							<div className="item-center flex justify-center gap-3">
+								<div className="flex h-8 w-8 items-center justify-center">
+									<LogOut size={20} strokeWidth={1.75} />
+								</div>
+								<span className="flex items-center">Log out</span>
 							</div>
-							<span className="flex items-center">Log out</span>
 						</Button>
 					</div>
 				</nav>

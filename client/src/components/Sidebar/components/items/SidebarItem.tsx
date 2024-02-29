@@ -28,7 +28,7 @@ export const SidebarItem = ({
 
 	return (
 		<li
-			className={`w-full divide-y divide-slate-400/20 overflow-clip rounded-md ${
+			className={`w-full divide-y divide-slate-400/20 overflow-clip rounded-md font-medium ${
 				isItemOpened ? 'bg-slate-400/10' : ''
 			}`}
 		>
