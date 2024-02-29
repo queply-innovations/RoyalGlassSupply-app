@@ -31,6 +31,18 @@ class ReportController extends Controller
                 ->groupBy('formatted_date')
                 ->get();
             }
+            elseif($request->type=="weekly"){
+                $result = Invoice::select(
+                    DB::raw("DATE_FORMAT(created_at, '%u') as formatted_date"),
+                    DB::raw("sum(total_amount_due) as total_sales")
+                )
+                ->where('type', 'payment')
+                ->where('warehouse_id', $request->warehouse)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->groupBy('formatted_date')
+                ->get();
+            }
             elseif($request->type=="monthly"){
                 $result = Invoice::select(
                     DB::raw("DATE_FORMAT(created_at, '%m-%Y') as formatted_date"),
@@ -58,6 +70,17 @@ class ReportController extends Controller
             if($request->type=="daily"){
                 $result = Invoice::select(
                     DB::raw("DATE_FORMAT(created_at, '%m-%d-%Y') as formatted_date"),
+                    DB::raw("sum(total_amount_due) as total_sales")
+                )
+                ->where('type', 'payment')
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->groupBy('formatted_date')
+                ->get();
+            }
+            elseif($request->type=="weekly"){
+                $result = Invoice::select(
+                    DB::raw("DATE_FORMAT(created_at, '%u') as formatted_date"),
                     DB::raw("sum(total_amount_due) as total_sales")
                 )
                 ->where('type', 'payment')
