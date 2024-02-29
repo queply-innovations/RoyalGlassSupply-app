@@ -35,7 +35,7 @@ export const SidebarItem = ({
 			{/* If item has children, display as an expandable dropdown */}
 			{item.children && item.children.length > 0 ? (
 				<div
-					className={`group relative flex w-full cursor-pointer flex-row justify-between p-1 px-3 hover:bg-slate-500/10 
+					className={`group relative flex w-full cursor-pointer flex-row justify-between px-3 py-1 hover:bg-slate-500/10 
 					${
 						pathname
 							? pathname.includes(item.id)

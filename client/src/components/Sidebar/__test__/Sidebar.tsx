@@ -5,20 +5,24 @@ import { SidebarItem } from '../components/items/SidebarItem';
 import { Role } from '../types';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import { Button } from '@/components';
 
 interface SidebarProps {}
 
 const Sidebar = ({}: SidebarProps) => {
-	const auth = useAuth();
+	const { logout } = useAuth();
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
 
 	return (
 		<>
-			<div className="relative flex w-1/6 min-w-[250px] max-w-[250px] flex-row overflow-y-hidden border-e border-slate-500/20 text-sm text-slate-800">
-				<nav className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-8 py-10 shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
-					<SidebarLogo />
-					<ul className="items-star flex h-full w-full flex-col gap-1 overflow-y-auto px-2">
+			<div className="relative flex w-1/6 min-w-[230px] max-w-[230px] flex-row overflow-y-hidden border-e border-slate-500/20 text-sm text-slate-800">
+				<nav className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-6 shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
+					<div className="flex w-full items-center justify-center px-12 pb-6 pt-8">
+						<SidebarLogo />
+					</div>
+					<ul className="items-star flex w-full flex-col gap-1 overflow-y-auto px-2">
 						{SidebarRoutesGrouped.map((group, index) => {
 							return group.groupName ? (
 								// If group has a name, display group name
@@ -52,6 +56,18 @@ const Sidebar = ({}: SidebarProps) => {
 							);
 						})}
 					</ul>
+					<div className="mt-auto min-h-[2.5rem] w-full px-2 pb-2">
+						<Button
+							fill={'empty'}
+							onClick={() => logout()}
+							className="flex w-full flex-row gap-3 rounded-md px-3 py-1 text-sm text-slate-700 hover:bg-red-100 hover:text-red-700"
+						>
+							<div className="flex h-8 w-8 items-center justify-center">
+								<LogOut size={20} strokeWidth={1.75} />
+							</div>
+							<span className="flex items-center">Log out</span>
+						</Button>
+					</div>
 				</nav>
 			</div>
 		</>
