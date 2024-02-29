@@ -65,4 +65,24 @@ class InvoiceItem extends Model
     {
         return ($this->quantity * $this->productPrice->stocks_quantity);
     }
+
+    public function getTotalSoldAttribute ()
+    {
+        if($this->invoice->type == "payment") {
+            return ($this->quantity * $this->productPrice->stocks_quantity);
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function getTotalMiscellaneousAttribute ()
+    {
+        if($this->invoice->type == "exit") {
+            return ($this->quantity * $this->productPrice->stocks_quantity);
+        }
+        else{
+            return 0;
+        }
+    }
 }

@@ -154,12 +154,20 @@ class ReportController extends Controller
                                     ->get();
 
         foreach($query as $q){
-            $result[$q->inventory->code][$q->product->name]['total_count'] = $q->total_count;
-            $result[$q->inventory->code][$q->product->name]['good_stocks'] = $q->stocks_count;
-            $result[$q->inventory->code][$q->product->name]['damages'] = $q->damage_count;
-            $result[$q->inventory->code][$q->product->name]['transferred'] = $q->transferProducts->sum('total_quantity');
-            $result[$q->inventory->code][$q->product->name]['sold_returned_misc'] = $q->invoiceItems->sum('total_stocks_quantity');
-            $remaining_stocks = $q->stocks_count - ($q->transferProducts->sum('total_quantity') + $q->invoiceItems->sum('total_stocks_quantity'));
+
+            $transferred = $q->transferProducts->sum('total_quantity');
+            $sold = $q->invoiceItems->sum('total_sold');
+            $miscellaneous = $q->invoiceItems->sum('total_miscellaneous');
+            $remaining_stocks = $q->stocks_count - ($transferred + $sold + $miscellaneous);
+
+            $result[$q->inventory->code][$q->product->name]['total_stocks_received'] = $q->total_count.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['good_stocks'] = $q->stocks_count.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['damages'] = $q->damage_count.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['transferred'] = $transferred.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['sold'] = $sold.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['miscellaneous'] = $miscellaneous.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['remaining_retail'] = $remaining_stocks.$q->unit;
+            $result[$q->inventory->code][$q->product->name]['remaining_bundles'] = intval($remaining_stocks / $q->quantity_per_bundle).$q->bundles_unit." (".$q->quantity_per_bundle.$q->unit." per ".$q->bundles_unit.")";
         }
 
         return new ReportCollection($result);
