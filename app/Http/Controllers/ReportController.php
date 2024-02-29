@@ -16,7 +16,7 @@ class ReportController extends Controller
 {
     public function sales(Request $request)
     {
-        //filters include warehouse, type (daily, weekly, monthly, custom)
+        //filters include warehouse, type (daily, monthly, custom)
 
         if($request->warehouse!="all"){
             if($request->type=="daily"){
@@ -30,9 +30,6 @@ class ReportController extends Controller
                 ->whereYear('created_at', Carbon::now()->year)
                 ->groupBy('formatted_date')
                 ->get();
-            }
-            elseif($request->type=="weekly"){
-
             }
             elseif($request->type=="monthly"){
                 $result = Invoice::select(
@@ -68,9 +65,6 @@ class ReportController extends Controller
                 ->whereYear('created_at', Carbon::now()->year)
                 ->groupBy('formatted_date')
                 ->get();
-            }
-            elseif($request->type=="weekly"){
-
             }
             elseif($request->type=="monthly"){
                 $result = Invoice::select(
