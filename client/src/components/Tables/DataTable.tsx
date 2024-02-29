@@ -145,7 +145,13 @@ export function DataTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									Loading...
+									<div className="flex items-center justify-center text-slate-800/60">
+										<Loader2
+											size={28}
+											strokeWidth={2}
+											className="animate-spin"
+										/>
+									</div>
 								</TableCell>
 							</TableRow>
 						) : (
