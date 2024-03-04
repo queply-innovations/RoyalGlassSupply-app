@@ -27,17 +27,19 @@ interface TransferTableProps {
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
 	const { transfers, isFetching, progress, setSelectedTransfer } = useTransfer();
 
-	// Modal handler to expand product pricing/listing details
+	// Modal handler to expand transfer details
 	const handleTransferDetails = (transfer: Transfer) => {
 		setSelectedTransfer(transfer);
 		openModal(transfer, 'details');
 	};
 
-	// Modal handler to edit product pricing/listing
+	// Modal handler to edit transfer
 	const handleEditTransfer = (transfer: Transfer) => {
 		setSelectedTransfer(transfer);
 		openModal(transfer, 'edit');
 	};
+
+	// console.log(transfers);
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
@@ -84,11 +86,11 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		// },
 
 		{
-			accessorKey: 'source-destination',
+			accessorKey: 'source',
 			header:	() => <div>SOURCE-DESTINATION</div>,
 			cell: ({ row }) => {
-				const source: any = row.getValue('source');
-				const destination: any = row.getValue('destination');
+				const source: any = row.original.source;
+				const destination: any = row.original.destination;
 				return (
 					<div>{source.code}-{destination.code}</div>
 				);
