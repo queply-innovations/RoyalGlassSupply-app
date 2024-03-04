@@ -46,7 +46,10 @@ export function DataTable<TData, TValue>({
 		[],
 	);
 
-	const modalHandler = openModal();
+	// ! This code below calls the openModal function,
+	// ! making some pages to open the modal when DataTable is mounted
+	// ! Check other pages that use DataTable and see if error occurs opening modal
+	// ? const modalHandler = openModal();
 
 	const table = useReactTable({
 		data,
@@ -94,7 +97,7 @@ export function DataTable<TData, TValue>({
 				<div className="flex flex-row-reverse gap-3">
 					<Button
 						fill={'green'}
-						onClick={() => modalHandler}
+						onClick={openModal}
 						disabled={isLoading}
 						className="disabled:cursor-not-allowed disabled:opacity-40"
 					>
