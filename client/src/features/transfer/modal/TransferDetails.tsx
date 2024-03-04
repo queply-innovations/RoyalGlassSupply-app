@@ -1,8 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
-// import { useProductPrices } from '../..';
 import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
-import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
 import { useTransfer } from '../context/TransferContext';
 
 interface TransferDetailsProps {

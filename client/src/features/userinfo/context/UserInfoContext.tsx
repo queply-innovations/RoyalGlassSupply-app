@@ -1,11 +1,15 @@
-import { ReactNode, createContext, useContext } from 'react';
-import { User } from '../types';
+import { ReactNode, createContext, useContext, useState } from 'react';
+import { Roles, User } from '../types';
 import { useUserInfoQuery } from '../hooks';
+import { getRoles } from '../api/UserInfo';
 
 interface UserInfoContextProps {
 	users: User[];
 	isFetching: boolean;
 	progress: any;
+	selectedUser: User;
+	setSelectedUser: (user: User) => void;
+	roles: Roles[];
 }
 
 export const UserInfoContext = createContext<UserInfoContextProps | undefined>(
@@ -17,9 +21,12 @@ interface UserInfoProviderProps {
 }
 
 export const UserInfoProvider = ({ children }: UserInfoProviderProps) => {
-	const { users, isFetching, progress } = useUserInfoQuery();
+	const [selectedUser, setSelectedUser] =
+		useState<User>({} as User);
 
-	const value = { users, isFetching, progress };
+	const { users, isFetching, progress, roles } = useUserInfoQuery();
+
+	const value = { users, isFetching, progress, selectedUser, setSelectedUser, roles};
 
 	return (
 		<UserInfoContext.Provider value={value}>

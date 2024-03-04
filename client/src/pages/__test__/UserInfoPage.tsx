@@ -8,26 +8,16 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
 import { set } from 'react-hook-form';
+import { UserInfoEdit } from '@/features/userinfo/components/UserInfoEdit';
 // import { MainLayout } from '@/layouts/MainLayout';
 
 export const UserInfo = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
 
-	const openEditModal = (users: IUserInfo, action: string) => {
-		openModal();
-		setModalAction(action);
-	};
-
-	const openAddModal = () => {
-		openModal();
-		setModalAction('add');
-	};
-
 	const openUserInfoModal = (users: IUserInfo, action: string) => {
 		openModal();
 		setModalAction(action);
-		console.log('action', action);
 	};
 
 	return (
@@ -45,14 +35,20 @@ export const UserInfo = () => {
 						title={
 							modalAction === 'edit'
 								? 'Edit User'
-								: modalAction === 'remove'
-									? 'Remove User'
-									: 'Add User'
+								: 'Add User'
 						}
 					>
-						<UserInfoForm
-							onClose={closeModal}
-						/>
+						<>
+							{modalAction === 'add' && (
+								<UserInfoForm
+									onClose={closeModal}
+								/>
+							)}
+							{modalAction === 'edit' && (
+								<UserInfoEdit onClose={closeModal} />
+								// <></>
+							)}
+						</>
 					</ModalTest>
 				</UserInfoProvider>
 			</MainLayout>

@@ -19,7 +19,7 @@ interface TransferProviderProps {
 }
 
 export const TransferProvider = ({ children }: TransferProviderProps) => {
-	// State of the selected product price/listing
+	// State of the selected transfer
 	const [selectedTransfer, setSelectedTransfer] =
 		useState<Transfer>({} as Transfer);
 

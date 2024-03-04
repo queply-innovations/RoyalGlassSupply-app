@@ -1,5 +1,5 @@
 import { API_HEADERS, API_URLS } from '@/api';
-import { User } from '@/entities';
+import { User } from '../types';
 import storage from '@/utils/storage';
 import axios from 'axios';
 import { RolePermissions, Roles } from '../types';
@@ -75,11 +75,19 @@ export const getUsers = async (): Promise<User[]> => {
 };
 
 export const getRoles = async (): Promise<Roles[]> => {
-	return axios.get(`${API_URLS.ROLES}`, {
+	return await axios
+	.get(`${API_URLS.ROLES}`, {
 		headers: {
 			Authorization: `Bearer ${storage.getToken()}`,
 			'Content-Type': 'application/json',
 		},
+	})
+	.then(response => {
+		return response.data.data;
+	})
+	.catch(error => {
+		console.error('Error fetching roles:', error);
+		throw error;
 	});
 };
 

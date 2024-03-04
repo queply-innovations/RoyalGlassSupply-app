@@ -2,8 +2,8 @@ export interface User {
 	id: number;
 	username: string;
 	email: string;
-	firstName: string;
-	lastName: string;
+	firstname: string;
+	lastname: string;
 	position: string;
 	contact_no: string;
 }

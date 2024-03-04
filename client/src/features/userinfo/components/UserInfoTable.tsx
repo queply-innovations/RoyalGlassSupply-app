@@ -11,7 +11,12 @@ interface UserTableProps {
 }
 
 export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps) =>{
-	const { users, isFetching, progress } = useUserInfo();
+	const { users, isFetching, progress, setSelectedUser } = useUserInfo();
+
+	const handleEditUser = (user: User) => {
+		setSelectedUser(user);
+		openModal(user, 'edit');
+	};
 	
 	const UserInfoTableHeader: ColumnDef<User>[] = [
 		{
@@ -94,7 +99,7 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 				const userinfoRow = row.original;
 				return (
 					<div className="flex flex-row text-xs font-normal uppercase">
-						<Button fill={'yellow'} textColor={'black'}>
+						<Button fill={'yellow'} textColor={'black'} onClick={() => handleEditUser(userinfoRow)}>
 							Edit User
 						</Button>
 					</div>
