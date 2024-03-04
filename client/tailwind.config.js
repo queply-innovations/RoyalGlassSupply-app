@@ -74,6 +74,7 @@ export default {
 		animation: {
 			'fade-in': 'fade-in 0.3s ease-in-out',
 			'fade-out': 'fade-out 0.3s ease-in-out',
+			spin: 'spin 1s linear infinite',
 		},
 	},
 	plugins: [],
