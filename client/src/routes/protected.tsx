@@ -65,7 +65,7 @@ const protectedRoutesConfig = [
 	{ path: '/transfer', element: <Transfer /> },
 	{ path: '/transaction', element: <Transaction /> },
 	{ path: '/transaction/expenses', element: <Expenses /> },
-	{ path: '/return', element: <Return /> },
+	{ path: '/returns', element: <Return /> },
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/finance', element: <Finance /> },
 	{ path: '/reports', element: <Reports /> },
