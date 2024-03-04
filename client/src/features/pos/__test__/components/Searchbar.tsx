@@ -6,7 +6,7 @@ import {
 	CommandList,
 } from '@/components/ui/command';
 import { Box, Boxes } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { usePos } from '../context/PosContext';
 import { Items } from '../types';
 
@@ -16,30 +16,6 @@ export const SearchBar = ({}: SearchBarProps) => {
 	const [search, setSearch] = useState('');
 	const { productInfo, isLoading, selectedProducts, setSelectedProducts } =
 		usePos();
-	// const Products = (): ReactNode => {
-	// 	return (
-	// 		<>
-	// 			{search && (
-	// 				<>
-	// 					{products.map((product, index) => {
-	// 						return (
-	// 							<CommandItem key={index} value={product.name}>
-	// 								<div className="flex flex-row flex-1">
-	// 									<div className="flex flex-row gap-2">
-	// 										<Box strokeWidth={1} />
-
-	// 										<span>{`${product.name} (${product.id})`}</span>
-	// 									</div>
-	// 									<div></div>
-	// 								</div>
-	// 							</CommandItem>
-	// 						);
-	// 					})}
-	// 				</>
-	// 			)}
-	// 		</>
-	// 	);
-	// };
 
 	return (
 		<div className="relative z-50 border pb-10">
@@ -72,17 +48,37 @@ export const SearchBar = ({}: SearchBarProps) => {
 											onSelect={value => {
 												const match = value.match(/\(([^)]+)\)/);
 												const type = match ? match[1] : '';
-												setSelectedProducts([
-													...selectedProducts,
-													{
-														product: product,
-														quantity: 1,
-														price: product.price,
-														name: product.product.name,
-														type: type,
-														subtotal: product.price,
-													} as Items,
-												]);
+												const selectedProductIndex =
+													selectedProducts.findIndex(
+														item =>
+															item.product.id === product.id,
+													);
+
+												if (selectedProductIndex !== -1) {
+													// If product already exists, update quantity
+													const updatedSelectedProducts = [
+														...selectedProducts,
+													];
+													updatedSelectedProducts[
+														selectedProductIndex
+													].quantity++;
+													setSelectedProducts(
+														updatedSelectedProducts,
+													);
+												} else {
+													// If product doesn't exist, add it
+													setSelectedProducts([
+														...selectedProducts,
+														{
+															product: product,
+															quantity: 1,
+															price: product.price,
+															name: product.product.name,
+															type: type,
+															subtotal: product.price,
+														} as Items,
+													]);
+												}
 												setSearch('');
 											}}
 										>
@@ -107,7 +103,6 @@ export const SearchBar = ({}: SearchBarProps) => {
 								})}
 							</>
 						)}
-						{/* {Products()} */}
 					</CommandList>
 				</Command>
 			</div>
