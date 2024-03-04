@@ -34,7 +34,8 @@ const { UserInfo } = lazyImport(() => import('@/pages/__test__'), 'UserInfo');
 const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
 // const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
 const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
-const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
+// const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
+const { Transfer } = lazyImport(() => import('@/pages/__test__'), 'Transfer');
 
 const App = () => {
 	return (

@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import { Transfer } from '../types';
 import { useTransferQuery } from '../hooks';
 
@@ -6,6 +6,8 @@ interface TransferContextProps {
 	transfers: Transfer[];
 	isFetching: boolean;
 	progress: any;
+	selectedTransfer: Transfer;
+	setSelectedTransfer: (transfer: Transfer) => void;
 }
 
 export const TransferContext = createContext<TransferContextProps | undefined>(
@@ -17,9 +19,19 @@ interface TransferProviderProps {
 }
 
 export const TransferProvider = ({ children }: TransferProviderProps) => {
+	// State of the selected product price/listing
+	const [selectedTransfer, setSelectedTransfer] =
+		useState<Transfer>({} as Transfer);
+
 	const { transfers, isFetching, progress } = useTransferQuery();
 
-	const value = { transfers, isFetching, progress };
+	const value = { 
+		transfers, 
+		isFetching, 
+		progress, 
+		selectedTransfer, 
+		setSelectedTransfer 
+	};
 
 	return (
 		<TransferContext.Provider value={value}>

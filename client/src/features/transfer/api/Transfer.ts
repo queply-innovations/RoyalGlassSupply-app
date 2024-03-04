@@ -1,5 +1,4 @@
 import { API_HEADERS, API_URLS } from '@/api';
-import { User } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
 import { Transfer } from '../types';

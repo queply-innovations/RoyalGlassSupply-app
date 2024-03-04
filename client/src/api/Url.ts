@@ -15,7 +15,7 @@ export const API_URLS = {
 	WAREHOUSE: `${API_BASE_URL}/warehouses`,
 	SUPPLIERS: `${API_BASE_URL}/suppliers`,
 	TRANSACTION: `${API_BASE_URL}/transaction`,
-	TRANSFER: `${API_BASE_URL}/transfer`,
+	TRANSFER: `${API_BASE_URL}/transfers`,
 };
 
 export const API_HEADERS = () => {
