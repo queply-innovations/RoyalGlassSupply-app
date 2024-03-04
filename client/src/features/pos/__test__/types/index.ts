@@ -29,9 +29,9 @@ export interface Products {
 export interface Items {
 	product: Partial<ProductPrices>;
 	quantity: number;
-	price: Partial<ProductPrices>;
-	name: Partial<ProductPrices>;
-	type: Partial<ProductPrices>;
+	price: number;
+	name: string;
+	type: string;
 	subtotal: number;
 }
 
