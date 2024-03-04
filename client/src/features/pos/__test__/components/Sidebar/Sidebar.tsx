@@ -34,31 +34,48 @@ export const Sidebar = ({}: SidebarProps) => {
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="">
-						{selectedProducts.map((items, key) => {
-							const formatSubtotal = items.subtotal
-								? Intl.NumberFormat('en-US', {
-										style: 'currency',
-										currency: 'PHP',
-									}).format(items.subtotal)
-								: '';
+						<div className="flex flex-col gap-1">
+							<div>
+								{selectedProducts.map((items, key) => {
+									const formatSubtotal = items.subtotal
+										? Intl.NumberFormat('en-US', {
+												style: 'currency',
+												currency: 'PHP',
+											}).format(items.subtotal)
+										: '';
 
-							return (
-								<div
-									key={key}
-									className="flex flex-row justify-between"
-								>
-									<div className="flex flex-row items-center gap-2">
-										<span className="text-sm">
-											{items.quantity} piece
-										</span>
-										<span className="text-sm">
-											{items.product.product?.name}
-										</span>
-									</div>
-									<span className="text-sm">{formatSubtotal}</span>
-								</div>
-							);
-						})}
+									return (
+										<div
+											key={key}
+											className="flex flex-row justify-between"
+										>
+											<div className="flex flex-row items-center gap-2">
+												<div className="flex w-5 flex-row justify-between">
+													<span className="text-sm">
+														{items.quantity}
+													</span>
+													<span className="text-sm">x</span>
+												</div>
+
+												<span className="text-sm">
+													{items.product.product?.name}
+												</span>
+											</div>
+											<span className="text-sm">
+												{formatSubtotal}
+											</span>
+										</div>
+									);
+								})}
+							</div>
+
+							<div className="flex flex-row items-center justify-between">
+								<span className="text-sm">Total Amount:</span>
+								<span className="border-t border-t-slate-800 text-sm">
+									{order.totalAmount ? formatted : `—`}
+								</span>
+							</div>
+						</div>
 					</PopoverContent>
 				</Popover>
 			</div>
