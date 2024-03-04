@@ -6,6 +6,7 @@ import { Product } from '@/features/product/__test__/types';
 import { Button } from '@/components';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
+import { TablePlacholder } from './EmptyPlaceholder';
 
 interface CreateOrderTableProps {}
 
@@ -26,7 +27,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 
 		// If new quantity is greater than zero, update the selectedProducts array
 		if (newQuantity > 0) {
-			setSelectedProducts((prevSelectedProducts: Items[]) =>
+			setSelectedProducts(prevSelectedProducts =>
 				prevSelectedProducts.map(
 					(item: { price: number }, index: number) => {
 						if (index === productId) {
@@ -136,7 +137,9 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 	];
 	return (
 		<>
-			{selectedProducts.length === 0 ? null : (
+			{selectedProducts.length === 0 ? (
+				<TablePlacholder />
+			) : (
 				<PosTable
 					data={selectedProducts}
 					columns={CreateOrderTableHeader}
