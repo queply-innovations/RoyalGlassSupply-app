@@ -27,11 +27,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			fallback={
 				<div className="flex h-screen w-full flex-col items-center justify-center space-y-0 px-20">
 					{/* <Spinner size="xl" /> */}
-					{/* <Loading /> */}
-					<ProgressBar />
+					<Loading />
+					{/* <ProgressBar />
 					<h2 className="text-primary-dark-gray text-2xl font-bold">
 						Loading Dashboard....
-					</h2>
+					</h2> */}
 				</div>
 			}
 		>

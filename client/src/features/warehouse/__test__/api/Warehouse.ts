@@ -13,8 +13,10 @@ export const fetchWarehouses = async (updateProgress: any): Promise<Warehouse[]>
 				'Content-Type': 'application/json',
 			},
 			onDownloadProgress: (progress) => {
-				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-				updateProgress(percentCompleted);
+				if (progress.total) {
+					let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+					updateProgress(percentCompleted);
+				}
 			},
 		})
 		.then(response => {

@@ -10,12 +10,12 @@ export const ProgressBar = (progress: any) => {
 			if (completed <= 90) {
 				const changing = setInterval(() => {
 					setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
-				}, 500);
+				}, 700);
 	
 				return () => clearInterval(changing);
 			}
 		}
-	}, [progress, completed]);
+	}, [completed]);
 
 	const containerStyles = {
 		height: 20,
@@ -31,7 +31,7 @@ export const ProgressBar = (progress: any) => {
 		backgroundColor: '#16A116',
 		borderRadius: 'inherit',
 		textAlign: 'right' as const,
-		transition: 'width 700ms ease-in-out',
+		transition: 'width 1000ms ease-in-out',
 	};
 
 	const labelStyles = {
