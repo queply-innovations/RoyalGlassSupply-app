@@ -8,8 +8,10 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
+import { User } from '@/features/auth/types';
 
 interface AuthProps {
+	user: User;
 	authenticated: boolean | null;
 	id: number;
 	role: string | null;
@@ -51,12 +53,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				}
 
 				setAuth({
-					username: response.user.username,
-					id: response.user.id,
+					user: {
+						id: response.user.id,
+						firstname: response.user.firstname,
+						lastname: response.user.lastname,
+					},
 					token: response.token,
 					authenticated: true,
 					role: userRole,
-				});
+				} as AuthProps);
 			}
 			return response;
 		} catch (error: any) {
