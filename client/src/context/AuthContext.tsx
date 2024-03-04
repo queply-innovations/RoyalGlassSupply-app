@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { UserResponse, getUserRole } from '@/features/auth';
+import { User, UserResponse, getUserRole } from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
@@ -51,8 +51,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				}
 
 				setAuth({
-					username: response.user.username,
-					id: response.user.id,
+					user: {
+						id: response.user.id,
+						firstname: response.user.firstname,
+						lastname: response.user.lastname,
+					},
 					token: response.token,
 					authenticated: true,
 					role: userRole,

@@ -94,7 +94,7 @@ export function DataTable<TData, TValue>({
 				<div className="flex flex-row-reverse gap-3">
 					<Button
 						fill={'green'}
-						onClick={() => modalHandler}
+						onClick={() => openModal()}
 						disabled={isLoading}
 						className="disabled:cursor-not-allowed disabled:opacity-40"
 					>
