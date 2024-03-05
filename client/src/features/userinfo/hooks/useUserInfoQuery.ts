@@ -7,9 +7,10 @@ import { Roles, User } from '../types';
 export const useUserInfoQuery = () => {
 	// State to store user info data
 	const [users, setUsers] = useState<User[]>([]);
-	const [roles, setRoles] = useState<Roles[]>([]);
+	const [roles, setRoles] = useState<Roles>();
 
 	const [progress, setProgress] = useState(0);
+	const [progress2, setProgress2] = useState(0);
 
 	// Query for fetching user info data
 	const { isFetching, data: userQuery } = useQuery({
@@ -26,7 +27,7 @@ export const useUserInfoQuery = () => {
 		// Key for identifying this query
 		queryKey: ['roles'],
 		// Function to fetch roles data
-		queryFn: () => getRoles(),
+		queryFn: () => getRoles(setProgress2),
 		// Disable refetching
 		refetchOnWindowFocus: false,
 	});
@@ -54,5 +55,5 @@ export const useUserInfoQuery = () => {
 	}, [roleQuery]);
 
 	// Return state and query object
-	return { users, userQuery, isFetching, progress, roles };
+	return { users, userQuery, isFetching, progress, progress2, roles };
 };

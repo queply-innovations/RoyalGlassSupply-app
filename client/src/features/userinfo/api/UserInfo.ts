@@ -74,12 +74,16 @@ export const getUsers = async (): Promise<User[]> => {
 	});
 };
 
-export const getRoles = async (): Promise<Roles[]> => {
+export const getRoles = async (updateProgress: any): Promise<Roles> => {
 	return await axios
 	.get(`${API_URLS.ROLES}`, {
 		headers: {
 			Authorization: `Bearer ${storage.getToken()}`,
 			'Content-Type': 'application/json',
+		},
+		onDownloadProgress: (progress) => {
+			let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+			updateProgress(percentCompleted);
 		},
 	})
 	.then(response => {
@@ -87,6 +91,46 @@ export const getRoles = async (): Promise<Roles[]> => {
 	})
 	.catch(error => {
 		console.error('Error fetching roles:', error);
+		throw error;
+	});
+};
+
+export const editUser = async (data: any) => {
+	console.log(data);
+	return await axios
+	.put(`${API_URLS.USERS}/${data.user_id}`, data,
+	{
+		headers: {
+			Authorization: `Bearer ${storage.getToken()}`,
+			'Content-Type': 'application/json',
+		},
+	})
+	.then(async response => {
+		console.log(response);
+		const data2 = {user_id: data.user_id, role_id: data.role_id};
+		return await axios
+		.put(`${API_URLS.USER_ROLES}/`, data2, 
+		//TODO: Get ID from user_role corresponding to this user
+		//Explanation: user_role put API requires ID where the user's role is located
+		//NOT the user's ID
+		{
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			console.log(response);
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error putting user changes:', error);
+			throw error;
+		});
+		// return response.data.data;
+	})
+	.catch(error => {
+		console.error('Error putting user changes:', error);
 		throw error;
 	});
 };

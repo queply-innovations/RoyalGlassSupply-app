@@ -4,7 +4,8 @@ import { formatUTCDate } from '@/utils/timeUtils';
 import { useUserInfo } from '../context/UserInfoContext';
 import { getRoles } from '../api/UserInfo';
 import { useEffect, useState } from 'react';
-import { Roles } from '../types';
+import { Roles, User } from '../types';
+import { useUserInfoMutation } from '../hooks';
 
 interface UserInfoProps {
 	onClose: UseModalProps['closeModal'];
@@ -13,105 +14,145 @@ interface UserInfoProps {
 export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 	const { selectedUser, roles } = useUserInfo();
 
-	//TODO: onChange handler for the form
-	//TODO: useUserInfoMutation in hooks
+	const {
+		user,
+		isChanged,
+		isSubmitting,
+		error,
+		success,
+		handleSubmit,
+		handleChange,
+	} = useUserInfoMutation(selectedUser, roles);
 
 	return (
 		<>
-			<div className="flex flex-col gap-5">
-				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-					<div className="flex flex-col col-span-3 gap-3">
-						<label htmlFor="id">User ID</label>
-						<input
-							type="text"
-							id="name"
-							placeholder="User ID"
-							className="inputbox"
-							value={selectedUser.id}
-						/>
+			<form
+				onSubmit={async e => {e.preventDefault(); handleSubmit;}}
+			>
+				<div className="flex flex-col gap-5">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="id">User ID</label>
+							<input
+								type="text"
+								name="id"
+								placeholder="User ID"
+								className="inputbox"
+								value={user.user_id}
+								disabled
+							/>
+						</div>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="firstname">First name</label>
+							<input
+								type="text"
+								name="firstname"
+								placeholder="First name"
+								className="inputbox"
+								value={user.firstname}
+								onChange={handleChange}
+							/>
+						</div>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="lastname">Last name</label>
+							<input
+								type="text"
+								name="lastname"
+								placeholder="Last name"
+								className="inputbox"
+								value={user.lastname}
+								onChange={handleChange}
+							/>
+						</div>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="username">Username</label>
+							<input
+								type="text"
+								name="username"
+								placeholder="Username"
+								className="inputbox"
+								value={user.username}
+								onChange={handleChange}
+							/>
+						</div>
 					</div>
-					<div className="flex flex-col col-span-3 gap-3">
-						<label htmlFor="firstname">First name</label>
-						<input
-							type="text"
-							id="firstname"
-							placeholder="First name"
-							className="inputbox"
-							value={selectedUser.firstname}
-						/>
-					</div>
-					<div className="flex flex-col col-span-3 gap-3">
-						<label htmlFor="lastname">Last name</label>
-						<input
-							type="text"
-							id="lastname"
-							placeholder="Last name"
-							className="inputbox"
-							value={selectedUser.lastname}
-						/>
-					</div>
-					<div className="flex flex-col col-span-3 gap-3">
-						<label htmlFor="username">Username</label>
-						<input
-							type="text"
-							id="username"
-							placeholder="Username"
-							className="inputbox"
-							value={selectedUser.username}
-						/>
-					</div>
-				</div>
 
-				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-					<div className="flex flex-col col-span-4 gap-3">
-						<label htmlFor="email">Email address</label>
-						<input
-							type="email"
-							id="email"
-							placeholder="Email address"
-							className="inputbox"
-							value={selectedUser.email}
-						/>
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+						<div className="flex flex-col col-span-4 gap-3">
+							<label htmlFor="email">Email address</label>
+							<input
+								type="email"
+								name="email"
+								placeholder="Email address"
+								className="inputbox"
+								value={user.email}
+								onChange={handleChange}
+							/>
+						</div>
+						<div className="flex flex-col col-span-4 gap-3">
+							<label htmlFor="email">Contact number</label>
+							<input
+								type="number"
+								name="contact_no"
+								placeholder="09XXXXXXXXX"
+								className="inputbox"
+								value={user.contact_no}
+								onChange={handleChange}
+							/>
+						</div>
+						<div className="flex flex-col col-span-4 gap-3">
+							<label htmlFor="position">Position</label>
+							<select 
+								name="position"
+								className="flex flex-col gap-5" 
+								defaultValue={user.position} 
+								onChange={handleChange}>
+								{roles.map((role: Roles) => {
+									return (
+										// role.title === user.position ? (
+										// 	<option 
+										// 		key={role.id} 
+										// 		value={role.title}
+										// 		selected
+										// 		>
+										// 		{role.title.charAt(0).toUpperCase() + 
+										// 		role.title.slice(1)}
+										// 	</option>
+										// ) : (
+											<option 
+												key={role.id} 
+												value={role.title}
+												>
+												{role.title.charAt(0).toUpperCase() + 
+												role.title.slice(1)}
+											</option>
+										// )
+									);
+								})}
+							</select>
+						</div>
 					</div>
-					<div className="flex flex-col col-span-4 gap-3">
-						<label htmlFor="email">Contact number</label>
-						<input
-							type="number"
-							id="contact_no"
-							placeholder="09XXXXXXXXX"
-							className="inputbox"
-							value={selectedUser.contact_no}
-						/>
-					</div>
-					<div className="flex flex-col col-span-4 gap-3">
-						<label htmlFor="position">Position</label>
-						<select className="flex flex-col gap-5">
-							{roles.map((role: Roles) => {
-								return (
-									role.title === selectedUser.position ? (
-										<option 
-											key={role.id} 
-											value={role.title}
-											selected
-											>
-											{role.title.charAt(0).toUpperCase() + 
-											role.title.slice(1)}
-										</option>
-									) : (
-										<option 
-											key={role.id} 
-											value={role.title}
-											>
-											{role.title.charAt(0).toUpperCase() + 
-											role.title.slice(1)}
-										</option>
-									)
-								);
-							})}
-						</select>
+					
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4 text-center">
+						<Button
+							type="submit"
+							fill={isChanged ? 'green' : null}
+							disabled={isChanged ? false : true}
+							onClick={handleSubmit}
+						>
+							{!isSubmitting ? 'Edit User' : 'Submitting'}
+						</Button>
+						<div className="col-span-3">
+							{success && (
+								<div className="font-bold text-green-700">{success}</div>
+							)}
+							{error && (
+								<div className="font-bold text-red-700">{error}</div>
+							)}
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</>
 	);
 };

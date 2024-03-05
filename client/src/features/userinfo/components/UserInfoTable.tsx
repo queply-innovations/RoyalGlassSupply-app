@@ -5,13 +5,14 @@ import { User } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useUserInfo } from '../context/UserInfoContext';
+import { Loading } from '@/components/Loading';
 
 interface UserTableProps {
 	openModal: (data: User, action: string) => void;
 }
 
 export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps) =>{
-	const { users, isFetching, progress, setSelectedUser } = useUserInfo();
+	const { users, isFetching, progress, progress2, setSelectedUser } = useUserInfo();
 
 	const handleEditUser = (user: User) => {
 		setSelectedUser(user);
@@ -99,8 +100,13 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 				const userinfoRow = row.original;
 				return (
 					<div className="flex flex-row text-xs font-normal uppercase">
-						<Button fill={'yellow'} textColor={'black'} onClick={() => handleEditUser(userinfoRow)}>
-							Edit User
+						<Button 
+							fill={progress2 === 0 ? null : 'yellow'} 
+							textColor={'black'} 
+							disabled={progress2 === 0 ? true : false}
+							onClick={() => handleEditUser(userinfoRow)}
+						>
+							{progress2 === 0 ? <Loading width={20} height={20} /> : "Edit User"}
 						</Button>
 					</div>
 				);

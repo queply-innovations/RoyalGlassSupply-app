@@ -7,9 +7,10 @@ interface UserInfoContextProps {
 	users: User[];
 	isFetching: boolean;
 	progress: any;
+	progress2: any;
 	selectedUser: User;
 	setSelectedUser: (user: User) => void;
-	roles: Roles[];
+	roles: any;
 }
 
 export const UserInfoContext = createContext<UserInfoContextProps | undefined>(
@@ -24,9 +25,9 @@ export const UserInfoProvider = ({ children }: UserInfoProviderProps) => {
 	const [selectedUser, setSelectedUser] =
 		useState<User>({} as User);
 
-	const { users, isFetching, progress, roles } = useUserInfoQuery();
+	const { users, isFetching, progress, progress2, roles } = useUserInfoQuery();
 
-	const value = { users, isFetching, progress, selectedUser, setSelectedUser, roles};
+	const value = { users, isFetching, progress, progress2, selectedUser, setSelectedUser, roles};
 
 	return (
 		<UserInfoContext.Provider value={value}>

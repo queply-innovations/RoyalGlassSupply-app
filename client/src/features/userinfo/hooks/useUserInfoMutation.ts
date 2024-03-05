@@ -1,34 +1,49 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-	addUser,
+	addUser, editUser,
 } from '../api/UserInfo';
 import { useUserInfo } from '../context/UserInfoContext';
 import { useState, ChangeEvent } from 'react';
-import { User } from '@/entities';
+import { Roles, User } from '../types';
 
-export const useUserInfoMutation = () => {
+export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const queryClient = useQueryClient();
-	const user = useUserInfo();
 
-	// State to store warehouse form data
-	const [value, setValue] = useState<User>({
-		id: user.length + 1 || 0,
-		username: '',
-		password: '',
-		email: '',
-		firstName: '',
-		lastName: '',
-		position: '',
-		contactNumber: '',
-	} as User);
+	const [ user, setUser ] = useState({
+		firstname: selectedUser.firstname,
+		lastname: selectedUser.lastname,
+		username: selectedUser.username,
+		email: selectedUser.email,
+		contact_no: selectedUser.contact_no,
+		position: selectedUser.position,
+		user_id: selectedUser.id,
+		role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+	});
 
-	// Function to handle form input changes
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setValue(prevUserForm => ({
-			...(prevUserForm as User),
-			[name]: value,
+	// const [ roleId, setRoleId ] = useState(roles.find((role: Roles) => role.title === selectedUser.position)?.id);
+
+	const [ isChanged, setIsChanged ] = useState(false);
+	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ success, setSuccess ] = useState<string | null>(null);
+
+	const handleChange = (e: any) => {
+		setIsChanged(true);
+		setUser(prev => ({
+			...prev,
+			[e.target.name]: e.target.value,
 		}));
+		if (e.target.name === 'position') {
+			setUser(prev => ({
+				...prev,
+				role_id: roles.find((role: Roles) => role.title === e.target.value)?.id,
+			}));
+		}
+	};
+
+	const handleSubmit = async () => {
+		setIsSubmitting(true);
+		return await editUserMutation(user);
 	};
 
 	// Configurations for mutation
@@ -36,20 +51,17 @@ export const useUserInfoMutation = () => {
 		onSuccess: async () => {
 			// Reset loading state
 			await queryClient.invalidateQueries({ queryKey: ['user'] });
-			// Reset form data
-			setValue({
-				id: user.length + 1 || 0,
-				username: '',
-				password: '',
-				email: '',
-				firstName: '',
-				lastName: '',
-				position: '',
-				contactNumber: '',
-			} as User);
+			setIsSubmitting(false);
+			setIsChanged(false);
+			setSuccess('User info has been updated');
+			setTimeout(() => {
+				setSuccess(null);
+			}, 8000);
 		},
 		onError: (error: any) => {
-			console.error('User Data failed', error);
+			console.error(error);
+			setError(error.message);
+			setIsSubmitting(false);
 		},
 	};
 
@@ -60,10 +72,9 @@ export const useUserInfoMutation = () => {
 	// 	...mutationConfig,
 	// });
 
-	const { mutateAsync: addUserMutation } = useMutation({
-		mutationKey: ['addUser'],
-		// * This function will call addWarehouse from API to add the warehouse
-		mutationFn: addUser,
+	const { mutateAsync: editUserMutation } = useMutation({
+		mutationKey: ['editUser'],
+		mutationFn: editUser,
 		...mutationConfig,
 	});
 
@@ -75,9 +86,15 @@ export const useUserInfoMutation = () => {
 	// });
 
 	return {
-		value,
-		setValue,
+		// value,
+		// setValue,
+		user,
+		isChanged,
+		isSubmitting,
+		error,
+		success,
+		handleSubmit,
 		handleChange,
-		addUserMutation,
+		editUserMutation,
 	};
 };
