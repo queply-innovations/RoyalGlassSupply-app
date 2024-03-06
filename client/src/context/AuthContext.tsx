@@ -8,14 +8,15 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
+import { User } from '@/features/auth/types';
 
 interface AuthProps {
-	user: number | null;
-	token: string | null;
+	user: User;
 	authenticated: boolean | null;
+	id: number;
 	role: string | null;
-	isLoggedIn: boolean;
+	token: string | null;
+	username: number | null;
 }
 interface AuthContextProps {
 	auth: AuthProps;
@@ -52,12 +53,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				}
 
 				setAuth({
-					username: response.user.username,
-					user: response.user.id,
+					user: {
+						id: response.user.id,
+						firstname: response.user.firstname,
+						lastname: response.user.lastname,
+					},
 					token: response.token,
 					authenticated: true,
 					role: userRole,
-				});
+				} as AuthProps);
 			}
 			return response;
 		} catch (error: any) {

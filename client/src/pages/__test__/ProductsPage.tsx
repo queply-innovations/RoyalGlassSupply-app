@@ -27,21 +27,7 @@ export const Products = () => {
 							<ProductsTable openModal={modalHandler} />
 						</div>
 					</div>
-					<ModalTest
-						isOpen={isOpen}
-						onClose={closeModal}
-						title={
-							modalAction === 'more_info'
-								? 'Product Details'
-								: 'This a modal'
-						}
-					>
-						{modalAction === 'more_info' ? (
-							<ProductDetails onClose={closeModal} />
-						) : (
-							<h1>Hello</h1>
-						)}
-					</ModalTest>
+
 					{/* <ModalTest isOpen onClose={closeModal} title="Add Products">
 						<Form onClose={closeModal} />
 					</ModalTest> */}

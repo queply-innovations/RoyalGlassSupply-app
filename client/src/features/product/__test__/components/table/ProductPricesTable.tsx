@@ -1,16 +1,24 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { useProductPrices } from '../..';
-import { ProductPrices } from '../../types';
+import { Product, ProductPrices } from '../../types';
 import { useAuth } from '@/context/AuthContext';
 import { ProductPricesColumns, ProductPricesColumnsLimited } from '.';
 
 interface ProductsPricesTableProps {
-	openModal: (data: ProductPrices, action: string) => void;
+	openModal: (data: ProductPrices | Product, action: string) => void;
+	isModalOpen: boolean;
 }
 
-export const ProductPricesTable = ({ openModal }: ProductsPricesTableProps) => {
+export const ProductPricesTable = ({
+	openModal,
+	isModalOpen,
+}: ProductsPricesTableProps) => {
 	const { auth } = useAuth();
 	const { data, isLoading, setSelectedProductPrice } = useProductPrices();
+
+	const handleAddProdPrice = () => {
+		openModal({} as Product, 'add');
+	};
 
 	// Modal handler to expand product pricing/listing details
 	const handleProdPriceDetails = (productPrice: ProductPrices) => {
@@ -25,9 +33,9 @@ export const ProductPricesTable = ({ openModal }: ProductsPricesTableProps) => {
 	};
 
 	// Modal handler to remove product pricing/listing
-	const handleRemoveProdPrice = (productPrice: ProductPrices) => {
+	const handleToggleActiveStatus = (productPrice: ProductPrices) => {
 		setSelectedProductPrice(productPrice);
-		openModal(productPrice, 'remove');
+		openModal(productPrice, 'toggle_active_stat');
 	};
 
 	return (
@@ -40,14 +48,14 @@ export const ProductPricesTable = ({ openModal }: ProductsPricesTableProps) => {
 						? ProductPricesColumns({
 								handleProdPriceDetails,
 								handleEditProdPrice,
-								handleRemoveProdPrice,
+								handleToggleActiveStatus,
 							})
 						: ProductPricesColumnsLimited
 				}
 				data={data}
 				filterWhat={'name'}
 				dataType={'Listing'}
-				openModal={openModal}
+				openModal={handleAddProdPrice}
 				isLoading={isLoading}
 			/>
 		</>

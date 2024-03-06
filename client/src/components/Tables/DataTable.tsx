@@ -21,13 +21,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { Loader2 } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	filterWhat: string;
 	dataType: string;
-	openModal: any;
+	openModal: () => void;
 	isLoading?: boolean;
 	progress: any;
 }
@@ -46,6 +47,11 @@ export function DataTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
 	);
+
+	// ! This code below calls the openModal function,
+	// ! making some pages to open the modal when DataTable is mounted
+	// ! Check other pages that use DataTable and see if error occurs opening modal
+	// ? const modalHandler = openModal();
 
 	const table = useReactTable({
 		data,
@@ -91,7 +97,12 @@ export function DataTable<TData, TValue>({
 					/>
 				</div>
 				<div className="flex flex-row-reverse gap-3">
-					<Button fill={'green'} onClick={() => openModal(data, 'add')}>
+					<Button
+						fill={'green'}
+						onClick={openModal}
+						disabled={isLoading}
+						className="disabled:cursor-not-allowed disabled:opacity-40"
+					>
 						{`Add ${dataType}`}
 					</Button>
 				</div>
@@ -143,10 +154,13 @@ export function DataTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center items-center justify-center space-y-0 px-20"
 								>
-									<ProgressBar progress={progress} />
-									<h2 className="text-primary-dark-gray pb-5 text-xl font-bold">
-										Fetching Data....
-									</h2>
+									<div className="flex items-center justify-center text-slate-800/60">
+										<Loader2
+											size={28}
+											strokeWidth={2}
+											className="animate-spin"
+										/>
+									</div>
 								</TableCell>
 							</TableRow>
 						) : (

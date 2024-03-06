@@ -1,5 +1,5 @@
+import { User } from '@/features/auth/types';
 import { Warehouse } from '@/features/warehouse/__test__/types';
-import { BluetoothPairingHandlerHandlerDetails } from 'electron';
 
 export interface Product {
 	id: number;
@@ -16,28 +16,36 @@ interface ProductEditor {
 	firstname: string;
 	lastname: string;
 }
-
 export interface ProductPrices {
 	id: number;
-	product_id: number;
-	product: Product;
+	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
 	type: 'retail' | 'wholesale' | string;
 	unit: string;
-	quantity: number;
+	stocks_quantity: number;
 	stocks_unit: string;
 	capital_price: number;
 	markup_price: number;
-	retail_price: number;
 	tax_amount: number;
 	cost: number;
 	on_sale: number;
-	sale_price: number;
+	sale_discount: number;
 	price: number;
-	warehouse: Pick<Warehouse, 'id'| 'name'>;
+	warehouse: Pick<Warehouse, 'id' | 'code' | 'name'>;
 	created_by: ProductEditor;
 	approval_status: 'pending' | 'approved' | 'rejected' | string;
 	approved_by: ProductEditor;
+	active_status: 'active' | 'inactive' | string;
 	created_at: string;
 	updated_at: string;
-	active_status: 'active' | 'inactive' | string;
+}
+
+export interface ProductPricesDatabase
+	extends Omit<
+		ProductPrices,
+		'product' | 'warehouse' | 'approved_by' | 'created_by'
+	> {
+	product_id: number;
+	warehouse_id: number;
+	created_by: number;
+	approved_by: number;
 }
