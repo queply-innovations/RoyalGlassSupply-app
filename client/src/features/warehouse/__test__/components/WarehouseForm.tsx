@@ -31,7 +31,7 @@ export const WarehouseForm = ({
 	useEffect(() => {
 		if (isUpdate || isDelete) {
 			setWarehouseForm(warehouseSelected);
-			console.log(isUpdate, isDelete);
+			// console.log(isUpdate, isDelete);
 		}
 	}, [isUpdate, isDelete, warehouseSelected, setWarehouseForm]);
 

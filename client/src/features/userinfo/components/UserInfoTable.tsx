@@ -5,7 +5,7 @@ import { User } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useUserInfo } from '../context/UserInfoContext';
-import { Loading } from '@/components/Loading';
+import { Loader2 } from 'lucide-react';
 
 interface UserTableProps {
 	openModal: (data: User, action: string) => void;
@@ -17,6 +17,10 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 	const handleEditUser = (user: User) => {
 		setSelectedUser(user);
 		openModal(user, 'edit');
+	};
+
+	const handleAddUser = () => {
+		openModal({} as User, 'add');
 	};
 	
 	const UserInfoTableHeader: ColumnDef<User>[] = [
@@ -106,7 +110,11 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 							disabled={progress2 === 0 ? true : false}
 							onClick={() => handleEditUser(userinfoRow)}
 						>
-							{progress2 === 0 ? <Loading width={20} height={20} /> : "Edit User"}
+							{progress2 === 0 ? <Loader2
+											size={28}
+											strokeWidth={2}
+											className="animate-spin"
+																	/> : "Edit User"}
 						</Button>
 					</div>
 				);
@@ -122,9 +130,8 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 				columns={UserInfoTableHeader}
 				filterWhat={"lastname"}
 				dataType={"User"}
-				openModal={openModal}
-				isLoading={isFetching}
-				progress={progress} />
+				openModal={handleAddUser}
+				isLoading={isFetching} />
 		</>
 	);
 };

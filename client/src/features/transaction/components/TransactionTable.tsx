@@ -119,9 +119,8 @@ export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: Trans
 				columns={TransactionTableHeader}
 				filterWhat={"serial"}
 				dataType={"Transaction"}
-				openModal={openModal}
-				isLoading={isFetching}
-				progress={progress} />
+				openModal={() => openModal}
+				isLoading={isFetching} />
 		</>
 	);
 };

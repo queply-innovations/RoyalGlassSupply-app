@@ -30,6 +30,8 @@ export const Supplier = () => {
 		console.log('action', action);
 	};
 
+	//TODO: Add Supplier modals
+
 	return (
 		<>
 			<MainLayout title="Supplier">

@@ -33,7 +33,9 @@ export const Transfer = () => {
 						title={
 							modalAction === 'details'
 								? 'Transfer Details'
-								: 'Edit Listing'
+								: modalAction === 'edit'
+									? 'Edit Transfer'
+									: 'Add Transfer'
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
@@ -44,6 +46,10 @@ export const Transfer = () => {
 							)}
 							{modalAction === 'edit' && (
 								// <TransferForm onClose={closeModal} />
+								<></>
+							)}
+							{modalAction === 'add' && (
+								// <TransferDetails onClose={closeModal} />
 								<></>
 							)}
 						</>

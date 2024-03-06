@@ -39,6 +39,10 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		openModal(transfer, 'edit');
 	};
 
+	const handleAddTransfer = () => {
+		openModal({} as Transfer, 'add');
+	};
+
 	// console.log(transfers);
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
@@ -253,9 +257,8 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				columns={TransferTableHeader}
 				filterWhat={"approval_status"}
 				dataType={"Transfer"}
-				openModal={openModal}
-				isLoading={isFetching}
-				progress={progress} />
+				openModal={handleAddTransfer}
+				isLoading={isFetching} />
 		</>
 	);
 };

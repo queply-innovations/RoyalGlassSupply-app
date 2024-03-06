@@ -30,7 +30,6 @@ interface DataTableProps<TData, TValue> {
 	dataType: string;
 	openModal: () => void;
 	isLoading?: boolean;
-	progress: any;
 }
 
 export function DataTable<TData, TValue>({
@@ -40,7 +39,6 @@ export function DataTable<TData, TValue>({
 	dataType,
 	openModal,
 	isLoading,
-	progress,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 

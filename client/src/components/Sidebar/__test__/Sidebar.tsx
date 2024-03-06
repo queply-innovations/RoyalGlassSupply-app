@@ -15,21 +15,21 @@ const Sidebar = ({}: SidebarProps) => {
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
 
-	const [open, setOpen] = useState("");
+	// const [open, setOpen] = useState("");
 
-	const handleClick = (itemId: string) => setOpen(itemId);
+	// const handleClick = (itemId: string) => setOpen(itemId);
 
-	const [ sidebar , setSidebar ] = useState(SidebarRoute);
-	useEffect(() => {
-		const filteredRoute = sidebar.map(route => (
-			{
-				...route, child: route.child?.filter(
-					subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
-				)
-			}
-		));
-		setSidebar(filteredRoute);
-	}, []);
+	// const [ sidebar , setSidebar ] = useState(SidebarRoute);
+	// useEffect(() => {
+	// 	const filteredRoute = sidebar.map(route => (
+	// 		{
+	// 			...route, child: route.child?.filter(
+	// 				subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
+	// 			)
+	// 		}
+	// 	));
+	// 	setSidebar(filteredRoute);
+	// }, []);
 
 	return (
 		<>

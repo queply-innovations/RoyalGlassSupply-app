@@ -19,6 +19,10 @@ interface SupplierTableProps {
 export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 	const { suppliers, isFetching, progress } = useSupplier();
 
+	const handleAddSupplier = () => {
+		openModal({} as Supplier, 'add');
+	};
+
 	const SupplierTableHeader: ColumnDef<Supplier>[] = [
 		{
 			id: "select",
@@ -134,9 +138,8 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 				columns={SupplierTableHeader}
 				filterWhat={"name"}
 				dataType={"Supplier"}
-				openModal={openModal}
-				isLoading={isFetching}
-				progress={progress} />
+				openModal={handleAddSupplier}
+				isLoading={isFetching} />
 
 			{/* <Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
