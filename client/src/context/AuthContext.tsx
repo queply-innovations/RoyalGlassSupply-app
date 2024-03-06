@@ -8,7 +8,6 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
-import { User } from '@/features/auth/types';
 
 interface AuthProps {
 	user: User;

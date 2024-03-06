@@ -7,23 +7,23 @@ import { lazyImport } from '@/utils/lazyImport';
 import { ProgressBar } from '@/components';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
-// const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
-// const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
+const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
+const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
 const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
 const { Invoice } = lazyImport(() => import('@/pages/__test__'), 'Invoice');
 const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PointOfSalePage',
 );
-// const { PendingInventory } = lazyImport(
-// () => import('@/pages'),
-// 'PendingInventory',
-// );
-// const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
-// const { PendingTransfer } = lazyImport(
-// () => import('@/pages'),
-// 'PendingTransfer',
-// );
+const { PendingInventory } = lazyImport(
+	() => import('@/pages'),
+	'PendingInventory',
+);
+const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
+const { PendingTransfer } = lazyImport(
+	() => import('@/pages'),
+	'PendingTransfer',
+);
 const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
 const { ProductPrices } = lazyImport(
 	() => import('@/pages/__test__'),
