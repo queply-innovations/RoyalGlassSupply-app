@@ -4,7 +4,7 @@ import { Warehouse } from '@/features/warehouse/__test__/types';
 export interface Product {
 	id: number;
 	name: string;
-	serial_no: number;
+	serial_no: string;
 	brand: string;
 	size: string;
 	color: string;
@@ -18,7 +18,7 @@ interface ProductEditor {
 }
 export interface ProductPrices {
 	id: number;
-	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
+	product: Partial<Product>;
 	type: 'retail' | 'wholesale' | string;
 	unit: string;
 	stocks_quantity: number;

@@ -19,6 +19,10 @@ export const getDate = () => {
 
 	return `${year}-${month}-${day} at ${time}`;
 };
+export const getDateNow = () => {
+	const date = new Date();
+	return date.toISOString();
+};
 
 export const formatUTCDate = (date: string) => {
 	const utcDate = new Date(date); // Convert the UTC date string to a JavaScript Date object
@@ -32,9 +36,24 @@ export const formatUTCDate = (date: string) => {
 	// Convert hours to 12-hour format
 	hours = hours % 12;
 	hours = hours || 12; // Handle midnight (0 hours) as 12 AM
-	
+
 	// Construct the formatted date and time string
-	const formattedDateTime = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day} ${hours}:${minutes < 10 ? '0' : ''}${minutes} ${amOrPm}`;
+	const formattedDateTime = `${year}-${month < 10 ? '0' : ''}${month}-${
+		day < 10 ? '0' : ''
+	}${day} ${hours}:${minutes < 10 ? '0' : ''}${minutes} ${amOrPm}`;
 
 	return formattedDateTime;
-}
+};
+
+export const formatUTCDateOnly = (date: string) => {
+	const utcDate = new Date(date); // Convert the UTC date string to a JavaScript Date object
+	const year = utcDate.getFullYear(); // Extract individual components of the date
+	const month = utcDate.getMonth() + 1; // Adding 1 since months are zero-indexed
+	const day = utcDate.getDate();
+	// Construct the formatted date and time string
+	const formattedDateTime = `${year}${month < 10 ? '0' : ''}${month}${
+		day < 10 ? '0' : ''
+	}${day}`;
+
+	return formattedDateTime;
+};

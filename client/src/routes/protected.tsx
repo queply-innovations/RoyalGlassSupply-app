@@ -1,24 +1,29 @@
 import { Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
-import { Spinner } from '@/components/Loader';
-import { Loading } from '@/components/Loading';
+// import { Spinner } from '@/components/Loader';
+// import { Loading } from '@/components/Loading';
 import { lazyImport } from '@/utils/lazyImport';
 import { ProgressBar } from '@/components';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
-const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
-const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
+// const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
+// const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
 const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
-const { PendingInventory } = lazyImport(
-	() => import('@/pages'),
-	'PendingInventory',
+const { Invoice } = lazyImport(() => import('@/pages/__test__'), 'Invoice');
+const { PointOfSalePage } = lazyImport(
+	() => import('@/pages/__test__'),
+	'PointOfSalePage',
 );
-const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
-const { PendingTransfer } = lazyImport(
-	() => import('@/pages'),
-	'PendingTransfer',
-);
+// const { PendingInventory } = lazyImport(
+// () => import('@/pages'),
+// 'PendingInventory',
+// );
+// const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
+// const { PendingTransfer } = lazyImport(
+// () => import('@/pages'),
+// 'PendingTransfer',
+// );
 const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
 const { ProductPrices } = lazyImport(
 	() => import('@/pages/__test__'),
@@ -57,11 +62,17 @@ const App = () => {
 };
 
 const protectedRoutesConfig = [
-	// { path: '*', element: <Navigate to="." /> },
+	{ path: '*', element: <Navigate to="." /> },
 	{ path: '/', element: <Navigate to="/dashboard" /> },
 	{ path: '/dashboard', element: <Dashboard /> },
 	{ path: '/user/information', element: <UserInfo /> },
 	{ path: '/user/sales', element: <UserSales /> },
+	{ path: '/test', element: <Invoice /> },
+	// TODO ! add POS PAGE
+	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
+	{ path: '/pos/add-order', element: <PointOfSalePage /> },
+	{ path: '/pos/add-product', element: <PointOfSalePage /> },
+	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
 	{ path: '/pending/inventory', element: <PendingInventory /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
@@ -70,8 +81,8 @@ const protectedRoutesConfig = [
 	{ path: '/transaction/expenses', element: <Expenses /> },
 	{ path: '/returns', element: <Return /> },
 	{ path: '/inventory', element: <Inventory /> },
-	{ path: '/finance', element: <Finance /> },
-	{ path: '/reports', element: <Reports /> },
+	// { path: '/finance', element: <Finance /> },
+	// { path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },

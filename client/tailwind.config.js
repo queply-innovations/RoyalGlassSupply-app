@@ -57,6 +57,8 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
+				'pos-primary-background':
+					'rgb(var(--pos-primary-background) / <alpha-value>)',
 			},
 			keyframes: {
 				'fade-in': {

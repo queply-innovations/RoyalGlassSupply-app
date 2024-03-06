@@ -20,7 +20,7 @@ class InvoiceResource extends JsonResource
             'customer' => new CustomerResource($this->customer),
             'warehouse' => new WarehouseResource($this->warehouse),
             'issued_by' => new UserResource($this->issuedBy),
-            'type', => $this->type,
+            'type' => $this->type,
             'payment_method' => $this->payment_method,
             'reference_no' => $this->reference_no,
             'subtotal' => $this->subtotal,
