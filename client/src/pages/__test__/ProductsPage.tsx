@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { ProductsProvider } from '@/features/product/__test__/context/ProductContext';
 import { MainLayout } from '@/layouts/MainLayout';
-import { Form } from '@/features/product/__test__/components/forms/Form';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { ProductsTable } from '@/features/product/__test__/components';
 import { Product as IProduct } from '@/features/product/__test__/types';
 import { useModal } from '@/utils/Modal';
-import { ProductDetails } from '@/features/product/__test__/components/ProductDetails';
+import { AddProductForm } from '@/features/product/__test__/components/forms/AddProdForm';
 
 export const Products = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -28,9 +27,13 @@ export const Products = () => {
 						</div>
 					</div>
 
-					{/* <ModalTest isOpen onClose={closeModal} title="Add Products">
-						<Form onClose={closeModal} />
-					</ModalTest> */}
+					<ModalTest
+						isOpen={isOpen}
+						onClose={closeModal}
+						title="Add Products"
+					>
+						<AddProductForm onClose={closeModal} />
+					</ModalTest>
 				</ProductsProvider>
 			</MainLayout>
 		</>

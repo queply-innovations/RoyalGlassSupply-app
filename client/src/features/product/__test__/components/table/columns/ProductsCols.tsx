@@ -1,8 +1,16 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Product } from '../../../types';
-import { Button } from '@/components';
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components';
 import { SortIcon } from '@/assets/icons';
-import { FaPencilAlt } from 'react-icons/fa';
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
@@ -90,21 +98,34 @@ export const ProductsCols = ({
 			cell: ({ row }) => {
 				const productRow = row.original;
 				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleEditProduct(productRow)}
-							className="flex flex-row items-center gap-2"
-						>
-							<FaPencilAlt /> Edit
-						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveProduct(productRow)}
-						>
-							Remove
-						</Button>
+					<div className="flex flex-row justify-end text-xs font-normal uppercase">
+						<DropdownMenu>
+							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+								<MoreVertical size={16} strokeWidth={2.25} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleEditProduct(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span className="font-medium">Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => handleRemoveProduct(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-100 hover:text-red-700"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Trash2 size={16} strokeWidth={2.25} />
+									</span>
+									<span className="font-medium">Delete</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				);
 			},

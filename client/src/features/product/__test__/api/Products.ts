@@ -30,12 +30,7 @@ export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 		});
 };
 
-export const addProduct = async (
-	data: Omit<Product, 'id'>,
-): Promise<{
-	status: number;
-	data: Product;
-}> => {
+export const addProduct = async (data: Omit<Product, 'id'>) => {
 	return await axios
 		.post(API_URLS.PRODUCTS, data, {
 			headers: API_HEADERS(),
