@@ -4,7 +4,7 @@ import { Button, Inputbox } from '@/components';
 import { UseModalProps } from '@/utils/Modal';
 // import { useWarehouse } from '..';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
-import { useUserInfoMutation } from '../hooks';
+import { useUserInfoAddition } from '../hooks';
 
 interface UserInfoFormProps {
 	isUpdate?: boolean;
@@ -16,26 +16,29 @@ const UserInfoForm = ({
 	onClose,
 }: UserInfoFormProps) => {
 	const {
-		value: userInfoForm,
-		setValue: setUserInfoForm,
+		user,
+		isChanged,
+		isSubmitting,
+		error,
+		success,
+		handleSubmit,
 		handleChange,
-		addUserMutation,
-	} = useUserInfoMutation();
+	} = useUserInfoAddition();
 
 	// TODO: Need to handle setValue when isUpdate and isDelete is true to pass data to form
 	// TODO: maybe need to pass UserInfoData selected from Context to setValue
 
-	const handleSubmit = async () => {
-		console.log('userInfoForm:', userInfoForm);
-		try {
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			// * call addUserMutation to Add User
-			await addUserMutation(userInfoForm);
-			onClose();
-		} catch (error) {
-			console.error('User Data submission failed', error);
-		}
-	};
+	// const handleSubmit = async () => {
+	// 	console.log('userInfoForm:', userInfoForm);
+	// 	try {
+	// 		await new Promise(resolve => setTimeout(resolve, 1000));
+	// 		// * call addUserMutation to Add User
+	// 		await addUserMutation(userInfoForm);
+	// 		onClose();
+	// 	} catch (error) {
+	// 		console.error('User Data submission failed', error);
+	// 	}
+	// };
 
 	//TODO: Check what's wrong with form when filling up values
 
@@ -56,7 +59,7 @@ const UserInfoForm = ({
 								</span>
 								<Inputbox
 									name="id"
-									value={userInfoForm?.id || 0}
+									value={user.id || 0}
 									type="number"
 									disabled={true}
 								/>
@@ -68,7 +71,7 @@ const UserInfoForm = ({
 								<Inputbox
 									name="firstName"
 									placeholder="User First Name"
-									value={userInfoForm?.firstName || ''}
+									value={user.firstName || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -80,7 +83,7 @@ const UserInfoForm = ({
 								<Inputbox
 									name="lastName"
 									placeholder="User Last Name"
-									value={userInfoForm?.lastName || ''}
+									value={user.lastName || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -96,7 +99,7 @@ const UserInfoForm = ({
 									name="email"
 									placeholder="User Email Address"
 									type="string"
-									value={userInfoForm?.email || ''}
+									value={user.email || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -109,7 +112,7 @@ const UserInfoForm = ({
 									name="contactNumber"
 									placeholder="User Contact Number"
 									type="string"
-									value={userInfoForm?.contactNumber || ''}
+									value={user.contact_no || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -122,7 +125,7 @@ const UserInfoForm = ({
 									name="posiiton"
 									placeholder="User Position"
 									type="string"
-									value={userInfoForm?.position || ''}
+									value={user.position || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -138,7 +141,7 @@ const UserInfoForm = ({
 									name="username"
 									placeholder="User Username"
 									type="string"
-									value={userInfoForm?.username || ''}
+									value={user.username || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -151,7 +154,7 @@ const UserInfoForm = ({
 									name="password"
 									placeholder="User Password"
 									type="password"
-									value={userInfoForm?.password || ''}
+									value={user.password || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -178,7 +181,7 @@ const UserInfoForm = ({
 								type="submit"
 								// onClick={handleSubmit}
 							>
-								{'Add Warehouse'}
+								{'Add User'}
 							</Button>
 							<Button
 								fill={'red'}
@@ -189,7 +192,7 @@ const UserInfoForm = ({
 								Cancel
 							</Button>
 							<Button
-								onClick={() => console.log(userInfoForm)}
+								onClick={() => console.log(user)}
 								type="button"
 							>
 								console form

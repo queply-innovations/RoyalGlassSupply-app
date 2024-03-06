@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
 					/>
 				</div>
 				<div className="flex flex-row-reverse gap-3">
-					<Button fill={'green'} onClick={openModal}>
+					<Button fill={'green'} onClick={() => openModal(data, 'add')}>
 						{`Add ${dataType}`}
 					</Button>
 				</div>

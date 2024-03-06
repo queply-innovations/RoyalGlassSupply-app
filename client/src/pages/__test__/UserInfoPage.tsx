@@ -26,7 +26,7 @@ export const UserInfo = () => {
 				<UserInfoProvider>
 					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<UserInfoTable openModal={openUserInfoModal} />
+							<UserInfoTable openModal={openUserInfoModal}/>
 						</div>
 					</div>
 					<ModalTest

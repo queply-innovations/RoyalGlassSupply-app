@@ -1,5 +1,6 @@
 import { API_HEADERS, API_URLS } from '@/api';
 import { User } from '../types';
+import { User as IUser } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
 import { RolePermissions, Roles } from '../types';
@@ -147,7 +148,7 @@ export const editUser = async (data: any) => {
 	});
 };
 
-export const addUser = async (data: User) => {
+export const addUser = async (data: IUser) => {
 	try {
 		const response = await axios
 			.post(API_URLS.WAREHOUSE, data, {

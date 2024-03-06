@@ -6,18 +6,18 @@ import { useUserInfo } from '../context/UserInfoContext';
 import { useState, ChangeEvent } from 'react';
 import { Roles, User } from '../types';
 
-export const useUserInfoMutation = (selectedUser: User, roles: any) => {
+export const useUserInfoAddition = () => {
 	const queryClient = useQueryClient();
 
 	const [ user, setUser ] = useState({
-		firstname: selectedUser.firstname,
-		lastname: selectedUser.lastname,
-		username: selectedUser.username,
-		email: selectedUser.email,
-		contact_no: selectedUser.contact_no,
-		position: selectedUser.position,
-		user_id: selectedUser.id,
-		role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+		firstName: '',
+		lastName: '',
+		username: '',
+		email: '',
+		password: '',
+		contact_no: '',
+		position: '',
+		id: 0,
 	});
 
 	// const [ roleId, setRoleId ] = useState(roles.find((role: Roles) => role.title === selectedUser.position)?.id);
@@ -34,17 +34,11 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 			...prev,
 			[e.target.name]: e.target.value,
 		}));
-		if (e.target.name === 'position') {
-			setUser(prev => ({
-				...prev,
-				role_id: roles.find((role: Roles) => role.title === e.target.value)?.id,
-			}));
-		}
 	};
 
 	const handleSubmit = async () => {
 		setIsSubmitting(true);
-		return await editUserMutation(user);
+		return await addUserMutation(user);
 	};
 
 	// Configurations for mutation
@@ -63,9 +57,9 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		},
 	};
 
-	const { mutateAsync: editUserMutation } = useMutation({
-		mutationKey: ['editUser'],
-		mutationFn: editUser,
+	const { mutateAsync: addUserMutation } = useMutation({
+		mutationKey: ['addUser'],
+		mutationFn: addUser,
 		...mutationConfig,
 	});
 
@@ -79,6 +73,6 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		success,
 		handleSubmit,
 		handleChange,
-		editUserMutation,
+		addUserMutation,
 	};
 };
