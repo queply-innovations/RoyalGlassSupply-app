@@ -16,7 +16,7 @@ class ReportController extends Controller
 {
     public function sales(Request $request)
     {
-        //filters include warehouse, type (daily, monthly, custom)
+        //filters include warehouse, type (daily, weekly, monthly, custom)
 
         if($request->warehouse!="all"){
             if($request->type=="daily"){
@@ -33,7 +33,7 @@ class ReportController extends Controller
             }
             elseif($request->type=="weekly"){
                 $result = Invoice::select(
-                    DB::raw("DATE_FORMAT(created_at, '%u') as formatted_date"),
+                    DB::raw("DATE_FORMAT(created_at, 'Week %u of %Y') as formatted_date"),
                     DB::raw("sum(total_amount_due) as total_sales")
                 )
                 ->where('type', 'payment')
@@ -80,7 +80,7 @@ class ReportController extends Controller
             }
             elseif($request->type=="weekly"){
                 $result = Invoice::select(
-                    DB::raw("DATE_FORMAT(created_at, '%u') as formatted_date"),
+                    DB::raw("DATE_FORMAT(created_at, 'Week %u of %Y') as formatted_date"),
                     DB::raw("sum(total_amount_due) as total_sales")
                 )
                 ->where('type', 'payment')
