@@ -11,7 +11,7 @@ import {
 	useState,
 	useEffect,
 } from 'react';
-import { CurrentOrder, Items, Products } from '../types';
+import { CurrentOrder, Items } from '../types';
 
 interface PosContextProps {
 	products: Product[];

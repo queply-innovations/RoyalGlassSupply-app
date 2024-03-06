@@ -2,10 +2,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { usePos } from '../../context/PosContext';
 import { PosTable } from './PosTable';
 import { Items } from '../../types';
-import { Product } from '@/features/product/__test__/types';
 import { Button } from '@/components';
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
 import { TablePlacholder } from './EmptyPlaceholder';
 
 interface CreateOrderTableProps {}
