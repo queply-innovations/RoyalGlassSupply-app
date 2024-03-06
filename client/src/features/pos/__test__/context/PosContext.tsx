@@ -21,6 +21,7 @@ interface PosContextProps {
 	selectedProducts: Items[];
 	setSelectedProducts: (product: Items[]) => void;
 	order: CurrentOrder;
+	quantityHandler: (productId: number, newQuantity: number) => void;
 }
 interface PosProviderProps {
 	children: ReactNode;
@@ -32,6 +33,31 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 	const [order, setOrder] = useState<CurrentOrder>({} as CurrentOrder);
 	const { data: products } = useProductQuery();
 	const { data: productInfo, isLoading } = useProductPricesQuery();
+	const quantityHandler = (productId: number, newQuantity: number) => {
+		console.log('quantityHandler', productId, newQuantity);
+		if (newQuantity > 0) {
+			setSelectedProducts(prevSelectedProducts =>
+				prevSelectedProducts.map((item, index) => {
+					if (index === productId) {
+						// Ensure that `price` property exists and is a number
+						if (typeof item.price === 'number') {
+							return {
+								...item,
+								quantity: newQuantity,
+								subtotal: item.price * newQuantity,
+							};
+						}
+					}
+					return item;
+				}),
+			);
+		} else {
+			setSelectedProducts(prevSelectedProducts =>
+				prevSelectedProducts.filter((_, index) => index !== productId),
+			);
+		}
+	};
+
 	useEffect(() => {
 		let totalItems = 0;
 		let totalAmount = 0;
@@ -46,6 +72,7 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		});
 	}, [selectedProducts]);
 	const value = {
+		quantityHandler,
 		order,
 		products,
 		productInfo,
