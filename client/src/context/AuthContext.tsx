@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 				setAuth({
 					username: response.user.username,
-					id: response.user.id,
+					user: response.user.id,
 					token: response.token,
 					authenticated: true,
 					role: userRole,

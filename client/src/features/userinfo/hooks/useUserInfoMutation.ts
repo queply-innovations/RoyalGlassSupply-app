@@ -29,6 +29,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 
 	const handleChange = (e: any) => {
 		setIsChanged(true);
+		setSuccess(null);
 		setUser(prev => ({
 			...prev,
 			[e.target.name]: e.target.value,
@@ -54,9 +55,6 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('User info has been updated');
-			setTimeout(() => {
-				setSuccess(null);
-			}, 8000);
 		},
 		onError: (error: any) => {
 			console.error(error);

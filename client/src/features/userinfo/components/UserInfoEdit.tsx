@@ -1,11 +1,12 @@
 import { UseModalProps } from '@/utils/Modal';
-import { Button } from '@/components';
+import { Button, Loading } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { useUserInfo } from '../context/UserInfoContext';
 import { getRoles } from '../api/UserInfo';
 import { useEffect, useState } from 'react';
 import { Roles, User } from '../types';
 import { useUserInfoMutation } from '../hooks';
+import { useAuth } from '@/context/AuthContext';
 
 interface UserInfoProps {
 	onClose: UseModalProps['closeModal'];
@@ -13,6 +14,7 @@ interface UserInfoProps {
 
 export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 	const { selectedUser, roles } = useUserInfo();
+	const { auth } = useAuth();
 
 	const {
 		user,
@@ -26,6 +28,15 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 
 	return (
 		<>
+			{selectedUser.id === auth.user && (
+				<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4">
+					<div className="flex flex-col col-span-6 font-bold text-red-700 text-start">
+						Warning: Be careful! You are editing your own account.
+						<br />
+						You are at risk of locking yourself out.
+					</div>
+				</div>
+			)}
 			<form
 				onSubmit={async e => {e.preventDefault(); handleSubmit;}}
 			>
@@ -109,46 +120,41 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}>
 								{roles.map((role: Roles) => {
 									return (
-										// role.title === user.position ? (
-										// 	<option 
-										// 		key={role.id} 
-										// 		value={role.title}
-										// 		selected
-										// 		>
-										// 		{role.title.charAt(0).toUpperCase() + 
-										// 		role.title.slice(1)}
-										// 	</option>
-										// ) : (
-											<option 
-												key={role.id} 
-												value={role.title}
-												>
-												{role.title.charAt(0).toUpperCase() + 
-												role.title.slice(1)}
-											</option>
-										// )
+										<option 
+											key={role.id} 
+											value={role.title}
+											>
+											{role.title.charAt(0).toUpperCase() + 
+											role.title.slice(1)}
+										</option>
 									);
 								})}
 							</select>
 						</div>
 					</div>
 					
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4 text-center">
-						<Button
-							type="submit"
-							fill={isChanged ? 'green' : null}
-							disabled={isChanged ? false : true}
-							onClick={handleSubmit}
-						>
-							{!isSubmitting ? 'Edit User' : 'Submitting'}
-						</Button>
-						<div className="col-span-3">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-8 gap-4 text-center">
+						<div className="flex flex-col col-span-2 gap-3">
+							<Button
+								type="submit"
+								fill={isChanged ? 'green' : null}
+								disabled={isChanged ? false : true}
+								onClick={handleSubmit}
+							>
+								{!isSubmitting ? 'Edit User' : 'Submitting'}
+							</Button>
+						</div>
+						<div className="flex flex-col col-span-3 items-start">
 							{success && (
 								<div className="font-bold text-green-700">{success}</div>
 							)}
 							{error && (
 								<div className="font-bold text-red-700">{error}</div>
 							)}
+							{!isSubmitting ? '' : 
+								<div className="flex flex-col flex-wrap items-start"> 
+									<Loading width={30} height={30} /> 
+								</div>}
 						</div>
 					</div>
 				</div>
