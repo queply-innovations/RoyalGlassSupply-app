@@ -10,25 +10,22 @@ import {
 	DropdownMenuTrigger,
 } from '@/components';
 import { SortIcon } from '@/assets/icons';
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil } from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
-	handleRemoveProduct: (product: Product) => void;
 }
 
 /**
  * Generates column definition for the Products table.
  *
  * @param handleEditProduct - Callback to edit product.
- * @param handleRemoveProduct - Callback to remove product.
  * @returns Column definition for the Products table.
  */
 export const ProductsCols = ({
 	handleEditProduct,
-	handleRemoveProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
 		{
@@ -114,15 +111,6 @@ export const ProductsCols = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span className="font-medium">Edit</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleRemoveProduct(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-100 hover:text-red-700"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Trash2 size={16} strokeWidth={2.25} />
-									</span>
-									<span className="font-medium">Delete</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

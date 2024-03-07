@@ -20,8 +20,6 @@ export const ProductPrices = () => {
 	const [modalAction, setModalAction] = useState<string>('');
 	console.log('modal state: ', isOpen);
 
-	const closeModalWithConfirmation = () => {};
-
 	const modalHandler = (
 		productPrice: ProdPriceType | ProductType,
 		action: string,

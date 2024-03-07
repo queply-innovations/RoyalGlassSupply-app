@@ -24,17 +24,17 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 	};
 
 	// Modal handler to remove product
-	const handleRemoveProduct = (product: Product) => {
-		setSelectedProduct(product);
-		openModal(product, 'remove');
-	};
+	// const handleRemoveProduct = (product: Product) => {
+	// 	setSelectedProduct(product);
+	// 	openModal(product, 'remove');
+	// };
 
 	return (
 		<>
 			<DataTable
 				columns={
 					auth?.role === 'super_admin' || auth?.role === 'admin'
-						? ProductsCols({ handleEditProduct, handleRemoveProduct })
+						? ProductsCols({ handleEditProduct })
 						: ProductsColsLimited
 				}
 				data={data}

@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchProducts, fetchProductPrices, addProduct } from '../api/Products';
-import { useProducts } from '../context/ProductContext';
+import { addProduct, patchProduct } from '../api/Products';
 import { Product } from '../types';
 import { useState } from 'react';
 
@@ -24,11 +23,11 @@ export const useProductMutation = () => {
 		console.log('Submitting: ', args);
 		if (args.action === 'add') {
 			return await addProductMutation(args.data);
-			// } else if (args.action === 'update') {
-			//     return await patchProductMutation({
-			//         id: args.id,
-			//         data: args.data,
-			//     });
+		} else if (args.action === 'update') {
+			return await patchProductMutation({
+				id: args.id,
+				data: args.data,
+			});
 		} else {
 			const message =
 				'No data to submit. Function requires at least one parameter.';
@@ -48,8 +47,14 @@ export const useProductMutation = () => {
 	};
 
 	const { mutateAsync: addProductMutation } = useMutation({
-		mutationKey: ['addProductListing'],
+		mutationKey: ['addProduct'],
 		mutationFn: addProduct,
+		...mutationConfig,
+	});
+
+	const { mutateAsync: patchProductMutation } = useMutation({
+		mutationKey: ['patchProduct'],
+		mutationFn: patchProduct,
 		...mutationConfig,
 	});
 

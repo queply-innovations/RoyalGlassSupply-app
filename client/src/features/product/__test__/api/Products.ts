@@ -30,7 +30,7 @@ export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 		});
 };
 
-export const addProduct = async (data: Omit<Product, 'id'>) => {
+export const addProduct = async (data: Omit<Partial<Product>, 'id'>) => {
 	return await axios
 		.post(API_URLS.PRODUCTS, data, {
 			headers: API_HEADERS(),
@@ -41,6 +41,32 @@ export const addProduct = async (data: Omit<Product, 'id'>) => {
 		.catch(error => {
 			console.error('Error adding product:', error);
 			throw error;
+		});
+};
+
+export const patchProduct = async ({
+	id,
+	data,
+}: {
+	id: number;
+	data: Omit<Partial<Product>, 'id'>;
+}) => {
+	return await axios
+		.patch(`${API_URLS.PRODUCTS}/${id}`, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			return error.response
+				? {
+						status: error.response.status as number,
+						data: error.response.data,
+					}
+				: error.request
+					? { status: 500, data: error.request }
+					: { status: 500, data: error.message };
 		});
 };
 

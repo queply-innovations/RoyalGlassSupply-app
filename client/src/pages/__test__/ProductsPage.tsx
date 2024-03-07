@@ -6,6 +6,7 @@ import { ProductsTable } from '@/features/product/__test__/components';
 import { Product as IProduct } from '@/features/product/__test__/types';
 import { useModal } from '@/utils/Modal';
 import { AddProductForm } from '@/features/product/__test__/components/forms/AddProdForm';
+import { EditProductForm } from '@/features/product/__test__/components/forms/EditProdForm';
 
 export const Products = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -30,9 +31,16 @@ export const Products = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
-						title="Add Products"
+						title={modalAction === 'add' ? 'Add Product' : 'Edit Product'}
 					>
-						<AddProductForm onClose={closeModal} />
+						<>
+							{modalAction === 'add' && (
+								<AddProductForm onClose={closeModal} />
+							)}
+							{modalAction === 'edit' && (
+								<EditProductForm onClose={closeModal} />
+							)}
+						</>
 					</ModalTest>
 				</ProductsProvider>
 			</MainLayout>

@@ -4,17 +4,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Button } from '@/components';
+import { useProducts } from '../..';
 
-interface AddProductFormProps {
+interface EditProductFormProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-export const AddProductForm = ({ onClose }: AddProductFormProps) => {
+export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 	const {
 		value: FormValue,
 		handleChange,
 		handleSubmit,
 	} = useProductMutation();
+	const { selectedProduct } = useProducts();
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -25,13 +27,14 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
 					const response = await handleSubmit({
-						action: 'add',
+						action: 'update',
+						id: selectedProduct.id,
 						data: FormValue,
 					});
-					response?.status === 200
+					response?.status
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to submit product'));
+							setError('Failed to update product'));
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
@@ -49,7 +52,13 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								type="text"
 								maxLength={100}
 								required
-								placeholder="Product name..."
+								defaultValue={
+									FormValue.name
+										? FormValue.name
+										: selectedProduct.name
+											? selectedProduct.name
+											: ''
+								}
 								onChange={e => handleChange('name', e.target.value)}
 							/>
 						</div>
@@ -66,7 +75,13 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								type="text"
 								maxLength={100}
 								required
-								placeholder="Serial number..."
+								defaultValue={
+									FormValue.serial_no
+										? FormValue.serial_no
+										: selectedProduct.serial_no
+											? selectedProduct.serial_no
+											: ''
+								}
 								onChange={e =>
 									handleChange('serial_no', e.target.value)
 								}
@@ -85,7 +100,13 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								type="text"
 								maxLength={100}
 								required
-								placeholder="e.g. medium..."
+								defaultValue={
+									FormValue.size
+										? FormValue.size
+										: selectedProduct.size
+											? selectedProduct.size
+											: ''
+								}
 								onChange={e => handleChange('size', e.target.value)}
 							/>
 						</div>
@@ -102,7 +123,13 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								type="text"
 								maxLength={40}
 								required
-								placeholder="e.g. white..."
+								defaultValue={
+									FormValue.color
+										? FormValue.color
+										: selectedProduct.color
+											? selectedProduct.color
+											: ''
+								}
 								onChange={e => handleChange('color', e.target.value)}
 							/>
 						</div>
@@ -117,7 +144,13 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								id="notes"
 								name="notes"
 								type="text"
-								placeholder="Type product notes here..."
+								defaultValue={
+									FormValue.notes
+										? FormValue.notes
+										: selectedProduct.notes
+											? selectedProduct.notes
+											: ''
+								}
 								onBlur={e => handleChange('notes', e.target.value)}
 							/>
 						</div>
