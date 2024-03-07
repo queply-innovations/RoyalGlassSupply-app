@@ -42,8 +42,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	const handleAddTransfer = () => {
 		openModal({} as Transfer, 'add');
 	};
-
-	// console.log(transfers);
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
@@ -76,18 +74,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			accessorKey: 'code',
 			header:	() => <div>TRANSFER CODE</div>,
 		},
-
-		// {
-		// 	accessorKey: 'created_by',
-		// 	header:	() => <div>CREATED BY</div>,
-		// 	cell: ({ row }) => {
-		// 		const created_by: any = row.getValue('created_by');
-		// 		const format = created_by.firstname + ' ' + created_by.lastname;
-		// 		return (
-		// 			<div id={created_by.id}>{format}</div>
-		// 		);
-		// 	},
-		// },
 
 		{
 			accessorKey: 'source',
@@ -154,60 +140,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				);
 			},
 		},
-
-		// {
-		// 	accessorKey: 'received_by',
-		// 	header:	() => <div>RECEIVED BY</div>,
-		// 	cell: ({ row }) => {
-		// 		const received_by: any = row.getValue('received_by');
-		// 		const format = received_by.firstname + ' ' + received_by.lastname;
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'created_at',
-		// 	header:	() => <div>CREATED AT</div>,
-		// 	cell: ({ row }) => {
-		// 		const sched: any = row.getValue('created_at');
-		// 		const details = { year: 'numeric', month: 'long', day: 'numeric' };
-		// 		const format = new Date(sched).toLocaleDateString([], details);
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'updated_at',
-		// 	header:	() => <div>UPDATED AT</div>,
-		// 	cell: ({ row }) => {
-		// 		const sched: any = row.getValue('updated_at');
-		// 		const details = { year: 'numeric', month: 'long', day: 'numeric' };
-		// 		const format = new Date(sched).toLocaleDateString([], details);
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'notes',
-		// 	header:	() => <div>NOTES</div>,
-		// 	cell: ({ row }) => {
-		// 		if (row.getValue('notes')) {
-		// 			return (
-		// 				<div>{row.getValue('notes')}</div>
-		// 			);
-		// 		} else {
-		// 			return (
-		// 				<div>N/A</div>
-		// 			);
-		// 		}
-		// 	},
-		// },
 
 		{
 			id: 'actions',
