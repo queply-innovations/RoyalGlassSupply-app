@@ -15,22 +15,6 @@ const Sidebar = ({}: SidebarProps) => {
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
 
-	// const [open, setOpen] = useState("");
-
-	// const handleClick = (itemId: string) => setOpen(itemId);
-
-	// const [ sidebar , setSidebar ] = useState(SidebarRoute);
-	// useEffect(() => {
-	// 	const filteredRoute = sidebar.map(route => (
-	// 		{
-	// 			...route, child: route.child?.filter(
-	// 				subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
-	// 			)
-	// 		}
-	// 	));
-	// 	setSidebar(filteredRoute);
-	// }, []);
-
 	return (
 		<>
 			<div className="relative flex w-1/6 min-w-[230px] max-w-[230px] flex-row overflow-y-hidden border-e border-slate-500/20 text-sm text-slate-800">
@@ -76,13 +60,17 @@ const Sidebar = ({}: SidebarProps) => {
 								</div>
 							) : (
 								group.items.map((item, index) => (
-									<SidebarItem
-										key={index}
-										item={item}
-										pathname={pathname}
-										openedItem={openedItem}
-										setOpenedItem={setOpenedItem}
-									/>
+									item.allowedRoles.includes(
+										auth.role as Role,
+									) && (
+										<SidebarItem
+											key={index}
+											item={item}
+											pathname={pathname}
+											openedItem={openedItem}
+											setOpenedItem={setOpenedItem}
+										/>
+									)
 								))
 							);
 						})}
