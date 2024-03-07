@@ -20,12 +20,14 @@ interface SelectboxProps
 	options: string[];
 	hasFrequency?: boolean;
 	frequencyOptions?: string[];
+	placeholder: string;
 }
 
 const Selectbox: FC<SelectboxProps> = ({
 	className,
 	variant,
 	options,
+	placeholder,
 	hasFrequency,
 	frequencyOptions,
 	...props
@@ -38,7 +40,7 @@ const Selectbox: FC<SelectboxProps> = ({
 				{...props}
 			>
 				<option value="DEFAULT" hidden>
-					Sort By
+					{placeholder}
 				</option>
 				{options.map((option, index) => (
 					<option

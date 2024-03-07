@@ -1,11 +1,10 @@
-import { User } from '@/features/auth/types';
 import { Warehouse } from '@/features/warehouse/__test__/types';
 
 export interface Product {
 	id: number;
 	name: string;
-	serial_no: number;
-	brand: string;
+	serial_no: string;
+	// brand: string; // ? Not in database table
 	size: string;
 	color: string;
 	notes: string;
@@ -18,7 +17,7 @@ interface ProductEditor {
 }
 export interface ProductPrices {
 	id: number;
-	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
+	product: Partial<Product>;
 	type: 'retail' | 'wholesale' | string;
 	unit: string;
 	stocks_quantity: number;

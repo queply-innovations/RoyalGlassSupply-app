@@ -12,6 +12,11 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 	const { auth } = useAuth();
 	const { data, isLoading, setSelectedProduct } = useProducts();
 
+	// Modal handler to add product
+	const handleAddProduct = () => {
+		openModal({} as Product, 'add');
+	};
+
 	// Modal handler to edit product
 	const handleEditProduct = (product: Product) => {
 		setSelectedProduct(product);
@@ -35,7 +40,7 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 				data={data}
 				filterWhat={'name'}
 				dataType={'Product'}
-				openModal={openModal}
+				openModal={handleAddProduct}
 				isLoading={isLoading}
 			/>
 		</>

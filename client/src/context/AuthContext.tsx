@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { UserResponse, getUserRole } from '@/features/auth';
+import { User, UserResponse, getUserRole } from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
@@ -8,7 +8,6 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
-import { User } from '@/features/auth/types';
 
 interface AuthProps {
 	user: User;

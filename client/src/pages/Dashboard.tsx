@@ -5,7 +5,7 @@ import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellin
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
 import { FC } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Button } from '@/components';
 import { useAuth } from '@/context/AuthContext';
@@ -16,8 +16,8 @@ import { useAuth } from '@/context/AuthContext';
 
 export const Dashboard = () => {
 	const { auth, logout } = useAuth();
-	const { state } = useLocation();
-	console.log(state);
+
+	const navigate = useNavigate();
 
 	return (
 		<LayoutWrapper>
@@ -35,10 +35,17 @@ export const Dashboard = () => {
 					</Button>
 					<Button
 						className="w-1/4"
-						fill={'red'}
-						onClick={() => console.log('LOGGED OUT', logout())}
+						fill={'yellow'}
+						onClick={() => navigate('/test')}
 					>
-						LOGOUT
+						PATH TO TEST
+					</Button>
+					<Button
+						className="w-1/4"
+						fill={'yellow'}
+						onClick={() => navigate('/pos')}
+					>
+						PATH TO POS
 					</Button>
 				</div>
 				<div className="infobox-container flex flex-row justify-between gap-8">
