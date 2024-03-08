@@ -1,5 +1,5 @@
 import { API_HEADERS, API_URLS } from '@/api';
-import { User } from '../types';
+import { User, UserAdd } from '../types';
 import { User as IUser } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
@@ -148,13 +148,13 @@ export const editUser = async (data: any) => {
 	});
 };
 
-export const addUser = async (data: IUser) => {
+export const addUser = async (data: UserAdd) => {
 	try {
 		const response = await axios
-			.post(API_URLS.WAREHOUSE, data, {
+			.post(API_URLS.REGISTER, data, {
 				headers: {
-					Authorization: `Bearer ${storage.getToken()}`,
-					'Content-Type': 'application/json',
+					// Authorization: `Bearer ${storage.getToken()}`,
+					'Accept': 'application/json',
 				},
 			});
 		return response.data;

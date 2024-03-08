@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Roles, User } from '../types';
 import { useUserInfoMutation } from '../hooks';
 import { useAuth } from '@/context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 interface UserInfoProps {
 	onClose: UseModalProps['closeModal'];
@@ -28,7 +29,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 
 	return (
 		<>
-			{selectedUser.id === auth.user && (
+			{selectedUser.id === auth.user.id && (
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4">
 					<div className="flex flex-col col-span-6 font-bold text-red-700 text-start">
 						Warning: Be careful! You are editing your own account.
@@ -116,19 +117,29 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							<select 
 								name="position"
 								className="flex flex-col gap-5" 
-								defaultValue={user.position} 
+								defaultValue={user.position.charAt(0).toLowerCase() + user.position.slice(1)} 
 								onChange={handleChange}>
-								{roles.map((role: Roles) => {
-									return (
-										<option 
-											key={role.id} 
-											value={role.title}
-											>
-											{role.title.charAt(0).toUpperCase() + 
-											role.title.slice(1)}
-										</option>
-									);
-								})}
+								{roles ? (
+									roles.map((role: Roles) => {
+										return (
+											<option 
+												key={role.id} 
+												value={role.title}
+												>
+												{role.title.charAt(0).toUpperCase() + 
+												role.title.slice(1)}
+											</option>
+										);
+									})
+								) : (
+									<div className="flex h-12 w-full items-center justify-center">
+										<Loader2
+											size={22}
+											strokeWidth={2.5}
+											className="animate-spin text-slate-700/50"
+										/>
+									</div>
+								)}
 							</select>
 						</div>
 					</div>
@@ -155,6 +166,15 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								<div className="flex flex-col flex-wrap items-start"> 
 									<Loading width={30} height={30} /> 
 								</div>}
+						</div>
+						<div className="flex flex-col col-span-3 gap-3 items-end">
+							<Button
+								type="reset"
+								fill={'red'}
+								onClick={onClose}
+							>
+								Cancel
+							</Button>
 						</div>
 					</div>
 				</div>

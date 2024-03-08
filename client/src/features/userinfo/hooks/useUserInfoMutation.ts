@@ -3,7 +3,7 @@ import {
 	addUser, editUser,
 } from '../api/UserInfo';
 import { useUserInfo } from '../context/UserInfoContext';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { Roles, User } from '../types';
 
 export const useUserInfoMutation = (selectedUser: User, roles: any) => {
@@ -17,8 +17,17 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		contact_no: selectedUser.contact_no,
 		position: selectedUser.position,
 		user_id: selectedUser.id,
-		role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+		role_id: 0,
 	});
+
+	useEffect(() => {
+		if (roles){
+			setUser(prev => ({
+				...prev,
+				role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+			}));
+		}
+	}, [roles]);
 
 	// const [ roleId, setRoleId ] = useState(roles.find((role: Roles) => role.title === selectedUser.position)?.id);
 

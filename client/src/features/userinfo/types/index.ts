@@ -8,6 +8,19 @@ export interface User {
 	contact_no: string;
 }
 
+export interface UserAdd {
+	id: number;
+	username: string;
+	email: string;
+	firstname: string;
+	lastname: string;
+	position: string;
+	contact_no: string;
+	password: string;
+	password_confirmation: string;
+	active_status: string;
+}
+
 export interface UserResponse {
 	user: User;
 	token: string;

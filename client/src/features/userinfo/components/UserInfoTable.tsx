@@ -105,16 +105,11 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 				return (
 					<div className="flex flex-row text-xs font-normal uppercase">
 						<Button 
-							fill={progress2 === 0 ? null : 'yellow'} 
-							textColor={'black'} 
-							disabled={progress2 === 0 ? true : false}
+							fill={'yellow'} 
+							textColor={'black'}
 							onClick={() => handleEditUser(userinfoRow)}
 						>
-							{progress2 === 0 ? <Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-																	/> : "Edit User"}
+							Edit User
 						</Button>
 					</div>
 				);

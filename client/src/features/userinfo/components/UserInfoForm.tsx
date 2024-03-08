@@ -1,10 +1,13 @@
 //TODO: ADD FORM FOR FILL UP HERE
 import { useEffect } from 'react';
-import { Button, Inputbox } from '@/components';
+import { Button, Inputbox, Selectbox, Loading } from '@/components';
 import { UseModalProps } from '@/utils/Modal';
 // import { useWarehouse } from '..';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
 import { useUserInfoAddition } from '../hooks';
+import { useUserInfo } from '../context/UserInfoContext';
+import { Roles } from '../types';
+import { Loader2 } from 'lucide-react';
 
 interface UserInfoFormProps {
 	isUpdate?: boolean;
@@ -28,19 +31,10 @@ const UserInfoForm = ({
 	// TODO: Need to handle setValue when isUpdate and isDelete is true to pass data to form
 	// TODO: maybe need to pass UserInfoData selected from Context to setValue
 
-	// const handleSubmit = async () => {
-	// 	console.log('userInfoForm:', userInfoForm);
-	// 	try {
-	// 		await new Promise(resolve => setTimeout(resolve, 1000));
-	// 		// * call addUserMutation to Add User
-	// 		await addUserMutation(userInfoForm);
-	// 		onClose();
-	// 	} catch (error) {
-	// 		console.error('User Data submission failed', error);
-	// 	}
-	// };
-
 	//TODO: Check what's wrong with form when filling up values
+
+	const { roles } = useUserInfo();
+	const rolesArr: string[] = roles ? roles.map((role: Roles) => role.title) : [];
 
 	return (
 		<>
@@ -48,7 +42,6 @@ const UserInfoForm = ({
 				<form
 					onSubmit={e => {
 						e.preventDefault();
-						handleSubmit();
 					}}
 				>
 					<div className="flex flex-col gap-5">
@@ -59,9 +52,10 @@ const UserInfoForm = ({
 								</span>
 								<Inputbox
 									name="id"
-									value={user.id || 0}
+									value={user.id}
 									type="number"
-									disabled={true}
+									disabled
+									readOnly
 								/>
 							</div>
 							<div className="flex flex-col gap-1">
@@ -69,9 +63,9 @@ const UserInfoForm = ({
 									User First Name
 								</span>
 								<Inputbox
-									name="firstName"
+									name="firstname"
 									placeholder="User First Name"
-									value={user.firstName || ''}
+									value={user.firstname || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -81,9 +75,9 @@ const UserInfoForm = ({
 									User Last Name
 								</span>
 								<Inputbox
-									name="lastName"
+									name="lastname"
 									placeholder="User Last Name"
-									value={user.lastName || ''}
+									value={user.lastname || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -98,7 +92,7 @@ const UserInfoForm = ({
 								<Inputbox
 									name="email"
 									placeholder="User Email Address"
-									type="string"
+									type="email"
 									value={user.email || ''}
 									onChange={handleChange}
 									required
@@ -109,9 +103,9 @@ const UserInfoForm = ({
 									User Contact Number
 								</span>
 								<Inputbox
-									name="contactNumber"
+									name="contact_no"
 									placeholder="User Contact Number"
-									type="string"
+									type="number"
 									value={user.contact_no || ''}
 									onChange={handleChange}
 									required
@@ -121,14 +115,14 @@ const UserInfoForm = ({
 								<span className="text-sm font-bold uppercase">
 									User Position
 								</span>
-								<Inputbox
-									name="posiiton"
-									placeholder="User Position"
-									type="string"
-									value={user.position || ''}
+								<Selectbox 
+									name="position"
+									className="text-lg" 
+									placeholder="---Select Position---" 
 									onChange={handleChange}
-									required
-								/>
+									options={rolesArr}
+									required >
+								</Selectbox>
 							</div>
 						</div>
 					
@@ -164,10 +158,10 @@ const UserInfoForm = ({
 									Confirm Password
 								</span>
 								<Inputbox
-									name="password"
+									name="password_confirmation"
 									placeholder="Confirm Password"
 									type="password"
-									value={''}
+									value={user.password_confirmation || ''}
 									onChange={handleChange}
 									required
 								/>
@@ -175,28 +169,39 @@ const UserInfoForm = ({
 						</div>
 						
 						<div className="flex flex-row justify-center gap-1">
-							<Button
-								fill={'green'}
-								className=""
-								type="submit"
-								// onClick={handleSubmit}
-							>
-								{'Add User'}
-							</Button>
-							<Button
-								fill={'red'}
-								className=""
-								onClick={onClose}
-								type="reset"
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={() => console.log(user)}
-								type="button"
-							>
-								console form
-							</Button>
+							<div className="mt-3 grid w-full grid-flow-row grid-cols-10 gap-4 text-center">
+								<div className="flex flex-col col-span-2 gap-3">
+									<Button
+										type="submit"
+										fill={isChanged ? 'green' : null}
+										disabled={isChanged ? false : true}
+										onClick={handleSubmit}
+									>
+										{!isSubmitting ? 'Add User' : 'Submitting'}
+									</Button>
+								</div>
+								<div className="flex flex-col col-span-5 items-start">
+									{success && (
+										<div className="font-bold text-green-700">{success}</div>
+									)}
+									{error && (
+										<div className="font-bold text-red-700">{error}</div>
+									)}
+									{!isSubmitting ? '' : 
+										<div className="flex flex-col flex-wrap items-start"> 
+											<Loading width={30} height={30} /> 
+										</div>}
+								</div>
+								<div className="flex flex-col col-span-3 gap-3 items-end">
+									<Button
+										type="reset"
+										fill={'red'}
+										onClick={onClose}
+									>
+										Cancel
+									</Button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</form>
