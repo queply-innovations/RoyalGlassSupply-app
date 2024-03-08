@@ -45,7 +45,10 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 
 		{
 			accessorKey: 'id',
-			header: () => <div className="justify-center">WAREHOUSE ID</div>,
+			header: () => <div className="text-center">WAREHOUSE ID</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.id}</div>
+			),
 		},
 
 		{
@@ -65,14 +68,23 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 					</div>
 				);
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.name}</div>
+			),
 		},
 		{
 			accessorKey: 'code',
-			header: () => <div className="justify-center">code</div>,
+			header: () => <div className="text-center">code</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.code}</div>
+			),
 		},
 		{
 			accessorKey: 'location',
-			header: () => <div className="justify-center">LOCATION</div>,
+			header: () => <div className="text-center">LOCATION</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.location}</div>
+			),
 		},
 
 		{

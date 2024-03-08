@@ -17,6 +17,9 @@ import {
 	MoreVertical,
 	Pencil,
 	List,
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
 } from 'lucide-react';
 
 interface TransferTableProps {
@@ -66,47 +69,88 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'id',
-			header:	() => <div>TRANSFER ID</div>,
+			header:	() => <div className="text-center">TRANSFER ID</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.id}</div>
+			),
 		},
 
 		{
 			accessorKey: 'code',
-			header:	() => <div>TRANSFER CODE</div>,
+			sortingFn: "alphanumeric",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER CODE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.code}</div>
+			),
 		},
 
 		{
 			accessorKey: 'source',
-			header:	() => <div>SOURCE-DESTINATION</div>,
+			header:	() => <div className="text-center">SOURCE-DESTINATION</div>,
 			cell: ({ row }) => {
 				const source: any = row.original.source;
 				const destination: any = row.original.destination;
 				return (
-					<div>{source.code}-{destination.code}</div>
+					<div className="text-center">{source.code}-{destination.code}</div>
 				);
 			},
 		},
 
 		{
 			accessorKey: 'transfer_status',
-			header:	() => <div>TRANSFER STATUS</div>,
+			header:	() => <div className="text-center">TRANSFER STATUS</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.transfer_status}</div>
+			),
 		},
 
 		{
 			accessorKey: 'transfer_schedule',
-			header:	() => <div>SCHEDULE</div>,
+			sortingFn: "datetime",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							SCHEDULE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
 				const details = { year: 'numeric', month: 'long', day: 'numeric' };
 				const format = new Date(sched).toLocaleDateString([], details);
 				return (
-					<div>{format}</div>
+					<div className="text-center">{format}</div>
 				);
 			},
 		},
 
 		{
 			accessorKey: 'date_received',
-			header:	() => <div>DATE RECEIVED</div>,
+			header:	() => <div className="text-center">DATE RECEIVED</div>,
 			cell: ({ row }) => {
 				const sched: any = row.getValue('date_received');
 				const details = { 
@@ -118,24 +162,27 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 					second:'numeric' };
 				const format = new Date(sched).toLocaleDateString([], details);
 				return (
-					<div>{format}</div>
+					<div className="text-center">{format}</div>
 				);
 			},
 		},
 
 		{
 			accessorKey: 'approval_status',
-			header:	() => <div>APPROVAL STATUS</div>,
+			header:	() => <div className="text-center">APPROVAL STATUS</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.approval_status}</div>
+			),
 		},
 
 		{
 			accessorKey: 'approved_by',
-			header:	() => <div>APPROVED BY</div>,
+			header:	() => <div className="text-center">APPROVED BY</div>,
 			cell: ({ row }) => {
 				const approved_by: any = row.getValue('approved_by');
 				const format = approved_by.firstname + ' ' + approved_by.lastname;
 				return (
-					<div id={approved_by.id}>{format}</div>
+					<div id={approved_by.id} className="text-center">{format}</div>
 				);
 			},
 		},

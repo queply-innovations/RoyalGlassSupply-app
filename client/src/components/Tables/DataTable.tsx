@@ -115,7 +115,7 @@ export function DataTable<TData, TValue>({
 									return (
 										<TableHead
 											key={header.id}
-											className="py-5 text-center text-xs font-bold uppercase"
+											className="py-5 text-xs font-bold uppercase"
 										>
 											{header.isPlaceholder
 												? null
@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
 								<TableRow
 									key={row.id}
 									data-state={row.getIsSelected() && 'selected'}
-									className="py-2 text-center text-xs font-normal uppercase"
+									className="py-2 text-xs font-normal uppercase"
 								>
 									{row.getVisibleCells().map(cell => (
 										<TableCell key={cell.id}>

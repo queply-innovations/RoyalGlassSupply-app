@@ -63,6 +63,9 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 					</div>
 				)
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.lastname}</div>
+			),
 		},
 
 		{
@@ -82,6 +85,9 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 					</div>
 				)
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.firstname}</div>
+			),
 		},
 
 		{
@@ -101,30 +107,42 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 					</div>
 				)
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.position}</div>
+			),
 		},
 
 		{
 			accessorKey: 'username',
-			header:	() => <div>USERNAME</div>,
+			header:	() => <div className="text-center">USERNAME</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.username}</div>
+			),
 		},
 
 		{
 			accessorKey: 'contact_no',
-			header:	() => <div>CONTACT</div>,
+			header:	() => <div className="text-center">CONTACT</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.contact_no}</div>
+			),
 		},
 
 		{
 			accessorKey: 'email',
-			header:	() => <div>EMAIL ADDRESS</div>,
+			header:	() => <div className="text-center">EMAIL ADDRESS</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.email}</div>
+			),
 		},
 
 		{
 			id: 'actions',
-			header:	() => <div>ACTION</div>,
+			header:	() => <div className="text-center">ACTION</div>,
 			cell: ({ row }) => {
 				const userinfoRow = row.original;
 				return (
-					<div className="flex flex-row text-xs font-normal uppercase">
+					<div className="flex flex-row text-xs justify-center font-normal uppercase">
 						<Button 
 							fill={'yellow'} 
 							textColor={'black'}

@@ -51,7 +51,7 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
-					<div>
+					<div className="text-center">
 						<Button
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row ml-auto mr-auto items-center"
@@ -62,21 +62,30 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 					</div>
 				)
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.name}</div>
+			),
 		},
 
 		{
 			accessorKey: 'contact_no',
-			header:	() => <div>CONTACT NUMBER</div>,
+			header:	() => <div className="text-center">CONTACT NUMBER</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.contact_no}</div>
+			),
 		},
 
 		{
 			accessorKey: 'address',
-			header:	() => <div>ADDRESS</div>,
+			header:	() => <div className="text-center">ADDRESS</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.address}</div>
+			),
 		},
 
 		{
 			id: 'actions',
-			header:	() => <div>ACTION</div>,
+			header:	() => <div className="text-center">ACTION</div>,
 			cell: ({ row }) => {
 				const supplierRow = row.original;
 				return (
