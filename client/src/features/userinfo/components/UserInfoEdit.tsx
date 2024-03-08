@@ -43,7 +43,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 			>
 				<div className="flex flex-col gap-5">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-						<div className="flex flex-col col-span-3 gap-3">
+						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="id">User ID</label>
 							<input
 								type="text"
@@ -54,7 +54,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								disabled
 							/>
 						</div>
-						<div className="flex flex-col col-span-3 gap-3">
+						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="firstname">First name</label>
 							<input
 								type="text"
@@ -65,7 +65,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-						<div className="flex flex-col col-span-3 gap-3">
+						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="lastname">Last name</label>
 							<input
 								type="text"
@@ -76,7 +76,10 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-						<div className="flex flex-col col-span-3 gap-3">
+					</div>
+
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="username">Username</label>
 							<input
 								type="text"
@@ -87,9 +90,6 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-					</div>
-
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="email">Email address</label>
 							<input
@@ -112,35 +112,45 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="position">Position</label>
-							<select 
-								name="position"
-								className="flex flex-col gap-5" 
-								defaultValue={user.position.charAt(0).toLowerCase() + user.position.slice(1)} 
-								onChange={handleChange}>
-								{roles ? (
-									roles.map((role: Roles) => {
-										return (
-											<option 
+					</div>
+
+					<div>
+						<label htmlFor="position">Position</label>
+						<div id="position" className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+							{/* TODO: set array for collecting of all checked positions???? */}
+							{roles ? (
+								roles.map((role: Roles) => {
+									const spanning = 12/roles.length;
+									const cn = `flex flex-row col-span-${spanning} gap-3`;
+									return (
+										<div className={cn} key={role.id + role.title}>
+											<input 
+												type="checkbox" 
 												key={role.id} 
+												name={role.title} 
 												value={role.title}
-												>
+												defaultChecked={
+													role.title.toLowerCase().replace(/[\s_]/g, '') === 
+													user.position.toLowerCase().replace(/[\s_]/g, '')
+													} 
+												
+												/>
+											<label htmlFor={role.title}>
 												{role.title.charAt(0).toUpperCase() + 
-												role.title.slice(1)}
-											</option>
-										);
-									})
-								) : (
-									<div className="flex h-12 w-full items-center justify-center">
-										<Loader2
-											size={22}
-											strokeWidth={2.5}
-											className="animate-spin text-slate-700/50"
-										/>
-									</div>
-								)}
-							</select>
+												role.title.slice(1).replace(/_/g, '')}
+											</label>
+										</div>
+									);
+								})
+							) : (
+								<div className="flex h-12 w-full items-center justify-center">
+									<Loader2
+										size={22}
+										strokeWidth={2.5}
+										className="animate-spin text-slate-700/50"
+									/>
+								</div>
+							)}
 						</div>
 					</div>
 					

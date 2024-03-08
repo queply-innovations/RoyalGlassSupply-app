@@ -87,6 +87,19 @@ const UserInfoForm = ({
 						<div className="flex flex-row gap-3">
 							<div className="flex flex-col gap-1">
 								<span className="text-sm font-bold uppercase">
+									User Username
+								</span>
+								<Inputbox
+									name="username"
+									placeholder="User Username"
+									type="string"
+									value={user.username || ''}
+									onChange={handleChange}
+									required
+								/>
+							</div>
+							<div className="flex flex-col gap-1">
+								<span className="text-sm font-bold uppercase">
 									User Email Address
 								</span>
 								<Inputbox
@@ -111,7 +124,7 @@ const UserInfoForm = ({
 									required
 								/>
 							</div>
-							<div className="flex flex-col gap-1">
+							{/* <div className="flex flex-col gap-1">
 								<span className="text-sm font-bold uppercase">
 									User Position
 								</span>
@@ -123,23 +136,44 @@ const UserInfoForm = ({
 									options={rolesArr}
 									required >
 								</Selectbox>
+							</div> */}
+						</div>
+
+						<div>
+							<label htmlFor="position">Position</label>
+							<div id="position" className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+								{/* TODO: set array for collecting of all checked positions???? */}
+								{roles ? (
+									roles.map((role: Roles) => {
+										const spanning = 12/roles.length;
+										const cn = `flex flex-row col-span-${spanning} gap-3`;
+										return (
+											<div className={cn} key={role.id + role.title}>
+												<input 
+													type="checkbox" 
+													key={role.id} 
+													name={role.title} 
+													value={role.title} />
+												<label htmlFor={role.title}>
+													{role.title.charAt(0).toUpperCase() + 
+													role.title.slice(1).replace(/_/g, '')}
+												</label>
+											</div>
+										);
+									})
+								) : (
+									<div className="flex h-12 w-full items-center justify-center">
+										<Loader2
+											size={22}
+											strokeWidth={2.5}
+											className="animate-spin text-slate-700/50"
+										/>
+									</div>
+								)}
 							</div>
 						</div>
 					
 						<div className="flex flex-row gap-3">
-							<div className="flex flex-col gap-1">
-								<span className="text-sm font-bold uppercase">
-									User Username
-								</span>
-								<Inputbox
-									name="username"
-									placeholder="User Username"
-									type="string"
-									value={user.username || ''}
-									onChange={handleChange}
-									required
-								/>
-							</div>
 							<div className="flex flex-col gap-1">
 								<span className="text-sm font-bold uppercase">
 									User Password
