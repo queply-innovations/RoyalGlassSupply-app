@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductPrices } from '../../../types';
 import { Button } from '@/components';
-import { SortIcon } from '@/assets/icons';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 // TODO: Include notes column in the table - ideally, a tooltip or a popover
 
@@ -42,7 +42,8 @@ export const ProductPricesColumnsLimited: ColumnDef<ProductPrices>[] = [
 						}
 						className="flex flex-row bg-transparent uppercase text-black"
 					>
-						Name <SortIcon />
+						Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 					</Button>
 				</div>
 			);

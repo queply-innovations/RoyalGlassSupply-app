@@ -1,11 +1,10 @@
-import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
 import { User } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useUserInfo } from '../context/UserInfoContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 interface UserTableProps {
 	openModal: (data: User, action: string) => void;
@@ -47,14 +46,19 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'lastname',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
 						<Button
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							onClick={() => {
+								column.toggleSorting(column.getIsSorted() === "asc"); 
+							}}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							LAST NAME <SortIcon />
+							LAST NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)
@@ -63,6 +67,8 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'firstname',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
@@ -70,7 +76,8 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							FIRST NAME <SortIcon />
+							FIRST NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)
@@ -79,7 +86,21 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'position',
-			header:	() => <div>ROLE</div>,
+			sortingFn: "text",
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+						>
+							ROLE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				)
+			},
 		},
 
 		{
@@ -123,7 +144,7 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 			<DataTable
 				data={users}
 				columns={UserInfoTableHeader}
-				filterWhat={"lastname"}
+				filterWhat={"username"}
 				dataType={"User"}
 				openModal={handleAddUser}
 				isLoading={isFetching} />

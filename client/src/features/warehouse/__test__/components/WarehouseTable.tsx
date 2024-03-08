@@ -2,9 +2,9 @@ import { useWarehouse } from '../context/WarehouseContext';
 import { Button } from '@/components';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
-import { SortIcon } from '@/assets/icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { Warehouse } from '../types';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 interface WarehouseTableProps {
 	openModal: (data: Warehouse, action: string) => void;
@@ -50,6 +50,8 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 
 		{
 			accessorKey: 'name',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div className='items-center'>
@@ -57,7 +59,8 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							WAREHOUSE NAME <SortIcon />
+							WAREHOUSE NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				);

@@ -1,4 +1,3 @@
-import { SortIcon } from '@/assets/icons';
 import { DataTable } from '@/components/Tables/DataTable';
 import { Transfer } from '../types';
 import { ColumnDef } from '@tanstack/react-table';

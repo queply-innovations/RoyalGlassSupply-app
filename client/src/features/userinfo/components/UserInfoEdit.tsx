@@ -44,7 +44,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 				<div className="flex flex-col gap-5">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="id">User ID</label>
+							<label htmlFor="id" className="text-sm font-bold uppercase">User ID</label>
 							<input
 								type="text"
 								name="id"
@@ -55,7 +55,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="firstname">First name</label>
+							<label htmlFor="firstname" className="text-sm font-bold uppercase">First name</label>
 							<input
 								type="text"
 								name="firstname"
@@ -66,7 +66,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="lastname">Last name</label>
+							<label htmlFor="lastname" className="text-sm font-bold uppercase">Last name</label>
 							<input
 								type="text"
 								name="lastname"
@@ -80,7 +80,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="username">Username</label>
+							<label htmlFor="username" className="text-sm font-bold uppercase">Username</label>
 							<input
 								type="text"
 								name="username"
@@ -91,7 +91,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="email">Email address</label>
+							<label htmlFor="email" className="text-sm font-bold uppercase">Email address</label>
 							<input
 								type="email"
 								name="email"
@@ -102,7 +102,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="email">Contact number</label>
+							<label htmlFor="email" className="text-sm font-bold uppercase">Contact number</label>
 							<input
 								type="number"
 								name="contact_no"
@@ -115,7 +115,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 					</div>
 
 					<div>
-						<label htmlFor="position">Position</label>
+						<label htmlFor="position" className="text-sm font-bold uppercase">Position</label>
 						<div id="position" className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 							{/* TODO: set array for collecting of all checked positions???? */}
 							{roles ? (

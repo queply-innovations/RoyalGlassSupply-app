@@ -9,7 +9,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { SortIcon } from '@/assets/icons';
 import {
 	Check,
 	X,
@@ -22,6 +21,9 @@ import {
 	List,
 	CircleOff,
 	CheckCircle,
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
 } from 'lucide-react';
 
 interface ProductPricesColumnsProps {
@@ -69,6 +71,8 @@ export const ProductPricesColumns = ({
 		{
 			id: 'name',
 			accessorKey: 'product.name',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div className="justify-center">
@@ -78,7 +82,8 @@ export const ProductPricesColumns = ({
 							}
 							className="flex flex-row bg-transparent uppercase text-black"
 						>
-							Name <SortIcon />
+							Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				);

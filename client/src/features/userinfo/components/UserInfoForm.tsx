@@ -140,7 +140,9 @@ const UserInfoForm = ({
 						</div>
 
 						<div>
-							<label htmlFor="position">Position</label>
+							<span className="text-sm font-bold uppercase">
+								User Position
+							</span>
 							<div id="position" className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 								{/* TODO: set array for collecting of all checked positions???? */}
 								{roles ? (

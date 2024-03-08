@@ -1,10 +1,10 @@
-import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
 import { Transaction } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useTransaction } from '../context/TransactionContext';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 interface TransactionTableProps {
 	openModal: (data: Transaction, action: string) => void;
@@ -56,6 +56,8 @@ export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: Trans
 
 		{
 			accessorKey: 'product_name',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
@@ -63,7 +65,8 @@ export const TransactionTable: FC<TransactionTableProps> = ({ openModal }: Trans
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							PRODUCT NAME <SortIcon />
+							PRODUCT NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)

@@ -42,15 +42,15 @@ const Selectbox: FC<SelectboxProps> = ({
 				<option value="DEFAULT" hidden>
 					{placeholder}
 				</option>
-				{options.map((option, index) => (
+				{options.length > 1 ? options.map((option, index) => (
 					<option
 						className="hover:bg-primary-red flex cursor-pointer rounded-none border-none"
 						key={index}
 						value={option}
 					>
-						{option}
+						{option.charAt(0).toUpperCase() + option.slice(1)}
 					</option>
-				))}
+				)) : options}
 			</select>
 			{hasFrequency && (
 				<select

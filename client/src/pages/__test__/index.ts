@@ -7,3 +7,4 @@ export * from './ProductsPage';
 export * from './ProductPricesPage';
 export * from './TransferPage';
 export * from './PosPage';
+export * from './TransactionPage';

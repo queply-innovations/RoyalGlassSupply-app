@@ -9,8 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { SortIcon } from '@/assets/icons';
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
@@ -69,7 +68,8 @@ export const ProductsCols = ({
 							}
 							className="flex flex-row bg-transparent uppercase text-black"
 						>
-							Name <SortIcon />
+							Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				);
