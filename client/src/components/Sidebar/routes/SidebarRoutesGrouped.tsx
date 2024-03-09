@@ -11,6 +11,7 @@ import {
 	Warehouse,
 	Truck,
 	Boxes,
+	Laptop2,
 } from 'lucide-react';
 
 export type Role =
@@ -26,36 +27,6 @@ interface SidebarGroup {
 }
 
 export const SidebarRoutesGrouped: SidebarGroup[] = [
-	{
-		items: [
-			{
-				id: 'user',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
-				itemProps: {
-					title: 'User',
-					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
-				},
-				children: [
-					{
-						id: 'user-information',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
-						path: '/user/information',
-						itemProps: {
-							title: 'User Information',
-						},
-					},
-					{
-						id: 'user-sales',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
-						path: '/user/sales',
-						itemProps: {
-							title: 'User Sales',
-						},
-					},
-				],
-			},
-		],
-	},
 	{
 		groupName: 'Operations',
 		items: [
@@ -170,11 +141,52 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					icon: <Undo2 size={20} strokeWidth={1.75} />,
 				},
 			},
+			{
+				id: 'pos',
+				allowedRoles: [
+					'super_admin',
+					'admin',
+					'manager',
+					'encoder',
+					'sales_person',
+				],
+				path: '/pos',
+				itemProps: {
+					title: 'POS',
+					icon: <Laptop2 size={20} strokeWidth={1.75} />,
+				},
+			},
 		],
 	},
 	{
 		groupName: 'Management',
 		items: [
+			{
+				id: 'user',
+				allowedRoles: ['super_admin', 'admin', 'manager'],
+				itemProps: {
+					title: 'User',
+					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
+				},
+				children: [
+					{
+						id: 'user-information',
+						allowedRoles: ['super_admin', 'admin', 'manager'],
+						path: '/user/information',
+						itemProps: {
+							title: 'User Information',
+						},
+					},
+					{
+						id: 'user-sales',
+						allowedRoles: ['super_admin', 'admin', 'manager'],
+						path: '/user/sales',
+						itemProps: {
+							title: 'User Sales',
+						},
+					},
+				],
+			},
 			{
 				id: 'finance',
 				allowedRoles: ['super_admin', 'admin', 'manager'],
