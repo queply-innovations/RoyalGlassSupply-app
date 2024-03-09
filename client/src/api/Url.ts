@@ -1,7 +1,6 @@
 import storage from '@/utils/storage';
 
 export const API_BASE_URL = 'https://royalglasssupply.com/api';
-// 'http://127.0.0.1:8000/api';
 // 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 export const API_URLS = {
@@ -19,6 +18,8 @@ export const API_URLS = {
 	INVOICE_ITEMS: `${API_BASE_URL}/invoice-items`,
 	INVOICE_DISCOUNTS: `${API_BASE_URL}/invoice-discounts`,
 	INVOICE_TAXES: `${API_BASE_URL}/invoice-taxes`,
+	TRANSACTION: `${API_BASE_URL}/transaction`,
+	TRANSFER: `${API_BASE_URL}/transfers`,
 };
 
 export const API_HEADERS = () => {

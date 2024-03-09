@@ -1,26 +1,31 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Product } from '../../../types';
-import { Button } from '@/components';
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components';
 import { SortIcon } from '@/assets/icons';
-import { FaPencilAlt } from 'react-icons/fa';
+import { MoreVertical, Pencil } from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
-	handleRemoveProduct: (product: Product) => void;
 }
 
 /**
  * Generates column definition for the Products table.
  *
  * @param handleEditProduct - Callback to edit product.
- * @param handleRemoveProduct - Callback to remove product.
  * @returns Column definition for the Products table.
  */
 export const ProductsCols = ({
 	handleEditProduct,
-	handleRemoveProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
 		{
@@ -90,21 +95,25 @@ export const ProductsCols = ({
 			cell: ({ row }) => {
 				const productRow = row.original;
 				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleEditProduct(productRow)}
-							className="flex flex-row items-center gap-2"
-						>
-							<FaPencilAlt /> Edit
-						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveProduct(productRow)}
-						>
-							Remove
-						</Button>
+					<div className="flex flex-row justify-end text-xs font-normal uppercase">
+						<DropdownMenu>
+							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+								<MoreVertical size={16} strokeWidth={2.25} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleEditProduct(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span className="font-medium">Edit</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				);
 			},

@@ -1,11 +1,10 @@
-import { User } from '@/features/auth/types';
 import { Warehouse } from '@/features/warehouse/__test__/types';
 
 export interface Product {
 	id: number;
 	name: string;
 	serial_no: string;
-	brand: string;
+	// brand: string; // ? Not in database table
 	size: string;
 	color: string;
 	notes: string;

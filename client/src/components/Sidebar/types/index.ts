@@ -6,7 +6,8 @@ export type Role =
 	| 'admin'
 	| 'manager'
 	| 'encoder'
-	| 'sales_person';
+	| 'sales_person'
+	| 'sales';
 
 export interface SidebarRoutes {
 	path?: string;

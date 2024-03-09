@@ -20,12 +20,12 @@
 	win: {
 		target: [
 			{
-				target: 'nsis',
+				target: 'portable',
 				arch: ['x64'],
 			},
 		],
 		artifactName: '${productName}-Windows-${version}-Setup.${ext}',
-		icon: 'public/RGSLOGO.icns',
+		icon: 'public/RGSLOGO.ico',
 	},
 	nsis: {
 		oneClick: false,

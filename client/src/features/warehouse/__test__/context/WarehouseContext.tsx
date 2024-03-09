@@ -6,16 +6,20 @@ interface WarehouseContextProps {
 	warehouses: Warehouse[];
 	warehouseSelected: Warehouse;
 	setWarehouseSelected: (warehouse: Warehouse) => void;
+	isFetching: boolean;
+	progress: any;
 }
+
 interface WarehouseProviderProps {
 	children: ReactNode;
 }
+
 const WarehouseContext = createContext<WarehouseContextProps | undefined>(
 	undefined,
 );
 
 export const WarehouseProvider = ({ children }: WarehouseProviderProps) => {
-	const { warehouses } = useWarehouseQuery();
+	const { warehouses, isFetching, progress } = useWarehouseQuery();
 	const [warehouseSelected, setWarehouseSelected] = useState<Warehouse>({
 		id: 0,
 		code: '',
@@ -27,6 +31,8 @@ export const WarehouseProvider = ({ children }: WarehouseProviderProps) => {
 		warehouses,
 		warehouseSelected,
 		setWarehouseSelected,
+		isFetching,
+		progress
 	};
 
 	return (

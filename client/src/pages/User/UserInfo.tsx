@@ -8,7 +8,6 @@ import { ProgressBar } from '@/components';
 
 export const UserInfo = () => {
 	const [data, setData] = useState(Array<unknown>);
-	const [roles, setRoles] = useState(Array<unknown>);
 	const [notLoading, setNotLoading] = useState(false);
 
 	useEffect(() => {
@@ -17,7 +16,7 @@ export const UserInfo = () => {
 				const data2 = await getUsers();
 				setData(data2.data.data);
 				setNotLoading(true);
-				//console.log(data2.data.data);
+				// console.log(roles);
 			} catch (error) {
 				console.log(error);
 			}
@@ -32,7 +31,7 @@ export const UserInfo = () => {
 			</h1>
 			<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 				<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-					<UserInfoTable data={data} roles={roles} />
+					<UserInfoTable data={data} />
 				</div>
 			</div>
 		</div>

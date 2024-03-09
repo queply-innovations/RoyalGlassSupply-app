@@ -11,7 +11,11 @@ interface WarehouseTableProps {
 }
 
 export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
-	const { warehouses, setWarehouseSelected } = useWarehouse();
+	const { warehouses, setWarehouseSelected, isFetching, progress } = useWarehouse();
+
+	const handleAddWarehouse = () => {
+		openModal({} as Warehouse, 'add');
+	};
 
 	const WarehouseTableHeader: ColumnDef<Warehouse>[] = [
 		{
@@ -48,12 +52,10 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 			accessorKey: 'name',
 			header: ({ column }) => {
 				return (
-					<div className="justify-center">
+					<div className='items-center'>
 						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row bg-transparent text-black"
+							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
 							WAREHOUSE NAME <SortIcon />
 						</Button>
@@ -126,7 +128,8 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				columns={WarehouseTableHeader}
 				filterWhat={'location'}
 				dataType={'Warehouse'}
-				openModal={() => openModal}
+				isLoading={isFetching}
+				openModal={handleAddWarehouse}
 			/>
 		</>
 	);
