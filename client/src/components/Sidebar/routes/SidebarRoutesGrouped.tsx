@@ -27,36 +27,6 @@ interface SidebarGroup {
 
 export const SidebarRoutesGrouped: SidebarGroup[] = [
 	{
-		items: [
-			{
-				id: 'user',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
-				itemProps: {
-					title: 'User',
-					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
-				},
-				children: [
-					{
-						id: 'user-information',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
-						path: '/user/information',
-						itemProps: {
-							title: 'User Information',
-						},
-					},
-					{
-						id: 'user-sales',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
-						path: '/user/sales',
-						itemProps: {
-							title: 'User Sales',
-						},
-					},
-				],
-			},
-		],
-	},
-	{
 		groupName: 'Operations',
 		items: [
 			{
@@ -175,6 +145,32 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 	{
 		groupName: 'Management',
 		items: [
+			{
+				id: 'user',
+				allowedRoles: ['super_admin', 'admin', 'manager'],
+				itemProps: {
+					title: 'User',
+					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
+				},
+				children: [
+					{
+						id: 'user-information',
+						allowedRoles: ['super_admin', 'admin', 'manager'],
+						path: '/user/information',
+						itemProps: {
+							title: 'User Information',
+						},
+					},
+					{
+						id: 'user-sales',
+						allowedRoles: ['super_admin', 'admin', 'manager'],
+						path: '/user/sales',
+						itemProps: {
+							title: 'User Sales',
+						},
+					},
+				],
+			},
 			{
 				id: 'finance',
 				allowedRoles: ['super_admin', 'admin', 'manager'],
