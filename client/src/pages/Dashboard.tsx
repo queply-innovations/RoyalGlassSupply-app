@@ -15,39 +15,12 @@ import { useAuth } from '@/context/AuthContext';
 // }
 
 export const Dashboard = () => {
-	const { auth, logout } = useAuth();
-
-	const navigate = useNavigate();
-
 	return (
 		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
 				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 					Dashboard
 				</h1>
-				<div className="flex flex-row gap-5">
-					<Button
-						className="w-1/4"
-						fill={'green'}
-						onClick={() => console.log('Check Auth', auth)}
-					>
-						check auth
-					</Button>
-					<Button
-						className="w-1/4"
-						fill={'yellow'}
-						onClick={() => navigate('/test')}
-					>
-						PATH TO TEST
-					</Button>
-					<Button
-						className="w-1/4"
-						fill={'yellow'}
-						onClick={() => navigate('/pos')}
-					>
-						PATH TO POS
-					</Button>
-				</div>
 				<div className="infobox-container flex flex-row justify-between gap-8">
 					<InfoCard background={'gradient'}>
 						<span className="text-sm font-bold uppercase text-white">
