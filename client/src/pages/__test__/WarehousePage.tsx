@@ -8,6 +8,7 @@ import { Warehouse as IWarehouse } from '@/features/warehouse/__test__/types';
 import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
+import { set } from 'react-hook-form';
 
 export const Warehouse = () => {
 	const { isOpen, openModal, closeModal } = useModal();

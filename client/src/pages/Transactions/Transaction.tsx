@@ -7,11 +7,11 @@ import { useState } from "react";
 export const Transaction = () => {
 	//Test code for searching stuff
 	const [Inputbox, setInputText] = useState("");
-	let inputHandler = (e) => {
-		//convert input text to lower case
-		var lowerCase = e.target.value.toLowerCase();
-		setInputText(lowerCase);
-	};
+	// let inputHandler = (e) => {
+	// 	//convert input text to lower case
+	// 	var lowerCase = e.target.value.toLowerCase();
+	// 	setInputText(lowerCase);
+	// };
 	return (
 		<>
 			<LayoutWrapper>
@@ -19,17 +19,6 @@ export const Transaction = () => {
 					<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
 						Add Transaction
 					</h1>
-					<div className="flex flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="flex flex-row justify-between">
-							<Inputbox
-								placeholder="Search"
-								variant={'searchbar'}
-								buttonIcon={'outside'}
-								className="w-1/2"
-								onChange={inputHandler}
-							/>
-						</div>
-					</div>
 					<div className="flex h-[80%] w-full rounded-lg">
 						<TransactionTable />
 						<div className="bg-primary-white flex h-[88%] w-[25%] flex-col items-center justify-between rounded-md border border-black/10 p-4">

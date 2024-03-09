@@ -16,6 +16,7 @@ class ReturnTransactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'invoice' => new InvoiceResource($this->invoice),
             'issued_by' => new UserResource($this->issuedBy),
             'refundable_amount' => $this->refundable_amount,
@@ -24,7 +25,6 @@ class ReturnTransactionResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'return_transaction_items' => new ReturnTransactionItemCollection($this->whenLoaded('returnTransactionItems'))
-            // 'return_transaction_items' => new ReturnTransactionItemCollection($this->returnTransactionItems)
         ];
     }
 }

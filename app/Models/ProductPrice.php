@@ -14,24 +14,28 @@ class ProductPrice extends Model
     protected $fillable = [
         'product_id',
         'type',
-        'quantity',
         'unit',
+        'stocks_quantity',
+        'stocks_unit',
         'capital_price',
         'markup_price',
-        'retail_price',
+        'tax_amount',
+        'cost',
         'on_sale',
-        'sale_price',
+        'sale_discount',
+        'price',
         'warehouse_id',
         'created_by',
         'approval_status',
-        'approved_by'
+        'approved_by',
+        'active_status'
     ];
 
     protected $with = [
         'product:id,name,size,color',
         'createdBy:id,firstname,lastname',
         'approvedBy:id,firstname,lastname',
-        'warehouse:id,name'
+        'warehouse:id,code,name'
     ];
 
     public function product(): BelongsTo

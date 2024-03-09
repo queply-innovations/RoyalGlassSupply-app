@@ -12,14 +12,6 @@ export const Transfer = () => {
 					Add Transfer
 				</h1>
 				<div className="flex h-full flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-					<div className="flex flex-row justify-between">
-						<Inputbox
-							placeholder="Search"
-							variant={'searchbar'}
-							buttonIcon={'outside'}
-							className="w-1/2"
-						/>
-					</div>
 					<div className="flex h-full w-full rounded-lg ">
 						<UserInfoTable />
 						<div className="bg-primary-white flex h-full w-[30%] flex-col items-center justify-between rounded-md border border-black/10 p-4">

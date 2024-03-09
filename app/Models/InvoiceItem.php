@@ -15,9 +15,13 @@ class InvoiceItem extends Model
         'invoice_id',
         'product_id',
         'product_price_id',
+        'product_price',
         'quantity',
         'unit',
-        'price',
+        'item_discount',
+        'discount_approval_status',
+        'approved_by',
+        'total_price',
         'source_inventory'
     ];
     
@@ -45,6 +49,11 @@ class InvoiceItem extends Model
     public function productPrice(): BelongsTo
     {
         return $this->belongsTo(ProductPrice::class);
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function inventoryProduct(): BelongsTo

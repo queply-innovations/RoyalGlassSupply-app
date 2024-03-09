@@ -19,7 +19,7 @@ class InvoiceTaxResource extends JsonResource
             'invoice_id' => $this->invoice_id,
             'item' => $this->item,
             'amount' => $this->amount,
-            'note' => $this->note
+            'notes' => $this->notes
         ];
     }
 }

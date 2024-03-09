@@ -4,7 +4,6 @@ import { UseModalProps } from '@/utils/Modal';
 // import { useWarehouse } from '..';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
 import { useWarehouseMutation } from '../hooks';
-import { Warehouse } from '../types';
 import { useWarehouse } from '..';
 
 interface WarehouseFormProps {
@@ -32,7 +31,7 @@ export const WarehouseForm = ({
 	useEffect(() => {
 		if (isUpdate || isDelete) {
 			setWarehouseForm(warehouseSelected);
-			console.log(isUpdate, isDelete);
+			// console.log(isUpdate, isDelete);
 		}
 	}, [isUpdate, isDelete, warehouseSelected, setWarehouseForm]);
 
@@ -113,7 +112,7 @@ export const WarehouseForm = ({
 										placeholder="Warehouse Code"
 										value={warehouseForm?.code || ''}
 										onChange={handleChange}
-										required
+										maxLength={3}
 									/>
 								</div> */}
 								<div className="flex flex-col gap-1">

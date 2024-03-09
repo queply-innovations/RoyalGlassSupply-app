@@ -16,6 +16,7 @@ class TransferResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'created_by' => new UserResource($this->createdBy),
             'source' => new WarehouseResource($this->sourceWarehouse),
             'destination' => new WarehouseResource($this->destinationWarehouse),
@@ -25,6 +26,7 @@ class TransferResource extends JsonResource
             'transfer_status' => $this->transfer_status,
             'date_received' => $this->date_received,
             'received_by' => new UserResource($this->receivedBy),
+            'notes' => $this->notes,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'transfer_products' => new TransferProductCollection($this->whenLoaded('transferProducts'))

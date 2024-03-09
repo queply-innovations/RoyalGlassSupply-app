@@ -28,9 +28,11 @@ export const LoginForm = () => {
 		resolver: zodResolver(schema),
 	});
 
+	const [progress, setProgress] = useState(0);
+
 	// Function to authenticate using form fields
 	const onSubmit: SubmitHandler<FormFields> = async (data: FormFields) => {
-		await login(data).catch(error => {
+		await login(data, setProgress).catch(error => {
 			// Catch error on authentication and set error message
 			setError('root', {
 				message: error.message,
@@ -41,7 +43,7 @@ export const LoginForm = () => {
 	// Loading state
 	const loading = (
 		<div className="flex w-full flex-col items-center justify-center space-y-0 px-20">
-			<ProgressBar />
+			<ProgressBar progress={progress} />
 			<h2 className="text-primary-dark-gray pb-5 text-2xl font-bold">
 				Checking you in....
 			</h2>

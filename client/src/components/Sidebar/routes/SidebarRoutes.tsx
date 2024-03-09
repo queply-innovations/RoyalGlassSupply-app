@@ -70,7 +70,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 			'admin',
 			'manager',
 			'encoder',
-			'sales_person',
+			'sales'
 		],
 		sidebarProps: {
 			displayText: 'Transaction',
@@ -83,7 +83,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 					'admin',
 					'manager',
 					'encoder',
-					'sales_person',
+					'sales'
 				],
 				path: '/transaction',
 				sidebarProps: {
@@ -113,7 +113,7 @@ export const SidebarRoute: SidebarRoutes[] = [
 			'admin',
 			'manager',
 			'encoder',
-			'sales_person',
+			'sales'
 		],
 		path: '/return',
 		sidebarProps: {
@@ -122,7 +122,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
-		allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
+		allowedRoles: [
+			'super_admin', 
+			'admin', 
+			'manager', 
+			'encoder',
+			'sales'
+		],
 		path: '/inventory',
 		sidebarProps: {
 			displayText: 'Inventory',
@@ -130,7 +136,13 @@ export const SidebarRoute: SidebarRoutes[] = [
 		},
 	},
 	{
-		allowedRoles: ['super_admin', 'admin', 'manager'],
+		allowedRoles: [
+			'super_admin', 
+			'admin', 
+			'manager',
+			'encoder',
+			'sales'
+		],
 		path: '/finance',
 		sidebarProps: {
 			displayText: 'Finance',

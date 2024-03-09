@@ -12,6 +12,7 @@ class ReturnTransaction extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'invoice_id',
         'issued_by',
         'refundable_amount',

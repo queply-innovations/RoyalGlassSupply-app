@@ -6,7 +6,7 @@ export interface User {
 	firstName: string;
 	lastName: string;
 	position: string;
-	contactNumber: string;
+	contact_no: string;
 }
 
 export interface UserData {

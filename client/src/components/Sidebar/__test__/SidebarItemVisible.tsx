@@ -7,27 +7,28 @@ import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi';
 
 interface SidebarItemVisibleProps {
 	item: SidebarRoutes;
+	handleClick: any;
+	id: string;
+	open: any;
 }
 
-const SidebarItemVisible = ({ item }: SidebarItemVisibleProps) => {
-	/*
-	 * need to add a state to check if the submenu is open or not
-	 * need sha isa ray open nga submenu kay sa karon if mag click ka
-	 * ug isa ka submenu, tas click other kay ang previous nga submenu
-	 * dili mawala, so need nato i close ang previous nga submenu
-	 */
-
-	const [open, setOpen] = useState(false);
+const SidebarItemVisible = ({ item, id, handleClick, open }: SidebarItemVisibleProps) => {
 
 	return item.sidebarProps ? (
 		<>
 			<li
 				className="relative flex w-full cursor-pointer flex-row items-center"
-				onClick={() => setOpen(!open)}
+				onClick={() => { 
+					if (open === id) {
+						handleClick("");
+					} else{
+						handleClick(id); 
+					}
+				}}
 			>
 				<div
 					className={`flex w-full cursor-pointer justify-between gap-x-4 px-10 py-4 text-sm hover:bg-gray-200 ${
-						open ? 'bg-gray-200' : ''
+						open === id ? 'bg-gray-200' : ''
 					}`}
 				>
 					<div className="item-center flex justify-center gap-5">
@@ -38,7 +39,7 @@ const SidebarItemVisible = ({ item }: SidebarItemVisibleProps) => {
 							{item.sidebarProps.displayText}
 						</span>
 					</div>
-					{open ? (
+					{open === id  ? (
 						<div className="flex items-center">
 							<BiSolidLeftArrow />
 						</div>
@@ -48,13 +49,17 @@ const SidebarItemVisible = ({ item }: SidebarItemVisibleProps) => {
 						</div>
 					)}
 				</div>
-				{open && (
+				{open === id && (
 					//TODO FIX POSITIONING
 					<ul className="submenu-active bg-primary-white absolute left-full top-0 z-30 w-full rounded rounded-bl-none rounded-br rounded-tl-none rounded-tr border-b border-r border-t font-semibold shadow-[2px_0_10px_0] shadow-black/10">
 						{item.child?.map((route, index) =>
 							route.sidebarProps ? (
 								route.child ? (
-									<SidebarItemVisible key={index} item={route} />
+									<SidebarItemVisible 
+										id={id} 
+										item={route} 
+										handleClick={handleClick} 
+										open={open} />
 								) : (
 									<SidebarItem key={index} item={route} />
 								)

@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { UserResponse, getUserRole } from '@/features/auth';
+import { User, UserResponse, getUserRole } from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
@@ -8,18 +8,18 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthProps {
-	user: number | null;
-	token: string | null;
+	user: User;
 	authenticated: boolean | null;
+	id: number;
 	role: string | null;
-	isLoggedIn: boolean;
+	token: string | null;
+	username: number | null;
 }
 interface AuthContextProps {
 	auth: AuthProps;
-	login(credentials: LoginCredentials): Promise<UserResponse>;
+	login(credentials: LoginCredentials, updateProgress: any): Promise<UserResponse>;
 	logout(): void;
 }
 
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
 
-	async function login(credentials: LoginCredentials): Promise<UserResponse> {
+	async function login(credentials: LoginCredentials, updateProgress: any): Promise<UserResponse> {
 		try {
 			// Log user in using credentials
 			const response = await LoginUser(credentials);
@@ -46,18 +46,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				// Set user token
 				storage.setToken(response.token);
 				// Get user role and store to local storage
-				const userRole = await getUserRole(response.user.id);
+				const userRole = await getUserRole(response.user.id, updateProgress);
 				if (userRole) {
 					storage.setUserRole(userRole);
 				}
 
 				setAuth({
-					username: response.user.username,
-					id: response.user.id,
+					user: {
+						id: response.user.id,
+						firstname: response.user.firstname,
+						lastname: response.user.lastname,
+					},
 					token: response.token,
 					authenticated: true,
 					role: userRole,
-				});
+				} as AuthProps);
 			}
 			return response;
 		} catch (error: any) {

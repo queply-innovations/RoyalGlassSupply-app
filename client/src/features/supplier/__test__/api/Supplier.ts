@@ -3,13 +3,25 @@ import storage from '@/utils/storage';
 import { API_URLS } from '@/api';
 import { Supplier } from '../../types';
 
-export const fetchSuppliers = async (): Promise<Supplier[]> => {
-	return axios.get(`${API_URLS.SUPPLIERS}`, {
-		headers: {
-			Authorization: `Bearer ${storage.getToken()}`,
-			'Content-Type': 'application/json',
-		},
-	});
+export const fetchSuppliers = async (updateProgress: any): Promise<Supplier[]> => {
+	return await axios
+		.get(API_URLS.SUPPLIERS, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+			onDownloadProgress: (progress) => {
+				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+				updateProgress(percentCompleted);
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching suppliers:', error);
+			throw error;
+		});
 };
 
 export const addSupplier = (data: Supplier) => {

@@ -18,7 +18,11 @@ class TransferProductResource extends JsonResource
             'id' => $this->id,
             'transfer_id' => $this->transfer_id,
             'product' => new ProductResource($this->product),
-            'quantity' => $this->quantity,
+            'capital_price' => $this->capital_price,
+            'bundles_count' => $this->bundles_count,
+            'bundles_unit' => $this->bundles_unit,
+            'quantity_per_bundle' => $this->quantity_per_bundle,
+            'total_quantity' => $this->quantity,
             'unit' => $this->unit,
             'source_inventory' => $this->source_inventory
         ];

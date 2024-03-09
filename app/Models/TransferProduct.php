@@ -13,7 +13,11 @@ class TransferProduct extends Model
     protected $fillable = [
         'transfer_id',
         'product_id',
-        'quantity',
+        'capital_price',
+        'bundles_count',
+        'bundles_unit',
+        'quantity_per_bundle',
+        'total_quantity',
         'unit',
         'source_inventory'
     ];

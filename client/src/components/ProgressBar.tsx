@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
-export const ProgressBar = () => {
-	const [completed, setCompleted] = useState(
-		Math.floor(Math.random() * 10) + 1,
-	);
+export const ProgressBar = (progress: any) => {
+	const [completed, setCompleted] = useState(0);
+
+	useEffect(() => {
+		if (progress.length > 0) {
+			setCompleted(progress.progress);
+		} else {
+			if (completed <= 90) {
+				const changing = setInterval(() => {
+					setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
+				}, 700);
+	
+				return () => clearInterval(changing);
+			}
+		}
+	}, [completed]);
 
 	const containerStyles = {
 		height: 20,
@@ -19,7 +31,7 @@ export const ProgressBar = () => {
 		backgroundColor: '#16A116',
 		borderRadius: 'inherit',
 		textAlign: 'right' as const,
-		transition: 'width 500ms ease-in-out',
+		transition: 'width 1000ms ease-in-out',
 	};
 
 	const labelStyles = {
@@ -28,16 +40,18 @@ export const ProgressBar = () => {
 		fontWeight: 'bold',
 	};
 
-	useEffect(() => {
-		if (completed <= 90) {
-			const changing = setInterval(() => {
-				setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
-			}, 500);
+	// console.log(progress, 'progress');
 
-			return () => clearInterval(changing);
-		}
-	}, [completed]);
+	// useEffect(() => {
+	// 	if (completed <= 90) {
+	// 		const changing = setInterval(() => {
+	// 			setCompleted(completed + (Math.floor(Math.random() * 10) + 1));
+	// 		}, 1000);
 
+	// 		return () => clearInterval(changing);
+	// 	}
+	// }, [completed]);
+	// useEffect(() => {}, [completed]);
 	return (
 		<div style={containerStyles}>
 			<div

@@ -12,6 +12,7 @@ class Transfer extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'created_by',
         'source',
         'destination',
@@ -20,13 +21,14 @@ class Transfer extends Model
         'approved_by',
         'transfer_status',
         'date_received',
-        'received_by'
+        'received_by',
+        'notes'
     ];
 
     protected $with = [
         'createdBy:id,firstname,lastname',
-        'sourceWarehouse:id,name',
-        'destinationWarehouse:id,name',
+        'sourceWarehouse:id,code,name',
+        'destinationWarehouse:id,code,name',
         'approvedBy:id,firstname,lastname',
         'receivedBy:id,firstname,lastname'
     ];
