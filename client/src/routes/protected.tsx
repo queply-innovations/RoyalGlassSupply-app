@@ -9,7 +9,8 @@ import { ProgressBar } from '@/components';
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
 const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
-const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
+// const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
+const { Inventory } = lazyImport(() => import('@/pages/__test__'), 'Inventory');
 const { Invoice } = lazyImport(() => import('@/pages/__test__'), 'Invoice');
 const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),

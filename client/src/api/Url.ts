@@ -14,6 +14,7 @@ export const API_URLS = {
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
 	LOGIN: `${API_BASE_URL}/login`,
 	WAREHOUSE: `${API_BASE_URL}/warehouses`,
+	INVENTORY: `${API_BASE_URL}/inventories`,
 	INVOICE: `${API_BASE_URL}/invoices`,
 	INVOICE_ITEMS: `${API_BASE_URL}/invoice-items`,
 	INVOICE_DISCOUNTS: `${API_BASE_URL}/invoice-discounts`,
