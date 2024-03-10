@@ -10,7 +10,13 @@ import {
 	DropdownMenuTrigger,
 } from '@/components';
 import { SortIcon } from '@/assets/icons';
-import { MoreVertical, Pencil } from 'lucide-react';
+import {
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
+	MoreVertical,
+	Pencil,
+} from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
@@ -52,21 +58,52 @@ export const ProductsCols = ({
 		},
 		{
 			accessorKey: 'id',
-			header: () => <div className="justify-center uppercase">Id</div>,
-		},
-		{
-			id: 'name',
-			accessorKey: 'name',
+			sortingFn: 'text',
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
-					<div className="justify-center">
+					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent uppercase text-black"
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Name <SortIcon />
+							Id{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
+		},
+		{
+			id: 'name',
+			accessorKey: 'name',
+			sortingFn: 'text',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Name{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
 						</Button>
 					</div>
 				);

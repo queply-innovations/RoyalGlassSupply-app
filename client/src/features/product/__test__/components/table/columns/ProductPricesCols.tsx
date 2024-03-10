@@ -22,6 +22,9 @@ import {
 	List,
 	CircleOff,
 	CheckCircle,
+	ArrowUp,
+	ArrowDown,
+	ArrowUpDown,
 } from 'lucide-react';
 
 interface ProductPricesColumnsProps {
@@ -69,16 +72,25 @@ export const ProductPricesColumns = ({
 		{
 			id: 'name',
 			accessorKey: 'product.name',
+			sortingFn: 'text',
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
-					<div className="justify-center">
+					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent uppercase text-black"
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Name <SortIcon />
+							Product name{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
 						</Button>
 					</div>
 				);
@@ -280,9 +292,29 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'active_status',
-			header: () => (
-				<div className="mx-auto w-fit text-center uppercase">Active</div>
-			),
+			sortingFn: 'basic',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Active{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const active = row.original.active_status;
 				return (
