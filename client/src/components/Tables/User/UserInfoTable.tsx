@@ -1,32 +1,30 @@
+import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
+import { User } from '@/entities';
 import { useQuery } from '@tanstack/react-query';
-
+import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
 import { FC, useState } from 'react';
+import { DataTable } from '../DataTable';
+import { StringValidation } from 'zod';
 
 interface UserTableProps {
 	data: any;
-	roles: any,
+	openModal: (data: User, action: string) => void;
 }
 
-export const UserInfoTable: FC<UserTableProps> = ({ data, roles }) =>{
-	const userInfoTableHeader: string[] = [
-		'',
-		'Complete Name',
-		'Role',
-		'Username',
-		'Contact',
-		'Email Address',
-		'Action',
-	];
-
+export const UserInfoTable: FC<UserTableProps> = ({ data, openModal }) =>{
 	type UserInfo = {
 		id: number;
-		name: string;
-		location: string;
+		lastname: string;
+		firstname: string;
+		position: string;
+		username: string;
+		contact_no: string;
+		email: string;
 	};
 
-	const UserInfoTableHeader: ColumnDef<Warehouse>[] = [
+	const UserInfoTableHeader: ColumnDef<UserInfo>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -49,20 +47,15 @@ export const UserInfoTable: FC<UserTableProps> = ({ data, roles }) =>{
 		},
 
 		{
-			accessorKey: 'id',
-			header:	() => <div className='justify-center'>WAREHOUSE ID</div>,
-		},
-
-		{
-			accessorKey: 'name',
+			accessorKey: 'lastname',
 			header: ({ column }) => {
 				return (
-					<div className='justify-center'>
+					<div>
 						<Button
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row"
 						>
-							WAREHOUSE NAME <SortIcon />
+							LAST NAME <SortIcon />
 						</Button>
 					</div>
 				)
@@ -70,30 +63,50 @@ export const UserInfoTable: FC<UserTableProps> = ({ data, roles }) =>{
 		},
 
 		{
-			accessorKey: 'location',
-			header:	() => <div className='justify-center'>LOCATION</div>,
+			accessorKey: 'firstname',
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							className="bg-transparent text-black flex flex-row"
+						>
+							FIRST NAME <SortIcon />
+						</Button>
+					</div>
+				)
+			},
+		},
+
+		{
+			accessorKey: 'position',
+			header:	() => <div>ROLE</div>,
+		},
+
+		{
+			accessorKey: 'username',
+			header:	() => <div>USERNAME</div>,
+		},
+
+		{
+			accessorKey: 'contact_no',
+			header:	() => <div>CONTACT</div>,
+		},
+
+		{
+			accessorKey: 'email',
+			header:	() => <div>EMAIL ADDRESS</div>,
 		},
 
 		{
 			id: 'actions',
-			header:	() => <div className='flex flex-row justify-center'>ACTIONS</div>,
+			header:	() => <div>ACTION</div>,
 			cell: ({ row }) => {
-				const warehouseRow = row.original;
+				const userinfoRow = row.original;
 				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleEditWarehouse(warehouseRow)}
-							className="flex flex-row items-center gap-2"
-						>
-							<FaPencilAlt /> Edit
-						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveWarehouse(warehouseRow)}
-						>
-							Remove
+					<div className="flex flex-row text-xs font-normal uppercase">
+						<Button fill={'yellow'} textColor={'black'}>
+							Edit User
 						</Button>
 					</div>
 				);
@@ -104,55 +117,12 @@ export const UserInfoTable: FC<UserTableProps> = ({ data, roles }) =>{
 
 	return (
 		<>
-			<table className="w-full overflow-y-scroll">
-				<thead className="table-head border-b border-black/10 bg-white ">
-					<tr>
-						{userInfoTableHeader.map(header => (
-							<th
-								key={header}
-								className="py-5 text-xs font-bold uppercase"
-							>
-								{header}
-							</th>
-						))}
-					</tr>
-				</thead>
-
-				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.map((userInfo: any) => {
-						const personRole = roles.find(role => role.user_id === userInfo.id);
-						return (
-							<tr key={userInfo.id} className="text-center">
-								<td className="w-16">
-									<input type="checkbox" />
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									<span>
-										{`${userInfo.lastname}, ${userInfo.firstname}`}
-									</span>
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{personRole ? personRole.role.title : 'No Role'}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{userInfo.username}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{userInfo.contact_no}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{userInfo.email}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									<Button fill={'yellow'} textColor={'black'}>
-										Edit User
-									</Button>
-								</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+			<DataTable
+				data={data}
+				columns={UserInfoTableHeader}
+				filterWhat={"lastname"}
+				dataType={"User"}
+				openModal={openModal} />
 		</>
 	);
 };

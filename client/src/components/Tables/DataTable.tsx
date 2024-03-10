@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Inputbox, Pagination } from '@/components';
+import { Button, Inputbox, Pagination, ProgressBar } from '@/components';
 
 import {
 	ColumnDef,
@@ -46,7 +46,10 @@ export function DataTable<TData, TValue>({
 		[],
 	);
 
-	const modalHandler = openModal();
+	// ! This code below calls the openModal function,
+	// ! making some pages to open the modal when DataTable is mounted
+	// ! Check other pages that use DataTable and see if error occurs opening modal
+	// ? const modalHandler = openModal();
 
 	const table = useReactTable({
 		data,
@@ -94,7 +97,7 @@ export function DataTable<TData, TValue>({
 				<div className="flex flex-row-reverse gap-3">
 					<Button
 						fill={'green'}
-						onClick={() => openModal()}
+						onClick={openModal}
 						disabled={isLoading}
 						className="disabled:cursor-not-allowed disabled:opacity-40"
 					>
@@ -109,7 +112,10 @@ export function DataTable<TData, TValue>({
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map(header => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead
+											key={header.id}
+											className="py-5 text-center text-xs font-bold uppercase"
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -128,6 +134,7 @@ export function DataTable<TData, TValue>({
 								<TableRow
 									key={row.id}
 									data-state={row.getIsSelected() && 'selected'}
+									className="py-2 text-center text-xs font-normal uppercase"
 								>
 									{row.getVisibleCells().map(cell => (
 										<TableCell key={cell.id}>
@@ -143,7 +150,7 @@ export function DataTable<TData, TValue>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center"
+									className="h-24 items-center justify-center space-y-0 px-20 text-center"
 								>
 									<div className="flex items-center justify-center text-slate-800/60">
 										<Loader2

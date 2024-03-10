@@ -1,12 +1,27 @@
 import LayoutWrapper from '@/layouts/Layout';
-import { useSupplier } from '@/api/Supplier';
+import { getSuppliers } from '@/features/auth/api/getSuppliers';
 import { Button, Modal, Inputbox } from '@/components';
 import { useModal } from '@/utils/Modal';
 import { SupplierForm, SupplierTable } from '@/pages';
+import { useEffect, useState } from 'react';
 
 export const Supplier = () => {
-	const { data: supplier } = useSupplier();
+	const [data, setData] = useState(Array<unknown>);
+	const [notLoading, setNotLoading] = useState(false);
 	const { isOpen, openModal, closeModal } = useModal();
+
+	useEffect(() => {
+		async function gettingSuppliers() {
+			try {
+				const data2 = await getSuppliers();
+				setData(data2.data.data);
+				setNotLoading(true);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		gettingSuppliers();
+	}, []);
 
 	return (
 		<>
@@ -16,31 +31,18 @@ export const Supplier = () => {
 						Supplier
 					</h1>
 					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="flex flex-row justify-between">
-							<Inputbox
-								placeholder="Search"
-								variant={'searchbar'}
-								buttonIcon={'outside'}
-								className="w-1/2"
-							/>
-							<div className="flex flex-row gap-3">
-								<Button fill={'green'} onClick={openModal}>
-									Add Supplier
-								</Button>
-							</div>
-						</div>
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<SupplierTable data={supplier} />
+							<SupplierTable data={data} onOpen={openModal}/>
 						</div>
 					</div>
 				</div>
 				<Modal
-					title={'Add Warehouse'}
+					title={'Add Supplier'}
 					isOpen={isOpen}
 					onClose={closeModal}
 					closeButton
 				>
-					<SupplierForm data={supplier} onClose={closeModal} />
+					<SupplierForm data={data} onClose={closeModal} />
 				</Modal>
 			</LayoutWrapper>
 		</>

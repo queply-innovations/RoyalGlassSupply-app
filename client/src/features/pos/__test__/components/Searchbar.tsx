@@ -14,9 +14,12 @@ interface SearchBarProps {}
 
 export const SearchBar = ({}: SearchBarProps) => {
 	const [search, setSearch] = useState('');
-	const { productInfo, isLoading, selectedProducts, setSelectedProducts } =
-		usePos();
-
+	const {
+		isLoading,
+		selectedProducts,
+		setSelectedProducts,
+		warehouseProducts,
+	} = usePos();
 	return (
 		<div className="relative z-50 border pb-10">
 			<div className="absolute box-content flex w-full ">
@@ -29,21 +32,21 @@ export const SearchBar = ({}: SearchBarProps) => {
 								? 'Loading Products'
 								: 'Enter Serial Number / Brand / Product Name'
 						}
-						disabled={isLoading}
+						disabled={warehouseProducts.length === 0}
 					/>
 					<CommandList className="">
 						{!search ? null : (
 							<>
 								<CommandEmpty>Product Not Found</CommandEmpty>
-								{productInfo.map((product, index) => {
+								{warehouseProducts.map((product, index) => {
 									return (
 										<CommandItem
 											className=""
 											key={index}
 											value={
 												product.type === 'retail'
-													? `${product.product.name} (Retail)`
-													: `${product.product.name} (Wholesale)`
+													? `${product.product.name} (Retail) ${product.warehouse}`
+													: `${product.product.name} (Wholesale) ${product.warehouse}`
 											}
 											onSelect={value => {
 												const match = value.match(/\(([^)]+)\)/);
@@ -91,7 +94,7 @@ export const SearchBar = ({}: SearchBarProps) => {
 													)}
 													<span>{product.product.name}</span>
 													<span className="text-xs text-gray-600 ">
-														({product.type})
+														{`(${product.type} ${product.warehouse.code}) ${product.stocks_quantity}`}
 													</span>
 												</div>
 												<div>

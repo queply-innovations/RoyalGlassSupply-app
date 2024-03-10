@@ -1,12 +1,11 @@
 import { User } from '@/features/auth';
-import { Warehouse } from '@/features/warehouse/__test__/types';
 
 export interface Invoices {
 	id: number;
 	code: string;
 	customer_id: number;
-	warehouse_id: Pick<Warehouse, 'id' | 'code' | 'name'>;
-	issued_by: Pick<User, 'id' | 'firstname' | 'lastname'>;
+	warehouse_id: number;
+	issued_by: number;
 	type: 'payment' | 'exit' | 'invoice' | string;
 	payment_method: 'cash' | 'credit' | 'debit' | 'wallet' | 'cheque' | string; // what is wallet?
 	reference_no: string;

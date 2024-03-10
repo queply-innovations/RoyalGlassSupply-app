@@ -10,6 +10,7 @@ import {
 import storage from '@/utils/storage';
 
 interface AuthProps {
+	user: User;
 	authenticated: boolean | null;
 	id: number;
 	role: string | null;
@@ -18,7 +19,10 @@ interface AuthProps {
 }
 interface AuthContextProps {
 	auth: AuthProps;
-	login(credentials: LoginCredentials): Promise<UserResponse>;
+	login(
+		credentials: LoginCredentials,
+		updateProgress: any,
+	): Promise<UserResponse>;
 	logout(): void;
 }
 
@@ -37,7 +41,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		localStorage.setItem('auth', JSON.stringify(auth));
 	}, [auth]);
 
-	async function login(credentials: LoginCredentials): Promise<UserResponse> {
+	async function login(
+		credentials: LoginCredentials,
+		updateProgress: any,
+	): Promise<UserResponse> {
 		try {
 			// Log user in using credentials
 			const response = await LoginUser(credentials);
@@ -45,7 +52,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				// Set user token
 				storage.setToken(response.token);
 				// Get user role and store to local storage
-				const userRole = await getUserRole(response.user.id);
+				const userRole = await getUserRole(
+					response.user.id,
+					updateProgress,
+				);
 				if (userRole) {
 					storage.setUserRole(userRole);
 				}
@@ -59,7 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					token: response.token,
 					authenticated: true,
 					role: userRole,
-				});
+				} as AuthProps);
 			}
 			return response;
 		} catch (error: any) {

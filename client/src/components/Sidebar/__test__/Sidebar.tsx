@@ -3,7 +3,7 @@ import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoutesGrouped } from '../routes/SidebarRoutesGrouped';
 import { SidebarItem } from '../components/items/SidebarItem';
 import { Role } from '../types';
-import { useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';
@@ -14,6 +14,22 @@ const Sidebar = ({}: SidebarProps) => {
 	const { auth, logout } = useAuth();
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
+
+	// const [open, setOpen] = useState("");
+
+	// const handleClick = (itemId: string) => setOpen(itemId);
+
+	// const [ sidebar , setSidebar ] = useState(SidebarRoute);
+	// useEffect(() => {
+	// 	const filteredRoute = sidebar.map(route => (
+	// 		{
+	// 			...route, child: route.child?.filter(
+	// 				subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
+	// 			)
+	// 		}
+	// 	));
+	// 	setSidebar(filteredRoute);
+	// }, []);
 
 	return (
 		<>

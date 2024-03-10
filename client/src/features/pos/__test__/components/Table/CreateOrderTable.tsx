@@ -36,6 +36,9 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			header: () => <div className="flex justify-center">Quantity</div>,
 			cell: ({ row }) => {
 				const productIndex = row.index;
+				const maxQuantity =
+					selectedProducts[productIndex].product.stocks_quantity ?? 0;
+
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
@@ -45,6 +48,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity - 1,
+										maxQuantity,
 									);
 								}}
 							>
@@ -53,17 +57,31 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 							<Input
 								className="w-20 rounded-none text-center drop-shadow-none"
 								type="number"
-								value={row.original.quantity}
-								onChange={() => {}}
+								value={row.original.quantity || ''}
+								onChange={e => {
+									quantityHandler(
+										productIndex,
+										Number(e.target.value),
+										maxQuantity,
+									);
+								}}
+								disabled={maxQuantity <= 1 ? true : false}
 							/>
 							<Button
-								className="rounded-sm bg-slate-500 hover:bg-slate-700"
+								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-200"
 								onClick={() => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity + 1,
+										maxQuantity,
 									);
 								}}
+								disabled={
+									maxQuantity <= 1 ||
+									maxQuantity <= row.original.quantity
+										? true
+										: false
+								}
 							>
 								<span>+</span>
 							</Button>

@@ -2,13 +2,22 @@ import axios from 'axios';
 import storage from '@/utils/storage';
 import { API_HEADERS, API_URLS } from '@/api';
 import { Warehouse } from '../types';
+// import { ToastContainer, toast } from 'react-toastify';
+// import "react-toastify/dist/ReactToastify.css";
 
-export const fetchWarehouses = async (): Promise<Warehouse[]> => {
+export const fetchWarehouses = async (updateProgress: any): Promise<Warehouse[]> => {
 	return await axios
 		.get(API_URLS.WAREHOUSE, {
 			headers: API_HEADERS(),
+			onDownloadProgress: (progress) => {
+				if (progress.total) {
+					let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+					updateProgress(percentCompleted);
+				}
+			},
 		})
 		.then(response => {
+			setTimeout(() => {updateProgress(100)}, 2000);
 			return response.data.data;
 		})
 		.catch((error: Error) => {

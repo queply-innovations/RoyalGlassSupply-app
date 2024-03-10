@@ -6,26 +6,105 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, FC, useState } from 'react';
 import { SupplierForm } from '@/pages';
 import { FaPencilAlt } from 'react-icons/fa';
+import { ColumnDef } from '@tanstack/react-table';
+import { SortIcon } from '@/assets/icons';
+import { DataTable } from '@/components/Tables/DataTable';
 
 interface SupplierTableProps {
 	data: any;
+	onOpen: any;
 }
 
-export const SupplierTable: FC<SupplierTableProps> = ({ data }) => {
+export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 	const queryClient = useQueryClient();
-	const SupplierTableHeader: string[] = [
-		'',
-		'Supplier ID',
-		'Supplier Name',
-		'Contact Number',
-		'Location',
-		'Action',
+
+	type Supplier = {
+		id: number;
+		name: string;
+		contact_no: string;
+		address: string;
+	};
+
+	const SupplierTableHeader: ColumnDef<Supplier>[] = [
+		{
+			id: "select",
+			header: ({ table }) => (
+				<input type="checkbox" 
+					checked={table.getIsAllPageRowsSelected()}
+					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+					aria-label="Select all"
+				/>
+			),
+			cell: ({ row }) => (
+				<input type="checkbox" 
+					checked={row.getIsSelected()}
+					onChange={(e) => row.toggleSelected(!!e.target.checked)}
+					aria-label="Select row"
+					className="justify-center"
+				/>
+			),
+			enableSorting: false,
+			enableHiding: false,
+		},
+
+		{
+			accessorKey: 'name',
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							className="bg-transparent text-black flex flex-row ml-auto mr-auto items-center"
+						>
+							NAME <SortIcon />
+						</Button>
+					</div>
+				)
+			},
+		},
+
+		{
+			accessorKey: 'contact_no',
+			header:	() => <div>CONTACT NUMBER</div>,
+		},
+
+		{
+			accessorKey: 'address',
+			header:	() => <div>ADDRESS</div>,
+		},
+
+		{
+			id: 'actions',
+			header:	() => <div>ACTION</div>,
+			cell: ({ row }) => {
+				const supplierRow = row.original;
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<Button
+							fill="empty"
+							textColor={'black'}
+							onClick={() => handleUpdateModal(supplierRow)}
+							className="flex flex-row items-center gap-2"
+						>
+							<FaPencilAlt /> Edit
+						</Button>
+						<Button
+							fill={'red'}
+							onClick={() => handleRemoveSupplier(supplierRow)}
+						>
+							Remove
+						</Button>
+					</div>
+				);
+			}
+		}
+
 	];
+
 	const removeModal = useModal();
 	const successModal = useModal();
 	const updateModal = useModal();
 	const [selectedSupplier, setSelectedSupplier] = useState<any | null>(null);
-	const { isLoading } = useSupplier();
 
 	const { mutateAsync: removeSupplierMutation } = useMutation({
 		mutationKey: ['removeSupplier:', selectedSupplier],
@@ -54,73 +133,13 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data }) => {
 
 	return (
 		<>
-			<table className="w-full overflow-y-scroll">
-				<thead className="table-head border-b border-black/10 bg-white ">
-					<tr>
-						{SupplierTableHeader.map(header => (
-							<th
-								key={header}
-								className="py-5 text-xs font-bold uppercase"
-							>
-								{header}
-							</th>
-						))}
-					</tr>
-				</thead>
-				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.map((supplier: any) => {
-						const handleCheckboxChange = (
-							event: ChangeEvent<HTMLInputElement>,
-						) => {
-							if (event.target.checked) {
-								console.log(
-									'Checkbox checked for supplier ID:',
-									supplier,
-								);
-							}
-						};
+			<DataTable
+				data={data}
+				columns={SupplierTableHeader}
+				filterWhat={"name"}
+				dataType={"Supplier"}
+				openModal={onOpen} />
 
-						return (
-							<tr key={supplier.id} className="text-center">
-								<td className="w-16">
-									<input
-										type="checkbox"
-										onChange={handleCheckboxChange}
-									/>
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									<span>{supplier.id}</span>
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{supplier.name}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{supplier.contact_number}
-								</td>
-								<td className="py-2 text-xs font-normal uppercase">
-									{supplier.address}
-								</td>
-								<td className="flex flex-row justify-center gap-3 py-2 text-xs font-normal uppercase">
-									<Button
-										fill={'empty'}
-										textColor={'black'}
-										onClick={() => handleUpdateModal(supplier)}
-										className="flex flex-row gap-2"
-									>
-										<FaPencilAlt /> Edit
-									</Button>
-									<Button
-										fill={'red'}
-										onClick={() => handleRemoveSupplier(supplier)}
-									>
-										Remove
-									</Button>
-								</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
 			<Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
 				<>
 					<div className="flex flex-col gap-4">
@@ -181,12 +200,6 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data }) => {
 					</Button>
 				</div>
 			</Modal>
-
-			{isLoading && (
-				<div className="flex items-center justify-center">
-					Fetching Supplier Information Data...
-				</div>
-			)}
 		</>
 	);
 };
