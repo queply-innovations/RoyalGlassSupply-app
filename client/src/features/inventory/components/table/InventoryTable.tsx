@@ -14,7 +14,7 @@ export const InventoryTable = ({
 	filterWarehouse,
 }: InventoryTableProps) => {
 	const [inventoryData, setInventoryData] = useState<Inventory[]>([]);
-	const { data, isLoading } = useInventory();
+	const { data, isLoading, setSelectedInventory } = useInventory();
 
 	useEffect(() => {
 		// If filterWarehouse is given, filter the inventory data by warehouse code
@@ -28,16 +28,27 @@ export const InventoryTable = ({
 		}
 	}, [data, filterWarehouse]);
 
+	const handleAddInventory = () => {
+		openModal({} as Inventory, 'add');
+	};
+
+	const handleEditInventory = () => {
+		openModal({} as Inventory, 'edit');
+	};
+
+	const handleViewItems = (inventory: Inventory) => {
+		setSelectedInventory(inventory);
+		openModal(inventory, 'view_items');
+	};
+
 	return (
 		<>
 			<DataTable
-				columns={InventoryCols()}
+				columns={InventoryCols({ handleViewItems })}
 				data={inventoryData}
 				filterWhat={'code'}
 				dataType={'Inventory'}
-				openModal={() => {
-					return null;
-				}}
+				openModal={handleAddInventory}
 				isLoading={isLoading}
 			/>
 		</>

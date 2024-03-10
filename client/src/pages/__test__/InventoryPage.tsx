@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { MainLayout } from '@/layouts/MainLayout';
+import { ModalTest } from '@/components/__test__/Modal/Modal';
+import { useModal } from '@/utils/Modal';
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
+import { Inventory as InventoryType } from '@/features/inventory/types';
 import { InventoryProvider } from '@/features/inventory/context/InventoryContext';
 import { InventoryTable } from '@/features/inventory/components/table/InventoryTable';
 import {
@@ -10,10 +13,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { ViewItems } from '@/features/inventory/components/modal/ViewItems';
 
 export const Inventory = () => {
 	const { warehouses } = useWarehouseQuery();
 	const [filterWarehouse, setFilterWarehouse] = useState(0);
+
+	// Modal handlers
+	const { openModal, isOpen, closeModal } = useModal();
+	const [modalAction, setModalAction] = useState<string>('');
+
+	const modalHandler = (inventory: InventoryType, action: string) => {
+		setModalAction(action);
+		openModal();
+	};
 
 	return (
 		<>
@@ -56,10 +69,28 @@ export const Inventory = () => {
 									// filter the inventory data by warehouse code
 									filterWarehouse > 0 ? filterWarehouse : undefined
 								}
-								openModal={() => {}}
+								openModal={modalHandler}
 							/>
 						</div>
 					</div>
+
+					<ModalTest
+						isOpen={isOpen}
+						onClose={closeModal}
+						title={
+							modalAction === 'add'
+								? 'Add Inventory'
+								: modalAction === 'view_items'
+									? 'View Items'
+									: ''
+						}
+					>
+						<>
+							{modalAction === 'view_items' && (
+								<ViewItems onClose={closeModal} />
+							)}
+						</>
+					</ModalTest>
 				</InventoryProvider>
 			</MainLayout>
 		</>

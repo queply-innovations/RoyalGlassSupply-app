@@ -20,7 +20,11 @@ import {
 } from 'lucide-react';
 import { formatUTCDate } from '@/utils/timeUtils';
 
-export const InventoryCols = () => {
+interface InventoryColsProps {
+	handleViewItems: (inventory: Inventory) => void;
+}
+
+export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 	const columnDefinition: ColumnDef<Inventory>[] = [
 		{
 			id: 'select',
@@ -204,6 +208,7 @@ export const InventoryCols = () => {
 		{
 			id: 'actions',
 			cell: ({ row }) => {
+				const inventoryRow = row.original;
 				return (
 					<div className="flex flex-row justify-center text-xs font-normal uppercase">
 						<DropdownMenu>
@@ -214,7 +219,9 @@ export const InventoryCols = () => {
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
 								<DropdownMenuItem
-									onClick={() => {}}
+									onClick={() => {
+										handleViewItems(inventoryRow);
+									}}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
