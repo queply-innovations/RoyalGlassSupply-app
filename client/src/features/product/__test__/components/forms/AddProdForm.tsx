@@ -28,7 +28,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 						action: 'add',
 						data: FormValue,
 					});
-					response?.status === 200
+					response?.status === 201
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to submit product'));
