@@ -32,7 +32,7 @@ class InventoryProductResource extends JsonResource
             'damage_count' => $this->damage_count,
             'total_count' => $this->total_count,
             'unit' => $this->unit,
-            'transferred_count' => $transferred_count,
+            'transferred_count' => $transferred_stocks_count,
             'sold_count' => $sold_count,
             'remaining_stocks_count' => $this->stocks_count - ($transferred_stocks_count + $sold_count)
         ];
