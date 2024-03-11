@@ -13,6 +13,7 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	Boxes,
 	List,
 	MoreVertical,
 	Pencil,
@@ -113,7 +114,7 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 							}
 							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Warehouse{' '}
+							WHS{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp size={18} strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
@@ -154,15 +155,22 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 		},
 		{
 			accessorKey: 'date_received',
-			header: () => (
-				<div className="justify-center uppercase">Received on</div>
-			),
+			header: () => <div className="justify-center uppercase">Received</div>,
 		},
 		{
 			accessorKey: 'transfer_id',
 			header: () => (
 				<div className="justify-center uppercase">Transer Id</div>
 			),
+			cell: ({ row }) => {
+				return (
+					<div className="uppercase">
+						<span>
+							{row.original.transfer_id ? row.original.transfer_id : '—'}
+						</span>
+					</div>
+				);
+			},
 		},
 		{
 			accessorKey: 'created_by',
@@ -199,8 +207,10 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 			header: () => <div className="justify-center uppercase">Notes</div>,
 			cell: ({ row }) => {
 				return (
-					<div className="overflow-ellipsis whitespace-nowrap">
-						<span>{row.original.notes}</span>
+					<div>
+						<p className="max-w-[25ch] truncate">
+							{row.original.notes ? row.original.notes : '—'}
+						</p>
 					</div>
 				);
 			},
@@ -225,9 +235,18 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
-										<List size={16} strokeWidth={2.25} />
+										<Boxes size={16} strokeWidth={2} />
 									</span>
 									<span>View items</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => {}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<List size={16} strokeWidth={2.25} />
+									</span>
+									<span>Details</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => {}}
@@ -241,7 +260,7 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 								<DropdownMenuSeparator className="bg-gray-200" />
 								<DropdownMenuItem
 									onClick={() => {}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
 								>
 									<span className="flex w-6 items-center justify-center">
 										<Trash2 size={16} strokeWidth={2.25} />

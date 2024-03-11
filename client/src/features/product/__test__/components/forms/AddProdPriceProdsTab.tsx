@@ -101,14 +101,10 @@ export const AddProdPriceProdsTab = ({
 				</PopoverContent>
 			</Popover>
 			{selectedProduct.id && (
-				<div className="mt-4 grid grid-flow-row grid-cols-4 gap-4 text-sm text-slate-700">
+				<div className="mt-4 grid grid-flow-row grid-cols-3 gap-4 text-sm text-slate-700">
 					<div className="flex flex-col gap-1">
 						<h3 className="font-bold">Serial Number</h3>
 						<p className="font-medium">{selectedProduct.serial_no}</p>
-					</div>
-					<div className="flex flex-col gap-1">
-						<h3 className="font-bold">Brand</h3>
-						<p className="font-medium">{selectedProduct.brand}</p>
 					</div>
 					<div className="flex flex-col gap-1">
 						<h3 className="font-bold">Size</h3>
@@ -118,7 +114,7 @@ export const AddProdPriceProdsTab = ({
 						<h3 className="font-bold">Color</h3>
 						<p className="font-medium">{selectedProduct.color}</p>
 					</div>
-					<div className="col-span-2 flex flex-col gap-1">
+					<div className="col-span-3 flex flex-col gap-1">
 						<h3 className="font-bold">Notes</h3>
 						<p className="font-medium">{selectedProduct.notes}</p>
 					</div>

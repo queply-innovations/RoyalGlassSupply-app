@@ -16,20 +16,29 @@ export interface Inventory {
 }
 
 export interface InventoryProduct {
-  id: number;
-  inventory_id: number;
-  product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
-  supplier_id: {id: number, name: string};
-  capital_price: number;
-  bundles_count: number;
-  bundles_unit: string;
-  quantity_per_bundle: number;
-  stocks_count: number;
-  damage_count: number;
-  total_count: number;
-  unit: string;
-  transferred_stocks_count?: number;
-  sold_count: number;
-  miscellaneous_count?: number;
-  remaining_stocks_count: number;
+	id: number;
+	inventory_id: number;
+	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
+	supplier_id: { id: number; name: string };
+	capital_price: number;
+	bundles_count: number;
+	bundles_unit: string;
+	quantity_per_bundle: number;
+	stocks_count: number;
+	damage_count: number;
+	total_count: number;
+	unit: string;
+	transferred_stocks_count?: number;
+	sold_count: number;
+	miscellaneous_count?: number;
+	remaining_stocks_count: number;
+}
+
+export interface InventoryDatabase
+	extends Omit<
+		Inventory,
+		'warehouse' | 'created_by' | 'created_at' | 'updated_at'
+	> {
+	warehouse_id: number;
+	created_by: number;
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { Inventory, InventoryProduct } from '../types';
+import { Inventory, InventoryProduct, InventoryDatabase } from '../types';
 
 export const fetchInventory = async (): Promise<Inventory[]> => {
 	return await axios
@@ -46,6 +46,22 @@ export const fetchInventoryProductById = async (
 		})
 		.catch(error => {
 			console.error('Error fetching inventory product by id:', error);
+			throw error;
+		});
+};
+
+export const addInventory = async (
+	data: Partial<Omit<InventoryDatabase, 'id'>>,
+) => {
+	return await axios
+		.post(API_URLS.INVENTORY, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			console.error('Error adding inventory:', error);
 			throw error;
 		});
 };

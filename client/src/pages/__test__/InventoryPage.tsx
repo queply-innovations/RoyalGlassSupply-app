@@ -13,6 +13,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { AddInventoryForm } from '@/features/inventory/components/forms/AddInventoryForm';
 import { ViewItems } from '@/features/inventory/components/modal/ViewItems';
 
 export const Inventory = () => {
@@ -86,6 +87,12 @@ export const Inventory = () => {
 						}
 					>
 						<>
+							{modalAction === 'add' && (
+								<AddInventoryForm
+									warehouses={warehouses}
+									onClose={closeModal}
+								/>
+							)}
 							{modalAction === 'view_items' && (
 								<ViewItems onClose={closeModal} />
 							)}
