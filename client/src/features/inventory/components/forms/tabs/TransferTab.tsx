@@ -161,7 +161,7 @@ export const TransferTab = ({ FormValue, handleChange }: TransferTabProps) => {
 								<CommandEmpty>No match found</CommandEmpty>
 								<ScrollArea className="max-h-[200px] overflow-y-scroll">
 									<CommandGroup>
-										{transfers.map((transfer, key) => (
+										{transfers.map(transfer => (
 											<CommandItem
 												key={transfer.id}
 												value={

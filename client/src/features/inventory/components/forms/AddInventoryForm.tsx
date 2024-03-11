@@ -169,6 +169,7 @@ export const AddInventoryForm = ({
 					<div className="ml-auto flex flex-row gap-4">
 						<LegacyButton
 							fill={'default'}
+							type="reset"
 							onClick={() => onClose()}
 							className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
 						>
