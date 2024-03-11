@@ -16,7 +16,7 @@ export const TransferDetails = ({ onClose }: TransferDetailsProps) => {
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 					<div className="col-span-6 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Transfer Code</h3>
-						<p className="text-sm">{selectedTransfer.code}</p>
+						<p className="text-sm">{selectedTransfer.code ? selectedTransfer.code : 'N/A'}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">
@@ -38,8 +38,9 @@ export const TransferDetails = ({ onClose }: TransferDetailsProps) => {
 							Transfer status
 						</h3>
 						<p className="text-sm">
-							{selectedTransfer.transfer_status.charAt(0).toUpperCase() + 
-							selectedTransfer.transfer_status.slice(1)}
+							{selectedTransfer.transfer_status ? 
+								selectedTransfer.transfer_status.charAt(0).toUpperCase() + 
+								selectedTransfer.transfer_status.slice(1) : 'N/A'}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
@@ -47,13 +48,15 @@ export const TransferDetails = ({ onClose }: TransferDetailsProps) => {
 							Transfer schedule
 						</h3>
 						<p className="text-sm">
-							{formatUTCDate(selectedTransfer.transfer_schedule)}
+							{selectedTransfer.transfer_schedule.toString() === '0000-00-00 00:00:00' ? 
+								'N/A' : formatUTCDate(selectedTransfer.transfer_schedule)}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Received by</h3>
 						<p className="text-sm">
-							{selectedTransfer.received_by.firstname + ' ' + selectedTransfer.received_by.lastname}
+							{selectedTransfer.received_by ? 
+								selectedTransfer.received_by.firstname + ' ' + selectedTransfer.received_by.lastname : 'N/A'}
 						</p>
 					</div>
 					<div className="relative col-span-3 flex flex-col justify-center	gap-1">
@@ -61,7 +64,9 @@ export const TransferDetails = ({ onClose }: TransferDetailsProps) => {
 							Date received
 						</h3>
 						<p className="text-sm">
-							{formatUTCDate(selectedTransfer.date_received)}
+							{selectedTransfer.date_received ? 
+								formatUTCDate(selectedTransfer.date_received) :
+								'N/A' }
 						</p>
 					</div>
 				</div>

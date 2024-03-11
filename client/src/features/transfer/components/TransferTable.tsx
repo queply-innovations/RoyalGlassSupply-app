@@ -20,7 +20,11 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	Ban,
+	Check,
+	Clock,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
@@ -28,6 +32,7 @@ interface TransferTableProps {
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
 	const { transfers, isFetching, progress, setSelectedTransfer } = useTransfer();
+	const { auth } = useAuth();
 
 	// Modal handler to expand transfer details
 	const handleTransferDetails = (transfer: Transfer) => {
@@ -95,7 +100,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.code}</div>
+				<div className="text-center">{row.original.code ? row.original.code : 'N/A'}</div>
 			),
 		},
 
@@ -115,7 +120,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			accessorKey: 'transfer_status',
 			header:	() => <div className="text-center">TRANSFER STATUS</div>,
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.transfer_status}</div>
+				<div className="text-center">{row.original.transfer_status ? row.original.transfer_status : 'N/A'}</div>
 			),
 		},
 
@@ -140,11 +145,23 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
-				const details = { year: 'numeric', month: 'long', day: 'numeric' };
-				const format = new Date(sched).toLocaleDateString([], details);
-				return (
-					<div className="text-center">{format}</div>
-				);
+				if (sched.toString() !== '0000-00-00 00:00:00') {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric', 
+						hour:'numeric',
+						minute:'numeric',
+						second:'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
 			},
 		},
 
@@ -153,26 +170,57 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			header:	() => <div className="text-center">DATE RECEIVED</div>,
 			cell: ({ row }) => {
 				const sched: any = row.getValue('date_received');
-				const details = { 
-					year: 'numeric', 
-					month: 'long', 
-					day: 'numeric', 
-					hour:'numeric',
-					minute:'numeric',
-					second:'numeric' };
-				const format = new Date(sched).toLocaleDateString([], details);
-				return (
-					<div className="text-center">{format}</div>
-				);
+				if (sched) {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric', 
+						hour:'numeric',
+						minute:'numeric',
+						second:'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
+				
 			},
 		},
 
 		{
 			accessorKey: 'approval_status',
 			header:	() => <div className="text-center">APPROVAL STATUS</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.approval_status}</div>
-			),
+			cell: ({ row }) => {
+				return (
+					<div className="flex mx-auto items-center justify-center">
+						{
+							row.original.approval_status.toLowerCase() === 'approved' ? ( 
+								<Check
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/> 
+							) : row.original.approval_status.toLowerCase() === 'rejected' ? (
+								<Ban
+									size={20}
+									strokeWidth={2}
+									className="text-red-600"
+								/>
+							) : (
+								<Clock
+									size={20}
+									strokeWidth={2}
+									className="text-amber-500"
+								/>
+							)
+						}
+					</div>
+				);
+			},
 		},
 
 		{
@@ -180,10 +228,14 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			header:	() => <div className="text-center">APPROVED BY</div>,
 			cell: ({ row }) => {
 				const approved_by: any = row.getValue('approved_by');
-				const format = approved_by.firstname + ' ' + approved_by.lastname;
-				return (
-					<div id={approved_by.id} className="text-center">{format}</div>
-				);
+				if (approved_by){
+					const format = approved_by.firstname + ' ' + approved_by.lastname;
+					return (
+						<div id={approved_by.id} className="text-center">{format}</div>
+					);
+				} else {
+					return (<div className="text-center">N/A</div>);
+				}
 			},
 		},
 
@@ -210,15 +262,17 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleEditTransfer(transferRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit</span>
-								</DropdownMenuItem>
+								{auth.role != 'manager' && (
+									<DropdownMenuItem
+										onClick={() => handleEditTransfer(transferRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit</span>
+									</DropdownMenuItem>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

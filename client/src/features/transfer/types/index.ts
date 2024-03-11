@@ -34,3 +34,28 @@ export interface Transfer {
 	updated_at: string;
 	notes: string;
 }
+
+export interface TransferAdd {
+	code: string;
+	created_by: number;
+	source: number;
+	destination: number;
+	approval_status: string;
+	transfer_schedule: string;
+	notes: string;
+}
+
+export interface TransferEdit {
+	id: number;
+	code: string;
+	created_by: number;
+	source: number;
+	destination: number;
+	transfer_schedule: string;
+	approval_status: string;
+	approved_by: number | null;
+	transfer_status: string | null;
+	date_received: string | null;
+	received_by: number | null;
+	notes: string;
+}

@@ -18,13 +18,13 @@ export const Pagination: FC<PaginationProps> = ({
 	const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
 	const goToNextPage = () => {
-		if (!canPrevPage) {
+		if (canPrevPage) {
 			onClickNext();
 		}
 	}
 
 	const goToPrevPage = () => {
-		if (!canNextPage) {
+		if (canNextPage) {
 			onClickPrev();
 		}
 	}

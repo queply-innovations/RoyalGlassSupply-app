@@ -1,7 +1,7 @@
 import { API_HEADERS, API_URLS } from '@/api';
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { Transfer } from '../types';
+import { Transfer, TransferAdd, TransferEdit } from '../types';
 
 export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> => {
 	return await axios
@@ -19,7 +19,39 @@ export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> =
 			return response.data.data;
 		})
 		.catch(error => {
-			console.error('Error fetching users:', error);
+			console.error('Error fetching transfer:', error);
 			throw error;
 		});
+};
+
+export const addTransfer = async (data: TransferAdd) => {
+	try {
+		const response = await axios
+			.post(API_URLS.TRANSFER, data, {
+				headers: {
+					Authorization: `Bearer ${storage.getToken()}`,
+					'Accept': 'application/json',
+				},
+			});
+		return response.data;
+	} catch (error) {
+		console.error('Error adding transfer:', error);
+		throw error;
+	}
+};
+
+export const editTransfer = async (data: TransferEdit) => {
+	try {
+		const response = await axios
+			.put(`${API_URLS.TRANSFER}/${data.id}`, data, {
+				headers: {
+					Authorization: `Bearer ${storage.getToken()}`,
+					'Content-Type': 'application/json',
+				},
+			});
+		return response.data;
+	} catch (error) {
+		console.error('Error editing transfer:', error);
+		throw error;
+	}
 };
