@@ -23,9 +23,13 @@ import { formatUTCDate } from '@/utils/timeUtils';
 
 interface InventoryColsProps {
 	handleViewItems: (inventory: Inventory) => void;
+	handleViewDetails: (inventory: Inventory) => void;
 }
 
-export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
+export const InventoryCols = ({
+	handleViewItems,
+	handleViewDetails,
+}: InventoryColsProps) => {
 	const columnDefinition: ColumnDef<Inventory>[] = [
 		{
 			id: 'select',
@@ -240,7 +244,9 @@ export const InventoryCols = ({ handleViewItems }: InventoryColsProps) => {
 									<span>View items</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
-									onClick={() => {}}
+									onClick={() => {
+										handleViewDetails(inventoryRow);
+									}}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
