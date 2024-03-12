@@ -42,7 +42,7 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 	const [selectedProducts, setSelectedProducts] = useState<Items[]>([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState<
 		Partial<Warehouse>
-	>({ code: 'CDO' } as Warehouse);
+	>({ id: 1, code: 'CDO' } as Warehouse);
 	const [warehouseProducts, setSelectWarehouseProducts] = useState<
 		ProductPrices[]
 	>([]);
@@ -92,22 +92,19 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		setSelectWarehouseProducts(
 			productInfo.filter(item => item.warehouse.code === warehouse.code),
 		);
-		return console.log('SETTING WAREHOUSE PRODUCTS:', warehouseProducts);
 	};
+
 	function selectWarehouse(warehouse: Partial<Warehouse>) {
 		setSelectedWarehouse({ id: warehouse.id, code: warehouse.code });
 		if (warehouse.code) {
 			setWarehouseProducts({ code: warehouse.code });
 		}
-		return console.log('SELECTED WAREHOUSE:', warehouse);
 	}
 	useEffect(() => {
-		if (isLoading) {
-			setWarehouseProducts({ code: 'CDO' });
-			console.log('Product INFO FETCH:');
+		if (!isLoading) {
+			selectWarehouse({ id: 1, code: 'CDO' });
 		}
-		setSelectedWarehouse({ id: 1, code: 'CDO' });
-	}, []);
+	}, [isLoading]);
 
 	useEffect(() => {
 		let totalItems = 0;

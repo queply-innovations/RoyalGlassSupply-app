@@ -11,7 +11,7 @@ import { ProductPrices } from '../types';
 export const useProductPricesQuery = () => {
 	// State of the response data and loading state
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	// Query for fetching product prices and isLoading state
 	const { data: result, isFetching: loading } = useQuery({
