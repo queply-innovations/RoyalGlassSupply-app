@@ -15,6 +15,7 @@ export interface UserAdd {
 	firstname: string;
 	lastname: string;
 	position: string;
+	role_id: number;
 	contact_no: string;
 	password: string;
 	password_confirmation: string;

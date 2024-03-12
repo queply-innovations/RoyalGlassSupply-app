@@ -95,16 +95,18 @@ export function DataTable<TData, TValue>({
 						buttonIcon={'outside'}
 					/>
 				</div>
-				<div className="flex flex-row-reverse gap-3">
-					<Button
-						fill={'green'}
-						onClick={openModal}
-						disabled={isLoading}
-						className="disabled:cursor-not-allowed disabled:opacity-40"
-					>
-						{`Add ${dataType}`}
-					</Button>
-				</div>
+				{dataType && (
+					<div className="flex flex-row-reverse gap-3">
+						<Button
+							fill={'green'}
+							onClick={openModal}
+							disabled={isLoading}
+							className="disabled:cursor-not-allowed disabled:opacity-40"
+						>
+							{`Add ${dataType}`}
+						</Button>
+					</div>
+				)}
 			</div>
 			<div className="rounded-md border">
 				<Table>
