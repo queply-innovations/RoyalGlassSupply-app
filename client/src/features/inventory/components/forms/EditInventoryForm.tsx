@@ -3,7 +3,7 @@ import { useInventoryMutation } from '../../hooks/useInventoryMutation';
 import { useInventory } from '../../context/InventoryContext';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
 	Select,
 	SelectContent,
@@ -278,7 +278,9 @@ export const EditInventoryForm = ({
 																	);
 																return (
 																	<div className="flex items-baseline gap-4">
-																		{transferItem?.code}
+																		{transferItem
+																			? transferItem.code
+																			: 'Loading...'}
 																	</div>
 																);
 															})()
