@@ -16,6 +16,20 @@ export const fetchInventory = async (): Promise<Inventory[]> => {
 		});
 };
 
+export const fetchInventoryById = async (id: number): Promise<Inventory> => {
+	return await axios
+		.get(`${API_URLS.INVENTORY}/${id}`, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching inventory by id:', error);
+			throw error;
+		});
+};
+
 export const fetchInventoryProducts = async (): Promise<InventoryProduct[]> => {
 	return await axios
 		.get(API_URLS.INVENTORY_PRODUCTS, {
