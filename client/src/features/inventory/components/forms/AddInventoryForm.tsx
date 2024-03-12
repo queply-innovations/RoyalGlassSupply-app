@@ -49,7 +49,10 @@ export const AddInventoryForm = ({
 						setError('Please select a date for date received.');
 					} else {
 						setIsSubmitting(!isSubmitting);
-						const response = await handleSubmit(FormValue);
+						const response = await handleSubmit({
+							action: 'add',
+							data: FormValue,
+						});
 						response?.status === 201
 							? (setIsSubmitting(!isSubmitting), onClose())
 							: (setIsSubmitting(!isSubmitting),
