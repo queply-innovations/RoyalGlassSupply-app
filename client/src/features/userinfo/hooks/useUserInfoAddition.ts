@@ -10,9 +10,9 @@ import { User } from '@/entities';
 export const useUserInfoAddition = () => {
 	const queryClient = useQueryClient();
 	const { users } = useUserInfo();
+	const { roles } = useUserInfo();
 
-	const lastId = users[users.length - 1].id + 1; //TODO: Edit ID, gaps in user ID
-	//TODO: Check why register is duplicating????
+	const lastId = users[users.length - 1].id + 1;
 
 	const [ user, setUser ] = useState({} as UserAdd);
 	useEffect(() => {
@@ -34,7 +34,7 @@ export const useUserInfoAddition = () => {
 			return { text: key }
 		});
 
-		const formChecker = headers.length === 10 ? true : false;
+		const formChecker = headers.length === 11 ? true : false;
 
 		if(formChecker){
 			const passwordChecker = user.password === user.password_confirmation ? true : false;
@@ -61,6 +61,12 @@ export const useUserInfoAddition = () => {
 			...prev,
 			[e.target.name]: e.target.value,
 		}));
+		if (e.target.name === "position"){
+			setUser(prev => ({
+				...prev,
+				role_id: roles.find((role: any) => role.title === e.target.value)?.id,
+			}));
+		}
 	};
 
 	const handleSubmit = async () => {

@@ -8,15 +8,12 @@ import { Roles, User } from '../types';
 import { useUserInfoMutation } from '../hooks';
 import { useAuth } from '@/context/AuthContext';
 import { Loader2 } from 'lucide-react';
-
 interface UserInfoProps {
 	onClose: UseModalProps['closeModal'];
 }
-
 export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 	const { selectedUser, roles } = useUserInfo();
 	const { auth } = useAuth();
-
 	const {
 		user,
 		isChanged,
@@ -26,9 +23,11 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 		handleSubmit,
 		handleChange,
 	} = useUserInfoMutation(selectedUser, roles);
-
 	return (
 		<>
+			{success && (setTimeout(() => {
+				onClose();
+			}, 3000))}
 			{selectedUser.id === auth.user.id && (
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4">
 					<div className="flex flex-col col-span-6 font-bold text-red-700 text-start">
@@ -43,8 +42,8 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 			>
 				<div className="flex flex-col gap-5">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="id" className="text-sm font-bold uppercase">User ID</label>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="id">User ID</label>
 							<input
 								type="text"
 								name="id"
@@ -54,8 +53,8 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								disabled
 							/>
 						</div>
-						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="firstname" className="text-sm font-bold uppercase">First name</label>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="firstname">First name</label>
 							<input
 								type="text"
 								name="firstname"
@@ -65,8 +64,8 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="lastname" className="text-sm font-bold uppercase">Last name</label>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="lastname">Last name</label>
 							<input
 								type="text"
 								name="lastname"
@@ -76,11 +75,8 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-					</div>
-
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="username" className="text-sm font-bold uppercase">Username</label>
+						<div className="flex flex-col col-span-3 gap-3">
+							<label htmlFor="username">Username</label>
 							<input
 								type="text"
 								name="username"
@@ -90,8 +86,11 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
+					</div>
+
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="email" className="text-sm font-bold uppercase">Email address</label>
+							<label htmlFor="email">Email address</label>
 							<input
 								type="email"
 								name="email"
@@ -102,7 +101,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
-							<label htmlFor="email" className="text-sm font-bold uppercase">Contact number</label>
+							<label htmlFor="email">Contact number</label>
 							<input
 								type="number"
 								name="contact_no"
@@ -112,48 +111,38 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								onChange={handleChange}
 							/>
 						</div>
-					</div>
-
-					<div>
-						<label htmlFor="position" className="text-sm font-bold uppercase">Position</label>
-						<div id="position" className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
-							{/* TODO: set array for collecting of all checked positions???? */}
-							{roles ? (
-								roles.map((role: Roles) => {
-									const spanning = 12/roles.length;
-									const cn = `flex flex-row col-span-${spanning} gap-3`;
-									return (
-										<div className={cn} key={role.id + role.title}>
-											<input 
-												type="checkbox" 
+						<div className="flex flex-col col-span-4 gap-3">
+							<label htmlFor="position">Position</label>
+							<select 
+								name="position"
+								className="flex flex-col gap-5" 
+								defaultValue={user.position.charAt(0).toLowerCase() + user.position.slice(1)} 
+								onChange={handleChange}>
+								{roles ? (
+									roles.map((role: Roles) => {
+										return (
+											<option 
 												key={role.id} 
-												name={role.title} 
 												value={role.title}
-												defaultChecked={
-													role.title.toLowerCase().replace(/[\s_]/g, '') === 
-													user.position.toLowerCase().replace(/[\s_]/g, '')
-													} 
-												
-												/>
-											<label htmlFor={role.title}>
+												>
 												{role.title.charAt(0).toUpperCase() + 
-												role.title.slice(1).replace(/_/g, '')}
-											</label>
-										</div>
-									);
-								})
-							) : (
-								<div className="flex h-12 w-full items-center justify-center">
-									<Loader2
-										size={22}
-										strokeWidth={2.5}
-										className="animate-spin text-slate-700/50"
-									/>
-								</div>
-							)}
+												role.title.slice(1)}
+											</option>
+										);
+									})
+								) : (
+									<div className="flex h-12 w-full items-center justify-center">
+										<Loader2
+											size={22}
+											strokeWidth={2.5}
+											className="animate-spin text-slate-700/50"
+										/>
+									</div>
+								)}
+							</select>
 						</div>
 					</div>
-					
+
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-8 gap-4 text-center">
 						<div className="flex flex-col col-span-2 gap-3">
 							<Button

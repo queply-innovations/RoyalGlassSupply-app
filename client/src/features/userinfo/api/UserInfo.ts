@@ -107,7 +107,6 @@ export const editUser = async (data: any) => {
 		},
 	})
 	.then(async response => {
-		// console.log(response);
 		return await axios
 		.post(`${API_URLS.USER_ROLES}/searches-filters-sorts`,
 			{ user_id: data.user_id },
@@ -156,8 +155,24 @@ export const addUser = async (data: UserAdd) => {
 					// Authorization: `Bearer ${storage.getToken()}`,
 					'Accept': 'application/json',
 				},
+			}) 
+			.then (async response => {
+				const data2 = {user_id: data.id, role_id: data.role_id};
+				return await axios
+				.post(`${API_URLS.USER_ROLES}`, data2, {
+					headers: {
+						Authorization: `Bearer ${storage.getToken()}`,
+						'Accept': 'application/json',
+					},
+				})
+				.then(async response2 => {
+					return response2.data.data;
+				})
+				.catch(error => {
+					console.error('Error posting user_roles:', error);
+					throw error;
+				});
 			});
-		return response.data;
 	} catch (error) {
 		console.error('Error adding user:', error);
 		throw error;
