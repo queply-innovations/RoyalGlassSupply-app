@@ -9,26 +9,22 @@ import { Product } from '../types';
  * @returns An object containing the response data and loading state.
  */
 export const useProductQuery = () => {
-	// State of the response data and loading state
+	// State of the response data
 	const [data, setData] = useState<Product[]>([] as Product[]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	// Query for fetching products and isLoading state
-	const { data: result, isFetching: loading } = useQuery({
+	const { data: result, isFetching: isLoading } = useQuery({
 		queryKey: ['products'],
 		queryFn: () => fetchProducts(),
 		refetchOnWindowFocus: false,
 	});
 
-	// Update states when query results changes [result, loading]
+	// Update states when query results changes [result, isLoading]
 	useEffect(() => {
-		if (loading) {
-			setIsLoading(true);
-		} else if (!loading && result) {
-			setIsLoading(false);
+		if (!isLoading && result) {
 			setData(result);
 		}
-	}, [result, loading]);
+	}, [result, isLoading]);
 
 	return { data, isLoading };
 };
