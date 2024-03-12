@@ -2,6 +2,7 @@ import { UseModalProps } from '@/utils/Modal';
 import { useInventory } from '../../context/InventoryContext';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components/Button';
+import { useTransferQuery } from '@/features/transfer/hooks';
 
 interface ViewDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -9,16 +10,22 @@ interface ViewDetailsProps {
 
 export const ViewDetails = ({ onClose }: ViewDetailsProps) => {
 	const { selectedInventory } = useInventory();
+	// TODO: Add transfer query by id to reduce processes/load
+	const { transfers, isFetching: isTransferLoading } = useTransferQuery();
+
+	const transfer = transfers.find(
+		item => item.id === selectedInventory.transfer_id,
+	);
 
 	return (
 		<>
 			<div className="flex max-w-2xl flex-col gap-2">
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-5">
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-5 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Code</h3>
 						<p className="text-sm">{selectedInventory.code}</p>
 					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Type</h3>
 						<p className="text-sm capitalize">{selectedInventory.type}</p>
 					</div>
@@ -26,20 +33,32 @@ export const ViewDetails = ({ onClose }: ViewDetailsProps) => {
 						<h3 className="text-sm font-bold text-gray-600">ID</h3>
 						<p className="text-sm">{selectedInventory.id}</p>
 					</div>
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-5 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Warehouse</h3>
 						<p className="text-sm">
 							{selectedInventory.warehouse.name} (
 							{selectedInventory.warehouse.code})
 						</p>
 					</div>
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					{selectedInventory.type === 'transfer' && (
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Transfer Code
+							</h3>
+							<p className="text-sm capitalize">
+								{!isTransferLoading ? transfer?.code : 'Loading...'}
+							</p>
+						</div>
+					)}
+					<div
+						className={`flex flex-col justify-center gap-1 ${selectedInventory.type === 'supplier' ? 'col-span-7' : 'col-span-3'}`}
+					>
 						<h3 className="text-sm font-bold text-gray-600">
-							Transfer ID
+							Date received
 						</h3>
 						<p className="text-sm capitalize">
-							{selectedInventory.transfer_id
-								? selectedInventory.transfer_id
+							{selectedInventory.date_received
+								? selectedInventory.date_received
 								: '—'}
 						</p>
 					</div>
