@@ -17,7 +17,6 @@ import {
 	List,
 	MoreVertical,
 	Pencil,
-	Trash2,
 } from 'lucide-react';
 import { formatUTCDate } from '@/utils/timeUtils';
 

@@ -3,6 +3,7 @@ import { useInventory } from '../../context/InventoryContext';
 import { Inventory } from '../../types';
 import { InventoryCols } from './columns/InventoryCols';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface InventoryTableProps {
 	openModal: (data: Inventory, action: string) => void;
@@ -15,6 +16,7 @@ export const InventoryTable = ({
 }: InventoryTableProps) => {
 	const [inventoryData, setInventoryData] = useState<Inventory[]>([]);
 	const { data, isLoading, setSelectedInventory } = useInventory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		// If filterWarehouse is given, filter the inventory data by warehouse code
@@ -39,7 +41,7 @@ export const InventoryTable = ({
 
 	const handleViewItems = (inventory: Inventory) => {
 		setSelectedInventory(inventory);
-		openModal(inventory, 'view_items');
+		navigate(`/inventory/items/${inventory.id}`); // navigate to inventory items page
 	};
 
 	const handleViewDetails = (inventory: Inventory) => {

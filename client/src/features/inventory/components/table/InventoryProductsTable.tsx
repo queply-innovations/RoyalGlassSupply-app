@@ -1,19 +1,22 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { InventoryProductsCols } from './columns/InventoryProductsCols';
-import { useInventory } from '../../context/InventoryContext';
 import { useInventoryProductByIdQuery } from '../../hooks/useInventoryProdsQuery';
+import { useEffect } from 'react';
 
-export const InventoryProductsTable = () => {
-	const { selectedInventory } = useInventory();
-	const { data: items, isLoading } = useInventoryProductByIdQuery(
-		selectedInventory.id,
-	);
+interface InventoryProductsTableProps {
+	id: number;
+}
+
+export const InventoryProductsTable = ({ id }: InventoryProductsTableProps) => {
+	const { data, isLoading } = useInventoryProductByIdQuery(id);
+
+	useEffect(() => console.log(data), [data]);
 
 	return (
 		<div className="w-full rounded-lg border bg-white">
 			<DataTable
 				columns={InventoryProductsCols()}
-				data={items ? items : []}
+				data={data ? data : []}
 				filterWhat={'product'}
 				dataType={'Item'}
 				openModal={() => {}}
