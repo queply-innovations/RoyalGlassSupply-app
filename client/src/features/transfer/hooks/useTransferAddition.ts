@@ -20,7 +20,7 @@ export const useTransferAddition = () => {
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<string | null>(null);
-	const [ dateDisplay, setDateDisplay ] = useState<Date>(new Date());
+	const [ dateDisplay, setDateDisplay ] = useState<Date | null>(null);
 	const [ srcCode, setSrcCode ] = useState<any>();
 	const [ dstCode, setDstCode ] = useState<any>();
 	const [ dateCode, setDateCode ] = useState<any>();
@@ -31,8 +31,7 @@ export const useTransferAddition = () => {
 			...prev,
 			approval_status: "pending",
 			created_by: auth.user.id,
-			transfer_schedule: dateDisplay.getFullYear() + '-' + (dateDisplay.getMonth() + 1) + '-' + dateDisplay.getDate() + 
-			' ' + dateDisplay.getHours() + ':' + dateDisplay.getMinutes() + ':' + dateDisplay.getSeconds(),
+			transfer_schedule: '',
 		}))
 	}, []);
 
@@ -41,12 +40,17 @@ export const useTransferAddition = () => {
 			return { text: key }
 		});
 
-		const formChecker = headers.length === 6 ? true : false;
+		const formChecker = headers.length === 6 || headers.length > 6 ? true : false;
 
 		if(formChecker){
 			const checker = transfer.source === transfer.destination ? false : true;
 			if (checker){
-				return [ checker, "" ];
+				const checker2 = transfer.transfer_schedule === '' ? false : true;
+				if (checker2){
+					return [ checker2, "" ];
+				} else {
+					return [ checker2, "Please fill up transfer schedule" ];
+				}
 			} else {
 				return [ checker, "You cannot have the same source and destination" ];
 			}
@@ -105,11 +109,13 @@ export const useTransferAddition = () => {
 	};
 
 	const handleSubmit = async () => {
-		const addCode = 'TRF-' + srcCode + '-' + dstCode + '-' + dateCode + '-' + lastId;
-		setTransfer(prev => ({
-			...prev,
-			code: addCode,
-		}));
+		if (srcCode && dstCode && dateCode) {
+			const addCode = 'TRF-' + srcCode + '-' + dstCode + '-' + dateCode + '-' + lastId;
+			setTransfer(prev => ({
+				...prev,
+				code: addCode,
+			}));
+		}
 	};
 
 	useEffect(() => {
@@ -118,7 +124,6 @@ export const useTransferAddition = () => {
 				const checker: any = isFormValid();
 				setIsSubmitting(true);
 				if (checker[0]) {
-					console.log(transfer);
 					return addTransferMutation(transfer);
 				} else {
 					setError(checker[1]);

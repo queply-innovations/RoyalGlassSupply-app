@@ -174,7 +174,6 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 									)}
 								</SelectContent>
 							</Select>
-							{/* TODO: FInd a way to disable selected warehouse ID in the source form */}
 						</div>
 					</div>
 
@@ -185,13 +184,16 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 							</span>
 							<DateTimePicker 
 								onChange={value => handleChangeDateTime("transfer_schedule", value)}
-								value={dateDisplay}
 								format="yyyy-M-d H:m"
-								minDate={dateDisplay}
+								minDate={new Date()}
+								value={dateDisplay}
 								required
 							/>
 						</div>
 					</div>
+					<span className="flex flex-col grid-cols-12 text-sm font-bold uppercase text-center">
+						(for PM times, add 12 to the hour)
+					</span>
 
 					<div className="flex flex-row gap-3 grid-cols-12">
 						<div className="flex flex-col gap-1 col-span-12 w-full">
@@ -200,7 +202,8 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 							</span>
 							<Textarea
 								name="notes"
-								value={transfer.notes}
+								onChange={handleChange}
+								value={transfer.notes || ''}
 								placeholder="Add notes here...."
 							/>
 						</div>

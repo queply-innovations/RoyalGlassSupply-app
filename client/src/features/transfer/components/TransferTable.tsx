@@ -74,7 +74,23 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'id',
-			header:	() => <div className="text-center">TRANSFER ID</div>,
+			sortingFn: "basic",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.id}</div>
 			),
@@ -118,7 +134,23 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'transfer_status',
-			header:	() => <div className="text-center">TRANSFER STATUS</div>,
+			sortingFn: "text",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER STATUS {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.transfer_status ? row.original.transfer_status : 'N/A'}</div>
 			),
@@ -151,8 +183,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 						month: 'long', 
 						day: 'numeric', 
 						hour:'numeric',
-						minute:'numeric',
-						second:'numeric' };
+						minute:'numeric' };
 					const format = new Date(sched).toLocaleDateString([], details);
 					return (
 						<div className="text-center">{format}</div>
@@ -167,7 +198,22 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'date_received',
-			header:	() => <div className="text-center">DATE RECEIVED</div>,
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							DATE RECEIVED {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('date_received');
 				if (sched) {
@@ -176,8 +222,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 						month: 'long', 
 						day: 'numeric', 
 						hour:'numeric',
-						minute:'numeric',
-						second:'numeric' };
+						minute:'numeric' };
 					const format = new Date(sched).toLocaleDateString([], details);
 					return (
 						<div className="text-center">{format}</div>
@@ -225,7 +270,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'approved_by',
-			header:	() => <div className="text-center">APPROVED BY</div>,
+			header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
 			cell: ({ row }) => {
 				const approved_by: any = row.getValue('approved_by');
 				if (approved_by){
@@ -262,7 +307,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								{auth.role != 'manager' && (
+								{auth.role?.toLowerCase() != 'encoder' && (
 									<DropdownMenuItem
 										onClick={() => handleEditTransfer(transferRow)}
 										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
