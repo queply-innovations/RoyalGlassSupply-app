@@ -1,5 +1,3 @@
-import { User } from '@/features/auth';
-
 export interface Invoices {
 	id: number;
 	code: string;
