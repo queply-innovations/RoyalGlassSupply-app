@@ -43,6 +43,8 @@ export const TransferTab = ({ FormValue, handleChange }: TransferTabProps) => {
 	// 	}
 	// }, [FormValue.warehouse_id]);
 
+	// ! Move transferQuery instance to parent component
+	// ! to reduce query instances.
 	const { transfers, isFetching: isLoading } = useTransferQuery();
 	const [transfersListOpen, setTransfersListOpen] = useState(false);
 
@@ -73,7 +75,7 @@ export const TransferTab = ({ FormValue, handleChange }: TransferTabProps) => {
 											);
 											return (
 												<div className="flex items-baseline gap-4">
-													<span>{transfer!.code}</span>
+													<span>{transfer?.code}</span>
 												</div>
 											);
 										})()
