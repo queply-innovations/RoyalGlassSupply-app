@@ -14,7 +14,6 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { AddInventoryForm } from '@/features/inventory/components/forms/AddInventoryForm';
-import { ViewItems } from '@/features/inventory/components/modal/ViewItems';
 import { ViewDetails } from '@/features/inventory/components/modal/ViewDetails';
 import { EditInventoryForm } from '@/features/inventory/components/forms/EditInventoryForm';
 
@@ -83,13 +82,11 @@ export const Inventory = () => {
 						title={
 							modalAction === 'add'
 								? 'Add Inventory'
-								: modalAction === 'view_items'
-									? 'View Items'
-									: modalAction === 'view_details'
-										? 'Details'
-										: modalAction === 'edit'
-											? 'Edit Inventory'
-											: ''
+								: modalAction === 'view_details'
+									? 'Details'
+									: modalAction === 'edit'
+										? 'Edit Inventory'
+										: ''
 						}
 					>
 						<>
@@ -98,9 +95,6 @@ export const Inventory = () => {
 									warehouses={warehouses}
 									onClose={closeModal}
 								/>
-							)}
-							{modalAction === 'view_items' && (
-								<ViewItems onClose={closeModal} />
 							)}
 							{modalAction === 'view_details' && (
 								<ViewDetails onClose={closeModal} />
