@@ -32,8 +32,9 @@ export const InventoryTable = ({
 		openModal({} as Inventory, 'add');
 	};
 
-	const handleEditInventory = () => {
-		openModal({} as Inventory, 'edit');
+	const handleEditInventory = (inventory: Inventory) => {
+		setSelectedInventory(inventory);
+		openModal(inventory, 'edit');
 	};
 
 	const handleViewItems = (inventory: Inventory) => {
@@ -49,7 +50,11 @@ export const InventoryTable = ({
 	return (
 		<>
 			<DataTable
-				columns={InventoryCols({ handleViewItems, handleViewDetails })}
+				columns={InventoryCols({
+					handleViewItems,
+					handleViewDetails,
+					handleEditInventory,
+				})}
 				data={inventoryData}
 				filterWhat={'code'}
 				dataType={'Inventory'}

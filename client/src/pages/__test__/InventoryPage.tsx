@@ -16,6 +16,7 @@ import {
 import { AddInventoryForm } from '@/features/inventory/components/forms/AddInventoryForm';
 import { ViewItems } from '@/features/inventory/components/modal/ViewItems';
 import { ViewDetails } from '@/features/inventory/components/modal/ViewDetails';
+import { EditInventoryForm } from '@/features/inventory/components/forms/EditInventoryForm';
 
 export const Inventory = () => {
 	const { warehouses } = useWarehouseQuery();
@@ -86,7 +87,9 @@ export const Inventory = () => {
 									? 'View Items'
 									: modalAction === 'view_details'
 										? 'Details'
-										: ''
+										: modalAction === 'edit'
+											? 'Edit Inventory'
+											: ''
 						}
 					>
 						<>
@@ -101,6 +104,12 @@ export const Inventory = () => {
 							)}
 							{modalAction === 'view_details' && (
 								<ViewDetails onClose={closeModal} />
+							)}
+							{modalAction === 'edit' && (
+								<EditInventoryForm
+									warehouses={warehouses}
+									onClose={closeModal}
+								/>
 							)}
 						</>
 					</ModalTest>
