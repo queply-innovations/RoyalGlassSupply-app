@@ -543,7 +543,7 @@ export const AddProdPriceListingsTab = ({
 							} // Disable button if there are no changes or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{!isSubmitting ? 'Submit listing' : 'Submitting...'}
+							{!isSubmitting ? 'Add listing' : 'Submitting...'}
 						</Button>
 					</div>
 					{error && (

@@ -471,7 +471,7 @@ export const AddInventoryProductForm = ({
 								} // Disable button if submitting or no product/supplier selected
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								{!isSubmitting ? 'Submit item' : 'Submitting...'}
+								{!isSubmitting ? 'Add item' : 'Submitting...'}
 							</LegacyButton>
 						</div>
 					</div>

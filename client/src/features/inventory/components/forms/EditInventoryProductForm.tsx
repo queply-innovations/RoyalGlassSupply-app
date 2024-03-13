@@ -392,7 +392,7 @@ export const EditInventoryProductForm = ({
 								} // Disable button if no changes made
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								{!isSubmitting ? 'Submit item' : 'Submitting...'}
+								{!isSubmitting ? 'Apply changes' : 'Applying...'}
 							</LegacyButton>
 						</div>
 					</div>

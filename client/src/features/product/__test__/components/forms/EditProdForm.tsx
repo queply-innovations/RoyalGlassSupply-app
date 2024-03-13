@@ -172,7 +172,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 							} // Disable button if there are no changes or form is submitting
 							className="flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{!isSubmitting ? 'Submit' : 'Submitting...'}
+							{!isSubmitting ? 'Apply changes' : 'Applying...'}
 						</Button>
 					</div>
 					{error && (

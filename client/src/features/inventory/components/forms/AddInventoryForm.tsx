@@ -186,7 +186,7 @@ export const AddInventoryForm = ({
 							} // Disable button if there are no changes or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{!isSubmitting ? 'Submit inventory' : 'Submitting...'}
+							{!isSubmitting ? 'Add inventory' : 'Submitting...'}
 						</LegacyButton>
 					</div>
 				</div>
