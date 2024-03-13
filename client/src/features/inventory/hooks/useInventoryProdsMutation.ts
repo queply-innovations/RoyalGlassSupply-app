@@ -1,12 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addInventoryProduct } from '../api/Inventory';
+import { addInventoryProduct, patchInventoryProduct } from '../api/Inventory';
 import { InventoryProductDatabase } from '../types';
 import { useState } from 'react';
 
-type handleSubmitArgs = {
-	action: 'add';
-	data: Partial<InventoryProductDatabase>;
-};
+type handleSubmitArgs =
+	| { action: 'add'; data: Partial<InventoryProductDatabase> }
+	| { action: 'update'; id: number; data: Partial<InventoryProductDatabase> };
 // | { action: 'batch_add'; data: Partial<InventoryProductDatabase>[] };
 
 // function batchMapItems (data: InventoryProduct[]) = {}
@@ -32,6 +31,11 @@ export const useInventoryProdsMutation = () => {
 		console.log('Submitting: ', args);
 		if (args.action === 'add') {
 			return await addInventoryProductMutation(args.data);
+		} else if (args.action === 'update') {
+			return await patchInventoryProductMutation({
+				id: args.id,
+				data: args.data,
+			});
 		} else {
 			const message =
 				'No data to submit. Function requires at least one parameter.';
@@ -54,6 +58,12 @@ export const useInventoryProdsMutation = () => {
 	const { mutateAsync: addInventoryProductMutation } = useMutation({
 		mutationKey: ['addInventoryProduct'],
 		mutationFn: addInventoryProduct,
+		...mutationConfig,
+	});
+
+	const { mutateAsync: patchInventoryProductMutation } = useMutation({
+		mutationKey: ['patchInventoryProduct'],
+		mutationFn: patchInventoryProduct,
 		...mutationConfig,
 	});
 

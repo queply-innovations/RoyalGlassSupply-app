@@ -124,3 +124,23 @@ export const addInventoryProduct = async (
 			throw error;
 		});
 };
+
+export const patchInventoryProduct = async ({
+	id,
+	data,
+}: {
+	id: number;
+	data: Partial<InventoryProductDatabase>;
+}) => {
+	return await axios
+		.patch(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			console.error('Error updating inventory product:', error);
+			throw error;
+		});
+};

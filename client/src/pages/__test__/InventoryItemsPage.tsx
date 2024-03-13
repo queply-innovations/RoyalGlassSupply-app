@@ -12,6 +12,7 @@ import { InventoryProductsTable } from '@/features/inventory/components/table/In
 import { InventoryProduct } from '@/features/inventory/types';
 // import { ImportTransferProducts } from '@/features/inventory/components/modal/ImportTransferProducts';
 import { AddInventoryProductForm } from '@/features/inventory/components/forms/AddInventoryProductForm';
+import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -75,7 +76,13 @@ export const InventoryItemsPage = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
-						title={modalAction === 'add' ? 'Add Item' : 'Hello'}
+						title={
+							modalAction === 'add'
+								? 'Add Item'
+								: modalAction === 'edit'
+									? 'Edit Item'
+									: ''
+						}
 					>
 						<>
 							{modalAction === 'add' && (
@@ -83,6 +90,9 @@ export const InventoryItemsPage = () => {
 									inventoryId={Number(inventoryId)}
 									onClose={closeModal}
 								/>
+							)}
+							{modalAction === 'edit' && (
+								<EditInventoryProductForm onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

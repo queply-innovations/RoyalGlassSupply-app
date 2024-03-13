@@ -1,9 +1,29 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { InventoryProduct } from '../../../types';
-import { Button } from '@/components';
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components';
+import {
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
+	MoreVertical,
+	Pencil,
+} from 'lucide-react';
 
-export const InventoryProductsCols = () => {
+interface InventoryProductsColsProps {
+	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
+}
+
+export const InventoryProductsCols = ({
+	handleEditInventoryProduct,
+}: InventoryProductsColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
 			id: 'select',
@@ -148,6 +168,37 @@ export const InventoryProductsCols = () => {
 			header: () => (
 				<div className="justify-center uppercase">Remaining</div>
 			),
+		},
+		{
+			id: 'actions',
+			cell: ({ row }) => {
+				const inventoryItemRow = row.original;
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<DropdownMenu>
+							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+								<MoreVertical size={16} strokeWidth={2.25} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => {
+										handleEditInventoryProduct(inventoryItemRow);
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span>Edit</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div>
+				);
+			},
+			enableGlobalFilter: false,
 		},
 	];
 	return columnDefinition;
