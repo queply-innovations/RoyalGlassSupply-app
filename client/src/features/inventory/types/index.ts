@@ -29,9 +29,9 @@ export interface InventoryProduct {
 	total_count: number;
 	unit: string;
 	transferred_stocks_count?: number;
-	sold_count: number;
+	sold_count?: number;
 	miscellaneous_count?: number;
-	remaining_stocks_count: number;
+	remaining_stocks_count?: number;
 }
 
 export interface InventoryDatabase
@@ -41,4 +41,10 @@ export interface InventoryDatabase
 	> {
 	warehouse_id: number;
 	created_by: number;
+}
+
+export interface InventoryProductDatabase
+	extends Partial<Omit<InventoryProduct, 'id' | 'product' | 'supplier_id'>> {
+	product_id: number;
+	supplier_id: number;
 }

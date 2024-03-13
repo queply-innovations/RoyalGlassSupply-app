@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { Inventory, InventoryProduct, InventoryDatabase } from '../types';
+import {
+	Inventory,
+	InventoryDatabase,
+	InventoryProduct,
+	InventoryProductDatabase,
+} from '../types';
 
 export const fetchInventory = async (): Promise<Inventory[]> => {
 	return await axios
@@ -101,5 +106,21 @@ export const patchInventory = async ({
 						data: error.response.data,
 					}
 				: error;
+		});
+};
+
+export const addInventoryProduct = async (
+	data: Partial<InventoryProductDatabase>,
+) => {
+	return await axios
+		.post(API_URLS.INVENTORY_PRODUCTS, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			console.error('Error adding inventory product:', error);
+			throw error;
 		});
 };
