@@ -66,7 +66,7 @@ export const AddProdPriceListingsTab = ({
 						action: 'add',
 						data: FormValue,
 					});
-					response?.status === 201
+					response?.status === 201 // 201 means resource successfully created
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to add product listing'));

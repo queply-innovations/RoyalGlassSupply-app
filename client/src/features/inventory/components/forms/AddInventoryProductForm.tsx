@@ -69,7 +69,7 @@ export const AddInventoryProductForm = ({
 							action: 'add',
 							data: FormValue,
 						});
-						response?.status === 201
+						response?.status === 201 // Status 201 means resource successfully created
 							? (setIsSubmitting(!isSubmitting), onClose())
 							: (setIsSubmitting(!isSubmitting),
 								setError('Failed to add inventory'));

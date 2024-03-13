@@ -74,7 +74,7 @@ export const EditInventoryForm = ({
 						id: selectedInventory.id,
 						data: FormValue,
 					});
-					response?.status === 200
+					response?.status === 200 // 200 means success
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to update inventory item'));

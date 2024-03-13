@@ -63,7 +63,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 						id: selectedProductPrice.id,
 						data: FormValue,
 					});
-					response?.status === 200
+					response?.status === 200 // 200 means request success
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to update product listing'));

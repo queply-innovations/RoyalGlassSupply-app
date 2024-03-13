@@ -31,7 +31,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 						id: selectedProduct.id,
 						data: FormValue,
 					});
-					response?.status
+					response?.status === 200
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to update product'));
