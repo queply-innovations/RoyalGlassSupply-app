@@ -9,3 +9,4 @@ export * from './TransferPage';
 export * from './PosPage';
 export * from './TransactionPage';
 export * from './PendingTransferPage';
+export * from './UserSalesPage';

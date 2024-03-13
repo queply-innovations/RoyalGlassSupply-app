@@ -179,8 +179,8 @@ export function DataTable<TData, TValue>({
 			</div>
 			<div className="flex flex-row justify-between space-x-2 py-4">
 				<div className="p-4 font-semibold">
-					{table.getFilteredSelectedRowModel().rows.length} of{' '}
-					{table.getFilteredRowModel().rows.length} row(s) selected.
+					{table.getFilteredSelectedRowModel().rows?.length} of{' '}
+					{table.getFilteredRowModel().rows?.length} row(s) selected.
 				</div>
 
 				<div>
