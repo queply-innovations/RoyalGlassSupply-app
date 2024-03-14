@@ -28,7 +28,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 						action: 'add',
 						data: FormValue,
 					});
-					response?.status === 200
+					response?.status === 201 // 201 means resource successfully created
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to submit product'));
@@ -139,7 +139,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 							} // Disable button if there are no changes or form is submitting
 							className="flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{!isSubmitting ? 'Submit' : 'Submitting...'}
+							{!isSubmitting ? 'Add product' : 'Submitting...'}
 						</Button>
 					</div>
 					{error && (

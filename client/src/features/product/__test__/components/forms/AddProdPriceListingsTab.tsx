@@ -15,6 +15,7 @@ import {
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { Button } from '@/components';
 import { useProductPricesMutation } from '../../hooks';
+import currency from 'currency.js';
 
 interface AddProdPriceListingsTabProps {
 	product: Product;
@@ -27,7 +28,6 @@ export const AddProdPriceListingsTab = ({
 	onClose,
 }: AddProdPriceListingsTabProps) => {
 	const { auth } = useAuth();
-	console.log(auth);
 	const { warehouses } = useWarehouseQuery();
 	const {
 		value: FormValue,
@@ -39,6 +39,8 @@ export const AddProdPriceListingsTab = ({
 	// States for form submission and error message
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const [markupPercentage, setMarkupPercentage] = useState<number>(0);
 
 	useEffect(() => {
 		// Initialize form values that may be not set in the form
@@ -56,6 +58,36 @@ export const AddProdPriceListingsTab = ({
 		);
 	}, []);
 
+	// Markup value calculation
+	useEffect(() => {
+		const capitalPrice = FormValue.capital_price || 0;
+		const markup = currency(capitalPrice).multiply(
+			(markupPercentage || 0) / 100,
+		);
+
+		handleChange('markup_price', markup.value);
+	}, [FormValue.capital_price, markupPercentage]);
+
+	// Cost value calculation
+	useEffect(() => {
+		const capitalPrice = FormValue.capital_price || 0;
+		const markupPrice = FormValue.markup_price || 0;
+		const taxAmount = FormValue.tax_amount || 0;
+
+		handleChange(
+			'cost',
+			currency(capitalPrice).add(markupPrice).add(taxAmount).value,
+		);
+	}, [FormValue.capital_price, FormValue.markup_price, FormValue.tax_amount]);
+
+	// Price value calculation
+	useEffect(() => {
+		const cost = FormValue.cost || 0;
+		const saleDiscount = FormValue.sale_discount || 0;
+
+		handleChange('price', currency(cost).subtract(saleDiscount).value);
+	}, [FormValue.cost, FormValue.sale_discount]);
+
 	return (
 		<>
 			<form
@@ -66,7 +98,7 @@ export const AddProdPriceListingsTab = ({
 						action: 'add',
 						data: FormValue,
 					});
-					response?.status === 201
+					response?.status === 201 // 201 means resource successfully created
 						? (setIsSubmitting(!isSubmitting), onClose())
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to add product listing'));
@@ -256,53 +288,80 @@ export const AddProdPriceListingsTab = ({
 								id="capital_price"
 								name="capital_price"
 								type="number"
+								inputMode="numeric"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								placeholder={'e.g. 2000.00'}
+								placeholder={'0.00'}
+								className="pl-7"
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
 									handleChange(
 										'capital_price',
-										Number(formattedValue),
+										currency(e.target.value).value,
 									);
 								}}
+								onBlur={e => {
+									e.target.value = Number(
+										FormValue.capital_price,
+									).toFixed(2);
+								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
-						<div className="relative col-span-2 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="markup_price"
-								className="text-sm font-bold text-gray-600"
-							>
-								Markup price
-							</Label>
-							<Input
-								id="markup_price"
-								name="markup_price"
-								type="number"
-								min={0}
-								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
-								required
-								className="pl-8"
-								placeholder={'e.g. 350.00...'}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('markup_price', Number(formattedValue));
-								}}
-							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
-								₱
-							</span>
+						<div className="col-span-2 grid grid-cols-5 gap-1">
+							<div className="relative col-span-2 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="markup"
+									className="text-sm font-bold text-gray-600"
+								>
+									Markup
+								</Label>
+								<Input
+									id="markup"
+									name="markup"
+									type="number"
+									inputMode="numeric"
+									min={0}
+									max={1000}
+									step={0.01}
+									required
+									placeholder={'0'}
+									onChange={e => {
+										setMarkupPercentage(
+											currency(e.target.value).value,
+										);
+									}}
+									onBlur={e => {
+										e.target.value = markupPercentage.toString();
+									}}
+								/>
+								<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
+									%
+								</span>
+							</div>
+							<div className="relative col-span-3 flex flex-col justify-end gap-1">
+								<Input
+									id="markup_value"
+									name="markup_value"
+									type="number"
+									min={0}
+									max={1000}
+									step={0.01}
+									readOnly
+									placeholder={'0'}
+									className="pl-7"
+									value={
+										FormValue.markup_price
+											? FormValue.markup_price.toFixed(2)
+											: '0.00'
+									}
+								/>
+								<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
+									₱
+								</span>
+							</div>
 						</div>
 						<div className="relative col-span-2 flex flex-col justify-center gap-1">
 							<Label
@@ -315,20 +374,25 @@ export const AddProdPriceListingsTab = ({
 								id="tax_amount"
 								name="tax_amount"
 								type="number"
+								inputMode="numeric"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								placeholder={'e.g. 150.00...'}
+								placeholder={'0.00'}
+								className="pl-7"
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
+									handleChange(
+										'tax_amount',
+										currency(e.target.value).value,
+									);
+								}}
+								onBlur={e => {
+									e.target.value = Number(
+										FormValue.tax_amount,
 									).toFixed(2);
-									handleChange('tax_amount', Number(formattedValue));
 								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
@@ -344,19 +408,14 @@ export const AddProdPriceListingsTab = ({
 								name="cost"
 								type="number"
 								min={0}
-								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								placeholder={'e.g. 500.00...'}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('cost', Number(formattedValue));
-								}}
+								className="pl-7"
+								readOnly
+								value={
+									FormValue.cost ? FormValue.cost.toFixed(2) : '0.00'
+								}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
@@ -371,31 +430,39 @@ export const AddProdPriceListingsTab = ({
 								id="sale_discount"
 								name="sale_discount"
 								type="number"
+								inputMode="numeric"
 								min={0}
+								max={FormValue.cost || 0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								disabled={
 									FormValue.on_sale === undefined
 										? true
 										: FormValue.on_sale === 0
 								}
-								defaultValue={0}
 								required
-								className="pl-8"
+								placeholder="0.00"
+								className="pl-7"
+								value={
+									FormValue.sale_discount !== 0
+										? FormValue.sale_discount
+										: ''
+								}
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
 									handleChange(
 										'sale_discount',
-										Number(formattedValue),
+										currency(e.target.value).value,
 									);
 								}}
+								onBlur={e => {
+									e.target.value = Number(
+										FormValue.sale_discount,
+									).toFixed(2);
+								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
-							<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-start gap-2 pb-[0.65rem] pr-3">
+							<div className="absolute right-0 top-1/2 mr-2 flex flex-none translate-y-1/4 flex-row items-center justify-start gap-2">
 								<Input
 									name="on_sale"
 									id="on_sale"
@@ -404,13 +471,12 @@ export const AddProdPriceListingsTab = ({
 									className="h-4 w-fit"
 									onChange={e => {
 										handleChange('on_sale', e.target.checked ? 1 : 0);
-										!e.target.checked &&
-											handleChange('sale_discount', 0);
+										handleChange('sale_discount', 0);
 									}}
 								/>
 								<Label
 									htmlFor="on_sale"
-									className="text-sm text-gray-700"
+									className="text-xs font-bold text-slate-700"
 								>
 									On Sale
 								</Label>
@@ -429,25 +495,21 @@ export const AddProdPriceListingsTab = ({
 								type="number"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								placeholder={'e.g. 2500.00...'}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('price', Number(formattedValue));
-								}}
+								readOnly
+								className="pl-7"
+								value={
+									FormValue.price ? FormValue.price.toFixed(2) : '0.00'
+								}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-4 flex flex-row items-center justify-start	gap-3">
+						<div className="col-span-4 flex flex-row items-center justify-start gap-3">
 							<Switch
 								id="active_status"
 								name="active_status"
@@ -543,7 +605,7 @@ export const AddProdPriceListingsTab = ({
 							} // Disable button if there are no changes or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{!isSubmitting ? 'Submit listing' : 'Submitting...'}
+							{!isSubmitting ? 'Add listing' : 'Submitting...'}
 						</Button>
 					</div>
 					{error && (
