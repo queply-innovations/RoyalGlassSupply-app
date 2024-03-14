@@ -18,13 +18,13 @@ export const Pagination: FC<PaginationProps> = ({
 	const pageNumbers = [...Array(nPages + 1).keys()].slice(1)
 
 	const goToNextPage = () => {
-		if (canPrevPage) {
+		if (!canNextPage) {
 			onClickNext();
 		}
 	}
 
 	const goToPrevPage = () => {
-		if (canNextPage) {
+		if (!canPrevPage) {
 			onClickPrev();
 		}
 	}
@@ -32,14 +32,14 @@ export const Pagination: FC<PaginationProps> = ({
 	return (
 		<nav className='flex flex-row p-4' key="navigation">
 			<ul className='flex flex-row content-center pagination' key="paginationUL">
-				<li className={`page-item ${canPrevPage ? 'bg-slate-200 disabled' : ''}`} key="first">
+				<li className={`page-item ${canPrevPage ? ' disabled' : ''}`} key="first">
 					<a className={`font-semibold page-link ${canPrevPage ? 'text-white disabled' : ''}`}
 						onClick={() => table.setPageIndex(0)} key="firstBttn" >
 						{`<<`}
 					</a>
 				</li>
 
-				<li className={`page-item ${canPrevPage ? 'bg-slate-200 disabled' : ''}`} key="previous">
+				<li className={`page-item ${canPrevPage ? ' disabled' : ''}`} key="previous">
 					<a className={`page-link ${canPrevPage ? 'text-white disabled' : ''}`}
 						onClick={goToPrevPage} key="previousBttn" >
 						{`< Previous`}
@@ -95,14 +95,14 @@ export const Pagination: FC<PaginationProps> = ({
 						<li key="ellipsisEnd"><EllipsisIcon /></li> : 
 						<li key="ellipsisNone2"></li> }
 
-				<li className={`page-item ${canNextPage ? 'bg-slate-200 disabled' : ''}`} key="next">
+				<li className={`page-item ${canNextPage ? 'disabled' : ''}`} key="next">
 					<a className={`page-link ${canNextPage ? 'text-white disabled' : ''}`}
 						onClick={goToNextPage} key="nextBttn" >
 						{`Next >`}
 					</a>
 				</li>
 
-				<li className={`page-item ${canNextPage ? 'bg-slate-200 disabled' : ''}`} key="last">
+				<li className={`page-item ${canNextPage ? 'disabled' : ''}`} key="last">
 					<a className={`font-semibold page-link ${canNextPage ? 'text-white disabled' : ''}`}
 						onClick={() => table.setPageIndex(table.getPageCount() - 1)} key="lastBttn" >
 						{`>>`}
