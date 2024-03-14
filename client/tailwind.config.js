@@ -22,6 +22,7 @@ export default {
 				'primary-background':
 					'rgb(var(--primary-background) / <alpha-value>)',
 				'border-color': 'rgb(var(--border-color) / 0.1)',
+				'login-button': '#1E293B',
 
 				// Shad/cn custom colors
 				border: 'hsl(var(--border))',

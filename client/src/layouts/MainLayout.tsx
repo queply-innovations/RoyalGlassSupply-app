@@ -4,6 +4,8 @@ import { useAuth } from '@/context/AuthContext';
 import { ReactNode } from 'react';
 import { CommonLayout } from './CommonLayout';
 import Logo from '/RGS-logo.png';
+import Sidebg from '@/assets/images/Sidebg.png';
+import { LoginForm } from '@/features/auth';
 
 interface MainLayoutProps {
 	children: ReactNode;
@@ -28,14 +30,29 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 				// if not logged in, return loginlayout
 				<>
 					<div className="flex h-screen w-screen items-center justify-center">
-						<div className="flex flex-col items-center gap-5 rounded-md border-[0.5px] bg-white px-16 py-5 shadow-md">
-							<div>
-								<img src={Logo} alt="RGS Logo" className="h-20 w-20" />
+						<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md">
+							<div className="flex flex-row justify-start">
+								{children}
 							</div>
-							<div className="text-3xl font-bold">
-								Royal Glass Supply
+							<div className="relative h-max flex flex-col row-span-6 justify-end">
+									<div className="rounded-lg" style={{
+										backgroundImage: `url(${Sidebg})`,
+										backgroundSize: `cover`,
+										backgroundRepeat: `no-repeat`,
+										width: `680px`,
+										height: `960px`,
+										paddingTop: `100%`,
+									}}>
+										<blockquote className="space-y-4 ml-12 pt-28 items-end text-white">
+											<p className="text-6xl font-bold" style={{zIndex: 2}}>
+												Welcome back!
+											</p>
+											<p className="text-2xl font-medium" style={{zIndex: 2}}>
+												The faster you log in, the faster we get to work
+											</p> 
+										</blockquote>
+									</div>
 							</div>
-							{children}
 						</div>
 					</div>
 				</>
