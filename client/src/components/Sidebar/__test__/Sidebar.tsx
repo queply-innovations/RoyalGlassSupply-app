@@ -48,7 +48,7 @@ const Sidebar = ({}: SidebarProps) => {
 							return group.groupName ? (
 								// If group has a name, display group name
 								// Group name is used to categorize the items contextually
-								<div className="w-full" key={index}>
+								<div className="w-full" key={group.groupName}>
 									{/* Just hide the group name if no items inside */}
 									{groupAllowed && (
 										<div className="px-4 pb-1 pt-4">
@@ -65,7 +65,7 @@ const Sidebar = ({}: SidebarProps) => {
 												auth.role as Role,
 											) && (
 												<SidebarItem
-													key={index}
+													key={item.id}
 													item={item}
 													pathname={pathname}
 													openedItem={openedItem}
@@ -77,7 +77,7 @@ const Sidebar = ({}: SidebarProps) => {
 							) : (
 								group.items.map((item, index) => (
 									<SidebarItem
-										key={index}
+										key={item.id}
 										item={item}
 										pathname={pathname}
 										openedItem={openedItem}

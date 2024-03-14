@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { SidebarListItems } from '../../types';
 import { SubmenuItem } from './SubmenuItem';
 import { ChevronDown } from 'lucide-react';
+import { motion as m, AnimatePresence } from 'framer-motion';
 
 interface SidebarItemProps {
 	item: SidebarListItems;
@@ -9,6 +10,16 @@ interface SidebarItemProps {
 	openedItem: string | undefined;
 	setOpenedItem: (id: string | undefined) => void;
 }
+
+// Motion prop values for submenu items
+const submenuMotion = {
+	initial: { height: 0 },
+	animate: {
+		height: 'auto',
+		transition: { duration: 0.175 },
+	},
+	exit: { height: 0, transition: { duration: 0.175 } },
+};
 
 export const SidebarItem = ({
 	item,
@@ -35,6 +46,7 @@ export const SidebarItem = ({
 			{/* If item has children, display as an expandable dropdown */}
 			{item.children && item.children.length > 0 ? (
 				<div
+					key={item.id}
 					className={`group relative flex w-full cursor-pointer flex-row justify-between px-3 py-1 hover:bg-slate-500/10 
 					${
 						pathname
@@ -114,13 +126,26 @@ export const SidebarItem = ({
 				</Link>
 			)}
 			{/* Render submenu if isItemOpened state is true */}
-			{isItemOpened && item.children && (
-				<ul className="divide-y divide-slate-400/20">
-					{item.children.map((childItem, key) => (
-						<SubmenuItem key={key} item={childItem} pathname={pathname} />
-					))}
-				</ul>
-			)}
+			<AnimatePresence>
+				{isItemOpened && item.children && (
+					<m.ul
+						key={item.id}
+						variants={submenuMotion}
+						initial={'initial'}
+						animate={'animate'}
+						exit={'exit'}
+						className="divide-y divide-slate-400/20"
+					>
+						{item.children.map(childItem => (
+							<SubmenuItem
+								key={childItem.id}
+								item={childItem}
+								pathname={pathname}
+							/>
+						))}
+					</m.ul>
+				)}
+			</AnimatePresence>
 		</li>
 	);
 };
