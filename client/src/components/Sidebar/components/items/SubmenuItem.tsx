@@ -11,25 +11,25 @@ export const SubmenuItem = ({ item, pathname }: SubmenuItemProps) => {
 		<li className="w-full">
 			<Link
 				to={item.path as string}
-				className={`flex w-full flex-row px-3 py-1 hover:bg-slate-500/10 ${
+				className={`flex w-full flex-row px-3 py-1 hover:bg-slate-200/50 ${
 					pathname
 						? pathname === item.path
-							? 'bg-slate-100/30 font-extrabold text-slate-700'
-							: ''
+							? 'bg-slate-100/30 font-bold text-slate-700'
+							: 'font-medium'
 						: ''
 				}`}
 			>
 				<div className="item-center flex justify-center gap-3">
-					{item.itemProps!.icon ? (
+					{item.itemProps?.icon ? (
 						<div className="flex h-8 w-8 items-center justify-center">
-							{item.itemProps!.icon}
+							{item.itemProps?.icon}
 						</div>
 					) : (
 						<div className="flex h-8 w-8 items-center justify-center"></div>
 					)}
 
 					<span className="flex items-center">
-						{item.itemProps!.title}
+						{item.itemProps?.title}
 					</span>
 				</div>
 			</Link>
