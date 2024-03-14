@@ -357,14 +357,6 @@ export const ProductDetails = ({ onClose }: ProductDetailProps) => {
 				</div>
 				<div className="flex min-w-0 flex-1 flex-row gap-1"></div>
 			</div>
-			<Button
-				fill={'empty'}
-				className="bg-gray-600 hover:bg-gray-800"
-				onClick={onClose}
-				type="reset"
-			>
-				Close
-			</Button>
 		</>
 	);
 };

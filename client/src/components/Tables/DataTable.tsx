@@ -21,7 +21,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -96,14 +96,14 @@ export function DataTable<TData, TValue>({
 					/>
 				</div>
 				{dataType && (
-					<div className="flex flex-row-reverse gap-3">
+					<div className="flex flex-row items-end gap-3">
 						<Button
 							fill={'green'}
 							onClick={openModal}
 							disabled={isLoading}
-							className="disabled:cursor-not-allowed disabled:opacity-40"
+							className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center"
 						>
-							{`Add ${dataType}`}
+							<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
 						</Button>
 					</div>
 				)}
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
 									return (
 										<TableHead
 											key={header.id}
-											className="py-5 text-xs font-bold uppercase"
+											className="py-5 text-xs font-bold uppercase text-black"
 										>
 											{header.isPlaceholder
 												? null
@@ -137,7 +137,7 @@ export function DataTable<TData, TValue>({
 								<TableRow
 									key={row.id}
 									data-state={row.getIsSelected() && 'selected'}
-									className="py-2 text-xs font-normal uppercase"
+									className="py-2 text-xs font-normal uppercase text-slate-900"
 								>
 									{row.getVisibleCells().map(cell => (
 										<TableCell key={cell.id}>

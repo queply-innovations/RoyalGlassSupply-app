@@ -10,15 +10,9 @@ import { useAuth } from '@/context/AuthContext';
 export const Navbar = () => {
 	const { logout } = useAuth();
 	return (
-		<div className="navbar-container flex flex-row items-center justify-between">
-			<Inputbox
-				variant={'searchbar'}
-				buttonIcon={'outside'}
-				placeholder="Search"
-				className="w-1/2"
-			/>
-			<div className="nav-icon flex flex-row items-center justify-center gap-x-5">
-				<Link to="/Dashboard">
+		// <div className="navbar-container flex flex-row items-end place-content-end justify-between">
+			<div className="nav-icon flex flex-row items-end justify-end gap-x-5">
+				<Link to="/dashboard">
 					<NavIcons
 						icon={
 							<GoHomeFill className="text-primary-dark-gray text-xl" />
@@ -34,15 +28,7 @@ export const Navbar = () => {
 						title={'Notification'}
 					/>
 				</Link>
-				<NavIcons
-					icon={<HiUser className="text-primary-dark-gray text-xl" />}
-					title={'Account'}
-					dropdown={true}
-				/>
-				<Button className="w-fit" fill={'red'} onClick={() => logout()}>
-					Logout
-				</Button>
 			</div>
-		</div>
+		// </div>
 	);
 };

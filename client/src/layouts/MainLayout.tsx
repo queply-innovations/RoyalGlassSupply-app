@@ -22,7 +22,9 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 						<Sidebar />
 						<div className="flex h-screen max-h-screen flex-auto flex-col p-5">
 							<Navbar />
-							<CommonLayout title={title!}>{children}</CommonLayout>
+							<CommonLayout title={title!}>
+								{children}
+							</CommonLayout>
 						</div>
 					</div>
 				</>

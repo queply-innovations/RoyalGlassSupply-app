@@ -4,9 +4,7 @@ import InventoryTable from '@/components/Tables/Inventory/inventory';
 import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
-import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
 import { Button } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 
@@ -15,7 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 // }
 
 export const Dashboard = () => {
-	const { auth, logout } = useAuth();
+	const { auth } = useAuth();
 
 	const navigate = useNavigate();
 
@@ -48,7 +46,7 @@ export const Dashboard = () => {
 						PATH TO POS
 					</Button>
 				</div>
-				<div className="infobox-container flex flex-row justify-between gap-8">
+				<div className="infobox-container flex flex-row justify-between gap-5">
 					<InfoCard background={'gradient'}>
 						<span className="text-sm font-bold uppercase text-white">
 							Gross Income

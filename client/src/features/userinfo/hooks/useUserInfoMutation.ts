@@ -36,6 +36,19 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<string | null>(null);
 
+	const handleChangeSelect = (
+		key: string,
+		_value: any,
+	) => {
+		setIsChanged(true);
+		setSuccess(null);
+		setError(null);
+		setUser(prev => ({
+			...prev,
+			[key]: _value,
+		}));
+	};
+
 	const handleChange = (e: any) => {
 		setIsChanged(true);
 		setSuccess(null);
@@ -87,6 +100,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		error,
 		success,
 		handleSubmit,
+		handleChangeSelect,
 		handleChange,
 		editUserMutation,
 	};

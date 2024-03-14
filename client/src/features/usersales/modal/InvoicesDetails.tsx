@@ -377,18 +377,6 @@ export const InvoicesDetails = ({ onClose, openModal }: InvoicesDetailsProps) =>
 					dataType={""}
 					openModal={handleAdd}
 					isLoading={isFetching} />
-
-				<div className="flex w-full flex-row justify-end pt-4">
-					<div className="flex flex-row gap-4 whitespace-nowrap">
-						<Button
-							fill={'default'}
-							className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
-							onClick={onClose}
-						>
-							Close
-						</Button>
-					</div>
-				</div>
 			</div>
 		</>
 	);
