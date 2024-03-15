@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Inputbox, Pagination, ProgressBar } from '@/components';
+import { Button, Inputbox, Pagination } from '@/components';
 
 import {
 	ColumnDef,
@@ -67,13 +67,10 @@ export function DataTable<TData, TValue>({
 		},
 	});
 
-	const placeholderLabel = `Filter ${filterWhat}...`;
+	const label = (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) + " " + 
+		(filterWhat.split('_')[1] === 'no' ? 'number' : (filterWhat.split('_')[1] ? filterWhat.split('_')[1] : ''));
 
-	// TODO: Clean Pagination props and Modal contexts
-	// In line with inserting changes in dev-frontend branch
-	// (Careful on the Context and Provider)
-
-	// TODO: Maybe add sizing for table columns using column sizing APIs
+	const placeholderLabel = `Filter ${label.trim()}...`;
 
 	return (
 		<>
