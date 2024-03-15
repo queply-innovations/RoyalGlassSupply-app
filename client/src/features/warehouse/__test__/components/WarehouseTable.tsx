@@ -104,12 +104,6 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 						>
 							<FaPencilAlt /> Edit
 						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveWarehouse(warehouseRow)}
-						>
-							Remove
-						</Button>
 					</div>
 				);
 			},
@@ -142,7 +136,7 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				data={warehouses}
 				columns={WarehouseTableHeader}
 				filterWhat={'location'}
-				dataType={'Warehouse'}
+				dataType={''}
 				isLoading={isFetching}
 				openModal={handleAddWarehouse}
 			/>

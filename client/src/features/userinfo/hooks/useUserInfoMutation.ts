@@ -66,7 +66,12 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 
 	const handleSubmit = async () => {
 		setIsSubmitting(true);
-		return await editUserMutation(user);
+		if (user.contact_no?.length > 11 || user.contact_no?.length < 11) {
+			setError('Contact number must be 11 digits');
+			setIsSubmitting(false);
+		} else {
+			return await editUserMutation(user);
+		}
 	};
 
 	// Configurations for mutation

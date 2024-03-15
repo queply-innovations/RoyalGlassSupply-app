@@ -41,7 +41,6 @@ const LayoutWrapper: FC<LayoutProps> = ({
 					className={cn(layoutVariants({ className, variant }))}
 					{...props}
 				>
-					<Navbar />
 					{children}
 				</div>
 			</div>

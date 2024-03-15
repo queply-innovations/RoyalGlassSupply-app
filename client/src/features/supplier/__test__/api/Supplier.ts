@@ -10,10 +10,10 @@ export const fetchSuppliers = async (updateProgress: any): Promise<Supplier[]> =
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
 			},
-			onDownloadProgress: (progress) => {
-				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-				updateProgress(percentCompleted);
-			},
+			// onDownloadProgress: (progress) => {
+			// 	let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+			// 	updateProgress(percentCompleted);
+			// },
 		})
 		.then(response => {
 			return response.data.data;
@@ -24,17 +24,41 @@ export const fetchSuppliers = async (updateProgress: any): Promise<Supplier[]> =
 		});
 };
 
-export const addSupplier = (data: Supplier) => {
-	const response = axios.post(`${API_URLS.SUPPLIERS}`, data);
-	return response;
+export const addSupplier = async (data: Supplier) => {
+	return await axios
+		.post(`${API_URLS.SUPPLIERS}`, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error adding supplier:', error);
+			throw error;
+		});
 };
 
-export const updateSupplier = (data: Supplier) => {
-	const response = axios.put(`${API_URLS.SUPPLIERS}/${data.id}`, data);
-	return response;
+export const updateSupplier = async (data: Supplier) => {
+	return await axios
+		.put(`${API_URLS.SUPPLIERS}/${data.id}`, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error editing supplier:', error);
+			throw error;
+		});
 };
 
-export const removeSupplier = (id: number) => {
-	const response = axios.delete(`${API_URLS.SUPPLIERS}/${id}`);
-	return response;
-};
+// export const removeSupplier = (id: number) => {
+// 	const response = axios.delete(`${API_URLS.SUPPLIERS}/${id}`);
+// 	return response;
+// };

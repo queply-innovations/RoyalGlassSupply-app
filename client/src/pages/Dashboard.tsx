@@ -5,7 +5,7 @@ import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellin
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components';
+import { Button, Navbar } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 
 // interface DashboardProps {
@@ -20,9 +20,12 @@ export const Dashboard = () => {
 	return (
 		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
-				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
-					Dashboard
-				</h1>
+				<div className=" flex flex-row justify-between">
+					<h1 className="page-title text-primary-dark-gray text-3xl font-bold self-center">
+						Dashboard
+					</h1>
+					<Navbar />
+				</div>
 				<div className="flex flex-row gap-5">
 					<Button
 						className="w-1/4"

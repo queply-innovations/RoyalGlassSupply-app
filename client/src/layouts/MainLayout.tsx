@@ -1,4 +1,3 @@
-import { Navbar } from '@/components';
 import Sidebar from '@/components/Sidebar/__test__/Sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { ReactNode } from 'react';
@@ -21,7 +20,6 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 					<div className="flex h-screen w-screen overflow-hidden">
 						<Sidebar />
 						<div className="flex h-screen max-h-screen flex-auto flex-col p-5">
-							<Navbar />
 							<CommonLayout title={title!}>
 								{children}
 							</CommonLayout>

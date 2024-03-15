@@ -17,10 +17,25 @@ interface SupplierTableProps {
 }
 
 export const SupplierTable = ({ openModal }: SupplierTableProps) => {
-	const { suppliers, isFetching, progress } = useSupplier();
+	const { suppliers, isFetching, progress, setSelectedSupplier } = useSupplier();
 
 	const handleAddSupplier = () => {
 		openModal({} as Supplier, 'add');
+	};
+
+	// const handleEditSupplier = (supplier: Supplier) => {
+	// 	console.log('Edit Supplier Clicked:', supplier);
+	// 	openModal(supplier, 'edit');
+	// };
+
+	// const handleRemoveSupplier = (supplier: Supplier) => {
+	// 	console.log('Remove Supplier Clicked:', supplier);
+	// 	openModal(supplier, 'remove');
+	// };
+
+	const handleEditSupplier = (supplier: Supplier) => {
+		setSelectedSupplier(supplier);
+		openModal(supplier, 'edit');
 	};
 
 	const SupplierTableHeader: ColumnDef<Supplier>[] = [
@@ -98,12 +113,6 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 						>
 							<FaPencilAlt /> Edit
 						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveSupplier(supplierRow)}
-						>
-							Remove
-						</Button>
 					</div>
 				);
 			}
@@ -111,108 +120,15 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 
 	];
 
-	// const removeModal = useModal();
-	// const successModal = useModal();
-	// const updateModal = useModal();
-	// const [selectedSupplier, setSelectedSupplier] = useState<any | null>(null);
-
-	// const { mutateAsync: removeSupplierMutation } = useMutation({
-	// 	mutationKey: ['removeSupplier:', selectedSupplier],
-	// 	mutationFn: removeSupplier,
-	// 	onSuccess: async () => {
-	// 		await queryClient.invalidateQueries({ queryKey: ['supplier'] });
-	// 		console.log('Supplier removed');
-	// 		removeModal.closeModal();
-	// 		successModal.openModal();
-	// 	},
-	// 	onError: error => {
-	// 		console.error('Supplier Data submission failed', error);
-	// 	},
-	// });
-
-	// * This function is used to handle the edit warehouse
-	const handleEditSupplier = (supplier: Supplier) => {
-		console.log('Edit Supplier Clicked:', supplier);
-		// * This function will open the modal with the warehouse data
-		openModal(supplier, 'edit');
-	};
-
-	// * This function is used to handle the remove warehouse
-	const handleRemoveSupplier = (supplier: Supplier) => {
-		console.log('Remove Supplier Clicked:', supplier);
-		openModal(supplier, 'remove');
-	};
-
 	return (
 		<>
 			<DataTable
 				data={suppliers}
 				columns={SupplierTableHeader}
-				filterWhat={"name"}
+				filterWhat={"address"}
 				dataType={"Supplier"}
 				openModal={handleAddSupplier}
 				isLoading={isFetching} />
-
-			{/* <Modal isOpen={removeModal.isOpen} onClose={removeModal.closeModal}>
-				<>
-					<div className="flex flex-col gap-4">
-						<p className="text-center font-bold uppercase">
-							Are you sure you want to remove?
-						</p>
-						<span>{`Supplier ID: ${selectedSupplier?.id}`}</span>
-						<span>{`Supplier Name: ${selectedSupplier?.name}`}</span>
-						<span>{`Supplier Location: ${selectedSupplier?.address}`}</span>
-
-						<div className="flex flex-row justify-center gap-1">
-							<Button
-								fill={'green'}
-								className=""
-								type="submit"
-								onClick={() =>
-									removeSupplierMutation(selectedSupplier.id)
-								}
-							>
-								{`Remove ${selectedSupplier?.name}`}
-							</Button>
-							<Button
-								fill={'red'}
-								className=""
-								type="reset"
-								onClick={removeModal.closeModal}
-							>
-								Cancel
-							</Button>
-						</div>
-					</div>
-				</>
-			</Modal>
-			<Modal isOpen={updateModal.isOpen} onClose={updateModal.closeModal}>
-				<>
-					<SupplierForm
-						data={selectedSupplier}
-						onClose={updateModal.closeModal}
-						isUpdate={true}
-					/>
-				</>
-			</Modal>
-			<Modal
-				isOpen={successModal.isOpen}
-				onClose={() => {
-					successModal.closeModal();
-					setTimeout(() => {
-						successModal.closeModal();
-					}, 50000);
-				}}
-			>
-				<div className="flex flex-col items-center justify-center gap-2">
-					<p>
-						{`Supplier ${selectedSupplier?.Supplier_name} successfully removed`}
-					</p>
-					<Button fill={'green'} onClick={successModal.closeModal}>
-						Close
-					</Button>
-				</div>
-			</Modal> */}
 		</>
 	);
 };
