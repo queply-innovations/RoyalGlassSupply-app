@@ -26,65 +26,70 @@ export const Dashboard = () => {
 					</h1>
 					<Navbar />
 				</div>
-				<div className="flex flex-row gap-5">
-					<Button
-						className="w-1/4"
-						fill={'green'}
-						onClick={() => console.log('Check Auth', auth)}
-					>
-						check auth
-					</Button>
-					<Button
-						className="w-1/4"
-						fill={'yellow'}
-						onClick={() => navigate('/test')}
-					>
-						PATH TO TEST
-					</Button>
-					<Button
-						className="w-1/4"
-						fill={'yellow'}
-						onClick={() => navigate('/pos')}
-					>
-						PATH TO POS
-					</Button>
-				</div>
-				<div className="infobox-container flex flex-row justify-between gap-5">
-					<InfoCard background={'gradient'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-				</div>
-				<div className="row-container flex h-full flex-col gap-6 ">
-					<div className="row-container flex flex-row justify-between gap-8">
-						<GrossAndNetProfit />
-						<TransferStatus />
-					</div>
-					<div className="row-container flex h-full flex-row justify-between gap-8">
-						<InventoryTable />
-						<TopSellingProducts />
-					</div>
-				</div>
+
+				{auth.user.position === 'admin' && (
+					<>
+						<div className="flex flex-row gap-5">
+							<Button
+								className="w-1/4"
+								fill={'green'}
+								onClick={() => console.log('Check Auth', auth)}
+							>
+								check auth
+							</Button>
+							<Button
+								className="w-1/4"
+								fill={'yellow'}
+								onClick={() => navigate('/test')}
+							>
+								PATH TO TEST
+							</Button>
+							<Button
+								className="w-1/4"
+								fill={'yellow'}
+								onClick={() => navigate('/pos')}
+							>
+								PATH TO POS
+							</Button>
+						</div>
+						<div className="infobox-container flex flex-row justify-between gap-5">
+							<InfoCard background={'gradient'}>
+								<span className="text-sm font-bold uppercase text-white">
+									Gross Income
+								</span>
+								<span className="text-2xl font-bold text-white">999</span>
+							</InfoCard>
+							<InfoCard background={'default'}>
+								<span className="text-sm font-bold uppercase text-white">
+									Gross Income
+								</span>
+								<span className="text-2xl font-bold text-white">999</span>
+							</InfoCard>
+							<InfoCard background={'default'}>
+								<span className="text-sm font-bold uppercase text-white">
+									Gross Income
+								</span>
+								<span className="text-2xl font-bold text-white">999</span>
+							</InfoCard>
+							<InfoCard background={'default'}>
+								<span className="text-sm font-bold uppercase text-white">
+									Gross Income
+								</span>
+								<span className="text-2xl font-bold text-white">999</span>
+							</InfoCard>
+						</div>
+						<div className="row-container flex h-full flex-col gap-6 ">
+							<div className="row-container flex flex-row justify-between gap-8">
+								<GrossAndNetProfit />
+								<TransferStatus />
+							</div>
+							<div className="row-container flex h-full flex-row justify-between gap-8">
+								<InventoryTable />
+								<TopSellingProducts />
+							</div>
+						</div>
+					</>
+				)}
 			</div>
 		</LayoutWrapper>
 	);
