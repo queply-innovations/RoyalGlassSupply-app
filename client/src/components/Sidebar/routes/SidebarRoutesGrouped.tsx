@@ -30,10 +30,10 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		groupName: 'Operations',
 		items: [
 			{
-				id: 'pending',
+				id: 'pendings',
 				allowedRoles: ['super_admin', 'admin', 'manager'],
 				itemProps: {
-					title: 'Pending',
+					title: 'Pendings',
 					icon: <Clock size={20} strokeWidth={1.75} />,
 				},
 				children: [
@@ -108,20 +108,20 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'inventory',
+				id: 'inventories',
 				allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
 				path: '/inventory',
 				itemProps: {
-					title: 'Inventory',
+					title: 'Inventories',
 					icon: <ClipboardList size={20} strokeWidth={1.75} />,
 				},
 			},
 			{
-				id: 'transfer',
+				id: 'transfers',
 				allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
 				path: '/transfer',
 				itemProps: {
-					title: 'Transfer',
+					title: 'Transfers',
 					icon: <ExternalLink size={20} strokeWidth={1.75} />,
 				},
 			},
@@ -146,10 +146,10 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		groupName: 'Management',
 		items: [
 			{
-				id: 'user',
+				id: 'users',
 				allowedRoles: ['super_admin', 'admin', 'manager'],
 				itemProps: {
-					title: 'User',
+					title: 'Users',
 					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
 				},
 				children: [
@@ -172,11 +172,11 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'finance',
+				id: 'finances',
 				allowedRoles: ['super_admin', 'admin', 'manager'],
 				path: '/finance',
 				itemProps: {
-					title: 'Finance',
+					title: 'Finances',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
 				},
 			},

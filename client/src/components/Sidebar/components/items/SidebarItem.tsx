@@ -40,7 +40,7 @@ export const SidebarItem = ({
 	return (
 		<li
 			className={`w-full divide-y divide-slate-400/20 overflow-clip rounded-md font-medium ${
-				isItemOpened ? 'bg-slate-400/10' : ''
+				isItemOpened && 'bg-slate-400/10'
 			}`}
 		>
 			{/* If item has children, display as an expandable dropdown */}
@@ -49,39 +49,29 @@ export const SidebarItem = ({
 					key={item.id}
 					className={`group relative flex w-full cursor-pointer flex-row justify-between px-3 py-1 hover:bg-slate-200/50
 					${
-						pathname
-							? pathname.includes(item.id.slice(0, -1))
-								? 'bg-slate-100/30 font-bold text-slate-700'
-								: ''
-							: ''
+						pathname &&
+						pathname.includes(item.id.slice(0, -1)) &&
+						'bg-slate-100/30 font-bold text-slate-700'
 					}`}
 					onClick={expandItem}
 				>
-					{pathname ? (
-						pathname.includes(item.id.slice(0, -1)) ? (
-							<div className="absolute left-0 top-0 flex h-full w-1 items-center">
-								<span className="block h-3 w-1 rounded-full bg-slate-700 transition-all group-hover:h-4"></span>
-							</div>
-						) : (
-							''
-						)
-					) : (
-						''
+					{pathname && pathname.includes(item.id.slice(0, -1)) && (
+						<div className="absolute left-0 top-0 flex h-full w-1 items-center">
+							<span className="block h-3 w-1 rounded-full bg-slate-700 transition-all group-hover:h-4"></span>
+						</div>
 					)}
 					<div className="item-center flex justify-center gap-3">
-						{item.itemProps!.icon && (
+						{item.itemProps?.icon && (
 							<div className="flex h-8 w-8 items-center justify-center">
-								{item.itemProps!.icon}
+								{item.itemProps?.icon}
 							</div>
 						)}
 						<span className="flex items-center">
-							{item.itemProps!.title}
+							{item.itemProps?.title}
 						</span>
 					</div>
 					<span
-						className={`flex items-center transition-transform duration-200 ${
-							isItemOpened ? 'rotate-180' : ''
-						}`}
+						className={`flex items-center transition-transform duration-200 ${isItemOpened && 'rotate-180'}`}
 					>
 						<ChevronDown
 							size={18}
@@ -94,33 +84,24 @@ export const SidebarItem = ({
 				<Link
 					to={item.path as string}
 					className={`group relative flex w-full flex-row px-3 py-1 hover:bg-slate-200/50 ${
-						pathname
-							? pathname === item.path
-								? 'bg-slate-100/30 font-bold text-slate-700'
-								: ''
-							: ''
+						pathname &&
+						pathname === item.path &&
+						'bg-slate-100/30 font-bold text-slate-700'
 					}`}
 				>
-					{pathname ? (
-						pathname === item.path ? (
-							<div className="absolute left-0 top-0 flex h-full w-1 items-center">
-								<span className="block h-3 w-1 rounded-full bg-slate-700 group-hover:h-4"></span>
-							</div>
-						) : (
-							''
-						)
-					) : (
-						''
+					{pathname && pathname === item.path && (
+						<div className="absolute left-0 top-0 flex h-full w-1 items-center">
+							<span className="block h-3 w-1 rounded-full bg-slate-700 transition-all group-hover:h-4"></span>
+						</div>
 					)}
 					<div className="item-center flex justify-center gap-3">
-						{item.itemProps!.icon ? (
+						{item.itemProps?.icon && (
 							<div className="flex h-8 w-8 items-center justify-center">
-								{item.itemProps!.icon}
+								{item.itemProps?.icon}
 							</div>
-						) : null}
-
+						)}
 						<span className="flex items-center">
-							{item.itemProps!.title}
+							{item.itemProps?.title}
 						</span>
 					</div>
 				</Link>
