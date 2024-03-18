@@ -31,7 +31,7 @@ export const InventoryProductsTable = ({
 				columns={InventoryProductsCols({ handleEditInventoryProduct })}
 				data={data ? data : []}
 				filterWhat={'product'}
-				dataType={'Item'}
+				dataType={'Items'}
 				openModal={handleAddInventoryProduct}
 				isLoading={isLoading}
 			/>

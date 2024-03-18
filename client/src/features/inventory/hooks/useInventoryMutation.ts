@@ -46,7 +46,7 @@ export const useInventoryMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ['inventoryData'],
+				queryKey: ['inventory'],
 			});
 		},
 		onError: (error: any) => {

@@ -1,14 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addInventoryProduct, patchInventoryProduct } from '../api/Inventory';
+import {
+	addInventoryProduct,
+	addInventoryProducts,
+	patchInventoryProduct,
+} from '../api/Inventory';
 import { InventoryProductDatabase } from '../types';
 import { useState } from 'react';
 
 type handleSubmitArgs =
 	| { action: 'add'; data: Partial<InventoryProductDatabase> }
+	| { action: 'batch-add'; data: Partial<InventoryProductDatabase>[] }
 	| { action: 'update'; id: number; data: Partial<InventoryProductDatabase> };
-// | { action: 'batch_add'; data: Partial<InventoryProductDatabase>[] };
-
-// function batchMapItems (data: InventoryProduct[]) = {}
 
 export const useInventoryProdsMutation = () => {
 	const queryClient = useQueryClient();
@@ -31,6 +33,8 @@ export const useInventoryProdsMutation = () => {
 		console.log('Submitting: ', args);
 		if (args.action === 'add') {
 			return await addInventoryProductMutation(args.data);
+		} else if (args.action === 'batch-add') {
+			return await addInventoryProductsMutation(args.data);
 		} else if (args.action === 'update') {
 			return await patchInventoryProductMutation({
 				id: args.id,
@@ -47,7 +51,7 @@ export const useInventoryProdsMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ['inventoryProducts'],
+				queryKey: ['inventoryProductById'],
 			});
 		},
 		onError: (error: any) => {
@@ -61,25 +65,17 @@ export const useInventoryProdsMutation = () => {
 		...mutationConfig,
 	});
 
+	const { mutateAsync: addInventoryProductsMutation } = useMutation({
+		mutationKey: ['addInventoryProducts'],
+		mutationFn: addInventoryProducts,
+		...mutationConfig,
+	});
+
 	const { mutateAsync: patchInventoryProductMutation } = useMutation({
 		mutationKey: ['patchInventoryProduct'],
 		mutationFn: patchInventoryProduct,
 		...mutationConfig,
 	});
-
-	/**
-	 * Mutation to perform batch adding of inventory products.
-	 */
-	// const { mutateAsync: addInventoryProductBatchMutation } = useMutation({
-	// 	mutationKey: ['addInventoryProductBatch'],
-	// 	mutationFn: async (data: Partial<InventoryProductDatabase>[]) => {
-	// 		return Promise.all(
-	// 			data.map(async (prod: Partial<InventoryProductDatabase>) => {
-	// 				await addInventoryProductMutation(prod);
-	// 			}),
-	// 		);
-	// 	},
-	// });
 
 	return {
 		value,

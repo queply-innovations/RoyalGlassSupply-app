@@ -1,8 +1,5 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UseModalProps } from '@/utils/Modal';
-// import { useProductQuery } from '@/features/product/__test__/hooks';
-// import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
 import {
 	Command,
@@ -27,11 +24,9 @@ import { Supplier } from '@/features/supplier/types';
 import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
 
 interface AddInventoryProductFormProps {
-	// onClose: UseModalProps['closeModal'];
 	setInventoryProductsQueue: React.Dispatch<
 		React.SetStateAction<InventoryProductsQueueProps[]>
 	>;
-	// selectedInventoryProduct: InventoryProductDatabase;
 	inventoryId: number;
 	products: Product[];
 	productsLoading: boolean;
@@ -54,23 +49,13 @@ export const AddInventoryProductForm = ({
 	handleNavigation,
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
-	const {
-		value: FormValue,
-		handleChange,
-		// handleSubmit,
-	} = useInventoryProdsMutation();
+	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
-	// Query and state handlers for PRODUCTS
-	// const { data: products, isLoading: productsLoading } = useProductQuery();
+	// State handlers for dropdowns/popovers
 	const [productsListOpen, setProductsListOpen] = useState(false);
-	// Query and state handlers for SUPPLIERS
-	// const { suppliers, isFetching: suppliersLoading } = useSupplierQuery();
 	const [suppliersListOpen, setSuppliersListOpen] = useState(false);
 
-	// const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => console.log('form:', FormValue), [FormValue]);
 
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
@@ -124,24 +109,6 @@ export const AddInventoryProductForm = ({
 						handleNavigation();
 					}
 				}}
-				// onSubmit={async e => {
-				// 	e.preventDefault();
-				// 	if (FormValue.product_id === undefined) {
-				// 		setError('Please select a product first.');
-				// 	} else if (FormValue.supplier_id === undefined) {
-				// 		setError('Please select a supplier first.');
-				// 	} else {
-				// 		setIsSubmitting(!isSubmitting);
-				// 		const response = await handleSubmit({
-				// 			action: 'add',
-				// 			data: FormValue,
-				// 		});
-				// 		response?.status === 201 // Status 201 means resource successfully created
-				// 			? (setIsSubmitting(!isSubmitting), onClose())
-				// 			: (setIsSubmitting(!isSubmitting),
-				// 				setError('Failed to add inventory'));
-				// 	}
-				// }}
 			>
 				<div className="flex w-full flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
@@ -344,21 +311,18 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								defaultValue={FormValue.capital_price || ''}
+								defaultValue={FormValue.capital_price?.toFixed(2) || ''}
 								onBlur={e => {
-									e.target.value
+									FormValue.capital_price !== undefined
 										? (e.target.value = Number(
 												e.target.value,
 											).toFixed(2))
 										: undefined;
 								}}
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
 									handleChange(
 										'capital_price',
-										Number(formattedValue),
+										Number(Number(e.target.value).toFixed(2)),
 									);
 								}}
 							/>
@@ -398,17 +362,24 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={FormValue.bundles_count || ''}
+								defaultValue={
+									FormValue.bundles_count !== undefined
+										? FormValue.bundles_count
+										: ''
+								}
 								onBlur={e => {
-									e.target.value
+									FormValue.bundles_count !== undefined
 										? (e.target.value = Number(
 												e.target.value,
 											).toFixed(0))
 										: undefined;
 								}}
-								onChange={e =>
-									handleChange('bundles_count', e.target.value)
-								}
+								onChange={e => {
+									handleChange(
+										'bundles_count',
+										Number(Number(e.target.value).toFixed(0)),
+									);
+								}}
 							/>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -445,16 +416,23 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={FormValue.quantity_per_bundle || ''}
+								defaultValue={
+									FormValue.quantity_per_bundle !== undefined
+										? FormValue.quantity_per_bundle
+										: ''
+								}
 								onBlur={e => {
-									e.target.value
+									e.target.value !== undefined
 										? (e.target.value = Number(
 												e.target.value,
 											).toFixed(0))
 										: undefined;
 								}}
 								onChange={e =>
-									handleChange('quantity_per_bundle', e.target.value)
+									handleChange(
+										'quantity_per_bundle',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -473,16 +451,23 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={FormValue.stocks_count || ''}
+								defaultValue={
+									FormValue.stocks_count !== undefined
+										? FormValue.stocks_count
+										: ''
+								}
 								onBlur={e => {
-									e.target.value
+									FormValue.stocks_count !== undefined
 										? (e.target.value = Number(
-												e.target.value,
+												FormValue.stocks_count,
 											).toFixed(0))
 										: undefined;
 								}}
 								onChange={e =>
-									handleChange('stocks_count', e.target.value)
+									handleChange(
+										'stocks_count',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -501,16 +486,23 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={FormValue.damage_count || ''}
+								defaultValue={
+									FormValue.damage_count !== undefined
+										? FormValue.damage_count
+										: ''
+								}
 								onBlur={e => {
-									e.target.value
+									FormValue.damage_count !== undefined
 										? (e.target.value = Number(
-												e.target.value,
+												FormValue.damage_count,
 											).toFixed(0))
 										: undefined;
 								}}
 								onChange={e =>
-									handleChange('damage_count', e.target.value)
+									handleChange(
+										'damage_count',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -529,30 +521,29 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={FormValue.total_count || ''}
+								defaultValue={
+									FormValue.total_count !== undefined
+										? FormValue.total_count
+										: ''
+								}
 								onBlur={e => {
-									e.target.value
+									FormValue.total_count !== undefined
 										? (e.target.value = Number(
-												e.target.value,
+												FormValue.total_count,
 											).toFixed(0))
 										: undefined;
 								}}
 								onChange={e =>
-									handleChange('total_count', e.target.value)
+									handleChange(
+										'total_count',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
 					</div>
 					<div className="flex w-full justify-between whitespace-nowrap pt-6">
 						<div className="ml-auto flex flex-row gap-4">
-							{/* <LegacyButton
-								fill={'default'}
-								type="reset"
-								onClick={() => onClose()}
-								className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
-							>
-								Cancel
-							</LegacyButton> */}
 							<LegacyButton
 								type="submit"
 								fill={'green'}
