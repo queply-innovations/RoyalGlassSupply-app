@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { InventoryProductDatabase } from '../../types';
 import { Button } from '@/components/ui/button';
 import { AddInventoryProductForm } from '../forms/AddInventoryProductForm';
@@ -6,6 +6,7 @@ import { motion as m, AnimatePresence } from 'framer-motion';
 import { Plus, ChevronLeft } from 'lucide-react';
 import { useProductQuery } from '@/features/product/__test__/hooks';
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
+import { useInventoryProdsMutation } from '../../hooks';
 import { AddInventoryProductTable } from '../table/AddInventoryProductTable';
 
 interface AddInventoryProductProps {
@@ -55,6 +56,7 @@ export const AddInventoryProducts = ({
 	// Query and state handlers for PRODUCTS and SUPPLIERS
 	const { data: products, isLoading: productsLoading } = useProductQuery();
 	const { suppliers, isFetching: suppliersLoading } = useSupplierQuery();
+	const { handleSubmit } = useInventoryProdsMutation();
 
 	const [inventoryProductsQueue, setInventoryProductsQueue] = useState<
 		InventoryProductsQueueProps[]
@@ -80,10 +82,6 @@ export const AddInventoryProducts = ({
 	const handleRemoveItem = (id: number) => {
 		setInventoryProductsQueue(prev => prev.filter(item => item.id !== id));
 	};
-
-	useEffect(() => {
-		console.log('inventoryProductsQueue:', inventoryProductsQueue);
-	}, [inventoryProductsQueue]);
 
 	return (
 		<>
@@ -123,6 +121,7 @@ export const AddInventoryProducts = ({
 									suppliers={suppliers}
 									handleEditItem={handleEditItem}
 									handleRemoveItem={handleRemoveItem}
+									handleSubmit={handleSubmit}
 									onClose={onClose}
 								/>
 							</m.div>
@@ -153,6 +152,7 @@ export const AddInventoryProducts = ({
 									}
 									handleNavigation={handleNavigation}
 									selectedProduct={
+										// If selectedProduct is not empty, pass it to the form
 										Object.keys(selectedProduct).length
 											? selectedProduct
 											: undefined

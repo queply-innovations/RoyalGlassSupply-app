@@ -20,6 +20,7 @@ import {
 } from '@/components/DropdownMenu';
 import { MoreVertical, PackageMinus, Pencil } from 'lucide-react';
 import { Button as LegacyButton } from '@/components';
+import { useState } from 'react';
 
 const tableCols = [
 	'',
@@ -41,6 +42,9 @@ interface AddInventoryProductTableProps {
 	suppliers: Supplier[];
 	handleEditItem: (item: InventoryProductsQueueProps) => void;
 	handleRemoveItem: (id: number) => void;
+	handleSubmit: (
+		args: any,
+	) => Promise<number[] | { status: number; data: any }>;
 	onClose: () => void;
 }
 
@@ -50,17 +54,46 @@ export const AddInventoryProductTable = ({
 	suppliers,
 	handleEditItem,
 	handleRemoveItem,
+	handleSubmit,
 	onClose,
 }: AddInventoryProductTableProps) => {
-	console.log('data:', data);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const submitItems = async () => {
+		setIsSubmitting(true);
+		const response = await handleSubmit({
+			action: 'batch-add',
+			data: data.map(item => item?.data),
+		});
+
+		// Check if there are errors in the response array
+		const errors = Array.isArray(response)
+			? response.filter(status => status !== 201)
+			: [];
+		if (errors.length > 0) {
+			setError('Error adding items to inventory');
+		} else {
+			setIsSubmitting(false);
+			onClose();
+		}
+	};
+
 	return (
 		<>
-			<div className="flex h-full flex-col">
+			<div className="relative flex h-full flex-col">
 				<ScrollArea
 					type="always"
 					className="flex-1 rounded-md border border-gray-200 bg-white"
 					style={{ '--border': '216 12% 84%' } as React.CSSProperties} // to change the color of the scrollbar
 				>
+					{data.length <= 0 && (
+						<div className="absolute z-10 flex h-full w-full items-center justify-center">
+							<p className="text-lg font-medium text-gray-500/50">
+								No items in queue
+							</p>
+						</div>
+					)}
 					<ScrollBar orientation="horizontal" className="z-50 h-3" />
 					<Table>
 						<TableHeader>
@@ -74,7 +107,7 @@ export const AddInventoryProductTable = ({
 								})}
 							</TableRow>
 						</TableHeader>
-						<TableBody>
+						<TableBody className="[&>*:nth-child(even)]:bg-gray-50 [&>*:nth-child(odd)]:bg-white">
 							<ScrollBar
 								orientation="vertical"
 								className="z-50 h-3"
@@ -90,7 +123,7 @@ export const AddInventoryProductTable = ({
 										<>
 											<TableRow
 												key={index}
-												className={`font-medium text-gray-700 hover:bg-slate-100 ${index % 2 === 0 && 'bg-slate-100/50'}`}
+												className={`text-sm font-medium text-gray-700`}
 											>
 												<TableCell className="p-3 pr-0">
 													<div className="flex flex-row justify-center text-xs font-normal uppercase">
@@ -197,6 +230,11 @@ export const AddInventoryProductTable = ({
 					</Table>
 				</ScrollArea>
 				<div className="flex w-full justify-between whitespace-nowrap pt-6">
+					{error && (
+						<div className="flex w-full flex-row items-center justify-start gap-4">
+							<p className="text-sm font-bold text-red-600">{error}</p>
+						</div>
+					)}
 					<div className="ml-auto flex flex-row gap-4">
 						<LegacyButton
 							fill={'default'}
@@ -209,11 +247,17 @@ export const AddInventoryProductTable = ({
 						<LegacyButton
 							type="submit"
 							fill={'green'}
-							disabled={data.length <= 0} // Disable button if no item in list
+							disabled={data.length <= 0 || isSubmitting} // Disable button if no item in list
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							// ! TODO: Add submit handler
+							onClick={e => {
+								e.preventDefault();
+								submitItems();
+							}}
 						>
-							Add items
+							{data.length <= 1
+								? 'Add item to inventory'
+								: `Add ${data.length} items to inventory`}
 						</LegacyButton>
 					</div>
 				</div>
