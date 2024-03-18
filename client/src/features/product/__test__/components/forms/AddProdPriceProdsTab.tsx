@@ -80,9 +80,9 @@ export const AddProdPriceProdsTab = ({
 						<CommandEmpty>No match found</CommandEmpty>
 						<ScrollArea className="max-h-[200px] overflow-y-scroll">
 							<CommandGroup>
-								{products.map((product, key) => (
+								{products.map(product => (
 									<CommandItem
-										key={key}
+										key={product.id}
 										className="cursor-pointer justify-between rounded-sm"
 										onSelect={() => {
 											setSelectedProduct(product);

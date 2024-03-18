@@ -159,9 +159,9 @@ export const AddProdPriceListingsTab = ({
 											/>
 										</div>
 									) : (
-										warehouses.map((warehouse, key) => (
+										warehouses.map(warehouse => (
 											<SelectItem
-												key={key}
+												key={warehouse.code}
 												value={warehouse.id.toString()}
 												className="text-sm font-medium text-slate-700"
 											>
