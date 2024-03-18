@@ -307,9 +307,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								required
 								placeholder={'0.00'}
 								className="pl-7"
-								defaultValue={
-									selectedProductPrice.capital_price.toFixed(2) ??
-									'0.00'
+								value={
+									FormValue.capital_price !== undefined
+										? FormValue.capital_price
+										: selectedProductPrice.capital_price.toFixed(2)
 								}
 								onChange={e => {
 									handleChange(
@@ -318,9 +319,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									);
 								}}
 								onBlur={e => {
-									e.target.value = Number(
-										FormValue.capital_price,
-									).toFixed(2);
+									FormValue.capital_price !== undefined
+										? (e.target.value = Number(
+												FormValue.capital_price,
+											).toFixed(2))
+										: selectedProductPrice.capital_price.toFixed(2) ||
+											'0.00';
 								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -401,8 +405,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								required
 								placeholder={'0.00'}
 								className="pl-7"
-								defaultValue={
-									selectedProductPrice.tax_amount.toFixed(2) ?? '0.00'
+								value={
+									FormValue.tax_amount !== undefined
+										? FormValue.tax_amount
+										: selectedProductPrice.tax_amount.toFixed(2)
 								}
 								onChange={e => {
 									handleChange(
@@ -411,9 +417,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									);
 								}}
 								onBlur={e => {
-									e.target.value = Number(
-										FormValue.tax_amount,
-									).toFixed(2);
+									FormValue.tax_amount !== undefined
+										? (e.target.value = Number(
+												FormValue.tax_amount,
+											).toFixed(2))
+										: selectedProductPrice.tax_amount.toFixed(2) ||
+											'0.00';
 								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
