@@ -13,8 +13,8 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 
 	return (
 		<>
-			<div className="flex max-w-2xl flex-col gap-4">
-				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+			<div className="flex max-w-2xl flex-col gap-4 font-medium">
+				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-6 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Name</h3>
 						<p className="text-sm">{selectedProductPrice.product.name}</p>
@@ -57,7 +57,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-4 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-4 gap-x-6 gap-y-4">
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Type</h3>
 						<p className="text-sm capitalize">
@@ -84,7 +84,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-6 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-6 gap-x-6 gap-y-4">
 					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold text-gray-600">
 							Capital price
@@ -127,7 +127,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 							}).format(selectedProductPrice.cost)}
 						</p>
 					</div>
-					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
+					<div className="relative col-span-2 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">
 							Sale discount
 						</h3>
@@ -156,7 +156,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 							</div>
 						</div>
 					</div>
-					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
+					<div className="relative col-span-2 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Price</h3>
 						<p className="text-sm">
 							{Intl.NumberFormat('en-US', {
@@ -167,7 +167,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-12 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">
 							Active status

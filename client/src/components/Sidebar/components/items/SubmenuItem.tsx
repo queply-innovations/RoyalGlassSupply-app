@@ -12,11 +12,9 @@ export const SubmenuItem = ({ item, pathname }: SubmenuItemProps) => {
 			<Link
 				to={item.path as string}
 				className={`flex w-full flex-row px-3 py-1 hover:bg-slate-200/50 ${
-					pathname
-						? pathname === item.path
-							? 'bg-slate-100/30 font-bold text-slate-700'
-							: 'font-medium'
-						: ''
+					pathname && pathname === item.path
+						? 'bg-slate-100/30 font-bold text-slate-700'
+						: 'font-medium'
 				}`}
 			>
 				<div className="item-center flex justify-center gap-3">

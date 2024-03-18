@@ -11,7 +11,8 @@ import { InventoryProductsTable } from '@/features/inventory/components/table/In
 // import { fetchTransferProductsById } from '@/features/transfer/api/Transfer';
 import { InventoryProduct } from '@/features/inventory/types';
 // import { ImportTransferProducts } from '@/features/inventory/components/modal/ImportTransferProducts';
-import { AddInventoryProductForm } from '@/features/inventory/components/forms/AddInventoryProductForm';
+// import { AddInventoryProductForm } from '@/features/inventory/components/forms/AddInventoryProductForm';
+import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 
 export const InventoryItemsPage = () => {
@@ -78,7 +79,7 @@ export const InventoryItemsPage = () => {
 						onClose={closeModal}
 						title={
 							modalAction === 'add'
-								? 'Add Item'
+								? 'Add Items'
 								: modalAction === 'edit'
 									? 'Edit Item'
 									: ''
@@ -86,7 +87,7 @@ export const InventoryItemsPage = () => {
 					>
 						<>
 							{modalAction === 'add' && (
-								<AddInventoryProductForm
+								<AddInventoryProducts
 									inventoryId={Number(inventoryId)}
 									onClose={closeModal}
 								/>

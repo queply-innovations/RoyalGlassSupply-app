@@ -49,6 +49,33 @@ export const fetchInventoryProducts = async (): Promise<InventoryProduct[]> => {
 		});
 };
 
+export const fetchInventoryByWarehouseId = async (
+	warehouse_id: number,
+): Promise<Inventory[]> => {
+	return await axios
+		.post(
+			`${API_URLS.INVENTORY}/searches-filters-sorts`,
+			{
+				filter: {
+					warehouse_id: warehouse_id,
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error(
+				'Error fetching inventory products by warehouse id:',
+				error,
+			);
+			throw error;
+		});
+};
+
 export const fetchInventoryProductById = async (
 	inventory_id: number,
 ): Promise<InventoryProduct[]> => {
@@ -121,6 +148,34 @@ export const addInventoryProduct = async (
 		})
 		.catch(error => {
 			console.error('Error adding inventory product:', error);
+			throw error;
+		});
+};
+
+export const addInventoryProducts = async (
+	data: Partial<InventoryProductDatabase>[],
+) => {
+	return Promise.all(
+		data.map(async (inventoryProduct: Partial<InventoryProductDatabase>) => {
+			return await axios
+				.post(API_URLS.INVENTORY_PRODUCTS, inventoryProduct, {
+					headers: API_HEADERS(),
+				})
+				.then(response => {
+					return { status: response.status, data: response.data };
+				})
+				.catch(error => {
+					console.error('Error adding inventory product:', error);
+					throw error;
+				});
+		}),
+	)
+		.then(responses => {
+			let status = responses.map(response => response.status);
+			return status;
+		})
+		.catch(error => {
+			console.error('Error adding inventory products:', error);
 			throw error;
 		});
 };

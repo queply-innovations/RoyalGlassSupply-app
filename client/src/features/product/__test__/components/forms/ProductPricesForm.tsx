@@ -11,10 +11,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components';
 import { useAuth } from '@/context/AuthContext';
+import currency from 'currency.js';
 
 interface ProductPricesFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -37,6 +38,14 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
+	const [markupPercentage, setMarkupPercentage] = useState<number>(
+		currency(
+			(selectedProductPrice.markup_price /
+				selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
+			{ precision: 3 },
+		).value,
+	);
+
 	const handleReset = () => {
 		// Omit the following properties from the selectedProductPrice object
 		const {
@@ -50,7 +59,60 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 			...limitedListings
 		} = selectedProductPrice;
 		setFormValue(limitedListings);
+		setMarkupPercentage(
+			currency(
+				(selectedProductPrice.markup_price /
+					selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
+				{ precision: 3 },
+			).value,
+		);
 	};
+
+	// Markup value calculations
+	useEffect(() => {
+		const capitalPrice =
+			FormValue.capital_price !== undefined
+				? FormValue.capital_price
+				: selectedProductPrice.capital_price || 0;
+		const markup = currency(capitalPrice).multiply(markupPercentage / 100);
+
+		handleChange('markup_price', markup.value);
+	}, [FormValue.capital_price, markupPercentage]);
+
+	// Cost value calculation
+	useEffect(() => {
+		const capitalPrice =
+			FormValue.capital_price !== undefined
+				? FormValue.capital_price
+				: selectedProductPrice.capital_price;
+		const markupPrice =
+			FormValue.markup_price !== undefined
+				? FormValue.markup_price
+				: selectedProductPrice.markup_price;
+		const taxAmount =
+			FormValue.tax_amount !== undefined
+				? FormValue.tax_amount
+				: selectedProductPrice.tax_amount;
+
+		handleChange(
+			'cost',
+			currency(capitalPrice).add(markupPrice).add(taxAmount).value,
+		);
+	}, [FormValue.capital_price, FormValue.markup_price, FormValue.tax_amount]);
+
+	// Price value calculation
+	useEffect(() => {
+		const cost =
+			FormValue.cost !== undefined
+				? FormValue.cost
+				: selectedProductPrice.cost;
+		const saleDiscount =
+			FormValue.sale_discount !== undefined
+				? FormValue.sale_discount
+				: selectedProductPrice.sale_discount;
+
+		handleChange('price', currency(cost).subtract(saleDiscount).value);
+	}, [FormValue.cost, FormValue.sale_discount]);
 
 	return (
 		<>
@@ -239,57 +301,92 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								id="capital_price"
 								name="capital_price"
 								type="number"
+								inputMode="numeric"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								defaultValue={
-									selectedProductPrice.capital_price.toFixed(2) ?? 0
+								placeholder={'0.00'}
+								className="pl-7"
+								value={
+									FormValue.capital_price !== undefined
+										? FormValue.capital_price
+										: selectedProductPrice.capital_price.toFixed(2)
 								}
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
 									handleChange(
 										'capital_price',
-										Number(formattedValue),
+										currency(e.target.value).value,
 									);
 								}}
+								onBlur={e => {
+									FormValue.capital_price !== undefined
+										? (e.target.value = Number(
+												FormValue.capital_price,
+											).toFixed(2))
+										: selectedProductPrice.capital_price.toFixed(2) ||
+											'0.00';
+								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
-						<div className="relative col-span-2 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="markup_price"
-								className="text-sm font-bold text-gray-600"
-							>
-								Markup price
-							</Label>
-							<Input
-								id="markup_price"
-								name="markup_price"
-								type="number"
-								min={0}
-								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
-								required
-								className="pl-8"
-								defaultValue={
-									selectedProductPrice.markup_price.toFixed(2) ?? 0
-								}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('markup_price', Number(formattedValue));
-								}}
-							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
-								₱
-							</span>
+						<div className="col-span-2 grid grid-cols-5 gap-1">
+							<div className="relative col-span-2 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="markup"
+									className="text-sm font-bold text-gray-600"
+								>
+									Markup
+								</Label>
+								<Input
+									id="markup"
+									name="markup"
+									type="number"
+									inputMode="numeric"
+									min={0}
+									max={1000}
+									step={0.001}
+									required
+									placeholder={'0'}
+									defaultValue={markupPercentage.toString()}
+									onChange={e => {
+										setMarkupPercentage(
+											currency(e.target.value, { precision: 3 })
+												.value,
+										);
+									}}
+									onBlur={e => {
+										e.target.value = markupPercentage.toString();
+									}}
+								/>
+								<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
+									%
+								</span>
+							</div>
+							<div className="relative col-span-3 flex flex-col justify-end gap-1">
+								<Input
+									id="markup_value"
+									name="markup_value"
+									type="number"
+									min={0}
+									max={1000}
+									readOnly
+									placeholder={'0'}
+									className="pl-7"
+									value={
+										FormValue.markup_price !== undefined
+											? FormValue.markup_price.toFixed(2)
+											: selectedProductPrice.markup_price.toFixed(2)
+									}
+									onChange={e => {
+										handleChange('markup_price', e.target.value);
+									}}
+								/>
+								<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
+									₱
+								</span>
+							</div>
 						</div>
 						<div className="relative col-span-2 flex flex-col justify-center gap-1">
 							<Label
@@ -302,22 +399,33 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								id="tax_amount"
 								name="tax_amount"
 								type="number"
+								inputMode="numeric"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								defaultValue={
-									selectedProductPrice.tax_amount.toFixed(2) ?? 0
+								placeholder={'0.00'}
+								className="pl-7"
+								value={
+									FormValue.tax_amount !== undefined
+										? FormValue.tax_amount
+										: selectedProductPrice.tax_amount.toFixed(2)
 								}
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('tax_amount', Number(formattedValue));
+									handleChange(
+										'tax_amount',
+										currency(e.target.value).value,
+									);
+								}}
+								onBlur={e => {
+									FormValue.tax_amount !== undefined
+										? (e.target.value = Number(
+												FormValue.tax_amount,
+											).toFixed(2))
+										: selectedProductPrice.tax_amount.toFixed(2) ||
+											'0.00';
 								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
@@ -333,17 +441,14 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								name="cost"
 								type="number"
 								min={0}
-								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								defaultValue={selectedProductPrice.cost.toFixed(2) ?? 0}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('cost', Number(formattedValue));
-								}}
+								className="pl-7"
+								readOnly
+								value={
+									FormValue.cost !== undefined
+										? FormValue.cost.toFixed(2)
+										: selectedProductPrice.cost.toFixed(2)
+								}
 							/>
 							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
 								₱
@@ -360,40 +465,47 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								id="sale_discount"
 								name="sale_discount"
 								type="number"
+								inputMode="numeric"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
+								max={
+									FormValue.cost !== undefined
+										? FormValue.cost
+										: selectedProductPrice.cost
+								}
 								disabled={
 									FormValue.on_sale === undefined
 										? selectedProductPrice.on_sale === 0
 										: FormValue.on_sale === 0
 								}
 								required
-								className="pl-8"
+								placeholder="0.00"
+								className="pl-7"
 								defaultValue={
-									selectedProductPrice.sale_discount.toFixed(2) ?? 0
+									FormValue.sale_discount !== undefined
+										? FormValue.sale_discount
+										: selectedProductPrice.sale_discount
 								}
 								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
 									handleChange(
 										'sale_discount',
-										Number(formattedValue),
+										currency(e.target.value).value,
 									);
 								}}
+								onBlur={e => {
+									e.target.value = Number(
+										FormValue.sale_discount,
+									).toFixed(2);
+								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
-							<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-start gap-2 pb-[0.65rem] pr-3">
+							<div className="absolute right-0 top-1/2 mr-2 flex flex-none translate-y-1/4 flex-row items-center justify-start gap-2">
 								<Input
 									name="on_sale"
 									id="on_sale"
 									type="checkbox"
-									// defaultChecked={
-									// 	selectedProductPrice.on_sale ? true : false
-									// }
 									checked={
 										FormValue.on_sale === undefined
 											? selectedProductPrice.on_sale === 1
@@ -401,14 +513,19 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									}
 									className="h-4 w-fit"
 									onChange={e => {
+										const saleDiscountInput = document.getElementById(
+											'sale_discount',
+										) as HTMLInputElement;
 										handleChange('on_sale', e.target.checked ? 1 : 0);
 										!e.target.checked &&
-											handleChange('sale_discount', 0);
+											(handleChange('sale_discount', 0),
+											saleDiscountInput &&
+												(saleDiscountInput.value = '0.00'));
 									}}
 								/>
 								<Label
 									htmlFor="on_sale"
-									className="text-sm text-gray-700"
+									className="text-xs font-bold text-slate-700"
 								>
 									On Sale
 								</Label>
@@ -427,20 +544,16 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								type="number"
 								min={0}
 								step={0.01}
-								pattern="^\d+(,\d{3})*(\.\d{1,2})?$"
 								required
-								className="pl-8"
-								defaultValue={
-									selectedProductPrice.price.toFixed(2) ?? 0
+								readOnly
+								className="pl-7"
+								value={
+									FormValue !== undefined
+										? FormValue.price?.toFixed(2)
+										: selectedProductPrice.price.toFixed(2)
 								}
-								onChange={e => {
-									const formattedValue = Number(
-										e.target.value,
-									).toFixed(2);
-									handleChange('price', Number(formattedValue));
-								}}
 							/>
-							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
+							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
 							</span>
 						</div>
@@ -451,9 +564,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							<Switch
 								id="active_status"
 								name="active_status"
-								// defaultChecked={
-								// 	selectedProductPrice.active_status === 'active'
-								// }
 								checked={
 									FormValue.active_status
 										? FormValue.active_status === 'active'

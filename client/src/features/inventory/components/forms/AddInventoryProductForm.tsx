@@ -1,8 +1,8 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UseModalProps } from '@/utils/Modal';
-import { useProductQuery } from '@/features/product/__test__/hooks';
-import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
+// import { useProductQuery } from '@/features/product/__test__/hooks';
+// import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
 import {
 	Command,
@@ -21,30 +21,53 @@ import { Button as LegacyButton } from '@/components';
 import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { InventoryProductDatabase } from '../../types';
+import { Product } from '@/features/product/__test__/types';
+import { Supplier } from '@/features/supplier/types';
+import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
 
 interface AddInventoryProductFormProps {
-	onClose: UseModalProps['closeModal'];
+	// onClose: UseModalProps['closeModal'];
+	setInventoryProductsQueue: React.Dispatch<
+		React.SetStateAction<InventoryProductsQueueProps[]>
+	>;
+	// selectedInventoryProduct: InventoryProductDatabase;
 	inventoryId: number;
+	products: Product[];
+	productsLoading: boolean;
+	suppliers: Supplier[];
+	suppliersLoading: boolean;
+	currentId: number;
+	handleNavigation: () => void;
+	selectedProduct?: InventoryProductsQueueProps;
 }
 
 export const AddInventoryProductForm = ({
-	onClose,
+	// onClose,
+	setInventoryProductsQueue,
 	inventoryId,
+	products,
+	productsLoading,
+	suppliers,
+	suppliersLoading,
+	currentId,
+	handleNavigation,
+	selectedProduct,
 }: AddInventoryProductFormProps) => {
 	const {
 		value: FormValue,
 		handleChange,
-		handleSubmit,
+		// handleSubmit,
 	} = useInventoryProdsMutation();
 
 	// Query and state handlers for PRODUCTS
-	const { data: products, isLoading: productsLoading } = useProductQuery();
+	// const { data: products, isLoading: productsLoading } = useProductQuery();
 	const [productsListOpen, setProductsListOpen] = useState(false);
 	// Query and state handlers for SUPPLIERS
-	const { suppliers, isFetching: suppliersLoading } = useSupplierQuery();
+	// const { suppliers, isFetching: suppliersLoading } = useSupplierQuery();
 	const [suppliersListOpen, setSuppliersListOpen] = useState(false);
 
-	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	// const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => console.log('form:', FormValue), [FormValue]);
@@ -52,31 +75,75 @@ export const AddInventoryProductForm = ({
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
+
+		// If selectedProduct is not undefined, populate the form with selectedProduct's data
+		selectedProduct &&
+			(handleChange('product_id', selectedProduct.data.product_id),
+			handleChange('supplier_id', selectedProduct.data.supplier_id),
+			handleChange('capital_price', selectedProduct.data.capital_price),
+			handleChange('unit', selectedProduct.data.unit),
+			handleChange('bundles_count', selectedProduct.data.bundles_count),
+			handleChange('bundles_unit', selectedProduct.data.bundles_unit),
+			handleChange(
+				'quantity_per_bundle',
+				selectedProduct.data.quantity_per_bundle,
+			),
+			handleChange('stocks_count', selectedProduct.data.stocks_count),
+			handleChange('damage_count', selectedProduct.data.damage_count),
+			handleChange('total_count', selectedProduct.data.total_count));
 	}, []);
 
 	return (
 		<>
 			<form
-				onSubmit={async e => {
+				onSubmit={e => {
 					e.preventDefault();
 					if (FormValue.product_id === undefined) {
 						setError('Please select a product first.');
 					} else if (FormValue.supplier_id === undefined) {
 						setError('Please select a supplier first.');
 					} else {
-						setIsSubmitting(!isSubmitting);
-						const response = await handleSubmit({
-							action: 'add',
-							data: FormValue,
-						});
-						response?.status === 201 // Status 201 means resource successfully created
-							? (setIsSubmitting(!isSubmitting), onClose())
-							: (setIsSubmitting(!isSubmitting),
-								setError('Failed to add inventory'));
+						selectedProduct
+							? // If selectedProduct is not undefined, update the queue
+								setInventoryProductsQueue(prev => [
+									...prev.filter(
+										item => item.id !== selectedProduct.id,
+									),
+									{
+										id: selectedProduct.id,
+										data: FormValue as InventoryProductDatabase,
+									},
+								])
+							: setInventoryProductsQueue(prev => [
+									...prev,
+									{
+										id: currentId + 1,
+										data: FormValue as InventoryProductDatabase,
+									},
+								]);
+						handleNavigation();
 					}
 				}}
+				// onSubmit={async e => {
+				// 	e.preventDefault();
+				// 	if (FormValue.product_id === undefined) {
+				// 		setError('Please select a product first.');
+				// 	} else if (FormValue.supplier_id === undefined) {
+				// 		setError('Please select a supplier first.');
+				// 	} else {
+				// 		setIsSubmitting(!isSubmitting);
+				// 		const response = await handleSubmit({
+				// 			action: 'add',
+				// 			data: FormValue,
+				// 		});
+				// 		response?.status === 201 // Status 201 means resource successfully created
+				// 			? (setIsSubmitting(!isSubmitting), onClose())
+				// 			: (setIsSubmitting(!isSubmitting),
+				// 				setError('Failed to add inventory'));
+				// 	}
+				// }}
 			>
-				<div className="flex w-[540px] flex-col gap-3">
+				<div className="flex w-full flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div className="col-span-6 flex flex-col justify-center gap-1">
 							<Label
@@ -276,9 +343,14 @@ export const AddInventoryProductForm = ({
 								step={0.01}
 								required
 								className="pl-8"
-								placeholder={'e.g. 2000.00'}
+								placeholder={'0.00'}
+								defaultValue={FormValue.capital_price || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(2);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(2))
+										: undefined;
 								}}
 								onChange={e => {
 									const formattedValue = Number(
@@ -307,7 +379,7 @@ export const AddInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. pcs...'}
+								defaultValue={FormValue.unit || ''}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
@@ -325,10 +397,14 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
+								defaultValue={FormValue.bundles_count || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(0))
+										: undefined;
 								}}
 								onChange={e =>
 									handleChange('bundles_count', e.target.value)
@@ -348,7 +424,7 @@ export const AddInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. boxes...'}
+								defaultValue={FormValue.bundles_unit || ''}
 								onChange={e =>
 									handleChange('bundles_unit', e.target.value)
 								}
@@ -368,10 +444,14 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
+								defaultValue={FormValue.quantity_per_bundle || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(0))
+										: undefined;
 								}}
 								onChange={e =>
 									handleChange('quantity_per_bundle', e.target.value)
@@ -392,10 +472,14 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
+								defaultValue={FormValue.stocks_count || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(0))
+										: undefined;
 								}}
 								onChange={e =>
 									handleChange('stocks_count', e.target.value)
@@ -416,10 +500,14 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
+								defaultValue={FormValue.damage_count || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(0))
+										: undefined;
 								}}
 								onChange={e =>
 									handleChange('damage_count', e.target.value)
@@ -440,10 +528,14 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
+								defaultValue={FormValue.total_count || ''}
 								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
+									e.target.value
+										? (e.target.value = Number(
+												e.target.value,
+											).toFixed(0))
+										: undefined;
 								}}
 								onChange={e =>
 									handleChange('total_count', e.target.value)
@@ -453,25 +545,26 @@ export const AddInventoryProductForm = ({
 					</div>
 					<div className="flex w-full justify-between whitespace-nowrap pt-6">
 						<div className="ml-auto flex flex-row gap-4">
-							<LegacyButton
+							{/* <LegacyButton
 								fill={'default'}
 								type="reset"
 								onClick={() => onClose()}
 								className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
 							>
 								Cancel
-							</LegacyButton>
+							</LegacyButton> */}
 							<LegacyButton
 								type="submit"
 								fill={'green'}
 								disabled={
-									isSubmitting ||
 									FormValue.product_id === undefined ||
 									FormValue.supplier_id === undefined
-								} // Disable button if submitting or no product/supplier selected
+								} // Disable button if no product/supplier selected
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								{!isSubmitting ? 'Add item' : 'Submitting...'}
+								{!selectedProduct
+									? 'Add item to queue'
+									: 'Save changes'}
 							</LegacyButton>
 						</div>
 					</div>

@@ -39,7 +39,11 @@ const Sidebar = ({}: SidebarProps) => {
 					<div className="flex w-full items-center justify-center px-12 pb-2 pt-8">
 						<SidebarLogo />
 					</div>
-					<ScrollArea className="w-full" type="always">
+					<ScrollArea
+						className="w-full"
+						type="always"
+						style={{ '--border': '216 12% 84%' } as React.CSSProperties}
+					>
 						<ul className="items-star flex w-full flex-col gap-1 px-2">
 							{SidebarRoutesGrouped.map(group => {
 								// Check if user's role is included in the allowed roles of the group items

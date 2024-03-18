@@ -17,6 +17,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 	} = useProductMutation();
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
+	const [errorSerial, setErrorSerial] = useState<boolean>(false);
 
 	return (
 		<>
@@ -36,7 +37,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div className="col-span-6 flex flex-col justify-start gap-1">
 							<Label
 								htmlFor="name"
 								className="text-sm font-bold text-gray-600"
@@ -67,10 +68,22 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 								maxLength={100}
 								required
 								placeholder="Serial number..."
-								onChange={e =>
-									handleChange('serial_no', e.target.value)
-								}
+								onChange={e => {
+									const regex = /^[a-zA-Z0-9-]{0,100}$/;
+									if (regex.test(e.target.value)) {
+										handleChange('serial_no', e.target.value);
+										setErrorSerial(false);
+									} else {
+										setErrorSerial(true);
+									}
+								}}
 							/>
+							<span
+								hidden={!errorSerial}
+								className="text-xs font-bold text-red-600"
+							>
+								Must only contain A-Z, 0-9, and -
+							</span>
 						</div>
 						<div className="col-span-6 flex flex-col justify-center gap-1">
 							<Label
@@ -135,7 +148,11 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 							type="submit"
 							fill={'green'}
 							disabled={
-								isSubmitting || Object.keys(FormValue).length === 0
+								isSubmitting ||
+								Object.keys(FormValue).length === 0 ||
+								errorSerial ||
+								FormValue.name === '' ||
+								FormValue.serial_no === ''
 							} // Disable button if there are no changes or form is submitting
 							className="flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
