@@ -39,7 +39,7 @@ export const useProductMutation = () => {
 	// Configurations for mutation
 	const mutationConfig = {
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ['productData'] });
+			await queryClient.invalidateQueries({ queryKey: ['products'] });
 		},
 		onError: (error: any) => {
 			console.error('Product Data failed', error);
