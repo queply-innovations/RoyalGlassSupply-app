@@ -114,8 +114,9 @@ class InventoryProductController extends Controller
     {
 
         //returns a filtered list of products of a particular inventory
-        $query = InventoryProduct::whereHas('inventory', function (Builder $query) use ($request) {
-                                    $query->where('warehouse_id', $request->warehouse_id);
+        //$query = InventoryProduct::whereNotNull('id');
+        $query = InventoryProduct::whereHas('inventory', function (Builder $q) use ($request) {
+                                    $q->where('warehouse_id', $request->warehouse_id);
                                 });
 
         if(!empty($request->search)){
