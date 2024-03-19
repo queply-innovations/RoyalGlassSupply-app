@@ -6,6 +6,7 @@ use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventoryProductController extends Controller
 {
@@ -113,8 +114,13 @@ class InventoryProductController extends Controller
     public function searchFilterAndSortByWarehouse(Request $request)
     {
 
-        //returns a filtered list of products of a particular inventory
-        $query = InventoryProduct::whereNotNull('id');
+        //returns a filtered list of products of a particular warehouse and product name
+        $query = InventoryProduct::whereHas('inventory', function (Builder $query) use ($request) {
+                                    $query->where('warehouse_id', $request->warehouse_id);
+                                })
+                                ->whereHas('product', function (Builder $query) use ($request) {
+                                    $query->where('name', 'like', '%'.$request->product_name.'%');
+                                });
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
@@ -139,10 +145,6 @@ class InventoryProductController extends Controller
                 $query->orderBy($sort_key, $sort_value);
             }
         }
-
-        $query->whereHas('inventory', function (Builder $q) use ($request) {
-            $q->where('warehouse_id', $request->warehouse_id);
-        });
 
         return new InventoryProductCollection($query->get());
     }
