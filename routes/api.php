@@ -77,6 +77,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/customers/searches-filters-sorts', [CustomerController::class, 'searchFilterAndSort']);
     Route::post('/inventories/searches-filters-sorts', [InventoryController::class, 'searchFilterAndSort']);
     Route::post('/inventory-products/searches-filters-sorts', [InventoryProductController::class, 'searchFilterAndSort']);
+    Route::post('/inventory-products/searches-filters-sorts-by-warehouse', [InventoryProductController::class, 'searchFilterAndSortByWarehouse']);
     Route::post('/invoices/searches-filters-sorts', [InvoiceController::class, 'searchFilterAndSort']);
     Route::post('/invoice-discounts/searches-filters-sorts', [InvoiceDiscountController::class, 'searchFilterAndSort']);
     Route::post('/invoice-items/searches-filters-sorts', [InvoiceItemController::class, 'searchFilterAndSort']);
