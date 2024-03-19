@@ -95,135 +95,174 @@ export const AddInventoryProductTable = ({
 						</div>
 					)}
 					<ScrollBar orientation="horizontal" className="z-50 h-3" />
+					<ScrollBar
+						orientation="vertical"
+						className="z-50 h-3"
+						style={
+							{
+								'--border': '216 12% 84%',
+							} as React.CSSProperties
+						}
+						asChild
+					/>
 					<Table>
 						<TableHeader>
-							<TableRow id={'tHeaderRow'} className="hover:bg-white">
+							<TableRow
+								key={'tHeaderRow'}
+								id={'tHeaderRow'}
+								className="hover:bg-white"
+							>
 								{tableCols.map(colName => {
 									return (
-										<TableHead className="whitespace-nowrap px-5 py-3 text-center text-xs font-bold uppercase">
+										<TableHead
+											key={colName + '_head'}
+											className="whitespace-nowrap px-5 py-3 text-center text-xs font-bold uppercase"
+										>
 											{colName}
 										</TableHead>
 									);
 								})}
 							</TableRow>
 						</TableHeader>
-						<TableBody className="[&>*:nth-child(even)]:bg-gray-50 [&>*:nth-child(odd)]:bg-white">
-							<ScrollBar
-								orientation="vertical"
-								className="z-50 h-3"
-								style={
-									{
-										'--border': '216 12% 84%',
-									} as React.CSSProperties
-								}
-							/>
+						<TableBody className="[&>*:nth-child(even)]:bg-white [&>*:nth-child(odd)]:bg-gray-50">
 							{data.length > 0 &&
-								data.map((row, index) => {
+								data.map(row => {
 									return (
-										<>
-											<TableRow
-												key={index}
-												className={`text-sm font-medium text-gray-700`}
+										<TableRow
+											key={row?.id + 'row'}
+											className="text-sm font-medium text-gray-700"
+										>
+											<TableCell
+												className="p-3 pr-0"
+												key={row?.id + 'action'}
 											>
-												<TableCell className="p-3 pr-0">
-													<div className="flex flex-row justify-center text-xs font-normal uppercase">
-														<DropdownMenu>
-															<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-200/70 p-1.5 hover:bg-gray-300">
-																<MoreVertical
-																	size={16}
-																	strokeWidth={2.25}
-																/>
-															</DropdownMenuTrigger>
-															<DropdownMenuContent className="relative z-50 w-44 bg-white font-medium">
-																<DropdownMenuLabel>
-																	Actions
-																</DropdownMenuLabel>
-																<DropdownMenuSeparator className="bg-gray-200" />
-																<DropdownMenuItem
-																	onClick={() => {
-																		row?.id
-																			? handleEditItem(row)
-																			: null;
-																	}}
-																	className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-																>
-																	<span className="flex w-6 items-center justify-center">
-																		<Pencil
-																			size={16}
-																			strokeWidth={2}
-																		/>
-																	</span>
-																	<span>Edit</span>
-																</DropdownMenuItem>
-																<DropdownMenuItem
-																	onClick={() => {
-																		row?.id
-																			? handleRemoveItem(
-																					row.id,
-																				)
-																			: null;
-																	}}
-																	className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-50 focus:text-red-700"
-																>
-																	<span className="flex w-6 items-center justify-center">
-																		<PackageMinus
-																			size={16}
-																			strokeWidth={2}
-																		/>
-																	</span>
-																	<span>Remove</span>
-																</DropdownMenuItem>
-															</DropdownMenuContent>
-														</DropdownMenu>
-													</div>
-												</TableCell>
-												<TableCell className="max-w-[200px] truncate px-5 py-3">
-													{row?.data.product_id
-														? products.find(
-																product =>
-																	product.id ===
-																	row.data.product_id,
-															)?.name
-														: row?.data.product_id}
-												</TableCell>
-												<TableCell className="max-w-[200px] truncate px-5 py-3">
-													{row?.data.supplier_id
-														? suppliers.find(
-																suppier =>
-																	suppier.id ===
-																	row.data.supplier_id,
-															)?.name
-														: row?.data.supplier_id}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{Intl.NumberFormat('en-US', {
-														style: 'currency',
-														currency: 'PHP',
-													}).format(row?.data.capital_price || 0)}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.unit}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.bundles_count}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.bundles_unit}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.quantity_per_bundle}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.stocks_count}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.damage_count}
-												</TableCell>
-												<TableCell className="px-5 py-3">
-													{row?.data.total_count}
-												</TableCell>
-											</TableRow>
-										</>
+												<div className="flex flex-row justify-center text-xs font-normal uppercase">
+													<DropdownMenu>
+														<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-200/70 p-1.5 hover:bg-gray-300">
+															<MoreVertical
+																size={16}
+																strokeWidth={2.25}
+															/>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent className="relative z-50 w-44 bg-white font-medium">
+															<DropdownMenuLabel>
+																Actions
+															</DropdownMenuLabel>
+															<DropdownMenuSeparator className="bg-gray-200" />
+															<DropdownMenuItem
+																key={row?.id + 'edit'}
+																onClick={() => {
+																	row?.id
+																		? handleEditItem(row)
+																		: null;
+																}}
+																className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+															>
+																<span className="flex w-6 items-center justify-center">
+																	<Pencil
+																		size={16}
+																		strokeWidth={2}
+																	/>
+																</span>
+																<span>Edit</span>
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																key={row?.id + 'remove'}
+																onClick={() => {
+																	row?.id
+																		? handleRemoveItem(row.id)
+																		: null;
+																}}
+																className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-50 focus:text-red-700"
+															>
+																<span className="flex w-6 items-center justify-center">
+																	<PackageMinus
+																		size={16}
+																		strokeWidth={2}
+																	/>
+																</span>
+																<span>Remove</span>
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</div>
+											</TableCell>
+											<TableCell
+												className="max-w-[200px] truncate px-5 py-3"
+												key={row?.id + 'product_id'}
+											>
+												{row?.data.product_id
+													? products.find(
+															product =>
+																product.id ===
+																row.data.product_id,
+														)?.name
+													: row?.data.product_id}
+											</TableCell>
+											<TableCell
+												className="max-w-[200px] truncate px-5 py-3"
+												key={row?.id + 'supplier_id'}
+											>
+												{row?.data.supplier_id
+													? suppliers.find(
+															suppier =>
+																suppier.id ===
+																row.data.supplier_id,
+														)?.name
+													: row?.data.supplier_id}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'capital_price'}
+											>
+												{Intl.NumberFormat('en-US', {
+													style: 'currency',
+													currency: 'PHP',
+												}).format(row?.data.capital_price || 0)}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'unit'}
+											>
+												{row?.data.unit}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'bundles_count'}
+											>
+												{row?.data.bundles_count}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'bundles_unit'}
+											>
+												{row?.data.bundles_unit}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'quantity_per_bundle'}
+											>
+												{row?.data.quantity_per_bundle}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'stocks_count'}
+											>
+												{row?.data.stocks_count}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'damage_count'}
+											>
+												{row?.data.damage_count}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'total_count'}
+											>
+												{row?.data.total_count}
+											</TableCell>
+										</TableRow>
 									);
 								})}
 						</TableBody>
