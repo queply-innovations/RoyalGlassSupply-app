@@ -70,12 +70,17 @@ export default {
 					'0%': { opacity: '1' },
 					'100%': { opacity: '0' },
 				},
+				'ping': {
+					'75%': { transform: '200%', opacity: '0', },
+					'100%': { transform: '200%', opacity: '0', },
+				}
 			},
 		},
 		animation: {
 			'fade-in': 'fade-in 0.3s ease-in-out',
 			'fade-out': 'fade-out 0.3s ease-in-out',
 			spin: 'spin 1s linear infinite',
+			'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
 		},
 	},
 	plugins: [],

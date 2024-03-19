@@ -14,7 +14,7 @@ export const useTransferAddition = () => {
 	const { auth } = useAuth();
 	const { warehouses } = useWarehouseQuery();
 
-	const lastId = transfers[transfers.length - 1].id + 1;
+	const lastId = transfers[0] ? transfers[transfers.length - 1].id + 1 : 1;
 
 	const [ isChanged, setIsChanged ] = useState(false);
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Navbar } from '@/components';
+import useNetwork from '@/useNetwork';
 
 interface CommonLayoutProps {
 	children: ReactNode;
@@ -7,6 +8,9 @@ interface CommonLayoutProps {
 }
 
 export const CommonLayout = ({ children, title }: CommonLayoutProps) => {
+	const networkState = useNetwork();
+	const { online } = networkState;
+	
 	return (
 		<>
 			<div className="flex h-screen flex-col gap-y-4">

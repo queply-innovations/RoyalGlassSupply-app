@@ -27,7 +27,7 @@ export const Dashboard = () => {
 					<Navbar />
 				</div>
 
-				{auth.user.position === 'admin' && (
+				{auth.role === 'admin' && (
 					<>
 						<div className="flex flex-row gap-5">
 							<Button
