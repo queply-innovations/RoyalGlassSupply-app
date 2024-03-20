@@ -19,7 +19,7 @@ import {
 	CommandItem,
 } from '@/components/ui/command';
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface EditInventoryProductFormProps {
@@ -42,6 +42,40 @@ export const EditInventoryProductForm = ({
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
+	// Calculate stocks count
+	const [stocksCount, setStocksCount] = useState<number | undefined>();
+	useEffect(() => {
+		const bundlesCount =
+			FormValue.bundles_count !== undefined
+				? FormValue.bundles_count
+				: selectedInventoryProduct?.bundles_count || 0;
+		const quantityPerBundle =
+			FormValue.quantity_per_bundle !== undefined
+				? FormValue.quantity_per_bundle
+				: selectedInventoryProduct?.quantity_per_bundle || 0;
+		const stocksCountCalc = bundlesCount * quantityPerBundle;
+
+		setStocksCount(stocksCountCalc);
+		handleChange('stocks_count', stocksCountCalc);
+	}, [FormValue.bundles_count, FormValue.quantity_per_bundle]);
+
+	// Calculate total count
+	const [totalCount, setTotalCount] = useState<number | undefined>();
+	useEffect(() => {
+		const damageCount =
+			FormValue.damage_count !== undefined
+				? FormValue.damage_count
+				: selectedInventoryProduct?.damage_count || 0;
+		const stocksCount =
+			FormValue.stocks_count !== undefined
+				? FormValue.stocks_count
+				: selectedInventoryProduct?.stocks_count || 0;
+		const totalCountCalc = stocksCount - damageCount;
+
+		setTotalCount(totalCountCalc);
+		handleChange('total_count', totalCountCalc);
+	}, [FormValue.damage_count, FormValue.stocks_count, totalCount]);
+
 	return (
 		<>
 			<form
@@ -54,10 +88,17 @@ export const EditInventoryProductForm = ({
 						id: selectedInventoryProduct.id,
 						data: FormValue,
 					});
-					response?.status === 200 // Status 200 means success
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to update item'));
+					if (
+						typeof response === 'object' &&
+						'status' in response &&
+						response.status === 200
+					) {
+						setIsSubmitting(!isSubmitting);
+						onClose();
+					} else {
+						setIsSubmitting(!isSubmitting);
+						setError('Failed to update item');
+					}
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
@@ -242,12 +283,20 @@ export const EditInventoryProductForm = ({
 								step={1}
 								placeholder="0"
 								required
-								defaultValue={selectedInventoryProduct?.bundles_count}
+								// defaultValue={selectedInventoryProduct?.bundles_count}
+								value={
+									FormValue.bundles_count !== undefined
+										? FormValue.bundles_count
+										: selectedInventoryProduct?.bundles_count || ''
+								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);
 								}}
 								onChange={e =>
-									handleChange('bundles_count', e.target.value)
+									handleChange(
+										'bundles_count',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -265,7 +314,12 @@ export const EditInventoryProductForm = ({
 								maxLength={40}
 								required
 								placeholder={'e.g. boxes...'}
-								defaultValue={selectedInventoryProduct?.bundles_unit}
+								// defaultValue={selectedInventoryProduct?.bundles_unit}
+								value={
+									FormValue.bundles_unit !== undefined
+										? FormValue.bundles_unit
+										: selectedInventoryProduct?.bundles_unit || ''
+								}
 								onChange={e =>
 									handleChange('bundles_unit', e.target.value)
 								}
@@ -287,14 +341,20 @@ export const EditInventoryProductForm = ({
 								step={1}
 								placeholder="0"
 								required
-								defaultValue={
-									selectedInventoryProduct?.quantity_per_bundle
+								value={
+									FormValue.quantity_per_bundle !== undefined
+										? FormValue.quantity_per_bundle
+										: selectedInventoryProduct?.quantity_per_bundle ||
+											''
 								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);
 								}}
 								onChange={e =>
-									handleChange('quantity_per_bundle', e.target.value)
+									handleChange(
+										'quantity_per_bundle',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -313,14 +373,8 @@ export const EditInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								placeholder="0"
-								required
-								defaultValue={selectedInventoryProduct?.stocks_count}
-								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
-								}}
-								onChange={e =>
-									handleChange('stocks_count', e.target.value)
-								}
+								value={stocksCount || 0}
+								readOnly
 							/>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -335,16 +389,23 @@ export const EditInventoryProductForm = ({
 								name="damage_count"
 								type="number"
 								min={0}
-								max={9999999}
+								max={stocksCount || 9999999}
 								step={1}
 								placeholder="0"
 								required
-								defaultValue={selectedInventoryProduct?.damage_count}
+								value={
+									FormValue.damage_count !== undefined
+										? FormValue.damage_count
+										: selectedInventoryProduct?.damage_count || ''
+								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);
 								}}
 								onChange={e =>
-									handleChange('damage_count', e.target.value)
+									handleChange(
+										'damage_count',
+										Number(Number(e.target.value).toFixed(0)),
+									)
 								}
 							/>
 						</div>
@@ -363,14 +424,8 @@ export const EditInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								placeholder="0"
-								required
-								defaultValue={selectedInventoryProduct?.total_count}
-								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
-								}}
-								onChange={e =>
-									handleChange('total_count', e.target.value)
-								}
+								value={totalCount || 0}
+								readOnly
 							/>
 						</div>
 					</div>
@@ -388,7 +443,7 @@ export const EditInventoryProductForm = ({
 								type="submit"
 								fill={'green'}
 								disabled={
-									isSubmitting || Object.keys(FormValue).length === 0
+									isSubmitting || Object.keys(FormValue).length <= 2
 								} // Disable button if no changes made
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
