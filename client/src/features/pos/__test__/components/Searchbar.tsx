@@ -21,7 +21,7 @@ export const SearchBar = ({}: SearchBarProps) => {
 		warehouseProducts,
 	} = usePos();
 	return (
-		<div className="relative z-50 border pb-10">
+		<div className="relative z-20 border pb-10">
 			<div className="absolute box-content flex w-full ">
 				<Command className="rounded-lg border p-1 shadow-md">
 					<CommandInput
