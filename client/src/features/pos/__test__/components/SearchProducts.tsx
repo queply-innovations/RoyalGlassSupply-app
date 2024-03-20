@@ -10,9 +10,9 @@ import { useState } from 'react';
 import { usePos } from '../context/PosContext';
 import { Items } from '../types';
 
-interface SearchBarProps {}
+interface SearchProductsProps {}
 
-export const SearchBar = ({}: SearchBarProps) => {
+export const SearchProducts = ({}: SearchProductsProps) => {
 	const [search, setSearch] = useState('');
 	const {
 		isLoading,

@@ -7,7 +7,7 @@ import {
 	PosProvider,
 	usePos,
 } from '@/features/pos/__test__/context/PosContext';
-import { SearchBar } from '@/features/pos/__test__/components/Searchbar';
+import { SearchProducts } from '@/features/pos/__test__/components/SearchProducts';
 import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
 import { CustomerProvider } from '@/features/customer/__test__/context/CustomerContext';
 
@@ -23,7 +23,7 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 							<Navbar />
 							<div id="main" className="flex w-screen flex-row">
 								<div className="flex flex-1 flex-col gap-6 p-6">
-									<SearchBar />
+									<SearchProducts />
 									<CreateOrderTable />
 								</div>
 								<Sidebar />
