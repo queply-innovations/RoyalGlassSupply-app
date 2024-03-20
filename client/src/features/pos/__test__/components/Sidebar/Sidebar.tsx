@@ -4,6 +4,8 @@ import { TotalItems } from './TotalItems';
 import { useAuth } from '@/context/AuthContext';
 import { usePos } from '../../context/PosContext';
 import { Payment } from './Payment';
+import { SearchCustomer } from '@/features/customer/__test__/components/SearchCustomer';
+import { CustomerInfo } from './Customer/CustomerInfo';
 
 interface SidebarProps {}
 
@@ -45,7 +47,8 @@ export const Sidebar = ({}: SidebarProps) => {
 					</Tabs>
 				</>
 			) : null}
-			<CustomerForm />
+			<SearchCustomer />
+			<CustomerInfo />
 			<TotalItems />
 			<Payment />
 		</div>
