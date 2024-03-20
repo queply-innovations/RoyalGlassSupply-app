@@ -68,6 +68,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		);
 	};
 
+	useEffect(() => {
+		FormValue;
+	}, [FormValue]);
+
 	// Markup value calculations
 	useEffect(() => {
 		const capitalPrice =
@@ -193,12 +197,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							</Label>
 							<Select
 								onValueChange={value => handleChange('type', value)}
-								defaultValue={
-									FormValue.type
-										? FormValue.type
-										: selectedProductPrice.type
-											? selectedProductPrice.type
-											: 'retail'
+								value={
+									FormValue.type || selectedProductPrice.type || ''
 								}
 								required
 							>
@@ -208,7 +208,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								>
 									<SelectValue
 										placeholder={
-											FormValue.type ?? selectedProductPrice.type
+											FormValue.type ||
+											selectedProductPrice.type ||
+											'Choose type...'
 										}
 									/>
 								</SelectTrigger>
@@ -242,7 +244,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								name="unit"
 								type="text"
 								required
-								defaultValue={selectedProductPrice.unit ?? ''}
+								value={
+									FormValue.unit || selectedProductPrice.unit || ''
+								}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
@@ -259,8 +263,13 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								type="number"
 								min={0}
 								max={9999999}
+								placeholder="0"
 								required
-								defaultValue={selectedProductPrice.stocks_quantity ?? 0}
+								value={
+									FormValue.stocks_quantity ||
+									selectedProductPrice.stocks_quantity ||
+									''
+								}
 								onChange={e =>
 									handleChange(
 										'stocks_quantity',
@@ -281,7 +290,11 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								name="stocks_unit"
 								type="text"
 								required
-								defaultValue={selectedProductPrice.stocks_unit ?? ''}
+								value={
+									FormValue.stocks_unit ||
+									selectedProductPrice.stocks_unit ||
+									''
+								}
 								onChange={e =>
 									handleChange('stocks_unit', e.target.value)
 								}
@@ -308,9 +321,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								placeholder={'0.00'}
 								className="pl-7"
 								value={
-									FormValue.capital_price !== undefined
-										? FormValue.capital_price
-										: selectedProductPrice.capital_price.toFixed(2)
+									FormValue.capital_price ||
+									selectedProductPrice.capital_price.toFixed(2)
 								}
 								onChange={e => {
 									handleChange(
@@ -349,7 +361,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									step={0.001}
 									required
 									placeholder={'0'}
-									defaultValue={markupPercentage.toString()}
+									value={markupPercentage.toString()}
 									onChange={e => {
 										setMarkupPercentage(
 											currency(e.target.value, { precision: 3 })
@@ -375,13 +387,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									placeholder={'0'}
 									className="pl-7"
 									value={
-										FormValue.markup_price !== undefined
-											? FormValue.markup_price.toFixed(2)
-											: selectedProductPrice.markup_price.toFixed(2)
+										FormValue.markup_price?.toFixed(2) ||
+										selectedProductPrice.markup_price.toFixed(2) ||
+										'0.00'
 									}
-									onChange={e => {
-										handleChange('markup_price', e.target.value);
-									}}
 								/>
 								<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 									₱
@@ -406,9 +415,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								placeholder={'0.00'}
 								className="pl-7"
 								value={
-									FormValue.tax_amount !== undefined
-										? FormValue.tax_amount
-										: selectedProductPrice.tax_amount.toFixed(2)
+									FormValue.tax_amount ||
+									selectedProductPrice.tax_amount.toFixed(2) ||
+									'0.00'
 								}
 								onChange={e => {
 									handleChange(
@@ -445,9 +454,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								className="pl-7"
 								readOnly
 								value={
-									FormValue.cost !== undefined
-										? FormValue.cost.toFixed(2)
-										: selectedProductPrice.cost.toFixed(2)
+									FormValue.cost?.toFixed(2) ||
+									selectedProductPrice.cost.toFixed(2) ||
+									'0.00'
 								}
 							/>
 							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
@@ -481,10 +490,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								required
 								placeholder="0.00"
 								className="pl-7"
-								defaultValue={
-									FormValue.sale_discount !== undefined
-										? FormValue.sale_discount
-										: selectedProductPrice.sale_discount
+								value={
+									FormValue.sale_discount ||
+									selectedProductPrice.sale_discount?.toFixed(2) ||
+									'0.00'
 								}
 								onChange={e => {
 									handleChange(
@@ -494,7 +503,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								}}
 								onBlur={e => {
 									e.target.value = Number(
-										FormValue.sale_discount,
+										FormValue.sale_discount !== undefined
+											? FormValue.sale_discount
+											: selectedProductPrice.sale_discount,
 									).toFixed(2);
 								}}
 							/>
@@ -548,9 +559,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								readOnly
 								className="pl-7"
 								value={
-									FormValue !== undefined
-										? FormValue.price?.toFixed(2)
-										: selectedProductPrice.price.toFixed(2)
+									FormValue.price?.toFixed(2) ||
+									selectedProductPrice.price.toFixed(2) ||
+									'0.00'
 								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -612,11 +623,14 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							<Select
 								onValueChange={value => {
 									handleChange('approval_status', value);
-									value === 'approved' &&
-										handleChange('approved_by', auth.id); // if changed to 'approved', update 'approved_by'
+									value === 'approved'
+										? handleChange('approved_by', auth.user.id) // if changed to 'approved', update 'approved_by'
+										: handleChange('approved_by', ''); // if changed to 'pending' or 'rejected', remove 'approved_by'
 								}}
-								defaultValue={
-									selectedProductPrice.approval_status ?? 'pending'
+								value={
+									FormValue.approval_status ||
+									selectedProductPrice.approval_status ||
+									''
 								}
 								required
 							>
@@ -626,8 +640,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								>
 									<SelectValue
 										placeholder={
-											FormValue.approval_status ??
-											selectedProductPrice.approval_status
+											FormValue.approval_status ||
+											selectedProductPrice.approval_status ||
+											'Select status...'
 										}
 									/>
 								</SelectTrigger>
