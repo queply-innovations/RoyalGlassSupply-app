@@ -98,6 +98,10 @@ export const InventoryProductsCols = ({
 			},
 		},
 		{
+			accessorKey: 'unit',
+			header: () => <div className="justify-center uppercase">Unit</div>,
+		},
+		{
 			accessorKey: 'bundles_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
@@ -144,10 +148,6 @@ export const InventoryProductsCols = ({
 					Total Count
 				</div>
 			),
-		},
-		{
-			accessorKey: 'unit',
-			header: () => <div className="justify-center uppercase">Unit</div>,
 		},
 		{
 			accessorKey: 'transferred_stocks_count',
