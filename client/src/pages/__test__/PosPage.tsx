@@ -9,6 +9,7 @@ import {
 } from '@/features/pos/__test__/context/PosContext';
 import { SearchBar } from '@/features/pos/__test__/components/Searchbar';
 import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
+import { CustomerProvider } from '@/features/customer/__test__/context/CustomerContext';
 
 interface PointOfSalePageProps {}
 
@@ -16,18 +17,20 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 	return (
 		<>
 			<PosProvider>
-				<InvoiceProvider>
-					<div className="flex flex-row">
-						<Navbar />
-						<div id="main" className="flex w-screen flex-row">
-							<div className="flex flex-1 flex-col gap-6 p-6">
-								<SearchBar />
-								<CreateOrderTable />
+				<CustomerProvider>
+					<InvoiceProvider>
+						<div className="flex flex-row">
+							<Navbar />
+							<div id="main" className="flex w-screen flex-row">
+								<div className="flex flex-1 flex-col gap-6 p-6">
+									<SearchBar />
+									<CreateOrderTable />
+								</div>
+								<Sidebar />
 							</div>
-							<Sidebar />
 						</div>
-					</div>
-				</InvoiceProvider>
+					</InvoiceProvider>
+				</CustomerProvider>
 			</PosProvider>
 		</>
 	);
