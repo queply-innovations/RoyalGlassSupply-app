@@ -1,17 +1,25 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { usePos } from '../../context/PosContext';
 import { PosTable } from './PosTable';
-import { Items } from '../../types';
-import { Button } from '@/components';
-import { Input } from '@/components/ui/input';
 import { TablePlacholder } from './EmptyPlaceholder';
+import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
+import {
+	InvoiceItemDatabase,
+	InvoiceItems,
+	Invoices,
+} from '@/features/invoice/__test__/types';
+import { usePos } from '../../context/__test__/PosContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useInventoryProds } from '@/features/inventory/context';
 
 interface CreateOrderTableProps {}
 
 export const CreateOrderTable = ({}: CreateOrderTableProps) => {
-	const { selectedProducts, quantityHandler } = usePos();
+	const { invoiceItemsQueue } = useInvoice();
+	const { quantityHandler, productListing } = usePos();
+	const { data: inventoryProducts } = useInventoryProds();
 
-	const CreateOrderTableHeader: ColumnDef<Items>[] = [
+	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
 		{
 			id: 'orderItem',
 			enableResizing: false,
@@ -26,18 +34,22 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		{
 			accessorKey: 'name',
 			header: () => <div className="justify-center">Product Name</div>,
-		},
-		{
-			accessorKey: 'type',
-			header: () => <div className="justify-center">Type</div>,
+			cell: ({ row }) => {
+				return (
+					<div className="flex justify-center">
+						{row.original.product_id.name}
+					</div>
+				);
+			},
 		},
 		{
 			accessorKey: 'quantity',
 			header: () => <div className="flex justify-center">Quantity</div>,
 			cell: ({ row }) => {
 				const productIndex = row.index;
-				const maxQuantity =
-					selectedProducts[productIndex].product.stocks_quantity ?? 0;
+				const remainingStocks = inventoryProducts.find(
+					inventory => inventory.product.id === row.original.product_id.id,
+				);
 
 				return (
 					<div className="flex justify-center ">
@@ -48,7 +60,9 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity - 1,
-										maxQuantity,
+										remainingStocks
+											? remainingStocks.remaining_stocks_count ?? 0
+											: 0,
 									);
 								}}
 							>
@@ -62,10 +76,18 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 									quantityHandler(
 										productIndex,
 										Number(e.target.value),
-										maxQuantity,
+										remainingStocks
+											? remainingStocks.remaining_stocks_count ?? 0
+											: 0,
 									);
 								}}
-								disabled={maxQuantity <= 1 ? true : false}
+								disabled={
+									remainingStocks
+										? remainingStocks.remaining_stocks_count ?? 1 <= 1
+											? true
+											: false
+										: false
+								}
 							/>
 							<Button
 								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-200"
@@ -73,13 +95,16 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity + 1,
-										maxQuantity,
+										remainingStocks
+											? remainingStocks.remaining_stocks_count ?? 0
+											: 0,
 									);
 								}}
 								disabled={
-									maxQuantity <= 1 ||
-									maxQuantity <= row.original.quantity
-										? true
+									remainingStocks
+										? remainingStocks.remaining_stocks_count ?? 1 <= 1
+											? true
+											: false
 										: false
 								}
 							>
@@ -95,27 +120,27 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			header: () => <div className="justify-center">Product Price</div>,
 			cell: ({ row }) => (
 				<div className="">
-					<span>₱ {String(row.original.price)}</span>
+					<span>₱ {String(row.original.product_price)}</span>
 				</div>
 			),
 		},
 		{
-			accessorKey: 'subtotal',
+			accessorKey: 'total_price',
 			header: () => <div className="justify-center">Total</div>,
 			cell: ({ row }) => (
 				<div className="">
-					<span>₱ {row.original.subtotal}</span>
+					<span>₱ {row.original.total_price}</span>
 				</div>
 			),
 		},
 	];
 	return (
 		<>
-			{selectedProducts.length === 0 ? (
+			{invoiceItemsQueue.length === 0 ? (
 				<TablePlacholder />
 			) : (
 				<PosTable
-					data={selectedProducts}
+					data={invoiceItemsQueue}
 					columns={CreateOrderTableHeader}
 				/>
 			)}

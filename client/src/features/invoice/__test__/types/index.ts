@@ -1,3 +1,5 @@
+import { Product } from '@/features/product/__test__/types';
+
 export interface Invoices {
 	id: number;
 	code: string;
@@ -18,11 +20,12 @@ export interface Invoices {
 	created_at: string;
 	updated_at: string;
 }
+export interface InvoiceItemDatabase extends Omit<InvoiceItems, 'id'> {}
 
 export interface InvoiceItems {
 	id: number;
 	invoice_id: number;
-	product_id: number;
+	product_id: Partial<Product>;
 	product_price_id: number;
 	product_price: number;
 	quantity: number;

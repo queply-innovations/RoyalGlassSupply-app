@@ -1,9 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs';
-import { CustomerForm } from '../Form/CustomerForm';
-import { TotalItems } from './TotalItems';
 import { useAuth } from '@/context/AuthContext';
-import { usePos } from '../../context/PosContext';
-import { Payment } from './Payment';
+import { usePos } from '../../context/__test__/PosContext';
 import { SearchCustomer } from '@/features/customer/__test__/components/SearchCustomer';
 import { CustomerInfo } from './Customer/CustomerInfo';
 
@@ -11,29 +8,33 @@ interface SidebarProps {}
 
 export const Sidebar = ({}: SidebarProps) => {
 	const { auth } = useAuth();
-	const { setSelectedProducts, selectWarehouse, selectedWarehouse } = usePos();
+	const { setFilter } = usePos();
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[350px] flex-col gap-2 p-4">
 			{auth.role === 'admin' ? (
 				<>
 					<Tabs
-						defaultValue={selectedWarehouse.code}
+						defaultValue="CDO"
 						onValueChange={(value: string) => {
 							if (value === 'ILI') {
-								selectWarehouse({ id: 2, code: value });
-								setSelectedProducts([]);
+								setFilter({
+									approval_status: 'approved',
+									warehouse_id: 2,
+								});
 							}
 							if (value === 'CDO') {
-								selectWarehouse({ id: 1, code: value });
-								setSelectedProducts([]);
+								setFilter({
+									approval_status: 'approved',
+									warehouse_id: 1,
+								});
 							}
 						}}
 					>
 						<TabsList className="flex flex-row">
 							<TabsTrigger
 								value="CDO"
-								className="data-[state=active]:bg-primary w-full  rounded-md
-                                text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
+								className="data-[state=active]:bg-primary w-full rounded-md
+	                            text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
 							>
 								CDO
 							</TabsTrigger>
@@ -47,10 +48,17 @@ export const Sidebar = ({}: SidebarProps) => {
 					</Tabs>
 				</>
 			) : null}
+			{/* <Button
+				onClick={() =>
+					setFilter({ approval_status: 'approved', warehouse_id: 2 })
+				}
+			>
+				2
+			</Button> */}
 			<SearchCustomer />
 			<CustomerInfo />
-			<TotalItems />
-			<Payment />
+			{/* <TotalItems />
+			<Payment /> */}
 		</div>
 	);
 };

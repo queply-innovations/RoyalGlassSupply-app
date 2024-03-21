@@ -6,32 +6,35 @@ import { PosTable } from '@/features/pos/__test__/components/Table/PosTable';
 import {
 	PosProvider,
 	usePos,
-} from '@/features/pos/__test__/context/PosContext';
+} from '@/features/pos/__test__/context/__test__/PosContext';
 import { SearchProducts } from '@/features/pos/__test__/components/SearchProducts';
 import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
 import { CustomerProvider } from '@/features/customer/__test__/context/CustomerContext';
+import { InventoryProdsProvider } from '@/features/inventory/context';
 
 interface PointOfSalePageProps {}
 
 export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 	return (
 		<>
-			<PosProvider>
-				<CustomerProvider>
-					<InvoiceProvider>
-						<div className="flex flex-row">
-							<Navbar />
-							<div id="main" className="flex w-screen flex-row">
-								<div className="flex flex-1 flex-col gap-6 p-6">
-									<SearchProducts />
-									<CreateOrderTable />
+			<InventoryProdsProvider>
+				<InvoiceProvider>
+					<CustomerProvider>
+						<PosProvider>
+							<div className="flex flex-row">
+								<Navbar />
+								<div id="main" className="flex w-screen flex-row">
+									<div className="flex flex-1 flex-col gap-6 p-6">
+										<SearchProducts />
+										<CreateOrderTable />
+									</div>
+									<Sidebar />
 								</div>
-								<Sidebar />
 							</div>
-						</div>
-					</InvoiceProvider>
-				</CustomerProvider>
-			</PosProvider>
+						</PosProvider>
+					</CustomerProvider>
+				</InvoiceProvider>
+			</InventoryProdsProvider>
 		</>
 	);
 };

@@ -1,6 +1,8 @@
 import { Invoices } from '@/features/invoice/__test__/types';
 import {
+	useProductPricesFilter,
 	useProductPricesQuery,
+	useProductPricesQueryFilterByApproved,
 	useProductQuery,
 } from '@/features/product/__test__/hooks';
 import { Product, ProductPrices } from '@/features/product/__test__/types';
@@ -32,6 +34,7 @@ interface PosContextProps {
 	selectedWarehouse: Partial<Warehouse>;
 	setSelectedWarehouse: (warehouse: Partial<Warehouse>) => void;
 	selectWarehouse: (warehouse: Partial<Warehouse>) => void;
+	setFilter: (filter: object) => void;
 }
 interface PosProviderProps {
 	children: ReactNode;
@@ -46,10 +49,14 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 	const [warehouseProducts, setSelectWarehouseProducts] = useState<
 		ProductPrices[]
 	>([]);
+
+	const [filter, setFilter] = useState<object>({
+		approval_status: 'approved',
+	});
 	const [order, setOrder] = useState<CurrentOrder>({} as CurrentOrder);
 	const { data: products } = useProductQuery();
-	const { data: productInfo, isLoading } = useProductPricesQuery();
-
+	const { data: productInfo, isLoading } = useProductPricesFilter(filter);
+	console.log(productInfo);
 	/**
 	 * Handles the quantity change for a selected product.
 	 * @param {number} productId - The ID of the product.
@@ -133,6 +140,7 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		selectedWarehouse,
 		setSelectedWarehouse,
 		selectWarehouse,
+		setFilter,
 	};
 
 	return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
