@@ -56,8 +56,34 @@ export const ProductsCols = ({
 				/>
 			),
 		},
+		// {
+		// 	accessorKey: 'id',
+		// 	sortingFn: 'text',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+		// 				>
+		// 					Id{' '}
+		// 					{column.getIsSorted() === 'asc' ? (
+		// 						<ArrowUp size={18} strokeWidth={2} />
+		// 					) : column.getIsSorted() === 'desc' ? (
+		// 						<ArrowDown size={18} strokeWidth={2} />
+		// 					) : (
+		// 						<ArrowUpDown size={18} strokeWidth={2} />
+		// 					)}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
-			accessorKey: 'id',
+			accessorKey: 'serial_no',
 			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
@@ -69,7 +95,7 @@ export const ProductsCols = ({
 							}
 							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Id{' '}
+							Serial Number{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp size={18} strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
@@ -110,10 +136,8 @@ export const ProductsCols = ({
 			},
 		},
 		{
-			accessorKey: 'serial_no',
-			header: () => (
-				<div className="justify-center uppercase">Serial No.</div>
-			),
+			accessorKey: 'brand',
+			header: () => <div className="justify-center uppercase">Brand</div>,
 		},
 		{
 			accessorKey: 'size',
