@@ -48,10 +48,11 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 											onSelect={() => {
 												const selectedInvoiceItemIndex =
 													invoiceItemsQueue.findIndex(
-														item =>
-															item.product_id ===
-															item.product_price_id,
+														invoiceItem =>
+															invoiceItem.product_price_id ===
+															item.id,
 													);
+												console.log(selectedInvoiceItemIndex);
 												if (selectedInvoiceItemIndex !== -1) {
 													const updatedSelectedProducts = [
 														...invoiceItemsQueue,
@@ -59,6 +60,9 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 													updatedSelectedProducts[
 														selectedInvoiceItemIndex
 													].quantity++;
+													setInvoiceItemsQueue(
+														updatedSelectedProducts,
+													);
 												} else {
 													setInvoiceItemsQueue([
 														...invoiceItemsQueue,
