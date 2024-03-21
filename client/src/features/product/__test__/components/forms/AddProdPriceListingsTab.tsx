@@ -138,6 +138,7 @@ export const AddProdPriceListingsTab = ({
 								Warehouse
 							</Label>
 							<Select
+								value={FormValue.warehouse_id?.toString() || ''}
 								onValueChange={value =>
 									handleChange('warehouse_id', Number(value))
 								}
@@ -190,6 +191,7 @@ export const AddProdPriceListingsTab = ({
 								Type
 							</Label>
 							<Select
+								value={FormValue.type || ''}
 								onValueChange={value => handleChange('type', value)}
 								required
 							>
@@ -230,6 +232,7 @@ export const AddProdPriceListingsTab = ({
 								type="text"
 								required
 								placeholder={'e.g. pcs...'}
+								value={FormValue.unit || ''}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
@@ -248,6 +251,7 @@ export const AddProdPriceListingsTab = ({
 								max={9999999}
 								required
 								placeholder={'e.g. 100...'}
+								value={FormValue.stocks_quantity || ''}
 								onChange={e =>
 									handleChange(
 										'stocks_quantity',
@@ -269,6 +273,7 @@ export const AddProdPriceListingsTab = ({
 								type="text"
 								required
 								placeholder={'e.g. pcs...'}
+								value={FormValue.stocks_unit || ''}
 								onChange={e =>
 									handleChange('stocks_unit', e.target.value)
 								}
@@ -294,6 +299,7 @@ export const AddProdPriceListingsTab = ({
 								required
 								placeholder={'0.00'}
 								className="pl-7"
+								value={FormValue.capital_price || ''}
 								onChange={e => {
 									handleChange(
 										'capital_price',
@@ -325,12 +331,14 @@ export const AddProdPriceListingsTab = ({
 									inputMode="numeric"
 									min={0}
 									max={1000}
-									step={0.01}
+									step={0.001}
 									required
 									placeholder={'0'}
+									value={markupPercentage.toString() || ''}
 									onChange={e => {
 										setMarkupPercentage(
-											currency(e.target.value).value,
+											currency(e.target.value, { precision: 3 })
+												.value,
 										);
 									}}
 									onBlur={e => {
@@ -350,7 +358,7 @@ export const AddProdPriceListingsTab = ({
 									max={1000}
 									step={0.01}
 									readOnly
-									placeholder={'0'}
+									placeholder={'0.00'}
 									className="pl-7"
 									value={
 										FormValue.markup_price
@@ -380,6 +388,7 @@ export const AddProdPriceListingsTab = ({
 								required
 								placeholder={'0.00'}
 								className="pl-7"
+								value={FormValue.tax_amount || ''}
 								onChange={e => {
 									handleChange(
 										'tax_amount',
@@ -442,11 +451,7 @@ export const AddProdPriceListingsTab = ({
 								required
 								placeholder="0.00"
 								className="pl-7"
-								value={
-									FormValue.sale_discount !== 0
-										? FormValue.sale_discount
-										: ''
-								}
+								value={FormValue.sale_discount || ''}
 								onChange={e => {
 									handleChange(
 										'sale_discount',
@@ -467,8 +472,8 @@ export const AddProdPriceListingsTab = ({
 									name="on_sale"
 									id="on_sale"
 									type="checkbox"
-									defaultChecked={false}
 									className="h-4 w-fit"
+									checked={FormValue.on_sale === 1 || false}
 									onChange={e => {
 										handleChange('on_sale', e.target.checked ? 1 : 0);
 										handleChange('sale_discount', 0);
@@ -498,9 +503,7 @@ export const AddProdPriceListingsTab = ({
 								required
 								readOnly
 								className="pl-7"
-								value={
-									FormValue.price ? FormValue.price.toFixed(2) : '0.00'
-								}
+								value={FormValue.price?.toFixed(2) || '0.00'}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
@@ -513,8 +516,8 @@ export const AddProdPriceListingsTab = ({
 							<Switch
 								id="active_status"
 								name="active_status"
-								defaultChecked={true}
 								className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+								checked={FormValue.active_status === 'active' || false}
 								onCheckedChange={checked => {
 									handleChange(
 										'active_status',
@@ -537,12 +540,13 @@ export const AddProdPriceListingsTab = ({
 								Approval status
 							</Label>
 							<Select
+								defaultValue={'pending'}
+								value={FormValue.approval_status || ''}
 								onValueChange={value => {
 									handleChange('approval_status', value);
 									value === 'approved' &&
-										handleChange('approved_by', auth.id); // if changed to 'approved', update 'approved_by'
+										handleChange('approved_by', auth.user.id); // if changed to 'approved', update 'approved_by'
 								}}
-								defaultValue={'pending'}
 								required
 							>
 								<SelectTrigger
@@ -601,7 +605,10 @@ export const AddProdPriceListingsTab = ({
 							type="submit"
 							fill={'green'}
 							disabled={
-								isSubmitting || Object.keys(FormValue).length <= 6
+								isSubmitting ||
+								Object.keys(FormValue).length <= 6 ||
+								FormValue.warehouse_id === undefined ||
+								FormValue.type === undefined
 							} // Disable button if there are no changes or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
