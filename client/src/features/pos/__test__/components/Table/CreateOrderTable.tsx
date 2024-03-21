@@ -47,24 +47,31 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			header: () => <div className="flex justify-center">Quantity</div>,
 			cell: ({ row }) => {
 				const productIndex = row.index;
-				const remainingStocks = inventoryProducts.find(
+				const productInfo = inventoryProducts.find(
 					inventory => inventory.product.id === row.original.product_id.id,
 				);
+				// console.log(
+				// 	'Remaining Stocks:',
+				// 	productInfo?.remaining_stocks_count,
+				// 	'FOR:',
+				// 	row.original.product_id.id,
+				// 	'Product Name:',
+				// 	row.original.product_id.name,
+				// );
 
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
 							<Button
-								className="rounded-sm bg-red-300 hover:bg-red-500"
+								className="rounded-sm bg-red-300 hover:bg-red-500 disabled:opacity-100"
 								onClick={() => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity - 1,
-										remainingStocks
-											? remainingStocks.remaining_stocks_count ?? 0
-											: 0,
+										productInfo?.remaining_stocks_count ?? 0,
 									);
 								}}
+								disabled={row.original.quantity <= 1 ? true : false}
 							>
 								<span>-</span>
 							</Button>
@@ -76,39 +83,33 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 									quantityHandler(
 										productIndex,
 										Number(e.target.value),
-										remainingStocks
-											? remainingStocks.remaining_stocks_count ?? 0
+										productInfo
+											? productInfo.remaining_stocks_count ?? 0
 											: 0,
 									);
 								}}
 								disabled={
-									remainingStocks
-										? remainingStocks.remaining_stocks_count ?? 1 <= 1
-											? true
-											: false
-										: false
+									productInfo?.remaining_stocks_count ? false : true
 								}
 							/>
 							<Button
-								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-200"
+								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:bg-slate-200"
 								onClick={() => {
 									quantityHandler(
 										productIndex,
 										row.original.quantity + 1,
-										remainingStocks
-											? remainingStocks.remaining_stocks_count ?? 0
-											: 0,
+										productInfo?.remaining_stocks_count ?? 0,
 									);
 								}}
 								disabled={
-									remainingStocks
-										? remainingStocks.remaining_stocks_count ?? 1 <= 1
-											? true
-											: false
-										: false
+									row.original.quantity >=
+									(productInfo?.remaining_stocks_count ?? 0)
 								}
 							>
 								<span>+</span>
+							</Button>
+							<Button onClick={() => console.log(productInfo)}>
+								TEST
 							</Button>
 						</div>
 					</div>
