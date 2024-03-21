@@ -26,6 +26,7 @@ import {
 	ArrowDown,
 	ArrowUpDown,
 } from 'lucide-react';
+import currency from 'currency.js';
 
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
@@ -97,6 +98,10 @@ export const ProductPricesColumns = ({
 			},
 		},
 		{
+			accessorKey: 'warehouse.code',
+			header: () => <div className="justify-center uppercase">WHS</div>,
+		},
+		{
 			accessorKey: 'type',
 			header: () => <div className="justify-center uppercase">Type</div>,
 			cell: ({ row }) => {
@@ -149,10 +154,17 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.markup_price);
+				}).format(row.original.markup_price || 0);
+				const markupPercent = currency(
+					(row.original.markup_price / row.original.capital_price) * 100,
+					{ precision: 3 },
+				).value;
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.markup_price ? formatted : `—`}</span>
+						<span>{formatted}</span>
+						<span className="text-gray-500">
+							&nbsp;({markupPercent}%)
+						</span>
 					</div>
 				);
 			},
@@ -164,10 +176,10 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.tax_amount);
+				}).format(row.original.tax_amount || 0);
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.tax_amount ? formatted : `—`}</span>
+						<span>{formatted}</span>
 					</div>
 				);
 			},
@@ -226,10 +238,10 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.sale_discount);
+				}).format(row.original.sale_discount || 0);
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.sale_discount ? formatted : `—`}</span>
+						<span>{row.original.on_sale === 1 ? formatted : `—`}</span>
 					</div>
 				);
 			},
@@ -249,10 +261,7 @@ export const ProductPricesColumns = ({
 				);
 			},
 		},
-		{
-			accessorKey: 'warehouse.code',
-			header: () => <div className="justify-center uppercase">WHS</div>,
-		},
+
 		{
 			accessorKey: 'approval_status',
 			header: () => (

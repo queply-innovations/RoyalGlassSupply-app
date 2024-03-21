@@ -82,6 +82,40 @@ export const AddInventoryProductForm = ({
 			handleChange('total_count', selectedProduct.data.total_count));
 	}, []);
 
+	// Calculate stocks count
+	const [stocksCount, setStocksCount] = useState<number | undefined>();
+	useEffect(() => {
+		const bundlesCount =
+			FormValue.bundles_count !== undefined
+				? FormValue.bundles_count
+				: selectedProduct?.data.bundles_count || 0;
+		const quantityPerBundle =
+			FormValue.quantity_per_bundle !== undefined
+				? FormValue.quantity_per_bundle
+				: selectedProduct?.data.quantity_per_bundle || 0;
+		const stocksCountCalc = bundlesCount * quantityPerBundle;
+
+		setStocksCount(stocksCountCalc);
+		handleChange('stocks_count', stocksCountCalc);
+	}, [FormValue.bundles_count, FormValue.quantity_per_bundle]);
+
+	// Calculate total count
+	const [totalCount, setTotalCount] = useState<number | undefined>();
+	useEffect(() => {
+		const damageCount =
+			FormValue.damage_count !== undefined
+				? FormValue.damage_count
+				: selectedProduct?.data.damage_count || 0;
+		const stocksCount =
+			FormValue.stocks_count !== undefined
+				? FormValue.stocks_count
+				: selectedProduct?.data.stocks_count || 0;
+		const totalCountCalc = stocksCount - damageCount;
+
+		setTotalCount(totalCountCalc);
+		handleChange('total_count', totalCountCalc);
+	}, [FormValue.damage_count, FormValue.stocks_count, totalCount]);
+
 	return (
 		<>
 			<form
@@ -384,7 +418,7 @@ export const AddInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								defaultValue={FormValue.unit || ''}
+								value={FormValue.unit || ''}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
@@ -403,17 +437,17 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={
+								value={
 									FormValue.bundles_count !== undefined
 										? FormValue.bundles_count
 										: ''
 								}
 								onBlur={e => {
-									FormValue.bundles_count !== undefined
+									e.target.value !== ''
 										? (e.target.value = Number(
 												e.target.value,
 											).toFixed(0))
-										: undefined;
+										: '';
 								}}
 								onChange={e => {
 									handleChange(
@@ -436,7 +470,7 @@ export const AddInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								defaultValue={FormValue.bundles_unit || ''}
+								value={FormValue.bundles_unit || ''}
 								onChange={e =>
 									handleChange('bundles_unit', e.target.value)
 								}
@@ -457,17 +491,17 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								required
-								defaultValue={
+								value={
 									FormValue.quantity_per_bundle !== undefined
 										? FormValue.quantity_per_bundle
 										: ''
 								}
 								onBlur={e => {
-									e.target.value !== undefined
+									e.target.value !== ''
 										? (e.target.value = Number(
 												e.target.value,
 											).toFixed(0))
-										: undefined;
+										: '';
 								}}
 								onChange={e =>
 									handleChange(
@@ -491,25 +525,8 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								required
-								defaultValue={
-									FormValue.stocks_count !== undefined
-										? FormValue.stocks_count
-										: ''
-								}
-								onBlur={e => {
-									FormValue.stocks_count !== undefined
-										? (e.target.value = Number(
-												FormValue.stocks_count,
-											).toFixed(0))
-										: undefined;
-								}}
-								onChange={e =>
-									handleChange(
-										'stocks_count',
-										Number(Number(e.target.value).toFixed(0)),
-									)
-								}
+								value={stocksCount || '0'}
+								readOnly
 							/>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -524,10 +541,10 @@ export const AddInventoryProductForm = ({
 								name="damage_count"
 								type="number"
 								min={0}
-								max={9999999}
+								max={stocksCount || 9999999}
 								step={1}
 								required
-								defaultValue={
+								value={
 									FormValue.damage_count !== undefined
 										? FormValue.damage_count
 										: ''
@@ -561,25 +578,8 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								required
-								defaultValue={
-									FormValue.total_count !== undefined
-										? FormValue.total_count
-										: ''
-								}
-								onBlur={e => {
-									FormValue.total_count !== undefined
-										? (e.target.value = Number(
-												FormValue.total_count,
-											).toFixed(0))
-										: undefined;
-								}}
-								onChange={e =>
-									handleChange(
-										'total_count',
-										Number(Number(e.target.value).toFixed(0)),
-									)
-								}
+								readOnly
+								value={totalCount ? totalCount : '0'}
 							/>
 						</div>
 					</div>

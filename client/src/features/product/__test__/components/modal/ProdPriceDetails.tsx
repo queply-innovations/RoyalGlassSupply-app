@@ -3,6 +3,7 @@ import { useProductPrices } from '../..';
 import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
+import currency from 'currency.js';
 
 interface ProdPriceDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -105,6 +106,18 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 								style: 'currency',
 								currency: 'PHP',
 							}).format(selectedProductPrice.markup_price)}
+							<span className="text-xs text-gray-500">
+								&nbsp;(
+								{
+									currency(
+										(selectedProductPrice.markup_price /
+											selectedProductPrice.capital_price) *
+											100,
+										{ precision: 3 },
+									).value
+								}
+								%)
+							</span>
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
@@ -132,10 +145,12 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 							Sale discount
 						</h3>
 						<p className="text-sm">
-							{Intl.NumberFormat('en-US', {
-								style: 'currency',
-								currency: 'PHP',
-							}).format(selectedProductPrice.sale_discount)}
+							{selectedProductPrice.on_sale === 1
+								? Intl.NumberFormat('en-US', {
+										style: 'currency',
+										currency: 'PHP',
+									}).format(selectedProductPrice.sale_discount)
+								: '—'}
 						</p>
 						<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-end gap-1 pb-[0.1rem] pr-1">
 							{selectedProductPrice.on_sale === 1 ? (
@@ -213,7 +228,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						<h3 className="text-sm font-bold text-gray-600">
 							Approval status
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm capitalize">
 							{selectedProductPrice.approval_status}
 						</p>
 					</div>
