@@ -2,21 +2,21 @@ import { ColumnDef } from '@tanstack/react-table';
 import { PosTable } from './PosTable';
 import { TablePlacholder } from './EmptyPlaceholder';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
-import {
-	InvoiceItemDatabase,
-	InvoiceItems,
-	Invoices,
-} from '@/features/invoice/__test__/types';
-import { usePos } from '../../context/__test__/PosContext';
+import { InvoiceItemDatabase } from '@/features/invoice/__test__/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInventoryProds } from '@/features/inventory/context';
+import { Trash2Icon } from 'lucide-react';
 
 interface CreateOrderTableProps {}
 
 export const CreateOrderTable = ({}: CreateOrderTableProps) => {
-	const { invoiceItemsQueue } = useInvoice();
-	const { quantityHandler, productListing } = usePos();
+	const {
+		invoiceItemsQueue,
+		quantityHandler,
+		formatCurrency,
+		handleInvoiceItemsChange,
+	} = useInvoice();
 	const { data: inventoryProducts } = useInventoryProds();
 
 	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
@@ -30,16 +30,13 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			cell: ({ row }) => {
 				return <div className="flex justify-center">{row.index + 1}</div>;
 			},
+			size: 250,
 		},
 		{
 			accessorKey: 'name',
 			header: () => <div className="justify-center">Product Name</div>,
 			cell: ({ row }) => {
-				return (
-					<div className="flex justify-center">
-						{row.original.product_id.name}
-					</div>
-				);
+				return <div className="flex ">{row.original.product_id.name}</div>;
 			},
 		},
 		{
@@ -76,10 +73,12 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 								<span>-</span>
 							</Button>
 							<Input
+								id="quantity"
 								className="w-20 rounded-none text-center drop-shadow-none"
 								type="number"
 								value={row.original.quantity || ''}
 								onChange={e => {
+									//TODO - rerenders after input loses focus
 									quantityHandler(
 										productIndex,
 										Number(e.target.value),
@@ -108,9 +107,6 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 							>
 								<span>+</span>
 							</Button>
-							<Button onClick={() => console.log(productInfo)}>
-								TEST
-							</Button>
 						</div>
 					</div>
 				);
@@ -121,18 +117,68 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			header: () => <div className="justify-center">Product Price</div>,
 			cell: ({ row }) => (
 				<div className="">
-					<span>₱ {String(row.original.product_price)}</span>
+					<span>{formatCurrency(row.original.product_price)}</span>
 				</div>
 			),
 		},
 		{
+			accessorKey: 'item_discount',
+			header: () => <div className="justify-center">Item Discount</div>,
+			cell: ({ row }) => {
+				return (
+					<div key={row.index}>
+						<Input
+							id="item_discount"
+							value={row.original.item_discount}
+							type="number"
+							onChange={e => {
+								//TODO - Fix this part, rerenders when adding input loses out of focus after input
+								handleInvoiceItemsChange(
+									row.index,
+									'item_discount',
+									Number(e.target.value),
+								);
+							}}
+						/>
+					</div>
+				);
+			},
+		},
+		{
+			id: 'total_price',
 			accessorKey: 'total_price',
 			header: () => <div className="justify-center">Total</div>,
 			cell: ({ row }) => (
 				<div className="">
-					<span>₱ {row.original.total_price}</span>
+					<span>{formatCurrency(row.original.total_price)}</span>
 				</div>
 			),
+			size: 250,
+		},
+		{
+			id: 'actions',
+			cell: ({ row }) => {
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<Button
+							className="bg-red-500 hover:bg-red-700"
+							onClick={() => {
+								console.log(row.original);
+							}}
+						>
+							<Trash2Icon color="#FFF" />
+						</Button>
+						<Button
+							className="bg-red-500 hover:bg-red-700"
+							onClick={() => {
+								console.log(row.original);
+							}}
+						>
+							TEST
+						</Button>
+					</div>
+				);
+			},
 		},
 	];
 	return (
