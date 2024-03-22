@@ -2,9 +2,13 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { Banknote } from 'lucide-react';
 import { usePos } from '../../../context/PosContext';
+import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 
 export const TotalAmount = () => {
-	const { order } = usePos();
+	const { invoiceItemsQueue, invoice } = useInvoice();
+	const totalAmount =
+		invoiceItemsQueue.reduce((acc, item) => acc + item.total_price, 0) -
+		(invoice.total_discount ?? 0);
 	return (
 		<>
 			<Button
@@ -17,11 +21,7 @@ export const TotalAmount = () => {
 				</div>
 				<div>
 					<span className="justify-between text-base">
-						{order.totalAmount ? (
-							formatCurrency(order.totalAmount)
-						) : (
-							<span>₱0.00</span>
-						)}
+						{totalAmount ? formatCurrency(totalAmount) : '₱0.00'}
 					</span>
 				</div>
 			</Button>

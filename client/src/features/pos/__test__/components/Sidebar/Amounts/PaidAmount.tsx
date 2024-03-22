@@ -7,8 +7,7 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 
 export const PaidAmount = () => {
-	const { order } = usePos();
-	const { invoice, handleChange } = useInvoice();
+	const { invoice, handleChange, invoiceItemsQueue } = useInvoice();
 	const inputRef = useRef<HTMLInputElement>(null);
 	return (
 		<>
@@ -17,7 +16,7 @@ export const PaidAmount = () => {
 				onClick={() => {
 					inputRef.current!.focus();
 				}}
-				disabled={order.totalItems === 0}
+				disabled={invoiceItemsQueue.length <= 0}
 			>
 				<div className="flex flex-row items-center gap-2">
 					<Coins color="black" className="" size={24} />
@@ -30,7 +29,7 @@ export const PaidAmount = () => {
 					name="paid_amount"
 					type="text"
 					placeholder="₱0.00"
-					disabled={order.totalAmount === 0}
+					disabled={invoiceItemsQueue.length <= 0}
 					onBlur={e => {
 						let value = e.target.value
 							? parseFloat(e.target.value.replace(/[^\d.]/g, ''))
@@ -43,7 +42,15 @@ export const PaidAmount = () => {
 						handleChange('paid_amount', Number(e.target.value));
 						handleChange(
 							'change_amount',
-							Number(e.target.value) - order.totalAmount,
+							Number(
+								Number(
+									Number(e.target.value) -
+										invoiceItemsQueue.reduce(
+											(acc, item) => acc + item.total_price,
+											0,
+										),
+								).toFixed(2),
+							),
 						);
 						console.log('change:', invoice.change_amount);
 					}}

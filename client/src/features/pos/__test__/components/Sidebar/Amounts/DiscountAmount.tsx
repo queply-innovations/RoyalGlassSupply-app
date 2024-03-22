@@ -1,5 +1,4 @@
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
-import { usePos } from '../../../context/PosContext';
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Coins } from 'lucide-react';
@@ -7,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { formatCurrency } from '@/utils/FormatCurrency';
 
 export const DiscountAmount = () => {
-	const { order } = usePos();
-	const { invoice, handleChange } = useInvoice();
+	const { invoice, handleChange, invoiceItemsQueue } = useInvoice();
 	const inputRef = useRef<HTMLInputElement>(null);
 	return (
 		<>
@@ -17,7 +15,7 @@ export const DiscountAmount = () => {
 				onClick={() => {
 					inputRef.current!.focus();
 				}}
-				disabled={order.totalItems === 0}
+				disabled={invoiceItemsQueue.length <= 0}
 			>
 				<div className="flex flex-row items-center gap-2">
 					<Coins color="black" className="" size={24} />
@@ -30,7 +28,7 @@ export const DiscountAmount = () => {
 					name="total_discount"
 					type="text"
 					placeholder="₱0.00"
-					disabled={order.totalAmount === 0}
+					disabled={invoiceItemsQueue.length <= 0}
 					onBlur={e => {
 						let value = e.target.value
 							? parseFloat(e.target.value.replace(/[^\d.]/g, ''))
@@ -43,7 +41,11 @@ export const DiscountAmount = () => {
 						handleChange('total_discount', Number(e.target.value));
 						handleChange(
 							'change_amount',
-							Number(e.target.value) - order.totalAmount,
+							Number(e.target.value) -
+								invoiceItemsQueue.reduce(
+									(acc, item) => acc + item.total_price,
+									0,
+								),
 						);
 						console.log('change:', invoice.change_amount);
 					}}

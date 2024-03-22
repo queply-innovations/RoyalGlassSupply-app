@@ -9,8 +9,11 @@ import { usePos } from '../../context/PosContext';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 
 export const TotalItems = () => {
-	const { formatCurrency } = useInvoice();
-	const { order, selectedProducts } = usePos();
+	const { formatCurrency, invoiceItemsQueue } = useInvoice();
+	const totalAmount = invoiceItemsQueue.reduce(
+		(acc, item) => acc + item.total_price,
+		0,
+	);
 	return (
 		<div className="flex flex-col gap-2 ">
 			<Popover>
@@ -22,7 +25,7 @@ export const TotalItems = () => {
 						</div>
 						<div>
 							<span className="justify-between text-base">
-								{order.totalItems}
+								{invoiceItemsQueue.length}
 							</span>
 						</div>
 					</Button>
@@ -30,12 +33,12 @@ export const TotalItems = () => {
 				<PopoverContent className="">
 					<div className="flex flex-col gap-1">
 						<div>
-							{selectedProducts.map((items, key) => {
-								const formatSubtotal = items.subtotal
+							{invoiceItemsQueue.map((items, key) => {
+								const formatSubtotal = items.total_price
 									? Intl.NumberFormat('en-US', {
 											style: 'currency',
 											currency: 'PHP',
-										}).format(items.subtotal)
+										}).format(items.total_price)
 									: '';
 
 								return (
@@ -52,7 +55,7 @@ export const TotalItems = () => {
 											</div>
 
 											<span className="text-sm">
-												{items.product.product?.name}
+												{items.product_id.name}
 											</span>
 										</div>
 										<span className="text-sm">{formatSubtotal}</span>
@@ -64,9 +67,7 @@ export const TotalItems = () => {
 						<div className="flex flex-row items-center justify-between">
 							<span className="text-sm">Total Amount:</span>
 							<span className="border-t border-t-slate-800 text-sm">
-								{order.totalAmount
-									? formatCurrency(order.totalAmount)
-									: null}
+								{totalAmount ? formatCurrency(totalAmount) : '₱0.00'}
 							</span>
 						</div>
 					</div>

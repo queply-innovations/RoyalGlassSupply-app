@@ -3,17 +3,18 @@ import { Button } from '@/components/ui/button';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { HandCoins } from 'lucide-react';
-import { usePos } from '../../../context/PosContext';
 
 export const ChangeAmount = () => {
-	const { order } = usePos();
-	const { invoice } = useInvoice();
+	const { invoice, invoiceItemsQueue } = useInvoice();
 
 	function getChange() {
 		if (invoice.paid_amount === 0) {
 			return 0;
 		} else {
-			return (invoice.paid_amount ?? 0) - order.totalAmount;
+			return (
+				(invoice.paid_amount ?? 0) -
+				invoiceItemsQueue.reduce((acc, item) => acc + item.total_price, 0)
+			);
 		}
 	}
 	return (
