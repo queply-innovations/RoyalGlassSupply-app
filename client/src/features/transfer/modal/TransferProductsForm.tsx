@@ -31,6 +31,8 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 		product,
 		allProducts,
 		allProductPrices,
+		filteredProductsActive,
+		bundlesLimit,
 		isChanged,
 		isSubmitting,
 		error,
@@ -106,7 +108,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium">
-									{allProducts.length <= 0 ? (
+									{filteredProductsActive.length <= 0 ? (
 										<div className="flex h-12 w-full items-center justify-center">
 											<Loader2
 												size={22}
@@ -115,13 +117,13 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 											/>
 										</div>
 									) : (
-										allProducts.map((product, key) => (
+										filteredProductsActive.map((product, key) => (
 											<SelectItem
-												key={key}
-												value={product.id.toString()}
+												key={product.id}
+												value={product.product.id ? product.product.id.toString() : ''}
 												className="text-sm font-medium text-slate-700"
 											>
-												{product.name}
+												{product.product.name}
 											</SelectItem>
 										))
 									)}
@@ -152,7 +154,8 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								name="bundles_count"
 								type="number"
 								value={product.bundles_count || ''}
-								placeholder='20'
+								placeholder={`Available stocks: ${bundlesLimit}`}
+								max={bundlesLimit}
 								onChange={handleChange}
 								required
 							/>

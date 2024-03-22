@@ -6,7 +6,6 @@ import { useTransfer } from '../context/TransferContext';
 import { useCallback, useEffect, useState } from 'react';
 import { TransferProduct } from '../types';
 import { useAuth } from '@/context/AuthContext';
-import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { useProductPricesQuery, useProductQuery } from '@/features/product/__test__/hooks';
 
 export const useProductAddition = () => {
@@ -17,6 +16,10 @@ export const useProductAddition = () => {
 	const { data: allProductPrices } = useProductPricesQuery(); 
 	//TODO: useInventoryProductsQuery instead. para unsay naa sa inventory sa warehouse sa ga add, mao ray iyang ma pilian
 
+	const filteredProductsSrc = allProductPrices.filter((prod) => prod.warehouse.id === selectedTransfer.source.id);
+	const filteredProductsActive = filteredProductsSrc.filter((prod) => prod.active_status === 'active' && prod.approval_status === 'approved');
+
+	const [ bundlesLimit, setBundlesLimit ] = useState<number>(0);
 	const [ isChanged, setIsChanged ] = useState(false);
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 	const [ error, setError ] = useState<string | null>(null);
@@ -65,6 +68,7 @@ export const useProductAddition = () => {
 			bundles_unit: bundlesUnit,
 			unit: unit,
 		}));
+		setBundlesLimit(capitalPrice[0] ? capitalPrice[0].stocks_quantity : 0);
 	};
 
 	useEffect(() => {
@@ -89,7 +93,11 @@ export const useProductAddition = () => {
 		const formChecker = headers.length === 10 ? true : false;
 
 		if (formChecker) {
-			return [ formChecker, "" ]
+			if (product.bundles_count > bundlesLimit) {
+				return [ false, "Bundles count input is greater than the current stock quantity." ]
+			} else {
+				return [ true, "" ]
+			}
 		} else {
 			return [ formChecker, "Please fill up all fields" ];
 		}
@@ -136,6 +144,8 @@ export const useProductAddition = () => {
 		product,
 		allProducts,
 		allProductPrices,
+		filteredProductsActive,
+		bundlesLimit,
 		isChanged,
 		isSubmitting,
 		error,

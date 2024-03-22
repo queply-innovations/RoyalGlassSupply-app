@@ -45,22 +45,11 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 	const { auth } = useAuth();
 
 	const filteredTransferProducts = transferProducts.filter((prod) => prod.transfer_id === selectedTransfer.id);
-	console.log(transferProducts);
-
-	// const handleTransferDetails = (transfer: Transfer) => {
-	// 	setSelectedTransfer(transfer);
-	// 	openModal(transfer, 'details');
-	// };
 
 	const handleEditProduct = (product: TransferProductFull) => {
 		setSelectedProduct(product);
 		openModal(product, 'edit');
 	};
-
-	// const handleTransferProducts = (transfer: Transfer) => {
-	// 	setSelectedTransfer(transfer);
-	// 	openModal(transfer, 'products');
-	// };
 
 	const handleAddProduct = () => {
 		openModal({} as TransferProductFull, 'add');
