@@ -21,8 +21,6 @@ interface ProductPricesFormProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-// TODO: Test for bugs and errors.
-
 export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	const { auth } = useAuth();
 	// Mutation state and handlers
@@ -37,14 +35,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	// States for form submission and error message
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-
-	const [markupPercentage, setMarkupPercentage] = useState<number>(
-		currency(
-			(selectedProductPrice.markup_price /
-				selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
-			{ precision: 3 },
-		).value,
-	);
 
 	const handleReset = () => {
 		// Omit the following properties from the selectedProductPrice object
@@ -68,11 +58,16 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		);
 	};
 
-	useEffect(() => {
-		FormValue;
-	}, [FormValue]);
-
-	// Markup value calculations
+	// MARKUP PERCENT & PRICE
+	// markupPercentage = (markup_price / capital_price) * 100
+	// markup_price = capital_price * (markupPercentage / 100)
+	const [markupPercentage, setMarkupPercentage] = useState<number>(
+		currency(
+			(selectedProductPrice.markup_price /
+				selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
+			{ precision: 3 },
+		).value,
+	);
 	useEffect(() => {
 		const capitalPrice =
 			FormValue.capital_price !== undefined
@@ -83,7 +78,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		handleChange('markup_price', markup.value);
 	}, [FormValue.capital_price, markupPercentage]);
 
-	// Cost value calculation
+	// COST VALUE CALCULATION
+	// cost = capital_price + markup_price + tax_amount
 	useEffect(() => {
 		const capitalPrice =
 			FormValue.capital_price !== undefined
@@ -104,7 +100,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		);
 	}, [FormValue.capital_price, FormValue.markup_price, FormValue.tax_amount]);
 
-	// Price value calculation
+	// PRICE CALCULATION
+	// price = cost - sale_discount
 	useEffect(() => {
 		const cost =
 			FormValue.cost !== undefined
@@ -136,26 +133,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-3 gap-y-5">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Name</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.name}
 							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Product ID
-							</h3>
-							<p className="text-sm">
-								{selectedProductPrice.product.id}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Listing ID
-							</h3>
-							<p className="text-sm">{selectedProductPrice.id}</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
@@ -171,134 +154,37 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 						</div>
 						<div className="col-span-3 flex flex-col justify-center	gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
-								Warehouse Code
+								Warehouse
 							</h3>
 							<p className="text-sm">
 								{selectedProductPrice.warehouse.code}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center	gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Warehouse
-							</h3>
-							<p className="text-sm">
-								{selectedProductPrice.warehouse.name}
+							<h3 className="text-sm font-bold text-gray-600">Type</h3>
+							<p className="text-sm capitalize">
+								{selectedProductPrice.type}
 							</p>
 						</div>
-					</div>
-					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-					<div className="grid w-full grid-flow-row grid-cols-4 gap-3">
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="type"
-								className="text-sm font-bold text-gray-600"
-							>
-								Type
-							</Label>
-							<Select
-								onValueChange={value => handleChange('type', value)}
-								value={
-									FormValue.type || selectedProductPrice.type || ''
-								}
-								required
-							>
-								<SelectTrigger
-									name="type"
-									className="flex flex-row items-center gap-3 bg-white text-sm capitalize"
-								>
-									<SelectValue
-										placeholder={
-											FormValue.type ||
-											selectedProductPrice.type ||
-											'Choose type...'
-										}
-									/>
-								</SelectTrigger>
-								<SelectContent className="bg-white">
-									<SelectItem
-										key="retail"
-										className="rounded-md"
-										value="retail"
-									>
-										Retail
-									</SelectItem>
-									<SelectItem
-										key="wholesale"
-										className="rounded-md"
-										value="wholesale"
-									>
-										Wholesale
-									</SelectItem>
-								</SelectContent>
-							</Select>
+						<div className="col-span-3 flex flex-col justify-center	gap-1">
+							<h3 className="text-sm font-bold text-gray-600">Unit</h3>
+							<p className="text-sm">{selectedProductPrice.unit}</p>
 						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Unit
-							</Label>
-							<Input
-								id="unit"
-								name="unit"
-								type="text"
-								required
-								value={
-									FormValue.unit || selectedProductPrice.unit || ''
-								}
-								onChange={e => handleChange('unit', e.target.value)}
-							/>
-						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="stocks_quantity"
-								className="text-sm font-bold text-gray-600"
-							>
+						<div className="col-span-3 flex flex-col justify-center	gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
 								Stocks quantity
-							</Label>
-							<Input
-								id="stocks_quantity"
-								name="stocks_quantity"
-								type="number"
-								min={0}
-								max={9999999}
-								placeholder="0"
-								required
-								value={
-									FormValue.stocks_quantity ||
-									selectedProductPrice.stocks_quantity ||
-									''
-								}
-								onChange={e =>
-									handleChange(
-										'stocks_quantity',
-										Number(e.target.value),
-									)
-								}
-							/>
+							</h3>
+							<p className="text-sm">
+								{selectedProductPrice.stocks_quantity}
+							</p>
 						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="stocks_unit"
-								className="text-sm font-bold text-gray-600"
-							>
+						<div className="col-span-3 flex flex-col justify-center	gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
 								Stocks unit
-							</Label>
-							<Input
-								id="stocks_unit"
-								name="stocks_unit"
-								type="text"
-								required
-								value={
-									FormValue.stocks_unit ||
-									selectedProductPrice.stocks_unit ||
-									''
-								}
-								onChange={e =>
-									handleChange('stocks_unit', e.target.value)
-								}
-							/>
+							</h3>
+							<p className="text-sm">
+								{selectedProductPrice.stocks_unit}
+							</p>
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
@@ -718,9 +604,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							<Button
 								type="submit"
 								fill={'green'}
-								disabled={
-									isSubmitting || Object.keys(FormValue).length === 0
-								} // Disable button if there are no changes or form is submitting
+								disabled={isSubmitting} // Disable button if form is submitting
 								className="flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								{!isSubmitting
