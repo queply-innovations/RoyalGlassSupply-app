@@ -15,16 +15,27 @@ interface InvoiceContextProps {
 	invoices: Invoices[];
 	invoiceSelected: Invoices;
 	setInvoiceSelected: (invoice: Invoices) => void;
-	generateInvoice: (warehouse: Partial<Warehouse>) => void;
+	// generateInvoice: (warehouse: Partial<Warehouse>) => void;
 	invoice: Partial<Invoices>;
 	handleChange: (key: string, value: Invoices[keyof Invoices]) => void;
 	formatCurrency: (value: number) => string;
-	AddInvoiceItems: () => void;
+	// AddInvoiceItems: () => void;
 	invoiceItems: Partial<InvoiceItems>[];
 
 	//New invoice Props
 	invoiceItemsQueue: InvoiceItemDatabase[];
 	setInvoiceItemsQueue: (invoiceItems: InvoiceItemDatabase[]) => void;
+	quantityHandler: (
+		productId: number,
+		newQuantity: number,
+		maxQuantity: number,
+	) => void;
+	discountHandler: (TIndex: number, TValue: number) => void;
+	handleInvoiceItemsChange: (
+		TIndex: number,
+		key: keyof InvoiceItemDatabase,
+		value: InvoiceItemDatabase[keyof InvoiceItemDatabase],
+	) => void;
 }
 
 interface InvoiceProviderProps {
@@ -57,6 +68,75 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 			[key]: value,
 		}));
 	}
+
+	function handleInvoiceItemsChange(
+		TIndex: number,
+		key: keyof InvoiceItemDatabase,
+		value: InvoiceItemDatabase[keyof InvoiceItemDatabase],
+	) {
+		setInvoiceItemsQueue(prev =>
+			prev.map((item, index) => {
+				if (index === TIndex) {
+					const updatedItem = {
+						...item,
+						[key]: value,
+					};
+					updatedItem.total_price =
+						updatedItem.product_price * updatedItem.quantity -
+						updatedItem.item_discount;
+					return updatedItem;
+				}
+				return item;
+			}),
+		);
+	}
+	const quantityHandler = (
+		productId: number,
+		newQuantity: number,
+		maxQuantity: number,
+	) => {
+		if (newQuantity > 0 && newQuantity <= maxQuantity) {
+			setInvoiceItemsQueue(prev =>
+				prev.map((item, index) => {
+					if (index === productId) {
+						// Ensure that `price` property exists and is a number
+						if (typeof item.product_price === 'number') {
+							return {
+								...item,
+								quantity: newQuantity,
+								total_price:
+									Number(
+										Number(item.product_price * newQuantity).toFixed(
+											2,
+										),
+									) - item.item_discount,
+							};
+						}
+					}
+					return item;
+				}),
+			);
+		} else if (newQuantity === 0) {
+			setInvoiceItemsQueue(prev =>
+				prev.filter((_, index) => index !== productId),
+			);
+		}
+	};
+
+	const discountHandler = (TIndex: number, TValue: number) => {
+		setInvoiceItemsQueue(prev =>
+			prev.map((item, index) => {
+				if (index === TIndex) {
+					return {
+						...item,
+						item_discount: TValue,
+						total_price: item.product_price * item.quantity - TValue,
+					};
+				}
+				return item;
+			}),
+		);
+	};
 
 	// function AddInvoiceItems() {
 	// 	selectedProducts.forEach(product => {
@@ -124,6 +204,9 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		//New invoice Props
 		invoiceItemsQueue,
 		setInvoiceItemsQueue,
+		quantityHandler,
+		discountHandler,
+		handleInvoiceItemsChange,
 	};
 	// useEffect(() => {
 	// 	setInvoice({
