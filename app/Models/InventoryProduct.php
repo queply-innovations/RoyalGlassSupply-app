@@ -28,7 +28,7 @@ class InventoryProduct extends Model
     public $timestamps = false;
 
     protected $with = [
-        'product:id,name,size,color',
+        'product:id,name,serial_no,brand,size,color',
         'supplier:id,name'
     ];
 

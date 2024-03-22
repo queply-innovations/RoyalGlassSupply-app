@@ -32,7 +32,7 @@ class ProductPrice extends Model
     ];
 
     protected $with = [
-        'product:id,name,size,color',
+        'product:id,name,serial_no,brand,size,color',
         'createdBy:id,firstname,lastname',
         'approvedBy:id,firstname,lastname',
         'warehouse:id,code,name'
