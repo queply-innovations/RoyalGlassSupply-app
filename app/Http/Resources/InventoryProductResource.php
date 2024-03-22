@@ -14,10 +14,10 @@ class InventoryProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //TO BE RESOLVED
-        //$transferred_bundles_count = $this->transferProducts->sum('bundles_count');
         $transferred_stocks_count = $this->transferProducts->sum('total_quantity');
-        $sold_count = $this->invoiceItems->sum('quantity');
+        $sold_count = $this->invoiceItems->sum('total_sold');
+        $miscellaneous_count = $this->invoiceItems->sum('total_miscellaneous');
+        $remaining_stocks = $this->stocks_count - ($transferred_stocks_count + $sold_count + $miscellaneous_count);
 
         return [
             'id' => $this->id,
@@ -32,9 +32,10 @@ class InventoryProductResource extends JsonResource
             'damage_count' => $this->damage_count,
             'total_count' => $this->total_count,
             'unit' => $this->unit,
-            'transferred_count' => $transferred_count,
+            'transferred_stocks_count' => $transferred_stocks_count,
             'sold_count' => $sold_count,
-            'remaining_stocks_count' => $this->stocks_count - ($transferred_stocks_count + $sold_count)
+            'miscellaneous_count' => $miscellaneous_count,
+            'remaining_stocks_count' => $remaining_stocks
         ];
     }
 }

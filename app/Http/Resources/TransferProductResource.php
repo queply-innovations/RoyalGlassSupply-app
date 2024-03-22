@@ -22,7 +22,7 @@ class TransferProductResource extends JsonResource
             'bundles_count' => $this->bundles_count,
             'bundles_unit' => $this->bundles_unit,
             'quantity_per_bundle' => $this->quantity_per_bundle,
-            'total_quantity' => $this->quantity,
+            'total_quantity' => $this->total_quantity,
             'unit' => $this->unit,
             'source_inventory' => $this->source_inventory
         ];

@@ -6,6 +6,7 @@ use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventoryProductController extends Controller
 {
@@ -79,6 +80,47 @@ class InventoryProductController extends Controller
 
         //returns a filtered list of products of a particular inventory
         $query = InventoryProduct::where('inventory_id', $request->inventory_id);
+
+        if(!empty($request->search)){
+            foreach($request->search as $search_key => $search_value){
+                $query->where($search_key, 'like', '%'.$search_value.'%');
+            }
+        }
+        
+        if(!empty($request->filter)){
+            foreach($request->filter as $filter_key => $filter_value){
+                $query->where($filter_key, $filter_value);
+            }
+        }
+
+        if(!empty($request->date_range)){
+            foreach($request->date_range as $date_range_key => $date_range_value){
+                $query->whereBetween($date_range_key, [$date_range_value['from'].' 00:00:00', $date_range_value['to'].' 23:59:59']);
+            }
+        }
+
+        if(!empty($request->sort)){
+            foreach($request->sort as $sort_key => $sort_value){
+                $query->orderBy($sort_key, $sort_value);
+            }
+        }
+
+        return new InventoryProductCollection($query->get());
+    }
+
+    /**
+     * Display a listing of the filtered collection.
+     */
+    public function searchFilterAndSortByWarehouse(Request $request)
+    {
+
+        //returns a filtered list of products of a particular warehouse and product name
+        $query = InventoryProduct::whereHas('inventory', function (Builder $query) use ($request) {
+                                    $query->where('warehouse_id', $request->warehouse_id);
+                                })
+                                ->whereHas('product', function (Builder $query) use ($request) {
+                                    $query->where('name', 'like', '%'.$request->product_name.'%');
+                                });
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
