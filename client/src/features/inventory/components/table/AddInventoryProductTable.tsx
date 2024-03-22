@@ -37,7 +37,7 @@ const tableCols = [
 ];
 
 interface AddInventoryProductTableProps {
-	data: (InventoryProductsQueueProps | undefined)[];
+	data: InventoryProductsQueueProps[];
 	products: Product[];
 	suppliers: Supplier[];
 	handleEditItem: (item: InventoryProductsQueueProps) => void;

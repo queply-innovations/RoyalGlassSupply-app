@@ -21,6 +21,7 @@ import {
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/context/AuthContext';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -29,6 +30,7 @@ interface EditInventoryProductFormProps {
 export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
+	const { auth } = useAuth();
 	const { selectedInventoryProduct } = useInventoryProds();
 	const {
 		value: FormValue,
@@ -228,7 +230,8 @@ export const EditInventoryProductForm = ({
 								step={0.01}
 								required
 								className="pl-8"
-								placeholder={'e.g. 2000.00'}
+								placeholder={'0.00'}
+								readOnly={auth.role !== 'admin'}
 								defaultValue={selectedInventoryProduct?.capital_price.toFixed(
 									2,
 								)}
@@ -262,7 +265,6 @@ export const EditInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. pcs...'}
 								defaultValue={selectedInventoryProduct?.unit}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
@@ -281,9 +283,7 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
-								// defaultValue={selectedInventoryProduct?.bundles_count}
 								value={
 									FormValue.bundles_count !== undefined
 										? FormValue.bundles_count
@@ -313,8 +313,6 @@ export const EditInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. boxes...'}
-								// defaultValue={selectedInventoryProduct?.bundles_unit}
 								value={
 									FormValue.bundles_unit !== undefined
 										? FormValue.bundles_unit
@@ -339,7 +337,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
 								value={
 									FormValue.quantity_per_bundle !== undefined
@@ -372,7 +369,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								value={stocksCount || 0}
 								readOnly
 							/>
@@ -391,7 +387,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={stocksCount || 9999999}
 								step={1}
-								placeholder="0"
 								required
 								value={
 									FormValue.damage_count !== undefined
@@ -423,7 +418,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								value={totalCount || 0}
 								readOnly
 							/>

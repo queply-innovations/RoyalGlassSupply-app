@@ -24,6 +24,7 @@ import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
 import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 interface AddInventoryProductFormProps {
 	setInventoryProductsQueue: React.Dispatch<
@@ -51,6 +52,7 @@ export const AddInventoryProductForm = ({
 	handleNavigation,
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
+	const { auth } = useAuth();
 	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
 	// State handlers for dropdowns/popovers
@@ -80,6 +82,11 @@ export const AddInventoryProductForm = ({
 			handleChange('stocks_count', selectedProduct.data.stocks_count),
 			handleChange('damage_count', selectedProduct.data.damage_count),
 			handleChange('total_count', selectedProduct.data.total_count));
+
+		// If authenticated user is not an admin, set the capital_price to 0.00
+		!selectedProduct &&
+			auth.role !== 'admin' &&
+			handleChange('capital_price', 0);
 	}, []);
 
 	// Calculate stocks count
@@ -386,6 +393,7 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
+								disabled={auth.role !== 'admin'} // Disable input if user is not an admin
 								defaultValue={FormValue.capital_price?.toFixed(2) || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined
