@@ -48,8 +48,8 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 						<CommonLayout title={title!}>
 							{children}
 							<div className="flex flex-row justify-end text-lg pt-4">
-								<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500' : 'bg-red-500'} mr-2`}>
-									<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500' : 'bg-red-500'} mr-2 animate-ping`}>
+								<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
+									<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
 									</div>
 								</div>
 								{online ? "You're currently online" : "You're currently offline"}

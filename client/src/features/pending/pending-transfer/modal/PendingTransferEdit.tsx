@@ -305,11 +305,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 		</Select>
 	);
 
+	success && setTimeout(() => {
+		onClose();
+	}, 3000);
+
 	return (
 		<>
-			{success && (setTimeout(() => {
-				onClose();
-			}, 3000))}
 			<form
 				onSubmit={e => {
 					e.preventDefault();

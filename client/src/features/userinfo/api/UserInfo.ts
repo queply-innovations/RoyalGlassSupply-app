@@ -3,7 +3,7 @@ import { User, UserAdd } from '../types';
 import { User as IUser } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { RolePermissions, Roles } from '../types';
+import { RolePermissions, Permissions, Roles } from '../types';
 
 export const fetchUsers = async (updateProgress: any): Promise<User[]> => {
 	return await axios
@@ -81,10 +81,6 @@ export const getRoles = async (updateProgress: any): Promise<Roles> => {
 		headers: {
 			Authorization: `Bearer ${storage.getToken()}`,
 			'Content-Type': 'application/json',
-		},
-		onDownloadProgress: (progress) => {
-			let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-			updateProgress(percentCompleted);
 		},
 	})
 	.then(response => {
@@ -177,4 +173,77 @@ export const addUser = async (data: UserAdd) => {
 		console.error('Error adding user:', error);
 		throw error;
 	}
+};
+
+export const fetchPermissions = async (): Promise<Permissions[]> => {
+	return await axios
+		.get(API_URLS.PERMISSIONS, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching permissions:', error);
+			throw error;
+		});
+};
+
+export const getPermissions = async (role_id: number): Promise<RolePermissions[]> => {
+	return await axios
+	.post(`${API_URLS.ROLE_PERMISSIONS}/searches-filters-sorts`, 
+		{'role_id': role_id}, 
+
+		{
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+
+		.then(response => {
+			return response.data.data;
+		})
+
+		.catch(error => {
+			console.error('Error fetching role permissions:', error);
+			throw error;
+		});
+};
+
+export const addPermissions = async (data: any): Promise<RolePermissions[]> => {
+	return await axios
+		.post(API_URLS.ROLE_PERMISSIONS, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error adding permissions:', error);
+			throw error;
+		});
+};
+
+export const removePermissions = async (data: RolePermissions): Promise<RolePermissions[]> => {
+	return await axios
+		.delete(`${API_URLS.ROLE_PERMISSIONS}/${data.id}`, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error adding permissions:', error);
+			throw error;
+		});
 };

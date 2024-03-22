@@ -33,11 +33,13 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 		handleChange,
 		handleChangeSelect,
 	} = useUserInfoMutation(selectedUser, roles);
+
+	success && setTimeout(() => {
+		onClose();
+	}, 3000);
+	
 	return (
 		<>
-			{success && (setTimeout(() => {
-				onClose();
-			}, 3000))}
 			{selectedUser.id === auth.user.id && (
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4">
 					<div className="flex flex-col col-span-6 font-bold text-red-700 text-start">

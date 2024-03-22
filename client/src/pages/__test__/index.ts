@@ -10,3 +10,4 @@ export * from './PosPage';
 export * from './TransactionPage';
 export * from './PendingTransferPage';
 export * from './UserSalesPage';
+export * from './RolePermissionsPage';

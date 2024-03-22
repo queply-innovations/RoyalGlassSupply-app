@@ -9,6 +9,7 @@ import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
 import { set } from 'react-hook-form';
 import { UserInfoEdit } from '@/features/userinfo/components/UserInfoEdit';
+import UserInfoPerms from '@/features/userinfo/components/UserInfoPerms';
 // import { MainLayout } from '@/layouts/MainLayout';
 
 export const UserInfo = () => {
@@ -16,6 +17,11 @@ export const UserInfo = () => {
 	const [modalAction, setModalAction] = useState<string>('');
 
 	const openUserInfoModal = (users: IUserInfo, action: string) => {
+		openModal();
+		setModalAction(action);
+	};
+
+	const openUserPermsModal = (users: IUserInfo, action: string) => {
 		openModal();
 		setModalAction(action);
 	};
@@ -35,7 +41,9 @@ export const UserInfo = () => {
 						title={
 							modalAction === 'edit'
 								? 'Edit User'
-								: 'Add User'
+								: modalAction === 'add' 
+									? 'Add User'
+									: 'Edit User Role Permissions'
 						}
 					>
 						<>
@@ -46,6 +54,10 @@ export const UserInfo = () => {
 							)}
 							{modalAction === 'edit' && (
 								<UserInfoEdit onClose={closeModal} />
+								// <></>
+							)}
+							{modalAction === 'editPerms' && (
+								<UserInfoPerms onClose={closeModal} />
 								// <></>
 							)}
 						</>

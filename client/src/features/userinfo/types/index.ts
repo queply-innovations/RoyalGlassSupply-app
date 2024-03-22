@@ -14,7 +14,6 @@ export interface UserAdd {
 	email: string;
 	firstname: string;
 	lastname: string;
-	position: string;
 	role_id: number;
 	contact_no: string;
 	password: string;
@@ -33,7 +32,7 @@ export interface Roles {
 }
 
 export interface RolePermissions {
-	id: number;
+	id: number | null;
 	role_id: number;
 	permission_id: number;
 }

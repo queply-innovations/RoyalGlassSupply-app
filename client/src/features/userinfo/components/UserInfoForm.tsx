@@ -29,11 +29,14 @@ const UserInfoForm = ({
 	//TODO: Check what's wrong with form when filling up values
 	const { roles } = useUserInfo();
 	const rolesArr: string[] = roles ? roles.map((role: Roles) => role.title) : [];
+
+	success && setTimeout(() => {
+		onClose();
+	}, 3000);
+
+	
 	return (
 		<>
-			{success && (setTimeout(() => {
-				onClose();
-			}, 3000))}
 			<form
 				onSubmit={e => {
 					e.preventDefault();

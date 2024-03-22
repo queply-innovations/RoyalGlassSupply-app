@@ -31,7 +31,24 @@ interface TransferTableProps {
 }
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, isFetching, progress, setSelectedTransfer } = usePendingTransfer();
+	const { transfers, transferProducts, isFetching, progress, setSelectedTransfer } = usePendingTransfer();
+
+	const transferId = transferProducts.map(prod => { 
+		return { 
+			transfer_id: prod.transfer_id 
+		} 
+	});
+
+	const filteredTransfers = transfers.filter((transfer) => 
+		{
+			if (transferId.some(id => id.transfer_id === transfer.id)) {
+				return transfer;
+			}
+		}
+	);
+
+	console.log(filteredTransfers); //TODO: Please check if working properly
+
 	const { auth } = useAuth();
 
 	// Modal handler to expand transfer details

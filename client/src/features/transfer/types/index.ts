@@ -1,3 +1,5 @@
+import { StringValidation } from "zod";
+
 export interface Transfer {
 	id: number;
 	code: string;
@@ -58,4 +60,35 @@ export interface TransferEdit {
 	date_received: string | null;
 	received_by: number | null;
 	notes: string;
+}
+
+export interface TransferProductFull {
+	id: number;
+	transfer_id: number;
+	product: {
+		color: string;
+		id: number;
+		name: string;
+		size: string;
+	};
+	capital_price: number;
+	bundles_count: number;
+	bundles_unit: string;
+	quantity_per_bundle: number;
+	total_quantity: number;
+	unit: string;
+	source_inventory: number;
+}
+
+export interface TransferProduct {
+	id: number;
+	transfer_id: number;
+	product_id: number;
+	capital_price: number;
+	bundles_count: number;
+	bundles_unit: string;
+	quantity_per_bundle: number;
+	total_quantity: number;
+	unit: string;
+	source_inventory: number;
 }

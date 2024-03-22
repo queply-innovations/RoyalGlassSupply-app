@@ -7,6 +7,7 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';
+import { all } from 'axios';
 
 interface SidebarProps {}
 
@@ -14,6 +15,10 @@ const Sidebar = ({}: SidebarProps) => {
 	const { auth, logout } = useAuth();
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
+
+	const permissionsList = auth.rolePermissions?.map(
+		permission => {return permission.permission_id}
+	);
 
 	return (
 		<>
@@ -26,7 +31,9 @@ const Sidebar = ({}: SidebarProps) => {
 						{SidebarRoutesGrouped.map((group, index) => {
 							// Check if user's role is included in the allowed roles of the group items
 							const allowedItems = group.items.filter(item => {
-								return item.allowedRoles.includes(auth.role as Role);
+								if (item.permissionId.some(id => permissionsList?.includes(id))) {
+									return item;
+								};
 							});
 							const groupAllowed = allowedItems.length > 0;
 							return group.groupName ? (
@@ -45,9 +52,7 @@ const Sidebar = ({}: SidebarProps) => {
 										(item, index) =>
 											// Check if user's role is included in the allowed roles of the item
 											// Don't display the item if user's role isn't allowed
-											item.allowedRoles.includes(
-												auth.role as Role,
-											) && (
+											item.permissionId.some(id => permissionsList?.includes(id)) && (
 												<SidebarItem
 													key={index}
 													item={item}
@@ -60,9 +65,7 @@ const Sidebar = ({}: SidebarProps) => {
 								</div>
 							) : (
 								group.items.map((item, index) => (
-									item.allowedRoles.includes(
-										auth.role as Role,
-									) && (
+									item.permissionId.some(id => permissionsList?.includes(id)) && (
 										<SidebarItem
 											key={index}
 											item={item}

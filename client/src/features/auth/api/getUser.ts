@@ -13,7 +13,7 @@ export const getUser = async (id: number): Promise<User[]> => {
 	});
 };
 
-export const getUserRole = async (id: number, updateProgress: any): Promise<Roles['title']> => {
+export const getUserRole = async (id: number, updateProgress: any): Promise<Roles> => {
 	try {
 		const response = await axios.post(
 			`${API_URLS.USER_ROLES}/searches-filters-sorts`,
@@ -23,29 +23,36 @@ export const getUserRole = async (id: number, updateProgress: any): Promise<Role
 					Authorization: `Bearer ${storage.getToken()}`,
 					'Content-Type': 'application/json',
 				},
-				onUploadProgress: (progress) => {
-					let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-					updateProgress(percentCompleted);
-				},
 			},
 		);
 		// Data contains object with an array of one object
-		return response.data.data[0].role.title;
+		return response.data.data[0].role;
 	} catch (e) {
 		console.log(e);
 		throw e;
 	}
 };
 
-export const getUserRolePermissions = async (
-	id: number,
-): Promise<RolePermissions> => {
-	return axios.get(`${API_URLS.ROLE_PERMISSIONS}/${id}`, {
-		headers: {
-			Authorization: `Bearer ${storage.getToken()}`,
-			'Content-Type': 'application/json',
-		},
-	});
+export const getUserRolePermissions = async (role_id: number): Promise<RolePermissions[]> => {
+	return await axios
+	.post(`${API_URLS.ROLE_PERMISSIONS}/searches-filters-sorts`, 
+		{'role_id': role_id}, 
+
+		{
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+
+		.then(response => {
+			return response.data.data;
+		})
+
+		.catch(error => {
+			console.error('Error fetching role permissions:', error);
+			throw error;
+		});
 };
 
 export const getUsers = async (): Promise<User[]> => {

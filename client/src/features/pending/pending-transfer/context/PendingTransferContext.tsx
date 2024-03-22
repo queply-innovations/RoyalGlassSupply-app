@@ -1,9 +1,11 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
 import { Transfer } from '../types';
 import { useTransferQuery } from '../hooks';
+import { TransferProduct } from '@/features/transfer/types';
 
 interface PendingTransferContextProps {
 	transfers: Transfer[];
+	transferProducts: TransferProduct[];
 	isFetching: boolean;
 	progress: any;
 	selectedTransfer: Transfer;
@@ -23,10 +25,11 @@ export const PendingTransferProvider = ({ children }: PendingTransferProviderPro
 	const [selectedTransfer, setSelectedTransfer] =
 		useState<Transfer>({} as Transfer);
 
-	const { transfers, isFetching, progress } = useTransferQuery();
+	const { transfers, transferProducts, isFetching, progress } = useTransferQuery();
 
 	const value = { 
 		transfers, 
+		transferProducts,
 		isFetching, 
 		progress, 
 		selectedTransfer, 

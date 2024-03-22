@@ -22,7 +22,7 @@ export interface SidebarRoutes {
 export interface SidebarListItems {
 	id: string;
 	path?: string;
-	allowedRoles: Role[];
+	permissionId: number[];
 	children?: SidebarListItems[];
 	itemProps?: {
 		title: string;
