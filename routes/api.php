@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         'transfer-products' => TransferProductController::class,
         'users' => UserController::class,
         'user-roles' => UserRoleController::class,
+        'user-warehouses' => UserWarehouseController::class,
         'vouchers' => VoucherController::class,
         'warehouses' => WarehouseController::class,
     ]);
@@ -95,6 +96,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/transfer-products/searches-filters-sorts', [TransferProductController::class, 'searchFilterAndSort']);
     Route::post('/users/searches-filters-sorts', [UserController::class, 'searchFilterAndSort']);
     Route::post('/user-roles/searches-filters-sorts', [UserRoleController::class, 'searchFilterAndSort']);
+    Route::post('/user-warehouses/searches-filters-sorts', [UserWarehouseController::class, 'searchFilterAndSort']);
     Route::post('/vouchers/searches-filters-sorts', [VoucherController::class, 'searchFilterAndSort']);
     Route::post('/warehouses/searches-filters-sorts', [WarehouseController::class, 'searchFilterAndSort']);
 
