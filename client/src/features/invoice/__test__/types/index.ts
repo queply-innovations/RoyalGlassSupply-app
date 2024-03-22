@@ -24,15 +24,15 @@ export interface InvoiceItemDatabase extends Omit<InvoiceItems, 'id'> {}
 
 export interface InvoiceItems {
 	id: number;
-	invoice_id: number;
+	invoice_id: number | null;
 	product_id: Partial<Product>;
 	product_price_id: number;
 	product_price: number;
 	quantity: number;
 	unit: string; //string or number?
 	item_discount: number;
-	discount_approval_status: string;
-	approved_by: number;
+	discount_approval_status: string | null;
+	approved_by: number | null;
 	total_price: number;
 	source_inventory: number;
 }
