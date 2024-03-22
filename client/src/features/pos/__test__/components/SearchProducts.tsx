@@ -68,10 +68,10 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 														...invoiceItemsQueue,
 														{
 															unit: '',
-															discount_approval_status: '',
-															approved_by: 1,
+															discount_approval_status: null,
+															approved_by: null,
 															item_discount: 0,
-															invoice_id: 1,
+															invoice_id: null,
 															product_id: {
 																id: item.product.id,
 																name: item.product.name,
