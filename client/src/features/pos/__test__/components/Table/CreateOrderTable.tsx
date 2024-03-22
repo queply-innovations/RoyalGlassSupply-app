@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
+import { useProductPrices } from '@/features/product/__test__';
 
 interface CreateOrderTableProps {}
 
@@ -16,8 +17,10 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		quantityHandler,
 		formatCurrency,
 		handleInvoiceItemsChange,
+		handleRemoveInvoiceItem,
 	} = useInvoice();
 	const { data: inventoryProducts } = useInventoryProds();
+	const { data: productPrices } = useProductPrices();
 
 	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
 		{
@@ -115,11 +118,21 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		{
 			accessorKey: 'price',
 			header: () => <div className="justify-center">Product Price</div>,
-			cell: ({ row }) => (
-				<div className="">
-					<span>{formatCurrency(row.original.product_price)}</span>
-				</div>
-			),
+			cell: ({ row }) => {
+				const productOnSale = productPrices.find(
+					inventory => inventory.product.id === row.original.product_id.id,
+				);
+				return (
+					<div className="flex flex-row gap-2">
+						<span>{formatCurrency(row.original.product_price)}</span>
+						{productOnSale?.sale_discount ? (
+							<span className="text-sm font-light">
+								({formatCurrency(productOnSale?.sale_discount ?? 0)})
+							</span>
+						) : null}
+					</div>
+				);
+			},
 		},
 		{
 			accessorKey: 'item_discount',
@@ -158,23 +171,16 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		{
 			id: 'actions',
 			cell: ({ row }) => {
+				const invoiceIndex = row.index;
 				return (
 					<div className="flex flex-row justify-center text-xs font-normal uppercase">
 						<Button
 							className="bg-red-500 hover:bg-red-700"
 							onClick={() => {
-								console.log(row.original);
+								handleRemoveInvoiceItem(invoiceIndex);
 							}}
 						>
 							<Trash2Icon color="#FFF" />
-						</Button>
-						<Button
-							className="bg-red-500 hover:bg-red-700"
-							onClick={() => {
-								console.log(row.original);
-							}}
-						>
-							TEST
 						</Button>
 					</div>
 				);
