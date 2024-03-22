@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { User, UserResponse, getUserRole, getUserRolePermissions } from '@/features/auth';
+import { User, UserResponse, getUserAssignedAt, getUserRole, getUserRolePermissions } from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
@@ -18,6 +18,7 @@ interface AuthProps {
 	token: string | null;
 	username: number | null;
 	rolePermissions: RolePermissions[] | null;
+	assignedAt: number;
 }
 interface AuthContextProps {
 	auth: AuthProps;
@@ -54,8 +55,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				}
 
 				const roleDetails = await getUserRolePermissions(userRole.id);
+				const assignedAt = await getUserAssignedAt(userRole.id);
 
-				//TODO IMPORTANT: get assigned_at from user_warehouse table
+				//TODO IMPORTANT: get assigned_at from user_warehouse table, verify when data is filled
 
 				setAuth({
 					user: {
@@ -67,6 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					authenticated: true,
 					role: userRole.title,
 					rolePermissions: roleDetails,
+					assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
 				} as AuthProps);
 			}
 			return response;
