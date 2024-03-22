@@ -31,7 +31,7 @@ interface TransferTableProps {
 }
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, isFetching, progress, setSelectedTransfer } = useTransfer();
+	const { transfers, transferProducts, isFetching, setSelectedTransfer } = useTransfer();
 	const { auth } = useAuth();
 
 	// Modal handler to expand transfer details
@@ -44,6 +44,11 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	const handleEditTransfer = (transfer: Transfer) => {
 		setSelectedTransfer(transfer);
 		openModal(transfer, 'edit');
+	};
+
+	const handleTransferProducts = (transfer: Transfer) => {
+		setSelectedTransfer(transfer);
+		openModal(transfer, 'products');
 	};
 
 	const handleAddTransfer = () => {
@@ -128,6 +133,32 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				const destination: any = row.original.destination;
 				return (
 					<div className="text-center">{source.code}-{destination.code}</div>
+				);
+			},
+		},
+
+		{
+			id: 'transfer_products',
+			header:	() => <div className="text-center">PRODUCTS ADDED?</div>,
+			cell: ({ row }) => {
+				return (
+					<div className="flex justify-center">
+						{
+							transferProducts.filter((prod) => prod.transfer_id === row.original.id).length > 0 ? (
+								<Check
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/>
+							) : (
+								<Ban
+									size={20}
+									strokeWidth={2}
+									className="text-red-600"
+								/>
+							)
+						}
+					</div>
 				);
 			},
 		},
@@ -268,21 +299,21 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			},
 		},
 
-		{
-			accessorKey: 'approved_by',
-			header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
-			cell: ({ row }) => {
-				const approved_by: any = row.getValue('approved_by');
-				if (approved_by){
-					const format = approved_by.firstname + ' ' + approved_by.lastname;
-					return (
-						<div id={approved_by.id} className="text-center">{format}</div>
-					);
-				} else {
-					return (<div className="text-center">N/A</div>);
-				}
-			},
-		},
+		// {
+		// 	accessorKey: 'approved_by',
+		// 	header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
+		// 	cell: ({ row }) => {
+		// 		const approved_by: any = row.getValue('approved_by');
+		// 		if (approved_by){
+		// 			const format = approved_by.firstname + ' ' + approved_by.lastname;
+		// 			return (
+		// 				<div id={approved_by.id} className="text-center">{format}</div>
+		// 			);
+		// 		} else {
+		// 			return (<div className="text-center">N/A</div>);
+		// 		}
+		// 	},
+		// },
 
 		{
 			id: 'actions',
@@ -307,17 +338,27 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								{auth.role?.toLowerCase() != 'encoder' && (
-									<DropdownMenuItem
-										onClick={() => handleEditTransfer(transferRow)}
-										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-									>
-										<span className="flex w-6 items-center justify-center">
-											<Pencil size={16} strokeWidth={2.25} />
-										</span>
-										<span>Edit</span>
-									</DropdownMenuItem>
-								)}
+								<DropdownMenuItem
+									onClick={() => handleEditTransfer(transferRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span>Edit</span>
+								</DropdownMenuItem>
+
+								<DropdownMenuSeparator className="bg-gray-200" />
+
+								<DropdownMenuItem
+									onClick={() => handleTransferProducts(transferRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span>Transfer Products</span>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

@@ -10,12 +10,12 @@ interface SupplierModalProps {
 
 export const SupplierModal = ({ onClose, isUpdate }: SupplierModalProps) => {
 	const { supplier, newSupplier, isSubmitting, error, success, isChanged, handleChange, handleSubmit } = useSupplierMutation();
-
+	success && setTimeout(() => {
+		onClose();
+	}, 3000);
+	
 	return (
 		<>
-			{success && (setTimeout(() => {
-				onClose();
-			}, 3000))}
 			<form
 				onSubmit={e => {
 					e.preventDefault();

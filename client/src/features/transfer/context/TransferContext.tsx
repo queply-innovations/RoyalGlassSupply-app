@@ -1,13 +1,16 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
-import { Transfer } from '../types';
+import { Transfer, TransferProduct, TransferProductFull } from '../types';
 import { useTransferQuery } from '../hooks';
 
 interface TransferContextProps {
 	transfers: Transfer[];
+	transferProducts: TransferProductFull[];
 	isFetching: boolean;
 	progress: any;
 	selectedTransfer: Transfer;
 	setSelectedTransfer: (transfer: Transfer) => void;
+	selectedProduct: TransferProductFull;
+	setSelectedProduct: (product: TransferProductFull) => void;
 }
 
 export const TransferContext = createContext<TransferContextProps | undefined>(
@@ -22,15 +25,20 @@ export const TransferProvider = ({ children }: TransferProviderProps) => {
 	// State of the selected transfer
 	const [selectedTransfer, setSelectedTransfer] =
 		useState<Transfer>({} as Transfer);
+	const [selectedProduct, setSelectedProduct] =
+		useState<TransferProductFull>({} as TransferProductFull);
 
-	const { transfers, isFetching, progress } = useTransferQuery();
+	const { transfers, transferProducts, isFetching, progress } = useTransferQuery();
 
 	const value = { 
-		transfers, 
+		transfers,
+		transferProducts, 
 		isFetching, 
 		progress, 
 		selectedTransfer, 
-		setSelectedTransfer 
+		setSelectedTransfer,
+		selectedProduct,
+		setSelectedProduct
 	};
 
 	return (
