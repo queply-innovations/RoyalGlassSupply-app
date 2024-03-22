@@ -9,8 +9,9 @@ export const API_URLS = {
 	USERS: `${API_BASE_URL}/users`,
 	SUPPLIERS: `${API_BASE_URL}/suppliers`,
 	USER_ROLES: `${API_BASE_URL}/user-roles`,
+	REGISTER: `${API_BASE_URL}/register`,
 	ROLES: `${API_BASE_URL}/roles`,
-	ROLE_PERMISSIONS: `${API_BASE_URL}/role_permissions`,
+	ROLE_PERMISSIONS: `${API_BASE_URL}/role-permissions`,
 	PERMISSIONS: `${API_BASE_URL}/permissions`,
 	LOGIN: `${API_BASE_URL}/login`,
 	WAREHOUSE: `${API_BASE_URL}/warehouses`,
@@ -20,6 +21,7 @@ export const API_URLS = {
 	INVOICE_TAXES: `${API_BASE_URL}/invoice-taxes`,
 	TRANSACTION: `${API_BASE_URL}/transaction`,
 	TRANSFER: `${API_BASE_URL}/transfers`,
+	TRANSFER_PRODUCTS: `${API_BASE_URL}/transfer-products`,
 };
 
 export const API_HEADERS = () => {
