@@ -17,6 +17,7 @@ interface InvoiceContextProps {
 	setInvoiceSelected: (invoice: Invoices) => void;
 	// generateInvoice: (warehouse: Partial<Warehouse>) => void;
 	invoice: Partial<Invoices>;
+	setInvoice: (invoice: Partial<Invoices>) => void;
 	handleChange: (key: string, value: Invoices[keyof Invoices]) => void;
 	formatCurrency: (value: number) => string;
 	// AddInvoiceItems: () => void;
@@ -36,6 +37,7 @@ interface InvoiceContextProps {
 		key: keyof InvoiceItemDatabase,
 		value: InvoiceItemDatabase[keyof InvoiceItemDatabase],
 	) => void;
+	handleRemoveInvoiceItem: (TIndex: number) => void;
 }
 
 interface InvoiceProviderProps {
@@ -60,7 +62,17 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 	const [invoiceItems, setInvoiceItems] = useState<Partial<InvoiceItems>[]>(
 		[],
 	);
-	const [invoice, setInvoice] = useState<Partial<Invoices>>({});
+	const [invoice, setInvoice] = useState<Partial<Invoices>>({
+		issued_by: auth.user.id,
+		id: invoices.length + 1,
+		total_amount_due: 0,
+		change_amount: 0,
+		subtotal: 0,
+		payment_method: '',
+		reference_no: '',
+		paid_amount: 0,
+		total_discount: 0,
+	} as Invoices);
 
 	function handleChange(key: string, value: Invoices[keyof Invoices]) {
 		setInvoice(prev => ({
@@ -89,6 +101,10 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 				return item;
 			}),
 		);
+	}
+
+	function handleRemoveInvoiceItem(TIndex: number) {
+		setInvoiceItemsQueue(prev => prev.filter((_, index) => index !== TIndex));
 	}
 	const quantityHandler = (
 		productId: number,
@@ -207,23 +223,25 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		quantityHandler,
 		discountHandler,
 		handleInvoiceItemsChange,
+		handleRemoveInvoiceItem,
+		setInvoice,
 	};
-	// useEffect(() => {
-	// 	setInvoice({
-	// 		...invoice,
-	// 		issued_by: auth.user.id,
-	// 		id: invoices.length + 1,
-	// 		code: `IVC-${selectedWarehouse.id}-${invoice?.id}`,
-	// 		warehouse_id: selectedWarehouse.id,
-	// 		total_amount_due: 0,
-	// 		change_amount: 0,
-	// 		subtotal: 0,
-	// 		payment_method: '',
-	// 		reference_no: '',
-	// 		paid_amount: 0,
-	// 		total_discount: 0,
-	// 	});
-	// }, []);
+	useEffect(() => {
+		setInvoice({
+			...invoice,
+			issued_by: auth.user.id,
+			id: invoices.length + 1,
+			// code: `IVC-${selectedWarehouse.id}-${invoice?.id}`,
+			// warehouse_id: selectedWarehouse.id,
+			total_amount_due: 0,
+			change_amount: 0,
+			subtotal: 0,
+			payment_method: 'payment',
+			reference_no: '',
+			paid_amount: 0,
+			total_discount: 0,
+		});
+	}, []);
 	return (
 		<InvoiceContext.Provider value={value}>
 			{children}
