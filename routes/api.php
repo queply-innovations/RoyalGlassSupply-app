@@ -24,6 +24,7 @@ use App\Http\Controllers\TransferController;
 use App\Http\Controllers\TransferProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\UserWarehouseController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WarehouseController;
 
