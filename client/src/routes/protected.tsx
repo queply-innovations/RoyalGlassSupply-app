@@ -9,7 +9,12 @@ import { ProgressBar } from '@/components';
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
 const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
-const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
+// const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
+const { Inventory } = lazyImport(() => import('@/pages/__test__'), 'Inventory');
+const { InventoryItemsPage } = lazyImport(
+	() => import('@/pages/__test__'),
+	'InventoryItemsPage',
+);
 const { Invoice } = lazyImport(() => import('@/pages/__test__'), 'Invoice');
 const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
@@ -89,6 +94,7 @@ const protectedRoutesConfig = [
 	{ path: '/transaction/expenses', element: <Expenses /> },
 	{ path: '/returns', element: <Return /> },
 	{ path: '/inventory', element: <Inventory /> },
+	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
 	// { path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },

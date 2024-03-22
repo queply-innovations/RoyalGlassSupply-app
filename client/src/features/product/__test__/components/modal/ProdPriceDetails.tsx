@@ -3,6 +3,7 @@ import { useProductPrices } from '../..';
 import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
+import currency from 'currency.js';
 
 interface ProdPriceDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -13,8 +14,8 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 
 	return (
 		<>
-			<div className="flex max-w-2xl flex-col gap-4">
-				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+			<div className="flex max-w-2xl flex-col gap-4 font-medium">
+				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-6 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Name</h3>
 						<p className="text-sm text-gray-800">{selectedProductPrice.product.name}</p>
@@ -57,7 +58,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-4 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-4 gap-x-6 gap-y-4">
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">Type</h3>
 						<p className="text-sm capitalize text-gray-800">
@@ -84,7 +85,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-6 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-6 gap-x-6 gap-y-4">
 					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">
 							Capital price
@@ -105,6 +106,18 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 								style: 'currency',
 								currency: 'PHP',
 							}).format(selectedProductPrice.markup_price)}
+							<span className="text-xs text-gray-500">
+								&nbsp;(
+								{
+									currency(
+										(selectedProductPrice.markup_price /
+											selectedProductPrice.capital_price) *
+											100,
+										{ precision: 3 },
+									).value
+								}
+								%)
+							</span>
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
@@ -127,15 +140,17 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 							}).format(selectedProductPrice.cost)}
 						</p>
 					</div>
-					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">
+					<div className="relative col-span-2 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">
 							Sale discount
 						</h3>
-						<p className="text-sm text-gray-800">
-							{Intl.NumberFormat('en-US', {
-								style: 'currency',
-								currency: 'PHP',
-							}).format(selectedProductPrice.sale_discount)}
+						<p className="text-sm">
+							{selectedProductPrice.on_sale === 1
+								? Intl.NumberFormat('en-US', {
+										style: 'currency',
+										currency: 'PHP',
+									}).format(selectedProductPrice.sale_discount)
+								: '—'}
 						</p>
 						<div className="absolute bottom-0 right-0 flex flex-none flex-row items-center justify-end gap-1 pb-[0.1rem] pr-1">
 							{selectedProductPrice.on_sale === 1 ? (
@@ -156,9 +171,9 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 							</div>
 						</div>
 					</div>
-					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Price</h3>
-						<p className="text-sm text-gray-800">
+					<div className="relative col-span-2 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Price</h3>
+						<p className="text-sm">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
@@ -167,7 +182,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-12 gap-4">
+				<div className="grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">
 							Active status
@@ -213,7 +228,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						<h3 className="text-sm font-bold">
 							Approval status
 						</h3>
-						<p className="text-sm text-gray-800">
+						<p className="text-sm capitalize">
 							{selectedProductPrice.approval_status}
 						</p>
 					</div>

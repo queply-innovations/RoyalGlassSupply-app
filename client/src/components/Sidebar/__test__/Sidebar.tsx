@@ -3,11 +3,12 @@ import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoutesGrouped } from '../routes/SidebarRoutesGrouped';
 import { SidebarItem } from '../components/items/SidebarItem';
 import { Role } from '../types';
-import { SetStateAction, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';
 import { all } from 'axios';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SidebarProps {}
 
@@ -22,8 +23,8 @@ const Sidebar = ({}: SidebarProps) => {
 
 	return (
 		<>
-			<div className="relative flex w-1/6 min-w-[230px] max-w-[230px] flex-row overflow-y-hidden border-e border-slate-500/20 text-sm text-slate-800">
-				<nav className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-6 shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
+			<div className="relative flex w-1/6 min-w-[230px] max-w-[230px] flex-row border-e border-slate-500/20 text-sm text-slate-800">
+				<nav className="sidebar bg-primary-white z-20 flex h-screen w-full flex-col items-center gap-y-6 overflow-y-hidden shadow-[1px_0_9px_0_rgba(0,0,0,0.1)]">
 					<div className="flex w-full items-center justify-center px-12 pb-2 pt-8">
 						<SidebarLogo />
 					</div>

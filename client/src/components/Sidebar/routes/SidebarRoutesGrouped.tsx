@@ -27,51 +27,13 @@ interface SidebarGroup {
 
 export const SidebarRoutesGrouped: SidebarGroup[] = [
 	{
-		items: [
-			{
-				id: 'user',
-				permissionId: [9],
-				itemProps: {
-					title: 'User',
-					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
-				},
-				children: [
-					{
-						id: 'user-information',
-						permissionId: [9, 1, 3],
-						path: '/user/information',
-						itemProps: {
-							title: 'User Information',
-						},
-					},
-					{
-						id: 'user-sales',
-						permissionId: [9],
-						path: '/user/sales',
-						itemProps: {
-							title: 'User Sales',
-						},
-					},
-					{
-						id: 'role-perms',
-						permissionId: [9, 2],
-						path: '/user/role-perms',
-						itemProps: {
-							title: 'Role Permissions',
-						},
-					},
-				],
-			},
-		],
-	},
-	{
 		groupName: 'Operations',
 		items: [
 			{
-				id: 'pending',
+				id: 'pendings',
 				permissionId: [13],
 				itemProps: {
-					title: 'Pending',
+					title: 'Pendings',
 					icon: <Clock size={20} strokeWidth={1.75} />,
 				},
 				children: [
@@ -132,7 +94,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				permissionId: [18],
 				path: '/inventory',
 				itemProps: {
-					title: 'Inventory',
+					title: 'Inventories',
 					icon: <ClipboardList size={20} strokeWidth={1.75} />,
 				},
 			},
@@ -141,7 +103,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				permissionId: [12],
 				path: '/transfer',
 				itemProps: {
-					title: 'Transfer',
+					title: 'Transfers',
 					icon: <ExternalLink size={20} strokeWidth={1.75} />,
 				},
 			},
@@ -160,11 +122,45 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		groupName: 'Management',
 		items: [
 			{
-				id: 'finance',
+				id: 'user',
+				permissionId: [9],
+				itemProps: {
+					title: 'User',
+					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
+				},
+				children: [
+					{
+						id: 'user-information',
+						permissionId: [9, 1, 3],
+						path: '/user/information',
+						itemProps: {
+							title: 'User Information',
+						},
+					},
+					{
+						id: 'user-sales',
+						permissionId: [9],
+						path: '/user/sales',
+						itemProps: {
+							title: 'User Sales',
+						},
+					},
+					{
+						id: 'role-perms',
+						permissionId: [9, 2],
+						path: '/user/role-perms',
+						itemProps: {
+							title: 'Role Permissions',
+						},
+					},
+				],
+			},
+			{
+				id: 'finances',
 				permissionId: [10],
 				path: '/finance',
 				itemProps: {
-					title: 'Finance',
+					title: 'Finances',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
 				},
 			},

@@ -25,6 +25,7 @@ import {
 	ArrowUp,
 	ArrowUpDown,
 } from 'lucide-react';
+import currency from 'currency.js';
 
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
@@ -71,23 +72,33 @@ export const ProductPricesColumns = ({
 		{
 			id: 'name',
 			accessorKey: 'product.name',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
-					<div className="justify-center">
+					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent uppercase text-black"
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							Product name{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
 						</Button>
 					</div>
 				);
 			},
+		},
+		{
+			accessorKey: 'warehouse.code',
+			header: () => <div className="justify-center uppercase">WHS</div>,
 		},
 		{
 			accessorKey: 'type',
@@ -142,10 +153,17 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.markup_price);
+				}).format(row.original.markup_price || 0);
+				const markupPercent = currency(
+					(row.original.markup_price / row.original.capital_price) * 100,
+					{ precision: 3 },
+				).value;
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.markup_price ? formatted : `—`}</span>
+						<span>{formatted}</span>
+						<span className="text-gray-500">
+							&nbsp;({markupPercent}%)
+						</span>
 					</div>
 				);
 			},
@@ -157,10 +175,10 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.tax_amount);
+				}).format(row.original.tax_amount || 0);
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.tax_amount ? formatted : `—`}</span>
+						<span>{formatted}</span>
 					</div>
 				);
 			},
@@ -219,10 +237,10 @@ export const ProductPricesColumns = ({
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
-				}).format(row.original.sale_discount);
+				}).format(row.original.sale_discount || 0);
 				return (
 					<div className="flex items-center uppercase">
-						<span>{row.original.sale_discount ? formatted : `—`}</span>
+						<span>{row.original.on_sale === 1 ? formatted : `—`}</span>
 					</div>
 				);
 			},
@@ -242,10 +260,7 @@ export const ProductPricesColumns = ({
 				);
 			},
 		},
-		{
-			accessorKey: 'warehouse.code',
-			header: () => <div className="justify-center uppercase">WHS</div>,
-		},
+
 		{
 			accessorKey: 'approval_status',
 			header: () => (
@@ -285,9 +300,29 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'active_status',
-			header: () => (
-				<div className="mx-auto w-fit text-center uppercase">Active</div>
-			),
+			sortingFn: 'basic',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Active{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const active = row.original.active_status;
 				return (

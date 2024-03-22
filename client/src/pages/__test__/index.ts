@@ -11,3 +11,5 @@ export * from './TransactionPage';
 export * from './PendingTransferPage';
 export * from './UserSalesPage';
 export * from './RolePermissionsPage';
+export * from './InventoryPage';
+export * from './InventoryItemsPage';

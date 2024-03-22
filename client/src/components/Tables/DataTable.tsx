@@ -28,7 +28,7 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 	filterWhat: string;
 	dataType: string;
-	openModal: () => void;
+	openModal?: () => void;
 	isLoading?: boolean;
 }
 
@@ -92,8 +92,11 @@ export function DataTable<TData, TValue>({
 						buttonIcon={'outside'}
 					/>
 				</div>
-				{dataType && (
-					<div className="flex flex-row items-end gap-3">
+				{/* Made this render conditionally, so that if
+						no openModal prop passed, this would not render.
+						Useful for view-only table. */}
+				{openModal && (
+					<div className="flex flex-row-reverse gap-3">
 						<Button
 							fill={'green'}
 							onClick={openModal}

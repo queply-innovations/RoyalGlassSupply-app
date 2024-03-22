@@ -33,7 +33,7 @@ export const ProdPriceActiveToggle = ({
 	return (
 		<div className="flex min-w-max flex-col gap-3">
 			<h2 className="text-sm text-gray-800">
-				Are you sure you'd like to switch this listing to{' '}
+				Are you sure you'd like to set this listing to{' '}
 				<strong>
 					{selectedProductPrice.active_status === 'active'
 						? 'inactive'
@@ -115,7 +115,13 @@ export const ProdPriceActiveToggle = ({
 						disabled={isSubmitting} // Disable button if submitting
 						className="flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{!isSubmitting ? 'Proceed' : 'Changing...'}
+						{!isSubmitting
+							? `Set to ${
+									selectedProductPrice.active_status === 'active'
+										? 'inactive'
+										: 'active'
+								}`
+							: 'Applying...'}
 					</Button>
 				</div>
 			</div>

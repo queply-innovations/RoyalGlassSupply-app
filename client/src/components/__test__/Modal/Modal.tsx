@@ -7,9 +7,16 @@ interface ModalProps {
 	title: string;
 	isOpen: boolean;
 	onClose: () => void;
+	closeOnOverlayClick?: boolean; // pass this prop to allow closing the modal when clicking the overlay
 }
 
-export const ModalTest = ({ children, title, isOpen, onClose }: ModalProps) => {
+export const ModalTest = ({
+	children,
+	title,
+	isOpen,
+	onClose,
+	closeOnOverlayClick,
+}: ModalProps) => {
 	const modalRef = useRef<HTMLDivElement | null>(null);
 	const [isVisible, setIsVisible] = useState<boolean>(false);
 	const modalAnimation = isOpen ? 'animate-fade-in' : 'animate-fade-out';
@@ -35,10 +42,10 @@ export const ModalTest = ({ children, title, isOpen, onClose }: ModalProps) => {
 				<>
 					<div
 						ref={modalRef}
-						className={`modal-content ${modalAnimation} absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-5 rounded-md bg-white stroke-1 p-5 pb-10`}
+						className={`modal-content ${modalAnimation} absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-5 rounded-md bg-white stroke-1 p-5 pb-10 shadow-2xl`}
 					>
 						<div className="flex w-full justify-between">
-							<span className="text-lg font-bold uppercase">
+							<span className="text-lg font-bold uppercase tracking-tight text-gray-800">
 								{title}
 							</span>
 							<span
@@ -51,8 +58,8 @@ export const ModalTest = ({ children, title, isOpen, onClose }: ModalProps) => {
 						{children}
 					</div>
 					<div
-						className="modal-overlay fixed left-0 top-0 z-30 h-full w-full bg-black bg-opacity-50"
-						onClick={onClose}
+						className={`modal-overlay fixed left-0 top-0 z-30 h-full w-full bg-black bg-opacity-70 ${modalAnimation}`}
+						onClick={closeOnOverlayClick ? onClose : () => {}}
 					/>
 				</>
 			)}

@@ -15,19 +15,16 @@ import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'l
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
-	handleRemoveProduct: (product: Product) => void;
 }
 
 /**
  * Generates column definition for the Products table.
  *
  * @param handleEditProduct - Callback to edit product.
- * @param handleRemoveProduct - Callback to remove product.
  * @returns Column definition for the Products table.
  */
 export const ProductsCols = ({
 	handleEditProduct,
-	handleRemoveProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
 		{
@@ -52,34 +49,88 @@ export const ProductsCols = ({
 				/>
 			),
 		},
+		// {
+		// 	accessorKey: 'id',
+		// 	sortingFn: 'text',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+		// 				>
+		// 					Id{' '}
+		// 					{column.getIsSorted() === 'asc' ? (
+		// 						<ArrowUp size={18} strokeWidth={2} />
+		// 					) : column.getIsSorted() === 'desc' ? (
+		// 						<ArrowDown size={18} strokeWidth={2} />
+		// 					) : (
+		// 						<ArrowUpDown size={18} strokeWidth={2} />
+		// 					)}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
-			accessorKey: 'id',
-			header: () => <div className="justify-center uppercase">Id</div>,
-		},
-		{
-			id: 'name',
-			accessorKey: 'name',
+			accessorKey: 'serial_no',
+			sortingFn: 'text',
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
-					<div className="justify-center">
+					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent uppercase text-black"
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							Serial Number{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
 						</Button>
 					</div>
 				);
 			},
 		},
 		{
-			accessorKey: 'serial_no',
-			header: () => (
-				<div className="justify-center uppercase">Serial No.</div>
-			),
+			id: 'name',
+			accessorKey: 'name',
+			sortingFn: 'text',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Name{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
+		},
+		{
+			accessorKey: 'brand',
+			header: () => <div className="justify-center uppercase">Brand</div>,
 		},
 		{
 			accessorKey: 'size',
@@ -114,15 +165,6 @@ export const ProductsCols = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span className="font-medium">Edit</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleRemoveProduct(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-100 hover:text-red-700"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Trash2 size={16} strokeWidth={2.25} />
-									</span>
-									<span className="font-medium">Delete</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

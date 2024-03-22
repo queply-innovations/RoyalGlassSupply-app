@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductPrices } from '../../../types';
 import { Button } from '@/components';
-import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
 // TODO: Include notes column in the table - ideally, a tooltip or a popover
 
@@ -33,17 +33,25 @@ export const ProductPricesColumnsLimited: ColumnDef<ProductPrices>[] = [
 	{
 		id: 'name',
 		accessorKey: 'product.name',
+		sortingFn: 'text',
+		enableSorting: true,
 		header: ({ column }) => {
 			return (
-				<div className="justify-center">
+				<div>
 					<Button
 						onClick={() =>
 							column.toggleSorting(column.getIsSorted() === 'asc')
 						}
-						className="flex flex-row bg-transparent uppercase text-black"
+						className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
 					>
-						Name {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						Product name{' '}
+						{column.getIsSorted() === 'asc' ? (
+							<ArrowUp size={18} strokeWidth={2} />
+						) : column.getIsSorted() === 'desc' ? (
+							<ArrowDown size={18} strokeWidth={2} />
+						) : (
+							<ArrowUpDown size={18} strokeWidth={2} />
+						)}
 					</Button>
 				</div>
 			);
@@ -62,18 +70,16 @@ export const ProductPricesColumnsLimited: ColumnDef<ProductPrices>[] = [
 		header: () => <div className="justify-center uppercase">Quantity</div>,
 	},
 	{
-		accessorKey: 'retail_price',
-		header: () => (
-			<div className="justify-center uppercase">Retail Price</div>
-		),
+		accessorKey: 'price',
+		header: () => <div className="justify-center uppercase">Price</div>,
 		cell: ({ row }) => {
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'PHP',
+			}).format(row.original.price);
 			return (
-				<div className="flex items-center">
-					<span>
-						{row.original.retail_price
-							? `₱ ${row.original.retail_price.toFixed(2)})}`
-							: `—`}
-					</span>
+				<div className="flex items-center uppercase">
+					<span>{row.original.price ? formatted : `—`}</span>
 				</div>
 			);
 		},
