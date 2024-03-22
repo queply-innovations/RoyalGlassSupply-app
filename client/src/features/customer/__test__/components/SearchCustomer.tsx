@@ -12,6 +12,7 @@ import { UserRoundPlus } from 'lucide-react';
 import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { CustomerForm } from './Form/CustomerForm';
+import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 
 interface SearchCustomerProps {}
 
@@ -25,6 +26,7 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 
 	// Command Search handlers
 	const [search, setSearch] = useState('');
+	const { invoice, setInvoice } = useInvoice();
 
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
@@ -67,6 +69,10 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 											onSelect={() => {
 												setSelectedCustomer(customer);
 												setSearch('');
+												setInvoice({
+													...invoice,
+													customer_id: customer.id,
+												});
 											}}
 										>
 											<div className="flex flex-row gap-2">
