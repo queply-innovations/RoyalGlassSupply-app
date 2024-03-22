@@ -26,6 +26,11 @@ export function PosTable<TData, TValue>({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		defaultColumn: {
+			size: 200, //starting column size
+			minSize: 50, //enforced during column resizing
+			maxSize: 500, //enforced during column resizing
+		},
 	});
 	return (
 		<div className="rounded-md border">
@@ -38,7 +43,7 @@ export function PosTable<TData, TValue>({
 									<TableHead
 										key={header.id}
 										style={{
-											width: header.index === 0 ? 100 : 'auto',
+											width: header.index === 0 ? 250 : 500,
 										}}
 									>
 										{header.isPlaceholder
