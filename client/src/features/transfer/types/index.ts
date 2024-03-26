@@ -92,3 +92,13 @@ export interface TransferProduct {
 	unit: string;
 	source_inventory: number;
 }
+
+export interface Inventory {
+	code: string;
+	warehouse_id: number;
+	created_by: number;
+	date_received: string | null;
+	type: 'transfer';
+	transfer_id: number;
+	notes: string;
+}

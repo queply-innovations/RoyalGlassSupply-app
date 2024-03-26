@@ -2,8 +2,7 @@ import { UseModalProps } from '@/utils/Modal';
 import { Button, Inputbox, Loading, Selectbox } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { usePendingTransfer } from '../context/PendingTransferContext';
-import { useTransferMutation } from '../hooks';
-import { Ban, Check, Loader2 } from 'lucide-react';
+import { AlertTriangle, Ban, Check, Clock, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { useUserInfoQuery } from '@/features/userinfo/hooks';
@@ -14,6 +13,8 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import { Textarea } from '@/components/ui/textarea';
+import { useTransfer } from '@/features/transfer/context/TransferContext';
+import { useTransferMutation } from '@/features/transfer/hooks';
 
 interface TransferDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -35,12 +36,13 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 		handleChangeDateTime,
 	} = useTransferMutation();
 
-	const { selectedTransfer } = usePendingTransfer();
+	const { selectedTransfer, transferProducts } = useTransfer();
 	const { warehouses } = useWarehouseQuery();
 	const { users } = useUserInfoQuery();
 	const { auth } = useAuth();
 
 	const approvalStatusChange = (
+		<>
 		<Select
 			onValueChange={value => handleChangeSelect('approval_status', value)}
 			name="approval_status"
@@ -79,6 +81,17 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 				</SelectContent>
 			</SelectTrigger>
 		</Select>
+ 
+		{transferProducts.filter((prod) => prod.transfer_id === transfer.id).length === 0 && (
+			<div className="flex align-center group">
+				<AlertTriangle size={30} strokeWidth={2} className="self-center text-yellow-600" />
+				<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 transition-opacity opacity-0 group-hover:opacity-100">
+					No products have been added yet.
+				</span>
+			</div>
+		)}
+
+		</>
 	);
 
 	const sourceSelect = (
@@ -336,7 +349,90 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-					{transfer.approval_status != 'rejected' && (
+
+					<div className="grid w-full grid-flow-row grid-cols-12 gap-4 pb-4">
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Created by
+							</h3>
+							<p className="text-sm">
+								{selectedTransfer.created_by.firstname + ' ' + selectedTransfer.created_by.lastname}
+							</p>
+						</div>
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Approval status
+							</h3>
+							<p className="text-sm flex flex-row gap-2">
+								{transfer.approval_status?.toLowerCase() === 'approved' && 
+									(
+										<>
+											{transfer.approval_status.charAt(0).toUpperCase() + 
+												transfer.approval_status.slice(1)}
+											<Check
+												size={20}
+												strokeWidth={2}
+												className="text-green-600"
+												/> 
+										</>
+									)
+								}
+								{transfer.approval_status?.toLowerCase() === 'rejected' && 
+									(
+										<>
+											{transfer.approval_status.charAt(0).toUpperCase() + 
+												transfer.approval_status.slice(1)}
+											<Ban
+												size={20}
+												strokeWidth={2}
+												className="text-red-600"
+											/>
+										</>
+									)
+								}
+								{auth.role != 'encoder' ? (
+										transfer.approval_status?.toLowerCase() === 'pending' &&
+										approvalStatusChange
+									) : (
+										<>
+											{transfer.approval_status.charAt(0).toUpperCase() + 
+												transfer.approval_status.slice(1)}
+											<Clock
+												size={20}
+												strokeWidth={2}
+												className="text-amber-500"
+											/>
+										</>
+									)
+								}
+							</p>
+						</div>
+						{transfer.approved_by && 
+							transfer.approval_status != 'pending' && (
+								<div className="col-span-4 flex flex-col justify-center gap-1">
+									<h3 className="text-sm font-bold text-gray-600">
+										{transfer.approval_status === 'approved' && 'Approved by'}
+										{transfer.approval_status === 'rejected' && 'Rejected by'}
+									</h3>
+									<p className="text-sm flex flex-row">
+										{users.length > 0 ? 
+											users[transfer.approved_by - 1].firstname + ' ' + users[transfer.approved_by - 1].lastname
+											: (
+												<div className="flex h-12 w-full items-center justify-center">
+													<Loader2
+														size={22}
+														strokeWidth={2.5}
+														className="animate-spin text-slate-700/50"
+													/>
+												</div>
+											)}
+									</p>
+								</div>
+							)
+						}
+					</div>
+
+					{transfer.approval_status == 'approved' && (
 						<>
 						<div className="grid w-full grid-flow-row grid-cols-8 gap-4">
 							<div className="relative col-span-3 flex flex-col justify-center	gap-1">
@@ -388,66 +484,10 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						<span className="flex flex-col grid-cols-12 text-sm font-bold uppercase text-center">
 							(for PM times, add 12 to the hour)
 						</span>
-						<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 						</>
 					)}
-					<div className="grid w-full grid-flow-row grid-cols-12 gap-4">
-						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Created by
-							</h3>
-							<p className="text-sm">
-								{selectedTransfer.created_by.firstname + ' ' + selectedTransfer.created_by.lastname}
-							</p>
-						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Approval status
-							</h3>
-							<p className="text-sm flex flex-row">
-								{transfer.approval_status?.toLowerCase() === 'approved' && 
-									(
-										<>
-											{transfer.approval_status.charAt(0).toUpperCase() + 
-												transfer.approval_status.slice(1)} &nbsp;
-											<Check
-												size={20}
-												strokeWidth={2}
-												className="text-green-600"
-												/> 
-										</>
-									)
-								}
-								{transfer.approval_status?.toLowerCase() === 'rejected' && 
-									(
-										<>
-											{transfer.approval_status.charAt(0).toUpperCase() + 
-												transfer.approval_status.slice(1)} &nbsp;
-											<Ban
-												size={20}
-												strokeWidth={2}
-												className="text-red-600"
-											/>
-										</>
-									)
-								}
-								{transfer.approval_status?.toLowerCase() === 'pending' && approvalStatusChange}
-							</p>
-						</div>
-						{transfer.approved_by && 
-							transfer.approval_status != 'pending' && (
-								<div className="col-span-4 flex flex-col justify-center gap-1">
-									<h3 className="text-sm font-bold text-gray-600">
-										{transfer.approval_status === 'approved' && 'Approved by'}
-										{transfer.approval_status === 'rejected' && 'Rejected by'}
-									</h3>
-									<p className="text-sm flex flex-row">
-										{users[transfer.approved_by - 1].firstname + ' ' + users[transfer.approved_by - 1].lastname}
-									</p>
-								</div>
-							)
-						}
-					</div>
+
+					
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="col-span-12 w-full flex flex-col justify-center gap-1">

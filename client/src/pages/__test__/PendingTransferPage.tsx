@@ -6,10 +6,10 @@ import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
-import { PendingTransferProvider } from '@/features/pending/pending-transfer/context/PendingTransferContext';
 import PendingTransferTable from '@/features/pending/pending-transfer/components/PendingTransferTable';
 import { PendingTransferDetails } from '@/features/pending/pending-transfer/modal/PendingTransferDetails';
 import { PendingTransferEdit } from '@/features/pending/pending-transfer/modal/PendingTransferEdit';
+import { TransferProvider } from '@/features/transfer/context/TransferContext';
 
 export const PendingTransfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -24,7 +24,7 @@ export const PendingTransfer = () => {
 	return (
 		<>
 			<MainLayout title="Pending Transfer">
-				<PendingTransferProvider>
+				<TransferProvider>
 					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<PendingTransferTable openModal={openTransferModal} />
@@ -51,7 +51,7 @@ export const PendingTransfer = () => {
 							)}
 						</>
 					</ModalTest>
-				</PendingTransferProvider>
+				</TransferProvider>
 			</MainLayout>
 		</>
 	);

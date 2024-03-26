@@ -1,8 +1,6 @@
 import { DataTable } from '@/components/Tables/DataTable';
-import { Transfer } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
-import { usePendingTransfer } from '../context/PendingTransferContext';
 import {
 	Button,
 	DropdownMenu,
@@ -25,13 +23,15 @@ import {
 	Clock,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useTransfer } from '@/features/transfer/context/TransferContext';
+import { Transfer } from '@/features/transfer/types';
 
 interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
 }
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, transferProducts, isFetching, progress, setSelectedTransfer } = usePendingTransfer();
+	const { transfers, transferProducts, isFetching, progress, setSelectedTransfer } = useTransfer();
 
 	const transferId = transferProducts.map(prod => { 
 		return { 
@@ -39,7 +39,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		} 
 	});
 
-	const filteredTransfers = transfers.filter((transfer) => 
+	const filteredTransfersInit = transfers.filter((transfer) => 
 		{
 			if (transferId.some(id => id.transfer_id === transfer.id)) {
 				return transfer;
@@ -47,7 +47,9 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		}
 	);
 
-	console.log(filteredTransfers); //TODO: Please check if working properly
+	const filteredTransfers = filteredTransfersInit.filter((transfer) => { 
+		if (transfer.approval_status === 'pending') return transfer;
+	});
 
 	const { auth } = useAuth();
 
@@ -347,11 +349,11 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	return (
 		<>
 			<DataTable
-				data={transfers}
+				data={filteredTransfers}
 				columns={TransferTableHeader}
 				filterWhat={"approval_status"}
 				dataType={""}
-				openModal={handleTransfer}
+				openModal={undefined}
 				isLoading={isFetching} />
 		</>
 	);

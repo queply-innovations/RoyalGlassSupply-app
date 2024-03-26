@@ -336,7 +336,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									<span className="flex w-6 items-center justify-center">
 										<List size={16} strokeWidth={2.25} />
 									</span>
-									<span>Details</span>
+									<span>Transfer Details</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => handleEditTransfer(transferRow)}
@@ -345,7 +345,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									<span className="flex w-6 items-center justify-center">
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
-									<span>Edit</span>
+									<span>Edit Transfer</span>
 								</DropdownMenuItem>
 
 								<DropdownMenuSeparator className="bg-gray-200" />
@@ -355,7 +355,12 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
+										{transferRow.transfer_status != 'arrived' ? (
+											<Pencil size={16} strokeWidth={2.25} />
+										) : (
+											<List size={16} strokeWidth={2.25} />
+										)}
+										
 									</span>
 									<span>Transfer Products</span>
 								</DropdownMenuItem>

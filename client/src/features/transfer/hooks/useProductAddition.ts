@@ -7,19 +7,33 @@ import { useCallback, useEffect, useState } from 'react';
 import { TransferProduct } from '../types';
 import { useAuth } from '@/context/AuthContext';
 import { useProductPricesQuery, useProductQuery } from '@/features/product/__test__/hooks';
+import { useInventoryProductsQuery, useInventoryQuery } from '@/features/inventory/hooks';
 
 export const useProductAddition = () => {
 	const queryClient = useQueryClient();
 	const { transfers, transferProducts, selectedProduct, selectedTransfer } = useTransfer();
 	const { auth } = useAuth();
 	const { data: allProducts } = useProductQuery();
-	const { data: allProductPrices } = useProductPricesQuery(); 
-	//TODO: useInventoryProductsQuery instead. para unsay naa sa inventory sa warehouse sa ga add, mao ray iyang ma pilian
+	const { data: allInventoryProducts } = useInventoryProductsQuery(); 
+	const { data: allInventories } = useInventoryQuery();
 
-	const filteredProductsSrc = allProductPrices.filter((prod) => prod.warehouse.id === selectedTransfer.source.id);
-	const filteredProductsActive = filteredProductsSrc.filter((prod) => prod.active_status === 'active' && prod.approval_status === 'approved');
+	const filteredInventoriesSrc = allInventories.filter((inv) => inv.warehouse.id === selectedTransfer.source.id);
+
+	const filteredProductsSrc = allInventoryProducts.filter((prod) => 
+		filteredInventoriesSrc.map((inv) => inv.id).includes(prod.inventory_id)
+		&& prod.capital_price > 0
+		&& (prod.remaining_stocks_count && prod.remaining_stocks_count > 0)
+	);
+
+	// console.log(allInventories);
+	// console.log(filteredProductsSrc);
+	// console.log(filteredInventoriesSrc);
+	// console.log(selectedTransfer);
 
 	const [ bundlesLimit, setBundlesLimit ] = useState<number>(0);
+	const [ quantityLimit, setQuantityLimit ] = useState<number>(0);
+	const [ damagedCount, setDamagedCount ] = useState<number>(0);
+
 	const [ isChanged, setIsChanged ] = useState(false);
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 	const [ error, setError ] = useState<string | null>(null);
@@ -31,7 +45,6 @@ export const useProductAddition = () => {
 			...prev,
 			id: transferProducts.length + 1,
 			transfer_id: selectedTransfer.id,
-			source_inventory: selectedTransfer.source.id,
 		}))
 	}, []);
 
@@ -48,27 +61,31 @@ export const useProductAddition = () => {
 	const handleChangeSelect = (
 		key: string,
 		_value: number,
+		id: number
 	) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		const capitalPrice = allProductPrices.filter((prodPrice) => 
-			prodPrice.product.id === _value &&
-			prodPrice.active_status === 'active' && 
-			prodPrice.approval_status === 'approved' && 
-			prodPrice.warehouse.id === selectedTransfer.source.id
-		);
-		const valueSet = capitalPrice[0] ? capitalPrice[0].capital_price : 0;
-		const bundlesUnit = capitalPrice[0] ? capitalPrice[0].stocks_unit : '';
-		const unit = capitalPrice[0] ? capitalPrice[0].unit : '';
+		const capitalPrice = filteredProductsSrc[id];
+		const src = capitalPrice.id;
+		const valueSet = capitalPrice.capital_price;
+		const bundlesUnit = capitalPrice.bundles_unit;
+		const unit = capitalPrice.unit;
+		const perBundle = capitalPrice.quantity_per_bundle;
 		setProduct(prev => ({
 			...prev,
 			[key]: _value,
 			capital_price: valueSet,
 			bundles_unit: bundlesUnit,
 			unit: unit,
+			quantity_per_bundle: perBundle,
+			source_inventory: src,
 		}));
-		setBundlesLimit(capitalPrice[0] ? capitalPrice[0].stocks_quantity : 0);
+		setBundlesLimit(capitalPrice.remaining_stocks_count ? 
+			capitalPrice.remaining_stocks_count / capitalPrice.quantity_per_bundle : 0);
+		setQuantityLimit(capitalPrice.remaining_stocks_count ?
+			capitalPrice.remaining_stocks_count : 0 );
+		setDamagedCount(capitalPrice.damage_count);
 	};
 
 	useEffect(() => {
@@ -143,9 +160,11 @@ export const useProductAddition = () => {
 		// setValue,
 		product,
 		allProducts,
-		allProductPrices,
-		filteredProductsActive,
+		allInventoryProducts,
+		filteredProductsSrc,
 		bundlesLimit,
+		quantityLimit,
+		damagedCount,
 		isChanged,
 		isSubmitting,
 		error,

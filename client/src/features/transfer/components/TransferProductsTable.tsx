@@ -130,18 +130,18 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 		},
 
 		{
-			accessorKey: 'total_quantity',
-			header:	() => <div className="text-center">TOTAL QUANTITY</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.total_quantity}</div>
-			),
-		},
-
-		{
 			accessorKey: 'unit',
 			header:	() => <div className="text-center">UNIT</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.unit}</div>
+			),
+		},
+
+		{
+			accessorKey: 'total_quantity',
+			header:	() => <div className="text-center">TOTAL QUANTITY</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.total_quantity} {row.original.unit}</div>
 			),
 		},
 
@@ -151,15 +151,17 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 			cell: ({ row }) => {
 				const productRow = row.original;
 				return (
-					<div className="flex flex-row text-xs justify-center font-normal uppercase">
-						<Button 
-							fill={'yellow'} 
-							textColor={'black'}
-							// onClick={() => handleEditUser(userinfoRow)}
-						>
-							Edit Product
-						</Button>
-					</div>
+					selectedTransfer.transfer_status != 'arrived' && (
+						<div className="flex flex-row text-xs justify-center font-normal uppercase">
+							<Button 
+								fill={'yellow'} 
+								textColor={'black'}
+								// onClick={() => handleEditUser(userinfoRow)}
+							>
+								Edit Product
+							</Button>
+						</div>
+					)
 				);
 			}
 		}
@@ -173,8 +175,10 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 				columns={TransferProductTableHeader}
 				filterWhat={"product_name"}
 				dataType={"Transfer Products"}
-				openModal={handleAddProduct}
+				openModal={selectedTransfer.transfer_status != 'arrived' ? handleAddProduct : undefined}
 				isLoading={isFetching} />
+
+				{/* TODO: PLEASE CHECK IF ADD TRANSFER PRODUCT IS HIDDEN IF TRANSFER HAS ARRIVED */}
 		</>
 	);
 };

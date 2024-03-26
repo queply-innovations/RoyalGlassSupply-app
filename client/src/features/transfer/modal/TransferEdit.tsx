@@ -414,7 +414,17 @@ export const TransferEdit = ({ onClose }: TransferDetailsProps) => {
 										{transfer.approval_status === 'rejected' && 'Rejected by'}
 									</h3>
 									<p className="text-sm flex flex-row">
-										{users[transfer.approved_by - 1].firstname + ' ' + users[transfer.approved_by - 1].lastname}
+										{users.length > 0 ? 
+											users[transfer.approved_by - 1].firstname + ' ' + users[transfer.approved_by - 1].lastname
+											: (
+												<div className="flex h-12 w-full items-center justify-center">
+													<Loader2
+														size={22}
+														strokeWidth={2.5}
+														className="animate-spin text-slate-700/50"
+													/>
+												</div>
+											)}
 									</p>
 								</div>
 							)
@@ -473,7 +483,6 @@ export const TransferEdit = ({ onClose }: TransferDetailsProps) => {
 						<span className="flex flex-col grid-cols-12 text-sm font-bold uppercase text-center">
 							(for PM times, add 12 to the hour)
 						</span>
-						<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 						</>
 					)}
 

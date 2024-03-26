@@ -2,6 +2,7 @@ import { API_HEADERS, API_URLS } from '@/api';
 import storage from '@/utils/storage';
 import axios from 'axios';
 import { Transfer, TransferAdd, TransferEdit, TransferProduct, TransferProductFull } from '../types';
+import { useState } from 'react';
 
 export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> => {
 	return await axios
@@ -48,8 +49,8 @@ export const editTransfer = async (data: TransferEdit) => {
 					Authorization: `Bearer ${storage.getToken()}`,
 					'Content-Type': 'application/json',
 				},
-			});
-		return response.data;
+			})
+			.then(response => {return response.data;}); 
 	} catch (error) {
 		console.error('Error editing transfer:', error);
 		throw error;
@@ -88,4 +89,129 @@ export const addTransferProduct = async (data: TransferProduct): Promise<Transfe
 			console.error('Error adding transfer product:', error);
 			throw error;
 		});
+};
+
+export const addInventory = async (
+	data: any,
+) => {
+	return await axios
+		.post(API_URLS.INVENTORY, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			console.error('Error adding inventory:', error);
+			throw error;
+		});
+};
+
+async function secondResponseParsing(id: number, data: any, inventoryID: number, transferProduct: TransferProductFull) {
+	try {
+		const addInvProd = {
+			inventory_id: inventoryID,
+			product_id: transferProduct.product.id,
+			supplier_id: data.supplier_id.id,
+			capital_price: transferProduct.capital_price,
+			bundles_count: transferProduct.bundles_count,
+			bundles_unit: transferProduct.bundles_unit,
+			quantity_per_bundle: transferProduct.quantity_per_bundle,
+			stocks_count: transferProduct.total_quantity,
+			damage_count: data.damage_count,
+			total_count: transferProduct.total_quantity,
+			unit: transferProduct.unit,
+		};
+
+		async function secondStepParsing() {
+			return await axios
+			.post(API_URLS.INVENTORY_PRODUCTS, addInvProd, { //ADD INVENTORY PRODUCT
+				headers: API_HEADERS(),
+			})
+			.then(response => {
+				return { status: response.status, data: response.data };
+			})
+			.catch(error => {
+				console.error('Error adding inventory product:', error);
+				throw error;
+			});
+		}
+
+		secondStepParsing();
+	} catch (error) {
+		console.error('Error updating inventory product:', error);
+		throw error;
+	}
+}
+
+export const updateAddTrfInvProducts = async (
+	data: TransferProductFull[],
+	inventoryID: number,
+) => {
+	return Promise.all(
+		data.map(async (transferProduct: TransferProductFull) => {
+			const id = transferProduct.source_inventory;
+			return await axios
+				.get(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, { //GET ORIGINAL INVENTORY PRODUCT
+					headers: API_HEADERS(),
+				})
+				.then(async response => {
+					function firstResponseParsing(response: any) {
+						secondResponseParsing(id, response.data.data, inventoryID, transferProduct);
+					}
+					firstResponseParsing(response);
+
+				})
+				.catch(error => {
+					console.error('Error getting inventory product:', error);
+					throw error;
+				});
+		}),
+	)
+
+	.then(responses => {
+		let status = responses.map(response => response);
+		return status;
+	})
+
+	.catch(error => {
+		console.error('Error parsing inventory products:', error);
+		throw error;
+	});
+};
+
+export const initInventoryProduct = async (
+	data: TransferProductFull[],
+) => {
+	return Promise.all(
+		data.map(async (transferProduct: TransferProductFull) => {
+			const id = transferProduct.id;
+			const trfProduct = {
+				total_quantity: 0,
+				bundles_count: 0,
+				quantity_per_bundle: 0,
+			};
+			return await axios
+				.patch(`${API_URLS.TRANSFER_PRODUCTS}/${id}`, trfProduct, { //EDIT TRANSFER PRODUCT
+					headers: API_HEADERS(),
+				})
+				.then(async response => {
+					return response;
+				})
+				.catch(error => {
+					console.error('Error getting transfer product:', error);
+					throw error;
+				});
+		}),
+	)
+
+	.then(responses => {
+		let status = responses.map(response => response);
+		return status;
+	})
+
+	.catch(error => {
+		console.error('Error parsing inventory products:', error);
+		throw error;
+	});
 };

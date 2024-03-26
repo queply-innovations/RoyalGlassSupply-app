@@ -5,7 +5,7 @@ import { useTransfer } from '../context/TransferContext';
 import { useProductAddition, useTransferAddition } from '../hooks';
 import { Roles } from '@/entities';
 import user from '@/store/user';
-import { Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import { 
 	Select, 
 	SelectContent, 
@@ -30,9 +30,11 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 	const {
 		product,
 		allProducts,
-		allProductPrices,
-		filteredProductsActive,
+		allInventoryProducts,
+		filteredProductsSrc,
 		bundlesLimit,
+		quantityLimit,
+		damagedCount,
 		isChanged,
 		isSubmitting,
 		error,
@@ -96,7 +98,8 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								Product to transfer:
 							</span>
 							<Select
-								onValueChange={value => handleChangeSelect('product_id', Number(value))}
+								onValueChange={value => 
+									handleChangeSelect('product_id', Number(value.split('-')[0]), Number(value.split('-')[1]))}
 								required
 								name="product_id"
 							>
@@ -108,7 +111,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium">
-									{filteredProductsActive.length <= 0 ? (
+									{filteredProductsSrc.length <= 0 ? (
 										<div className="flex h-12 w-full items-center justify-center">
 											<Loader2
 												size={22}
@@ -117,10 +120,12 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 											/>
 										</div>
 									) : (
-										filteredProductsActive.map((product, key) => (
+										filteredProductsSrc.map((product, key) => (
 											<SelectItem
-												key={product.id}
-												value={product.product.id ? product.product.id.toString() : ''}
+												key={key}
+												value={product.product.id ? 
+													product.product.id.toString() + "-" + key.toString()
+													: ''}
 												className="text-sm font-medium text-slate-700"
 											>
 												{product.product.name}
@@ -183,9 +188,10 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								name="quantity_per_bundle"
 								type="number"
 								value={product.quantity_per_bundle || ''}
-								placeholder='20'
+								placeholder='Quantity per bundle'
 								onChange={handleChange}
-								required
+								disabled
+								readOnly
 							/>
 						</div>
 
@@ -211,14 +217,25 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 							</span>
 							<Inputbox
 								name="total_quantity"
-								type="number"
-								value={product.total_quantity || ''}
-								placeholder='400'
+								type="string"
+								value={product.total_quantity && product.unit ? 
+									product.total_quantity.toString() + ' ' + product.unit.toString() 
+									: ''}
+								placeholder={`Available stocks: ${quantityLimit}`}
 								onChange={handleChange}
 								disabled
 								readOnly
 							/>
 						</div>
+
+						{product.total_quantity != 0 && damagedCount != 0 && product.total_quantity == quantityLimit && (
+							<div className="grid content-center group">
+								<AlertTriangle size={30} strokeWidth={2} className="self-center text-yellow-600" />
+								<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-2 rounded-md bg-gray-800 px-1 text-sm text-gray-100 transition-opacity opacity-0 group-hover:opacity-100">
+									Some damaged goods ({damagedCount} {product.unit}) are included in the transfer.
+								</span>
+							</div>
+						)}
 					</div>
 					
 					<div className="flex flex-row justify-center gap-1">
