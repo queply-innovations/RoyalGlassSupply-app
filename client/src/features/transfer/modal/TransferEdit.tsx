@@ -389,7 +389,7 @@ export const TransferEdit = ({ onClose }: TransferDetailsProps) => {
 										</>
 									)
 								}
-								{auth.role != 'encoder' ? (
+								{auth.rolePermissions.some((role) => role.permission_id === 22) ? (
 										transfer.approval_status?.toLowerCase() === 'pending' &&
 										approvalStatusChange
 									) : (

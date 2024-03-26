@@ -107,7 +107,7 @@ export const addInventory = async (
 		});
 };
 
-async function secondResponseParsing(id: number, data: any, inventoryID: number, transferProduct: TransferProductFull) {
+async function secondResponseParsing(data: any, inventoryID: number, transferProduct: TransferProductFull) {
 	try {
 		const addInvProd = {
 			inventory_id: inventoryID,
@@ -156,11 +156,7 @@ export const updateAddTrfInvProducts = async (
 					headers: API_HEADERS(),
 				})
 				.then(async response => {
-					function firstResponseParsing(response: any) {
-						secondResponseParsing(id, response.data.data, inventoryID, transferProduct);
-					}
-					firstResponseParsing(response);
-
+					secondResponseParsing(response.data.data, inventoryID, transferProduct);
 				})
 				.catch(error => {
 					console.error('Error getting inventory product:', error);

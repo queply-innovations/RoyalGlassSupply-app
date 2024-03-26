@@ -278,7 +278,7 @@ export const useTransferMutation = () => {
 		...mutationConfigAddInv,
 	});
 
-	// Configurations for mutation FOR RE-INSTATING TRANSFER PRODUCT COUNT
+	// Configurations for mutation FOR REINSTATING TRANSFER PRODUCT COUNT
 	const mutationConfigReTrfProd = {
 		onSuccess: async () => {
 			// Reset loading state

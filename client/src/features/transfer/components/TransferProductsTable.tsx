@@ -151,7 +151,8 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 			cell: ({ row }) => {
 				const productRow = row.original;
 				return (
-					selectedTransfer.transfer_status != 'arrived' && (
+					selectedTransfer.transfer_status != 'arrived' && 
+					selectedTransfer.approval_status != 'rejected' && (
 						<div className="flex flex-row text-xs justify-center font-normal uppercase">
 							<Button 
 								fill={'yellow'} 
@@ -175,7 +176,8 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 				columns={TransferProductTableHeader}
 				filterWhat={"product_name"}
 				dataType={"Transfer Products"}
-				openModal={selectedTransfer.transfer_status != 'arrived' ? handleAddProduct : undefined}
+				openModal={selectedTransfer.transfer_status != 'arrived' && 
+							selectedTransfer.approval_status != 'rejected' ? handleAddProduct : undefined}
 				isLoading={isFetching} />
 
 				{/* TODO: PLEASE CHECK IF ADD TRANSFER PRODUCT IS HIDDEN IF TRANSFER HAS ARRIVED */}

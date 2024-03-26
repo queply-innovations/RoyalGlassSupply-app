@@ -1,14 +1,14 @@
 import { UseModalProps } from '@/utils/Modal';
 import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
-import { usePendingTransfer } from '../context/PendingTransferContext';
+import { useTransfer } from '@/features/transfer/context/TransferContext';
 
 interface TransferDetailsProps {
 	onClose: UseModalProps['closeModal'];
 }
 
 export const PendingTransferDetails = ({ onClose }: TransferDetailsProps) => {
-	const { selectedTransfer } = usePendingTransfer();
+	const { selectedTransfer } = useTransfer();
 
 	return (
 		<>

@@ -17,7 +17,7 @@ interface AuthProps {
 	role: string | null;
 	token: string | null;
 	username: number | null;
-	rolePermissions: RolePermissions[] | null;
+	rolePermissions: RolePermissions[];
 	assignedAt: number;
 }
 interface AuthContextProps {
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				}
 
 				const roleDetails = await getUserRolePermissions(userRole.id);
-				const assignedAt = await getUserAssignedAt(userRole.id);
+				// const assignedAt = await getUserAssignedAt(userRole.id);
 
 				//TODO IMPORTANT: get assigned_at from user_warehouse table, verify when data is filled
 
@@ -69,8 +69,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					authenticated: true,
 					role: userRole.title,
 					rolePermissions: roleDetails,
-					assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
+					// assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
 				} as AuthProps);
+
+				useEffect(() => { console.log(auth); }, [auth]);
+
 			}
 			return response;
 		} catch (error: any) {
