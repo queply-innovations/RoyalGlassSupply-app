@@ -13,13 +13,6 @@ import {
 	Boxes,
 } from 'lucide-react';
 
-export type Role =
-	| 'super_admin'
-	| 'admin'
-	| 'manager'
-	| 'encoder'
-	| 'sales_person';
-
 interface SidebarGroup {
 	groupName?: string;
 	items: SidebarListItems[];

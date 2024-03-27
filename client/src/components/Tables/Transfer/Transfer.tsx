@@ -1,43 +1,18 @@
 import { FC } from 'react';
 import { BsFillEyeFill } from 'react-icons/bs';
+import { TransferProvider } from '@/features/transfer/context/TransferContext';
+import MiniTransferTable from './MiniTransferTable';
 
 export const TransferStatus: FC = () => {
 	return (
+		<TransferProvider>
 		<div className="flex w-full flex-1 flex-col items-center gap-y-5 rounded-md border border-black/10 bg-white p-4">
 			<h2 className="uppercase text-black">Transfer Status</h2>
 			<div className="h-full w-full rounded-md border border-solid">
-				<table className="w-full rounded-md">
-					<tbody>
-						<tr>
-							<th className="border-b p-2 text-[15px]">Transfer ID</th>
-							<th className="border-x border-b p-2 text-[15px]">
-								Status
-							</th>
-							<th className="border-b p-2 text-[15px]">Action</th>
-						</tr>
-						{/* <tr>
-							<td id="Transfer_ID" className="text-center table-data">
-								001
-							</td>
-							<td
-								id="Transfer_Status"
-								className="text-center table-data border-x"
-							>
-								Arrived at warehouse
-							</td>
-							<td
-								id="Transfer_Action"
-								className="text-center table-data"
-							>
-								<div className="flex justify-center">
-									<BsFillEyeFill className="text-[15px] text-black" />
-								</div>
-							</td>
-						</tr> */}
-					</tbody>
-				</table>
+				<MiniTransferTable />
 			</div>
 		</div>
+		</TransferProvider>
 	);
 };
 

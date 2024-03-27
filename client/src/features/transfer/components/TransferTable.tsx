@@ -299,22 +299,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			},
 		},
 
-		// {
-		// 	accessorKey: 'approved_by',
-		// 	header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
-		// 	cell: ({ row }) => {
-		// 		const approved_by: any = row.getValue('approved_by');
-		// 		if (approved_by){
-		// 			const format = approved_by.firstname + ' ' + approved_by.lastname;
-		// 			return (
-		// 				<div id={approved_by.id} className="text-center">{format}</div>
-		// 			);
-		// 		} else {
-		// 			return (<div className="text-center">N/A</div>);
-		// 		}
-		// 	},
-		// },
-
 		{
 			id: 'actions',
 			header:	() => <div></div>,

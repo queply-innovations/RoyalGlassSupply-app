@@ -5,7 +5,7 @@ import { z } from 'zod';
 // import { useAuth } from '@/context/__test__AuthContext';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, Mail, LockKeyhole } from 'lucide-react';
+import { Loader2, Mail, LockKeyhole, Eye, EyeOff } from 'lucide-react';
 
 // Define the form schema
 const schema = z.object({
@@ -51,6 +51,12 @@ export const LoginForm = () => {
 		</div>
 	);
 
+	// Pasword show state
+	const [ showPass, setShowPass ] = useState<boolean>(false);
+	const changeStat = () => {
+		setShowPass(!showPass);
+	}
+
 	// Login form layout
 	const layout = (
 		<Form onSubmit={handleSubmit(onSubmit)}>
@@ -73,9 +79,14 @@ export const LoginForm = () => {
 						<input
 							className="ml-4 w-full"
 							{...register('password', { required: true })}
-							type="password"
+							type={ showPass ? "test" : "password"}
 							placeholder="Password"
 						/>
+						{ showPass ? (
+							<Eye size={26} strokeWidth={1} className="ml-2" onClick={changeStat} />
+						) : (
+							<EyeOff size={26} strokeWidth={1} className="ml-2" onClick={changeStat} />
+						) }
 					</div>
 					{errors.password && (
 						<div className="text-base text-red-500">
