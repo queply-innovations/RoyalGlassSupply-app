@@ -18,6 +18,13 @@ import {
 	CommandInput,
 	CommandItem,
 } from '@/components/ui/command';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -105,7 +112,7 @@ export const EditInventoryProductForm = ({
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div className="col-span-12 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="product"
 								className="text-sm font-bold text-gray-600"
@@ -211,6 +218,49 @@ export const EditInventoryProductForm = ({
 									</Command>
 								</PopoverContent>
 							</Popover>
+						</div>
+						<div className="col-span-6 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="status"
+								className="text-sm font-bold text-gray-600"
+							>
+								Status
+							</Label>
+							<Select
+								required
+								disabled={auth.role !== 'admin'} // Disable select if user is not an admin
+								// value={selectedInventoryProduct?.status || 'pending'}
+								onValueChange={value => {
+									// ! Status field is yet to be implemented
+									// ! Also, add status column to AddInventoryProductTable and InventoryProductsCols
+									// handleChange('status', value); // Uncomment this line to enable status change
+									console.log('Inventory item status: ', value); // Remove this line when status field is implemented
+								}}
+							>
+								<SelectTrigger
+									id="status"
+									name="status"
+									className="flex flex-row items-center gap-3 bg-white text-sm font-bold text-slate-700"
+								>
+									<SelectValue placeholder={'Choose status...'} />
+								</SelectTrigger>
+								<SelectContent className="bg-white font-medium">
+									<SelectItem
+										key="status-pending"
+										value="pending"
+										className="text-sm font-medium text-slate-700"
+									>
+										Pending
+									</SelectItem>
+									<SelectItem
+										key="status-active"
+										value="active"
+										className="text-sm font-medium text-slate-700"
+									>
+										Active
+									</SelectItem>
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
