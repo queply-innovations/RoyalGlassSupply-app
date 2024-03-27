@@ -195,9 +195,29 @@ export const InventoryCols = ({
 		},
 		{
 			accessorKey: 'created_at',
-			header: () => (
-				<div className="justify-center uppercase">Created at</div>
-			),
+			sortingFn: 'text',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Created at{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const formattedDate = formatUTCDate(row.original.created_at);
 				return (
