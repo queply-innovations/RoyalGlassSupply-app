@@ -105,7 +105,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'bundles_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Bund. count
+					Bundles
 				</div>
 			),
 		},
@@ -129,7 +129,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'stocks_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Stocks Count
+					Stocks
 				</div>
 			),
 		},
@@ -137,7 +137,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'damage_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Damage Count
+					Damage
 				</div>
 			),
 		},
@@ -145,7 +145,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'total_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Total Count
+					Total
 				</div>
 			),
 		},

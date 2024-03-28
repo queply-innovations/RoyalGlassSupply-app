@@ -37,7 +37,7 @@ export const Supplier = () => {
 		<>
 			<MainLayout title="Supplier">
 				<SupplierProvider>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<SupplierTable openModal={openSupplierModal} />
 						</div>
@@ -46,13 +46,14 @@ export const Supplier = () => {
 						isOpen={isOpen}
 						onClose={closeModal}
 						title={
-							modalAction === 'edit'
-								? 'Edit Supplier'
-								: 'Add Supplier'
+							modalAction === 'edit' ? 'Edit Supplier' : 'Add Supplier'
 						}
 					>
 						<>
-							<SupplierModal	onClose={closeModal} isUpdate={modalAction === 'edit' ? true : false} />
+							<SupplierModal
+								onClose={closeModal}
+								isUpdate={modalAction === 'edit' ? true : false}
+							/>
 						</>
 					</ModalTest>
 				</SupplierProvider>

@@ -55,32 +55,6 @@ export const InventoryCols = ({
 			),
 		},
 		{
-			accessorKey: 'id',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Id{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
-		},
-		{
 			accessorKey: 'code',
 			sortingFn: 'text',
 			enableSorting: true,

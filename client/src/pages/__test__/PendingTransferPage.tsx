@@ -14,7 +14,7 @@ import { TransferProvider } from '@/features/transfer/context/TransferContext';
 export const PendingTransfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
-	
+
 	const openTransferModal = (transfers: ITransfer, action: string) => {
 		openModal();
 		setModalAction(action);
@@ -25,7 +25,7 @@ export const PendingTransfer = () => {
 		<>
 			<MainLayout title="Pending Transfer">
 				<TransferProvider>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<PendingTransferTable openModal={openTransferModal} />
 						</div>
@@ -55,4 +55,4 @@ export const PendingTransfer = () => {
 			</MainLayout>
 		</>
 	);
-}
+};

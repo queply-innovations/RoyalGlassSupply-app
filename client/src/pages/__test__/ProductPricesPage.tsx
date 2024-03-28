@@ -32,8 +32,8 @@ export const ProductPrices = () => {
 		<>
 			<MainLayout title="Product Listings">
 				<ProductPricesProvider>
-					<div className="flex max-h-[calc(100vh-16%)] flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
 							<ProductPricesTable
 								openModal={modalHandler}
 								isModalOpen={isOpen}
