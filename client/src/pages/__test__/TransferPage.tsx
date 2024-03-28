@@ -1,11 +1,14 @@
 import TransferTable from '@/features/transfer/components/TransferTable';
 import { TransferDetails } from '@/features/transfer/modal/TransferDetails';
+import { TransferForm } from '@/features/transfer/modal/TransferForm';
 import { TransferProvider } from '@/features/transfer/context/TransferContext';
 import { MainLayout } from '@/layouts/MainLayout';
 import { Transfer as ITransfer } from '@/features/transfer/types';
 import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
+import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
+import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
 
 export const Transfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -14,7 +17,7 @@ export const Transfer = () => {
 	const openTransferModal = (transfers: ITransfer, action: string) => {
 		openModal();
 		setModalAction(action);
-		console.log('action', action);
+		// console.log('action', action);
 	};
 
 	return (
@@ -35,7 +38,9 @@ export const Transfer = () => {
 								? 'Transfer Details'
 								: modalAction === 'edit'
 									? 'Edit Transfer'
-									: 'Add Transfer'
+									: modalAction === 'add'
+										? 'Add Transfer'
+										: 'Transfer Products'
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
@@ -45,12 +50,13 @@ export const Transfer = () => {
 								<TransferDetails onClose={closeModal} />
 							)}
 							{modalAction === 'edit' && (
-								// <TransferForm onClose={closeModal} />
-								<></>
+								<TransferEdit onClose={closeModal} />
 							)}
 							{modalAction === 'add' && (
-								// <TransferDetails onClose={closeModal} />
-								<></>
+								<TransferForm onClose={closeModal} />
+							)}
+							{modalAction === 'products' && (
+								<TransferProducts onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

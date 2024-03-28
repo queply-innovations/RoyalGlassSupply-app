@@ -5,17 +5,18 @@ import { Transaction } from "../types";
 
 export const fetchTransactions = async (updateProgress: any): Promise<Transaction[]> => {
 	return await axios
-		.get(API_URLS.TRANSACTION, {
+		.get(API_URLS.INVOICE, {
 			headers: {
 				Authorization: `Bearer ${storage.getToken()}`,
 				'Content-Type': 'application/json',
 			},
-			onDownloadProgress: (progress) => {
-				let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-				updateProgress(percentCompleted);
-			},
+			// onDownloadProgress: (progress) => {
+			// 	let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
+			// 	updateProgress(percentCompleted);
+			// },
 		})
 		.then(response => {
+			console.log(response);
 			return response.data.data;
 		})
 		.catch(error => {

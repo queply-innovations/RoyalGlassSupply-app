@@ -8,7 +8,7 @@ import { WarehouseForm } from '@pages/Warehouse';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
 import { ColumnDef } from '@tanstack/react-table';
-import { SortIcon } from '@assets/icons';
+// import { SortIcon } from '@assets/icons';
 
 interface WarehouseTableProps {
 	data: any;
@@ -64,7 +64,7 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 							}
 							className="flex flex-row bg-transparent text-black"
 						>
-							WAREHOUSE NAME <SortIcon />
+							WAREHOUSE NAME 
 						</Button>
 					</div>
 				);
@@ -146,7 +146,6 @@ export const WarehouseTable: FC<WarehouseTableProps> = ({ data }) => {
 				columns={tableHeader}
 				filterWhat={'location'}
 				dataType={'Warehouse'}
-				isOpen={isOpen}
 				openModal={openModal}
 				closeModal={closeModal}
 			/>

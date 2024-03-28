@@ -1,5 +1,6 @@
 import { Button, Inputbox } from '@/components';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
+import { SupplierModal } from '@/features/supplier/__test__/components/SupplierModal';
 // import { SupplierForm } from '@/features/supplier/__test__/components/SupplierForm';
 //TODO: Create SupplierForm
 import { SupplierTable } from '@/features/supplier/__test__/components/SupplierTable';
@@ -41,23 +42,19 @@ export const Supplier = () => {
 							<SupplierTable openModal={openSupplierModal} />
 						</div>
 					</div>
-					{/* <ModalTest
+					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
 						title={
 							modalAction === 'edit'
-								? 'Edit Warehouse'
-								: modalAction === 'remove'
-									? 'Remove Warehouse'
-									: 'Add Warehouse'
+								? 'Edit Supplier'
+								: 'Add Supplier'
 						}
 					>
-						<SupplierForm
-							onClose={closeModal}
-							isUpdate={modalAction === 'edit' ? true : false}
-							isDelete={modalAction === 'remove' ? true : false}
-						/>
-					</ModalTest> */}
+						<>
+							<SupplierModal	onClose={closeModal} isUpdate={modalAction === 'edit' ? true : false} />
+						</>
+					</ModalTest>
 				</SupplierProvider>
 			</MainLayout>
 		</>

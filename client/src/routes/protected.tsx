@@ -25,8 +25,12 @@ const { PendingInventory } = lazyImport(
 	'PendingInventory',
 );
 const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
+// const { PendingTransfer } = lazyImport(
+// 	() => import('@/pages'),
+// 	'PendingTransfer',
+// );
 const { PendingTransfer } = lazyImport(
-	() => import('@/pages'),
+	() => import('@/pages/__test__'),
 	'PendingTransfer',
 );
 const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
@@ -38,10 +42,13 @@ const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
-const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
+// const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
+const { Transaction } = lazyImport(() => import('@/pages/__test__'), 'Transaction');
 // const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserInfo } = lazyImport(() => import('@/pages/__test__'), 'UserInfo');
-const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
+// const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
+const { UserSales } = lazyImport(() => import('@/pages/__test__'), 'UserSales');
+const { RolePermissions } = lazyImport(() => import('@/pages/__test__'), 'RolePermissions');
 // const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
 const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
@@ -72,6 +79,7 @@ const protectedRoutesConfig = [
 	{ path: '/dashboard', element: <Dashboard /> },
 	{ path: '/user/information', element: <UserInfo /> },
 	{ path: '/user/sales', element: <UserSales /> },
+	{ path: '/user/role-perms', element: <RolePermissions /> },
 	{ path: '/test', element: <Invoice /> },
 	// TODO ! add POS PAGE
 	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },

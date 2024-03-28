@@ -1,10 +1,11 @@
-import { Button, Form, ProgressBar } from '@/components';
+import { Button, Form, Inputbox, ProgressBar } from '@/components';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 // import { useAuth } from '@/context/__test__AuthContext';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
+import { Loader2, Mail, LockKeyhole } from 'lucide-react';
 
 // Define the form schema
 const schema = z.object({
@@ -53,40 +54,49 @@ export const LoginForm = () => {
 	// Login form layout
 	const layout = (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<input
-				className="w-full rounded-lg border border-gray-300 p-2"
-				{...register('email', { required: true })}
-				type="email"
-				placeholder="Email"
-			/>
-			{errors.email && (
-				<div className="text-base text-red-500">{errors.email.message}</div>
-			)}
-			<input
-				className="w-full rounded-lg border border-gray-300 p-2"
-				{...register('password', { required: true })}
-				type="password"
-				placeholder="Password"
-			/>
-			{errors.password && (
-				<div className="text-base text-red-500">
-					{errors.password.message}
+			<div className="grid gap-6">
+				<div className="grid gap-4">
+					<div className="flex flex-row rounded-lg border border-gray-300 p-2 w-[420px] h-[56px] items-center align-center">
+						<Mail size={26} strokeWidth={1} className="ml-2" />
+						<input
+							className="ml-4 w-full"
+							{...register('email', { required: true })}
+							type="email"
+							placeholder="Email"
+						/>
+					</div>
+					{errors.email && (
+						<div className="text-base text-red-500">{errors.email.message}</div>
+					)}
+					<div className="flex flex-row rounded-lg border border-gray-300 p-2 w-[420px] h-[56px] items-center align-center">
+						<LockKeyhole size={26} strokeWidth={1} className="ml-2" />
+						<input
+							className="ml-4 w-full"
+							{...register('password', { required: true })}
+							type="password"
+							placeholder="Password"
+						/>
+					</div>
+					{errors.password && (
+						<div className="text-base text-red-500">
+							{errors.password.message}
+						</div>
+					)}
 				</div>
-			)}
-			<Button
-				type="submit"
-				disabled={isSubmitting}
-				fill={'green'}
-				className="mt-3 w-full"
-			>
-				Log In
-				<input type="submit" hidden />
-			</Button>
-			{errors.root && (
-				<div className="pt-3 text-base font-bold text-red-700">
-					{errors.root.message}
-				</div>
-			)}
+				<Button disabled={isSubmitting} 
+					className="rounded-md w-[420px] h-[56px] bg-login-button hover:bg-blue-950 font-extrabold">
+					{isSubmitting && (
+						<div className="flex items-center justify-center text-slate-800/60">
+							<Loader2
+								size={28}
+								strokeWidth={2}
+								className="animate-spin"
+							/>
+						</div>
+					)}
+					Log in
+				</Button>
+			</div>
 		</Form>
 	);
 

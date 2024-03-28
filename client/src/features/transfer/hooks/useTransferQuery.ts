@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTransfers } from '../api/Transfer';
+import { fetchTransferProducts, fetchTransfers } from '../api/Transfer';
 import { useEffect, useState } from 'react';
-import { Transfer } from '../types';
+import { Transfer, TransferProduct, TransferProductFull } from '../types';
 
 // Custom hook for fetching and managing data
 export const useTransferQuery = () => {
 	// State to store data
 	const [transfers, setTransfers] = useState<Transfer[]>([]);
+	const [transferProducts, setTransferProducts] = useState<TransferProductFull[]>([]);
 
 	const [progress, setProgress] = useState(0);
 
@@ -31,6 +32,19 @@ export const useTransferQuery = () => {
 		// Dependency array to trigger effect when Query changes
 	}, [transferQuery]);
 
+	const { data: transferProductsQuery } = useQuery({
+		queryKey: ['transfer_products'],
+		queryFn: () => fetchTransferProducts(),
+		refetchOnWindowFocus: false,
+	});
+
+	useEffect(() => {
+		const transferProducts = transferProductsQuery;
+		if (transferProducts) {
+			setTransferProducts(transferProducts);
+		}
+	}, [transferProductsQuery]);
+
 	// Return state and query object
-	return { transfers, transferQuery, isFetching, progress };
+	return { transfers, transferQuery, transferProducts, transferProductsQuery, isFetching, progress };
 };

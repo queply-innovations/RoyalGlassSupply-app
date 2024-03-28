@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Inputbox, Pagination, ProgressBar } from '@/components';
+import { Button, Inputbox, Pagination } from '@/components';
 
 import {
 	ColumnDef,
@@ -21,7 +21,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -55,24 +55,22 @@ export function DataTable<TData, TValue>({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		enableSortingRemoval: false,
 		state: {
 			sorting,
 			columnFilters,
 		},
 	});
 
-	const placeholderLabel = `Filter ${filterWhat}...`;
+	const label = (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) + " " + 
+		(filterWhat.split('_')[1] === 'no' ? 'number' : (filterWhat.split('_')[1] ? filterWhat.split('_')[1] : ''));
 
-	// TODO: Clean Pagination props and Modal contexts
-	// In line with inserting changes in dev-frontend branch
-	// (Careful on the Context and Provider)
-
-	// TODO: Maybe add sizing for table columns using column sizing APIs
+	const placeholderLabel = `Filter ${label.trim()}...`;
 
 	return (
 		<>
@@ -103,9 +101,9 @@ export function DataTable<TData, TValue>({
 							fill={'green'}
 							onClick={openModal}
 							disabled={isLoading}
-							className="disabled:cursor-not-allowed disabled:opacity-40"
+							className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center"
 						>
-							{`Add ${dataType}`}
+							<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
 						</Button>
 					</div>
 				)}
@@ -119,7 +117,7 @@ export function DataTable<TData, TValue>({
 									return (
 										<TableHead
 											key={header.id}
-											className="py-5 text-center text-xs font-bold uppercase"
+											className="py-5 text-xs font-bold uppercase text-black"
 										>
 											{header.isPlaceholder
 												? null
@@ -139,7 +137,7 @@ export function DataTable<TData, TValue>({
 								<TableRow
 									key={row.id}
 									data-state={row.getIsSelected() && 'selected'}
-									className="py-2 text-center text-xs font-normal uppercase"
+									className="py-2 text-xs font-normal uppercase text-slate-900"
 								>
 									{row.getVisibleCells().map(cell => (
 										<TableCell key={cell.id}>
@@ -181,8 +179,8 @@ export function DataTable<TData, TValue>({
 			</div>
 			<div className="flex flex-row justify-between space-x-2 py-4">
 				<div className="p-4 font-semibold">
-					{table.getFilteredSelectedRowModel().rows.length} of{' '}
-					{table.getFilteredRowModel().rows.length} row(s) selected.
+					{table.getFilteredSelectedRowModel().rows?.length} of{' '}
+					{table.getFilteredRowModel().rows?.length} row(s) selected.
 				</div>
 
 				<div>

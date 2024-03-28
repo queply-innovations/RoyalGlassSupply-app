@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductPrices } from '../../../types';
 import { Button } from '@/components';
-import { SortIcon } from '@/assets/icons';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
 // TODO: Include notes column in the table - ideally, a tooltip or a popover

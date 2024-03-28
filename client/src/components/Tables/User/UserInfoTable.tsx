@@ -1,4 +1,3 @@
-import { SortIcon } from '@/assets/icons';
 import { Button } from '@/components/Button';
 import { User } from '@/entities';
 import { useQuery } from '@tanstack/react-query';

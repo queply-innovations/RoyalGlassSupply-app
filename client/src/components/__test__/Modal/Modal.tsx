@@ -1,5 +1,6 @@
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
+import { X } from 'lucide-react';
 
 interface ModalProps {
 	children: ReactElement;
@@ -41,17 +42,17 @@ export const ModalTest = ({
 				<>
 					<div
 						ref={modalRef}
-						className={`modal-content ${modalAnimation} absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-5 rounded-lg bg-slate-50 p-5 shadow-2xl`}
+						className={`modal-content ${modalAnimation} absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-5 rounded-md bg-white stroke-1 p-5 pb-10 shadow-2xl`}
 					>
 						<div className="flex w-full justify-between">
 							<span className="text-lg font-bold uppercase tracking-tight text-gray-800">
 								{title}
 							</span>
 							<span
-								className="close-button relative right-0 top-0 flex-none cursor-pointer justify-end p-1"
+								className="close-button relative right-0 top-0 flex-none cursor-pointer justify-end"
 								onClick={onClose}
 							>
-								<IoMdClose />
+								<X strokeWidth={2} size={28} />
 							</span>
 						</div>
 						{children}

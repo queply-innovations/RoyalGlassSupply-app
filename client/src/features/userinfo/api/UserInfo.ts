@@ -1,9 +1,9 @@
 import { API_HEADERS, API_URLS } from '@/api';
-import { User } from '../types';
+import { User, UserAdd } from '../types';
 import { User as IUser } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { RolePermissions, Roles } from '../types';
+import { RolePermissions, Permissions, Roles } from '../types';
 
 export const fetchUsers = async (updateProgress: any): Promise<User[]> => {
 	return await axios
@@ -82,10 +82,6 @@ export const getRoles = async (updateProgress: any): Promise<Roles> => {
 			Authorization: `Bearer ${storage.getToken()}`,
 			'Content-Type': 'application/json',
 		},
-		onDownloadProgress: (progress) => {
-			let percentCompleted = Math.round((progress.loaded / progress.total) * 100);
-			updateProgress(percentCompleted);
-		},
 	})
 	.then(response => {
 		return response.data.data;
@@ -107,7 +103,6 @@ export const editUser = async (data: any) => {
 		},
 	})
 	.then(async response => {
-		// console.log(response);
 		return await axios
 		.post(`${API_URLS.USER_ROLES}/searches-filters-sorts`,
 			{ user_id: data.user_id },
@@ -148,18 +143,107 @@ export const editUser = async (data: any) => {
 	});
 };
 
-export const addUser = async (data: IUser) => {
+export const addUser = async (data: UserAdd) => {
 	try {
 		const response = await axios
-			.post(API_URLS.WAREHOUSE, data, {
+			.post(API_URLS.REGISTER, data, {
 				headers: {
-					Authorization: `Bearer ${storage.getToken()}`,
-					'Content-Type': 'application/json',
+					// Authorization: `Bearer ${storage.getToken()}`,
+					'Accept': 'application/json',
 				},
+			}) 
+			.then (async response => {
+				const data2 = {user_id: data.id, role_id: data.role_id};
+				return await axios
+				.post(`${API_URLS.USER_ROLES}`, data2, {
+					headers: {
+						Authorization: `Bearer ${storage.getToken()}`,
+						'Accept': 'application/json',
+					},
+				})
+				.then(async response2 => {
+					return response2.data.data;
+				})
+				.catch(error => {
+					console.error('Error posting user_roles:', error);
+					throw error;
+				});
 			});
-		return response.data;
 	} catch (error) {
 		console.error('Error adding user:', error);
 		throw error;
 	}
+};
+
+export const fetchPermissions = async (): Promise<Permissions[]> => {
+	return await axios
+		.get(API_URLS.PERMISSIONS, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching permissions:', error);
+			throw error;
+		});
+};
+
+export const getPermissions = async (role_id: number): Promise<RolePermissions[]> => {
+	return await axios
+	.post(`${API_URLS.ROLE_PERMISSIONS}/searches-filters-sorts`, 
+		{'role_id': role_id}, 
+
+		{
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+
+		.then(response => {
+			return response.data.data;
+		})
+
+		.catch(error => {
+			console.error('Error fetching role permissions:', error);
+			throw error;
+		});
+};
+
+export const addPermissions = async (data: any): Promise<RolePermissions[]> => {
+	return await axios
+		.post(API_URLS.ROLE_PERMISSIONS, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error adding permissions:', error);
+			throw error;
+		});
+};
+
+export const removePermissions = async (data: RolePermissions): Promise<RolePermissions[]> => {
+	return await axios
+		.delete(`${API_URLS.ROLE_PERMISSIONS}/${data.id}`, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error adding permissions:', error);
+			throw error;
+		});
 };

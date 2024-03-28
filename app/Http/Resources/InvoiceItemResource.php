@@ -22,7 +22,7 @@ class InvoiceItemResource extends JsonResource
             'product_price' => $this->product_price,
             'quantity' => $this->quantity,
             'unit' => $this->unit,
-            'item_discount' => $item->discount,
+            'item_discount' => $this->item_discount,
             'discount_approval_status' => $this->discount_approval_status,
             'approved_by' => new UserResource($this->approvedBy),
             'total_price' => $this->total_price,

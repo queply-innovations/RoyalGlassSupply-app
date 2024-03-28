@@ -2,9 +2,9 @@ import { useWarehouse } from '../context/WarehouseContext';
 import { Button } from '@/components';
 import { FaPencilAlt } from 'react-icons/fa';
 import { DataTable } from '@/components/Tables/DataTable';
-import { SortIcon } from '@/assets/icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { Warehouse } from '../types';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 interface WarehouseTableProps {
 	openModal: (data: Warehouse, action: string) => void;
@@ -45,11 +45,16 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 
 		{
 			accessorKey: 'id',
-			header: () => <div className="justify-center">WAREHOUSE ID</div>,
+			header: () => <div className="text-center">WAREHOUSE ID</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.id}</div>
+			),
 		},
 
 		{
 			accessorKey: 'name',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div className='items-center'>
@@ -57,19 +62,29 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							WAREHOUSE NAME <SortIcon />
+							WAREHOUSE NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				);
 			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.name}</div>
+			),
 		},
 		{
 			accessorKey: 'code',
-			header: () => <div className="justify-center">code</div>,
+			header: () => <div className="text-center">code</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.code}</div>
+			),
 		},
 		{
 			accessorKey: 'location',
-			header: () => <div className="justify-center">LOCATION</div>,
+			header: () => <div className="text-center">LOCATION</div>,
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.location}</div>
+			),
 		},
 
 		{
@@ -88,12 +103,6 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 							className="flex flex-row items-center gap-2"
 						>
 							<FaPencilAlt /> Edit
-						</Button>
-						<Button
-							fill={'red'}
-							onClick={() => handleRemoveWarehouse(warehouseRow)}
-						>
-							Remove
 						</Button>
 					</div>
 				);
@@ -127,7 +136,7 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				data={warehouses}
 				columns={WarehouseTableHeader}
 				filterWhat={'location'}
-				dataType={'Warehouse'}
+				dataType={''}
 				isLoading={isFetching}
 				openModal={handleAddWarehouse}
 			/>

@@ -1,5 +1,5 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { User, UserResponse, getUserRole } from '@/features/auth';
+import { User, UserResponse, getUserAssignedAt, getUserRole, getUserRolePermissions } from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
@@ -8,6 +8,7 @@ import {
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
+import { RolePermissions } from '@/features/userinfo/types';
 
 interface AuthProps {
 	user: User;
@@ -16,6 +17,8 @@ interface AuthProps {
 	role: string | null;
 	token: string | null;
 	username: number | null;
+	rolePermissions: RolePermissions[];
+	assignedAt: number;
 }
 interface AuthContextProps {
 	auth: AuthProps;
@@ -57,8 +60,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					updateProgress,
 				);
 				if (userRole) {
-					storage.setUserRole(userRole);
+					storage.setUserRole(userRole.title);
 				}
+
+				const roleDetails = await getUserRolePermissions(userRole.id);
+				// const assignedAt = await getUserAssignedAt(userRole.id);
+
+				//TODO IMPORTANT: get assigned_at from user_warehouse table, verify when data is filled
 
 				setAuth({
 					user: {
@@ -68,8 +76,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					},
 					token: response.token,
 					authenticated: true,
-					role: userRole,
+					role: userRole.title,
+					rolePermissions: roleDetails,
+					// assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
 				} as AuthProps);
+
+				useEffect(() => { console.log(auth); }, [auth]);
+
 			}
 			return response;
 		} catch (error: any) {
@@ -85,6 +98,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			authenticated: false,
 			role: null,
 			isLoggedIn: false,
+			rolePermissions: null,
 		});
 		storage.clearUserSession();
 		storage.clearLogIn();

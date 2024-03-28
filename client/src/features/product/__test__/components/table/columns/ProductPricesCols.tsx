@@ -9,7 +9,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { SortIcon } from '@/assets/icons';
 import {
 	Check,
 	X,
@@ -22,8 +21,8 @@ import {
 	List,
 	CircleOff,
 	CheckCircle,
-	ArrowUp,
 	ArrowDown,
+	ArrowUp,
 	ArrowUpDown,
 } from 'lucide-react';
 import currency from 'currency.js';

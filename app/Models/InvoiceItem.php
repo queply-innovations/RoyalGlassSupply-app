@@ -28,7 +28,7 @@ class InvoiceItem extends Model
     public $timestamps = false;
 
     protected $with = [
-        'product:id,name,size,color'
+        'product:id,name,serial_no,brand,size,color'
     ];
 
     public function returnTransactionItems(): HasMany
@@ -59,5 +59,30 @@ class InvoiceItem extends Model
     public function inventoryProduct(): BelongsTo
     {
         return $this->belongsTo(InventoryProduct::class, 'source_inventory');
+    }
+
+    public function getTotalStocksQuantityAttribute ()
+    {
+        return ($this->quantity * $this->productPrice->stocks_quantity);
+    }
+
+    public function getTotalSoldAttribute ()
+    {
+        if($this->invoice->type == "payment") {
+            return ($this->quantity * $this->productPrice->stocks_quantity);
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function getTotalMiscellaneousAttribute ()
+    {
+        if($this->invoice->type == "exit") {
+            return ($this->quantity * $this->productPrice->stocks_quantity);
+        }
+        else{
+            return 0;
+        }
     }
 }

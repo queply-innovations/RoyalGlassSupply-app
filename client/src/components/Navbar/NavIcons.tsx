@@ -87,7 +87,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 					<div className="navicon-container flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white hover:bg-gray-200">
 						{icon}
 					</div>
-					<span className="nav-title text-primary-dark-gray text-xs font-bold">
+					<span className="nav-title text-primary-dark-gray text-xs font-bold mt-2">
 						{title}
 					</span>
 				</>
