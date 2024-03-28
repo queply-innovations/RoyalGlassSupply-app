@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import { Supplier } from '../../types';
 import { useSupplierQuery } from '../../__test__/hooks';
 
@@ -6,6 +6,8 @@ interface SupplierContextProps {
 	suppliers: Supplier[];
 	isFetching: boolean;
 	progress: any;
+	selectedSupplier: Supplier;
+	setSelectedSupplier: (supplier: Supplier) => void;
 }
 
 export const SupplierContext = createContext<SupplierContextProps | undefined>(
@@ -19,7 +21,10 @@ interface SupplierProviderProps {
 export const SupplierProvider = ({ children }: SupplierProviderProps) => {
 	const { suppliers, isFetching, progress } = useSupplierQuery();
 
-	const value = { suppliers, isFetching, progress };
+	const [selectedSupplier, setSelectedSupplier] =
+		useState<Supplier>({} as Supplier);
+
+	const value = { suppliers, isFetching, progress, selectedSupplier, setSelectedSupplier };
 
 	return (
 		<SupplierContext.Provider value={value}>

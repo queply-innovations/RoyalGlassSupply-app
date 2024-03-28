@@ -1,4 +1,4 @@
-import { SearchBar } from '../Searchbar';
+import { SearchBar } from '../SearchProducts';
 
 export const Header = () => {
 	return (

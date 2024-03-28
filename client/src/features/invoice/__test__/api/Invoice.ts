@@ -30,7 +30,7 @@ export const fetchInvoiceById = async (id: number): Promise<Invoices> => {
 		});
 };
 
-export const addInvoice = (data: Invoices[]) => {
+export const addInvoice = (data: Partial<Invoices>) => {
 	return axios
 		.post(API_URLS.INVOICE, data, {
 			headers: API_HEADERS(),

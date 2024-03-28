@@ -3,10 +3,11 @@ import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoutesGrouped } from '../routes/SidebarRoutesGrouped';
 import { SidebarItem } from '../components/items/SidebarItem';
 import { Role } from '../types';
-import { useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';
+import { all } from 'axios';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SidebarProps {}
@@ -16,21 +17,9 @@ const Sidebar = ({}: SidebarProps) => {
 	const { pathname } = useLocation(); // Get the current pathname/URL
 	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
 
-	// const [open, setOpen] = useState("");
-
-	// const handleClick = (itemId: string) => setOpen(itemId);
-
-	// const [ sidebar , setSidebar ] = useState(SidebarRoute);
-	// useEffect(() => {
-	// 	const filteredRoute = sidebar.map(route => (
-	// 		{
-	// 			...route, child: route.child?.filter(
-	// 				subChild => subChild.allowedRoles.includes(auth.auth.role as Role)
-	// 			)
-	// 		}
-	// 	));
-	// 	setSidebar(filteredRoute);
-	// }, []);
+	const permissionsList = auth.rolePermissions?.map(
+		permission => {return permission.permission_id}
+	);
 
 	return (
 		<>
@@ -39,62 +28,58 @@ const Sidebar = ({}: SidebarProps) => {
 					<div className="flex w-full items-center justify-center px-12 pb-2 pt-8">
 						<SidebarLogo />
 					</div>
-					<ScrollArea
-						className="w-full"
-						type="always"
-						style={{ '--border': '216 12% 84%' } as React.CSSProperties}
-					>
-						<ul className="items-star flex w-full flex-col gap-1 px-2">
-							{SidebarRoutesGrouped.map(group => {
-								// Check if user's role is included in the allowed roles of the group items
-								const allowedItems = group.items.filter(item => {
-									return item.allowedRoles.includes(auth.role as Role);
-								});
-								const groupAllowed = allowedItems.length > 0;
-								return group.groupName ? (
-									// If group has a name, display group name
-									// Group name is used to categorize the items contextually
-									<div className="w-full" key={group.groupName}>
-										{/* Just hide the group name if no items inside */}
-										{groupAllowed && (
-											<div className="px-4 pb-1 pt-4">
-												<span className="text-xs font-semibold text-slate-500/80">
-													{group.groupName}
-												</span>
-											</div>
-										)}
-										{group.items.map(
-											item =>
-												// Check if user's role is included in the allowed roles of the item
-												// Don't display the item if user's role isn't allowed
-												item.allowedRoles.includes(
-													auth.role as Role,
-												) && (
-													<SidebarItem
-														key={item.id}
-														item={item}
-														pathname={pathname}
-														openedItem={openedItem}
-														setOpenedItem={setOpenedItem}
-													/>
-												),
-										)}
-									</div>
-								) : (
-									group.items.map(item => (
+					<ul className="items-star flex w-full flex-col gap-1 overflow-y-auto px-2">
+						{SidebarRoutesGrouped.map((group, index) => {
+							// Check if user's role is included in the allowed roles of the group items
+							const allowedItems = group.items.filter(item => {
+								if (item.permissionId.some(id => permissionsList?.includes(id))) {
+									return item;
+								};
+							});
+							const groupAllowed = allowedItems.length > 0;
+							return group.groupName ? (
+								// If group has a name, display group name
+								// Group name is used to categorize the items contextually
+								<div className="w-full" key={index}>
+									{/* Just hide the group name if no items inside */}
+									{groupAllowed && (
+										<div className="px-4 pb-1 pt-4">
+											<span className="text-xs font-semibold text-slate-500/80">
+												{group.groupName}
+											</span>
+										</div>
+									)}
+									{group.items.map(
+										(item, index) =>
+											// Check if user's role is included in the allowed roles of the item
+											// Don't display the item if user's role isn't allowed
+											item.permissionId.some(id => permissionsList?.includes(id)) && (
+												<SidebarItem
+													key={index}
+													item={item}
+													pathname={pathname}
+													openedItem={openedItem}
+													setOpenedItem={setOpenedItem}
+												/>
+											),
+									)}
+								</div>
+							) : (
+								group.items.map((item, index) => (
+									item.permissionId.some(id => permissionsList?.includes(id)) && (
 										<SidebarItem
-											key={item.id}
+											key={index}
 											item={item}
 											pathname={pathname}
 											openedItem={openedItem}
 											setOpenedItem={setOpenedItem}
 										/>
-									))
-								);
-							})}
-						</ul>
-					</ScrollArea>
-					<div className="mt-auto w-full px-2 pb-2">
+									)
+								))
+							);
+						})}
+					</ul>
+					<div className="mt-auto min-h-[2.5rem] w-full px-2 pb-2">
 						<Button
 							fill={'empty'}
 							onClick={() => logout()}

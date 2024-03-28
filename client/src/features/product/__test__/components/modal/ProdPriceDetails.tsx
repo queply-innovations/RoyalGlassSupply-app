@@ -17,42 +17,42 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 			<div className="flex max-w-2xl flex-col gap-4 font-medium">
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-6 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Name</h3>
-						<p className="text-sm">{selectedProductPrice.product.name}</p>
+						<h3 className="text-sm font-bold">Name</h3>
+						<p className="text-sm text-gray-800">{selectedProductPrice.product.name}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Product ID
 						</h3>
-						<p className="text-sm">{selectedProductPrice.product.id}</p>
+						<p className="text-sm text-gray-800">{selectedProductPrice.product.id}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Listing ID
 						</h3>
-						<p className="text-sm">{selectedProductPrice.id}</p>
+						<p className="text-sm text-gray-800">{selectedProductPrice.id}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Size</h3>
-						<p className="text-sm">{selectedProductPrice.product.size}</p>
+						<h3 className="text-sm font-bold">Size</h3>
+						<p className="text-sm text-gray-800">{selectedProductPrice.product.size}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Color</h3>
-						<p className="text-sm">
+						<h3 className="text-sm font-bold">Color</h3>
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.product.color}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Warehouse Code
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.warehouse.code}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Warehouse</h3>
-						<p className="text-sm">
+						<h3 className="text-sm font-bold">Warehouse</h3>
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.warehouse.name}
 						</p>
 					</div>
@@ -60,37 +60,37 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 				<div className="grid w-full grid-flow-row grid-cols-4 gap-x-6 gap-y-4">
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Type</h3>
-						<p className="text-sm capitalize">
+						<h3 className="text-sm font-bold">Type</h3>
+						<p className="text-sm capitalize text-gray-800">
 							{selectedProductPrice.type}
 						</p>
 					</div>
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Unit</h3>
-						<p className="text-sm">{selectedProductPrice.unit}</p>
+						<h3 className="text-sm font-bold">Unit</h3>
+						<p className="text-sm text-gray-800">{selectedProductPrice.unit}</p>
 					</div>
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Stocks quantity
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.stocks_quantity}
 						</p>
 					</div>
 					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Stocks unit
 						</h3>
-						<p className="text-sm">{selectedProductPrice.stocks_unit}</p>
+						<p className="text-sm text-gray-800">{selectedProductPrice.stocks_unit}</p>
 					</div>
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 				<div className="grid w-full grid-flow-row grid-cols-6 gap-x-6 gap-y-4">
 					<div className="relative col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Capital price
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
@@ -98,10 +98,10 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Markup price
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
@@ -121,10 +121,10 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Tax amount
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
@@ -132,8 +132,8 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Cost</h3>
-						<p className="text-sm">
+						<h3 className="text-sm font-bold">Cost</h3>
+						<p className="text-sm text-gray-800">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
@@ -166,7 +166,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 									className="text-gray-600"
 								/>
 							)}
-							<div className="text-xs font-semibold leading-4 text-gray-700">
+							<div className="text-xs font-semibold leading-4 text-gray-900">
 								On Sale
 							</div>
 						</div>
@@ -184,7 +184,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 				<div className="grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Active status
 						</h3>
 						<span className="flex flex-row items-center gap-2">
@@ -201,31 +201,31 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 									className="text-gray-600"
 								/>
 							)}
-							<p className="text-sm capitalize">
+							<p className="text-sm capitalize text-gray-800">
 								{selectedProductPrice.active_status}
 							</p>
 						</span>
 					</div>
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Created by
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.created_by.firstname +
 								' ' +
 								selectedProductPrice.created_by.lastname}
 						</p>
 					</div>
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Created at
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{formatUTCDate(selectedProductPrice.created_at)}
 						</p>
 					</div>
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Approval status
 						</h3>
 						<p className="text-sm capitalize">
@@ -233,10 +233,10 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Approved by
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{selectedProductPrice.approved_by
 								? selectedProductPrice.approved_by.firstname +
 									' ' +
@@ -245,23 +245,12 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-4 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
+						<h3 className="text-sm font-bold">
 							Updated at
 						</h3>
-						<p className="text-sm">
+						<p className="text-sm text-gray-800">
 							{formatUTCDate(selectedProductPrice.updated_at)}
 						</p>
-					</div>
-				</div>
-				<div className="flex w-full flex-row justify-end pt-4">
-					<div className="flex flex-row gap-4 whitespace-nowrap">
-						<Button
-							fill={'default'}
-							className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
-							onClick={onClose}
-						>
-							Close
-						</Button>
 					</div>
 				</div>
 			</div>

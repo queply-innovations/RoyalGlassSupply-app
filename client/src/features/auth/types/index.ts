@@ -35,3 +35,9 @@ export interface UserRole {
 	user_id: User['id'];
 	role_id: Roles['id'];
 }
+
+export interface UserWarehouses {
+	id: number;
+	user_id: number;
+	warehouse_id: number;
+}

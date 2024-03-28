@@ -1,4 +1,3 @@
-import { SortIcon } from '@/assets/icons';
 import { DataTable } from '@/components/Tables/DataTable';
 import { Transfer } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
@@ -18,14 +17,22 @@ import {
 	MoreVertical,
 	Pencil,
 	List,
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
+	Ban,
+	Check,
+	Clock,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
 }
 
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, isFetching, progress, setSelectedTransfer } = useTransfer();
+	const { transfers, transferProducts, isFetching, setSelectedTransfer } = useTransfer();
+	const { auth } = useAuth();
 
 	// Modal handler to expand transfer details
 	const handleTransferDetails = (transfer: Transfer) => {
@@ -39,11 +46,14 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		openModal(transfer, 'edit');
 	};
 
+	const handleTransferProducts = (transfer: Transfer) => {
+		setSelectedTransfer(transfer);
+		openModal(transfer, 'products');
+	};
+
 	const handleAddTransfer = () => {
 		openModal({} as Transfer, 'add');
 	};
-
-	// console.log(transfers);
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
@@ -69,142 +79,238 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'id',
-			header:	() => <div>TRANSFER ID</div>,
+			sortingFn: "basic",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.id}</div>
+			),
 		},
 
 		{
 			accessorKey: 'code',
-			header:	() => <div>TRANSFER CODE</div>,
+			sortingFn: "alphanumeric",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER CODE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.code ? row.original.code : 'N/A'}</div>
+			),
 		},
-
-		// {
-		// 	accessorKey: 'created_by',
-		// 	header:	() => <div>CREATED BY</div>,
-		// 	cell: ({ row }) => {
-		// 		const created_by: any = row.getValue('created_by');
-		// 		const format = created_by.firstname + ' ' + created_by.lastname;
-		// 		return (
-		// 			<div id={created_by.id}>{format}</div>
-		// 		);
-		// 	},
-		// },
 
 		{
 			accessorKey: 'source',
-			header:	() => <div>SOURCE-DESTINATION</div>,
+			header:	() => <div className="text-center">SOURCE-DESTINATION</div>,
 			cell: ({ row }) => {
 				const source: any = row.original.source;
 				const destination: any = row.original.destination;
 				return (
-					<div>{source.code}-{destination.code}</div>
+					<div className="text-center">{source.code}-{destination.code}</div>
+				);
+			},
+		},
+
+		{
+			id: 'transfer_products',
+			header:	() => <div className="text-center">PRODUCTS ADDED?</div>,
+			cell: ({ row }) => {
+				return (
+					<div className="flex justify-center">
+						{
+							transferProducts.filter((prod) => prod.transfer_id === row.original.id).length > 0 ? (
+								<Check
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/>
+							) : (
+								<Ban
+									size={20}
+									strokeWidth={2}
+									className="text-red-600"
+								/>
+							)
+						}
+					</div>
 				);
 			},
 		},
 
 		{
 			accessorKey: 'transfer_status',
-			header:	() => <div>TRANSFER STATUS</div>,
+			sortingFn: "text",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							TRANSFER STATUS {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="text-center">{row.original.transfer_status ? row.original.transfer_status : 'N/A'}</div>
+			),
 		},
 
 		{
 			accessorKey: 'transfer_schedule',
-			header:	() => <div>SCHEDULE</div>,
+			sortingFn: "datetime",
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							SCHEDULE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
-				const details = { year: 'numeric', month: 'long', day: 'numeric' };
-				const format = new Date(sched).toLocaleDateString([], details);
-				return (
-					<div>{format}</div>
-				);
+				if (sched.toString() !== '0000-00-00 00:00:00') {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric', 
+						hour:'numeric',
+						minute:'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
 			},
 		},
 
 		{
 			accessorKey: 'date_received',
-			header:	() => <div>DATE RECEIVED</div>,
+			enableSorting: true,
+			header:	({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row bg-transparent text-black items-center"
+						>
+							DATE RECEIVED {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('date_received');
-				const details = { 
-					year: 'numeric', 
-					month: 'long', 
-					day: 'numeric', 
-					hour:'numeric',
-					minute:'numeric',
-					second:'numeric' };
-				const format = new Date(sched).toLocaleDateString([], details);
-				return (
-					<div>{format}</div>
-				);
+				if (sched) {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric', 
+						hour:'numeric',
+						minute:'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
+				
 			},
 		},
 
 		{
 			accessorKey: 'approval_status',
-			header:	() => <div>APPROVAL STATUS</div>,
-		},
-
-		{
-			accessorKey: 'approved_by',
-			header:	() => <div>APPROVED BY</div>,
+			header:	() => <div className="text-center">APPROVAL STATUS</div>,
 			cell: ({ row }) => {
-				const approved_by: any = row.getValue('approved_by');
-				const format = approved_by.firstname + ' ' + approved_by.lastname;
 				return (
-					<div id={approved_by.id}>{format}</div>
+					<div className="flex mx-auto items-center justify-center">
+						{
+							row.original.approval_status.toLowerCase() === 'approved' ? ( 
+								<Check
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/> 
+							) : row.original.approval_status.toLowerCase() === 'rejected' ? (
+								<Ban
+									size={20}
+									strokeWidth={2}
+									className="text-red-600"
+								/>
+							) : (
+								<Clock
+									size={20}
+									strokeWidth={2}
+									className="text-amber-500"
+								/>
+							)
+						}
+					</div>
 				);
 			},
 		},
 
 		// {
-		// 	accessorKey: 'received_by',
-		// 	header:	() => <div>RECEIVED BY</div>,
+		// 	accessorKey: 'approved_by',
+		// 	header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
 		// 	cell: ({ row }) => {
-		// 		const received_by: any = row.getValue('received_by');
-		// 		const format = received_by.firstname + ' ' + received_by.lastname;
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'created_at',
-		// 	header:	() => <div>CREATED AT</div>,
-		// 	cell: ({ row }) => {
-		// 		const sched: any = row.getValue('created_at');
-		// 		const details = { year: 'numeric', month: 'long', day: 'numeric' };
-		// 		const format = new Date(sched).toLocaleDateString([], details);
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'updated_at',
-		// 	header:	() => <div>UPDATED AT</div>,
-		// 	cell: ({ row }) => {
-		// 		const sched: any = row.getValue('updated_at');
-		// 		const details = { year: 'numeric', month: 'long', day: 'numeric' };
-		// 		const format = new Date(sched).toLocaleDateString([], details);
-		// 		return (
-		// 			<div>{format}</div>
-		// 		);
-		// 	},
-		// },
-
-		// {
-		// 	accessorKey: 'notes',
-		// 	header:	() => <div>NOTES</div>,
-		// 	cell: ({ row }) => {
-		// 		if (row.getValue('notes')) {
+		// 		const approved_by: any = row.getValue('approved_by');
+		// 		if (approved_by){
+		// 			const format = approved_by.firstname + ' ' + approved_by.lastname;
 		// 			return (
-		// 				<div>{row.getValue('notes')}</div>
+		// 				<div id={approved_by.id} className="text-center">{format}</div>
 		// 			);
 		// 		} else {
-		// 			return (
-		// 				<div>N/A</div>
-		// 			);
+		// 			return (<div className="text-center">N/A</div>);
 		// 		}
 		// 	},
 		// },
@@ -230,7 +336,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									<span className="flex w-6 items-center justify-center">
 										<List size={16} strokeWidth={2.25} />
 									</span>
-									<span>Details</span>
+									<span>Transfer Details</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => handleEditTransfer(transferRow)}
@@ -239,7 +345,25 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									<span className="flex w-6 items-center justify-center">
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
-									<span>Edit</span>
+									<span>Edit Transfer</span>
+								</DropdownMenuItem>
+
+								<DropdownMenuSeparator className="bg-gray-200" />
+
+								<DropdownMenuItem
+									onClick={() => handleTransferProducts(transferRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										{transferRow.transfer_status != 'arrived' && 
+										transferRow.approval_status != 'rejected' ? (
+											<Pencil size={16} strokeWidth={2.25} />
+										) : (
+											<List size={16} strokeWidth={2.25} />
+										)}
+										
+									</span>
+									<span>Transfer Products</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

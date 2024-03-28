@@ -10,15 +10,14 @@ export const useInvoiceMutation = () => {
 	const { auth } = useAuth();
 	const { invoices } = useInvoice();
 
-	const [value, setValue] = useState<Invoices>({} as Invoices);
+	const [value, setValue] = useState<Partial<Invoices>>(
+		{} as Partial<Invoices>,
+	);
 
-	const handleChange = (
-		e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
-	) => {
-		const { name, value } = e.target;
-		setValue(prevInvoiceForm => ({
-			...(prevInvoiceForm as Invoices),
-			[name]: value,
+	const handleChange = (key: string, _value: Invoices[keyof Invoices]) => {
+		setValue(prev => ({
+			...prev,
+			[key]: _value,
 		}));
 	};
 

@@ -19,6 +19,7 @@ export const LoginUser = async (
 				'Access-Control-Allow-Origin': '*',
 			},
 		}).catch((error) => {
+			console.log(error);
 			throw new Error(error.response.data.message)
 		});
 

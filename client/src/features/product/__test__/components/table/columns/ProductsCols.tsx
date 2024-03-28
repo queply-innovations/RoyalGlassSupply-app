@@ -9,14 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { SortIcon } from '@/assets/icons';
-import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	MoreVertical,
-	Pencil,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 

@@ -1,5 +1,5 @@
 import { UseModalProps } from '@/utils/Modal';
-import { Button, Loading } from '@/components';
+import { Button, Inputbox, Loading } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { useUserInfo } from '../context/UserInfoContext';
 import { getRoles } from '../api/UserInfo';
@@ -7,6 +7,14 @@ import { useEffect, useState } from 'react';
 import { Roles, User } from '../types';
 import { useUserInfoMutation } from '../hooks';
 import { useAuth } from '@/context/AuthContext';
+import { Loader2 } from 'lucide-react';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 
 interface UserInfoProps {
 	onClose: UseModalProps['closeModal'];
@@ -15,7 +23,6 @@ interface UserInfoProps {
 export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 	const { selectedUser, roles } = useUserInfo();
 	const { auth } = useAuth();
-
 	const {
 		user,
 		isChanged,
@@ -24,11 +31,16 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 		success,
 		handleSubmit,
 		handleChange,
+		handleChangeSelect,
 	} = useUserInfoMutation(selectedUser, roles);
 
+	success && setTimeout(() => {
+		onClose();
+	}, 3000);
+	
 	return (
 		<>
-			{selectedUser.id === auth.user && (
+			{selectedUser.id === auth.user.id && (
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-6 gap-4">
 					<div className="flex flex-col col-span-6 font-bold text-red-700 text-start">
 						Warning: Be careful! You are editing your own account.
@@ -44,7 +56,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-3 gap-3">
 							<label htmlFor="id">User ID</label>
-							<input
+							<Inputbox
 								type="text"
 								name="id"
 								placeholder="User ID"
@@ -55,33 +67,33 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 						</div>
 						<div className="flex flex-col col-span-3 gap-3">
 							<label htmlFor="firstname">First name</label>
-							<input
+							<Inputbox
 								type="text"
 								name="firstname"
 								placeholder="First name"
-								className="inputbox"
+								className="inputbox rounded-md bg-slate-100"
 								value={user.firstname}
 								onChange={handleChange}
 							/>
 						</div>
 						<div className="flex flex-col col-span-3 gap-3">
 							<label htmlFor="lastname">Last name</label>
-							<input
+							<Inputbox
 								type="text"
 								name="lastname"
 								placeholder="Last name"
-								className="inputbox"
+								className="inputbox rounded-md bg-slate-100"
 								value={user.lastname}
 								onChange={handleChange}
 							/>
 						</div>
 						<div className="flex flex-col col-span-3 gap-3">
 							<label htmlFor="username">Username</label>
-							<input
+							<Inputbox
 								type="text"
 								name="username"
 								placeholder="Username"
-								className="inputbox"
+								className="inputbox rounded-md bg-slate-100"
 								value={user.username}
 								onChange={handleChange}
 							/>
@@ -91,48 +103,106 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="email">Email address</label>
-							<input
+							<Inputbox
 								type="email"
 								name="email"
 								placeholder="Email address"
-								className="inputbox"
+								className="inputbox rounded-md bg-slate-100"
 								value={user.email}
 								onChange={handleChange}
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="email">Contact number</label>
-							<input
+							<Inputbox
 								type="number"
 								name="contact_no"
 								placeholder="09XXXXXXXXX"
-								className="inputbox"
+								className="inputbox rounded-md bg-slate-100"
 								value={user.contact_no}
 								onChange={handleChange}
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
 							<label htmlFor="position">Position</label>
-							<select 
+							<Select
+								onValueChange={value =>
+									handleChangeSelect('position', value)
+								}
+								required
+							>
+								<SelectTrigger
+									name="position"
+									className="flex flex-row items-center gap-3 truncate text-md rounded-md bg-slate-100"
+								>
+									<SelectValue placeholder={
+										user.position ? 
+											user.position.charAt(0).toUpperCase() +
+											user.position.slice(1) :
+										'Choose position...'
+									} />
+								</SelectTrigger>
+
+								<SelectContent className="bg-white font-medium text-md">
+									{roles.length > 0 ? (
+										roles.map((role: Roles) => {
+											return (
+												// <option 
+												// 	key={role.id} 
+												// 	value={role.title}
+												// 	>
+												// 	{role.title.charAt(0).toUpperCase() + 
+												// 	role.title.slice(1)}
+												// </option>
+												<SelectItem
+													key={role.id}
+													value={role.title}>
+														{role.title.charAt(0).toUpperCase() + 
+															role.title.slice(1)}
+												</SelectItem>
+											);
+										})
+									) : (
+										<div className="flex h-12 w-full items-center justify-center">
+											<Loader2
+												size={22}
+												strokeWidth={2.5}
+												className="animate-spin text-slate-700/50"
+											/>
+										</div>
+									)}
+								</SelectContent>
+							</Select>
+							{/* <select 
 								name="position"
-								className="flex flex-col gap-5" 
-								defaultValue={user.position} 
+								className="flex flex-col gap-5 rounded-md bg-slate-100" 
+								defaultValue={user.position.charAt(0).toLowerCase() + user.position.slice(1)} 
 								onChange={handleChange}>
-								{roles.map((role: Roles) => {
-									return (
-										<option 
-											key={role.id} 
-											value={role.title}
-											>
-											{role.title.charAt(0).toUpperCase() + 
-											role.title.slice(1)}
-										</option>
-									);
-								})}
-							</select>
+								{roles ? (
+									roles.map((role: Roles) => {
+										return (
+											<option 
+												key={role.id} 
+												value={role.title}
+												>
+												{role.title.charAt(0).toUpperCase() + 
+												role.title.slice(1)}
+											</option>
+										);
+									})
+								) : (
+									<div className="flex h-12 w-full items-center justify-center">
+										<Loader2
+											size={22}
+											strokeWidth={2.5}
+											className="animate-spin text-slate-700/50"
+										/>
+									</div>
+								)}
+							</select> */}
 						</div>
 					</div>
-					
+
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-8 gap-4 text-center">
 						<div className="flex flex-col col-span-2 gap-3">
 							<Button
@@ -155,6 +225,15 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								<div className="flex flex-col flex-wrap items-start"> 
 									<Loading width={30} height={30} /> 
 								</div>}
+						</div>
+						<div className="flex flex-col col-span-3 gap-3 items-end">
+							<Button
+								type="reset"
+								fill={'red'}
+								onClick={onClose}
+							>
+								Cancel
+							</Button>
 						</div>
 					</div>
 				</div>

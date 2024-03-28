@@ -13,7 +13,7 @@ export const useTransactionQuery = () => {
 	// Query for fetching user info data
 	const { isFetching, data: transactionQuery } = useQuery({
 		// Key for identifying this query
-		queryKey: ['transactions'],
+		queryKey: ['invoice'],
 		// Function to fetch user info data
 		queryFn: () => fetchTransactions(setProgress),
 		// Disable refetching

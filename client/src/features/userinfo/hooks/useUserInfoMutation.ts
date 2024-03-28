@@ -3,7 +3,7 @@ import {
 	addUser, editUser,
 } from '../api/UserInfo';
 import { useUserInfo } from '../context/UserInfoContext';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { Roles, User } from '../types';
 
 export const useUserInfoMutation = (selectedUser: User, roles: any) => {
@@ -17,8 +17,17 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		contact_no: selectedUser.contact_no,
 		position: selectedUser.position,
 		user_id: selectedUser.id,
-		role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+		role_id: 0,
 	});
+
+	useEffect(() => {
+		if (roles){
+			setUser(prev => ({
+				...prev,
+				role_id: roles.find((role: Roles) => role.title === selectedUser.position)?.id,
+			}));
+		}
+	}, [roles]);
 
 	// const [ roleId, setRoleId ] = useState(roles.find((role: Roles) => role.title === selectedUser.position)?.id);
 
@@ -26,6 +35,19 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<string | null>(null);
+
+	const handleChangeSelect = (
+		key: string,
+		_value: any,
+	) => {
+		setIsChanged(true);
+		setSuccess(null);
+		setError(null);
+		setUser(prev => ({
+			...prev,
+			[key]: _value,
+		}));
+	};
 
 	const handleChange = (e: any) => {
 		setIsChanged(true);
@@ -44,7 +66,12 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 
 	const handleSubmit = async () => {
 		setIsSubmitting(true);
-		return await editUserMutation(user);
+		if (user.contact_no?.length > 11 || user.contact_no?.length < 11) {
+			setError('Contact number must be 11 digits');
+			setIsSubmitting(false);
+		} else {
+			return await editUserMutation(user);
+		}
 	};
 
 	// Configurations for mutation
@@ -78,6 +105,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		error,
 		success,
 		handleSubmit,
+		handleChangeSelect,
 		handleChange,
 		editUserMutation,
 	};

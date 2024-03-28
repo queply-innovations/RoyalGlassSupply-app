@@ -31,7 +31,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		items: [
 			{
 				id: 'pendings',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
+				permissionId: [13],
 				itemProps: {
 					title: 'Pendings',
 					icon: <Clock size={20} strokeWidth={1.75} />,
@@ -39,7 +39,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				children: [
 					{
 						id: 'pending-inventory',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
+						permissionId: [13],
 						path: '/pending/inventory',
 						itemProps: {
 							title: 'Pending Inventory',
@@ -47,7 +47,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'pending-transfer',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
+						permissionId: [13],
 						path: '/pending/transfer',
 						itemProps: {
 							title: 'Pending Transfer',
@@ -55,7 +55,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'pending-return',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
+						permissionId: [13],
 						path: '/pending/return',
 						itemProps: {
 							title: 'Pending Return',
@@ -65,13 +65,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'transactions',
-				allowedRoles: [
-					'super_admin',
-					'admin',
-					'manager',
-					'encoder',
-					'sales_person',
-				],
+				permissionId: [11],
 				itemProps: {
 					title: 'Transactions',
 					icon: <ArrowRightLeft size={20} strokeWidth={1.75} />,
@@ -79,13 +73,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				children: [
 					{
 						id: 'transaction',
-						allowedRoles: [
-							'super_admin',
-							'admin',
-							'manager',
-							'encoder',
-							'sales_person',
-						],
+						permissionId: [11],
 						path: '/transaction',
 						itemProps: {
 							title: 'Transaction',
@@ -93,13 +81,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'transaction-return',
-						allowedRoles: [
-							'super_admin',
-							'admin',
-							'manager',
-							'encoder',
-							'sales_person',
-						],
+						permissionId: [11, 17],
 						path: '/transaction/return',
 						itemProps: {
 							title: 'Transaction Return',
@@ -108,8 +90,8 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'inventories',
-				allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
+				id: 'inventory',
+				permissionId: [18],
 				path: '/inventory',
 				itemProps: {
 					title: 'Inventories',
@@ -117,8 +99,8 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				},
 			},
 			{
-				id: 'transfers',
-				allowedRoles: ['super_admin', 'admin', 'manager', 'encoder'],
+				id: 'transfer',
+				permissionId: [12],
 				path: '/transfer',
 				itemProps: {
 					title: 'Transfers',
@@ -127,13 +109,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'returns',
-				allowedRoles: [
-					'super_admin',
-					'admin',
-					'manager',
-					'encoder',
-					'sales_person',
-				],
+				permissionId: [17],
 				path: '/returns',
 				itemProps: {
 					title: 'Returns',
@@ -146,16 +122,16 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		groupName: 'Management',
 		items: [
 			{
-				id: 'users',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
+				id: 'user',
+				permissionId: [9],
 				itemProps: {
-					title: 'Users',
+					title: 'User',
 					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
 				},
 				children: [
 					{
 						id: 'user-information',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
+						permissionId: [9, 1, 3],
 						path: '/user/information',
 						itemProps: {
 							title: 'User Information',
@@ -163,17 +139,25 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'user-sales',
-						allowedRoles: ['super_admin', 'admin', 'manager'],
+						permissionId: [9],
 						path: '/user/sales',
 						itemProps: {
 							title: 'User Sales',
+						},
+					},
+					{
+						id: 'role-perms',
+						permissionId: [9, 2],
+						path: '/user/role-perms',
+						itemProps: {
+							title: 'Role Permissions',
 						},
 					},
 				],
 			},
 			{
 				id: 'finances',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
+				permissionId: [10],
 				path: '/finance',
 				itemProps: {
 					title: 'Finances',
@@ -182,7 +166,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'reports',
-				allowedRoles: ['super_admin', 'admin', 'manager'],
+				permissionId: [19],
 				path: '/reports',
 				itemProps: {
 					title: 'Reports',
@@ -191,7 +175,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'warehouses',
-				allowedRoles: ['super_admin', 'admin'],
+				permissionId: [14],
 				path: '/warehouse',
 				itemProps: {
 					title: 'Warehouses',
@@ -200,7 +184,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'suppliers',
-				allowedRoles: ['super_admin', 'admin'],
+				permissionId: [15],
 				path: '/supplier',
 				itemProps: {
 					title: 'Suppliers',
@@ -209,7 +193,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 			},
 			{
 				id: 'products',
-				allowedRoles: ['super_admin', 'admin'],
+				permissionId: [16],
 				itemProps: {
 					title: 'Products',
 					icon: <Boxes size={20} strokeWidth={1.75} />,
@@ -217,7 +201,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				children: [
 					{
 						id: 'product-items',
-						allowedRoles: ['super_admin', 'admin'],
+						permissionId: [16],
 						path: '/products',
 						itemProps: {
 							title: 'Product Items',
@@ -225,7 +209,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'product-listings',
-						allowedRoles: ['super_admin', 'admin'],
+						permissionId: [16],
 						path: '/products/listings',
 						itemProps: {
 							title: 'Product Listings',

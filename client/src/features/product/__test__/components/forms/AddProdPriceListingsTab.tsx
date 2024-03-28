@@ -512,7 +512,7 @@ export const AddProdPriceListingsTab = ({
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-4 flex flex-row items-center justify-start	gap-3">
+						<div className="col-span-4 flex flex-row items-center justify-start gap-3">
 							<Switch
 								id="active_status"
 								name="active_status"

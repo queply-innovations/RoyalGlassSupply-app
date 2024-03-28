@@ -7,8 +7,8 @@ import { ChangeEvent, FC, useState } from 'react';
 import { SupplierForm } from '@/pages';
 import { FaPencilAlt } from 'react-icons/fa';
 import { ColumnDef } from '@tanstack/react-table';
-import { SortIcon } from '@/assets/icons';
 import { DataTable } from '@/components/Tables/DataTable';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 interface SupplierTableProps {
 	data: any;
@@ -49,6 +49,8 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 
 		{
 			accessorKey: 'name',
+			sortingFn: "text",
+			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
@@ -56,7 +58,8 @@ export const SupplierTable: FC<SupplierTableProps> = ({ data, onOpen }) => {
 							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 							className="bg-transparent text-black flex flex-row ml-auto mr-auto items-center"
 						>
-							NAME <SortIcon />
+							NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)

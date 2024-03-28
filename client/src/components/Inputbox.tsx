@@ -13,9 +13,9 @@ const inputVariants = cva('inputbox', {
 		},
 		buttonIcon: {
 			default:
-				'flex w-full items-center rounded-full border border-black/10 bg-white pl-5 p-2',
+				'flex w-full items-center rounded-full bg-slate-100 pl-5 p-2',
 			outside:
-				'flex w-full items-center justify-between rounded-full border border-black/10 bg-white',
+				'flex w-full items-center justify-between rounded-full bg-slate-100',
 		},
 	},
 	defaultVariants: {
@@ -43,7 +43,7 @@ const Inputbox: FC<InputboxProps> = ({
 						<>
 							<HiOutlineMagnifyingGlass className="searchbar-icon text-2xl" />
 							<input
-								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
+								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none bg-slate-100 "
 								{...props}
 							/>
 						</>
@@ -51,7 +51,7 @@ const Inputbox: FC<InputboxProps> = ({
 					{buttonIcon === 'outside' && (
 						<>
 							<input
-								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none "
+								className="searchbar-input ml-3 mr-4 w-full focus-visible:outline-none bg-slate-100 "
 								{...props}
 							/>
 							<Button
