@@ -10,21 +10,30 @@ import { Payment } from './Payment';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
 
-interface SidebarProps {}
 
-export const Sidebar = ({}: SidebarProps) => {
+interface SidebarProps { }
+
+export const Sidebar = ({ }: SidebarProps) => {
 	const { auth } = useAuth();
 
 	const { setFilter } = usePos();
 
 	const { invoiceItemsQueue, invoice } = useInvoice();
-	const { addInvoiceMutation } = useInvoiceMutation();
+	const {
+		value: invoiceForm,
+		addInvoiceMutation } = useInvoiceMutation();
 
 	const { selectedCustomer } = useCustomer();
 
-	function handlePrint() {
+
+	async function handlePrint() {
 		console.log('Invoice:', invoice);
 		console.log('InvoiceItems:', invoiceItemsQueue);
+		let data: any = invoice;
+		data["invoice_items"] = invoiceItemsQueue.map((d:any) => {
+			return ({...d, product_id : d.product_id.id})
+		});
+		await addInvoiceMutation(data);
 	}
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[350px] flex-col gap-2 p-4">
