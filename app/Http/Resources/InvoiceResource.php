@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +21,7 @@ class InvoiceResource extends JsonResource
             'customer' => new CustomerResource($this->customer),
             'warehouse' => new WarehouseResource($this->warehouse),
             'issued_by' => new UserResource($this->issuedBy),
-            'type', => $this->type,
+            'type' => $this->type,
             'payment_method' => $this->payment_method,
             'reference_no' => $this->reference_no,
             'subtotal' => $this->subtotal,
@@ -31,6 +32,7 @@ class InvoiceResource extends JsonResource
             'paid_amount' => $this->paid_amount,
             'change_amount' => $this->change_amount,
             'or_no' => $this->or_no,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'invoice_items' => new InvoiceItemCollection($this->whenLoaded('invoiceItems')),

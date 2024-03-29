@@ -26,7 +26,8 @@ class Invoice extends Model
         'total_amount_due',
         'paid_amount',
         'change_amount',
-        'or_no'
+        'or_no',
+        'status'
     ];
 
     protected $with = [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Http\Resources\InvoiceCollection;
 use App\Http\Resources\InvoiceResource;
+use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -31,7 +32,13 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = Invoice::create($request->all());
+        $invoice_items = $request->invoice_items;
+        $invoice = Invoice::create($request->except('invoice_items') + ['reference_no' => 'asdasd', 'warehouse_id' => 1]);
+        foreach($invoice_items as $index =>$invoice_item){
+            $invoice_items[$index]["invoice_id"] = $invoice->id;
+            $invoice_items[$index]["unit"] = 'pcs';
+        }
+        $invoice_items = InvoiceItem::insert($invoice_items);
 
         return new InvoiceResource($invoice);
     }
