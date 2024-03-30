@@ -47,6 +47,7 @@ export const DiscountAmount = () => {
 									0,
 								),
 						);
+						handleChange('status', Number(e.target.value) > 0 ? 'pending' : 'approved')
 						console.log('change:', invoice.change_amount);
 					}}
 					onFocus={e => {

@@ -32,6 +32,7 @@ export const API_URLS = {
 export const API_HEADERS = () => {
 	return {
 		Authorization: `Bearer ${storage.getToken()}`,
+		Accept: 'application/json',
 		'Content-Type': 'application/json',
 	};
 };

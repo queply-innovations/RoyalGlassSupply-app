@@ -19,6 +19,7 @@ export interface Invoices {
 	or_no: string;
 	created_at: string;
 	updated_at: string;
+	status: string;
 }
 export interface InvoiceItemDatabase extends Omit<InvoiceItems, 'id'> {}
 

@@ -4,6 +4,7 @@ import { Invoices } from '../types';
 import { ChangeEvent, useState } from 'react';
 import { addInvoice, removeInvoice, updateInvoice } from '../api';
 import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-toastify';
 
 export const useInvoiceMutation = () => {
 	const queryClient = useQueryClient();
@@ -34,6 +35,7 @@ export const useInvoiceMutation = () => {
 			await queryClient.invalidateQueries({ queryKey: ['invoices'] });
 			// Reset form data
 			setValue({} as Invoices);
+			toast.success('Submitted successfully!');
 		},
 		onError: (error: Error) => {
 			console.error('Invoices Data failed', error.message);

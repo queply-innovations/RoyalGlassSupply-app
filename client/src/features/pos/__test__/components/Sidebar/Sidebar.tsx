@@ -9,6 +9,7 @@ import { TotalItems } from './TotalItems';
 import { Payment } from './Payment';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
+import { toast } from 'react-toastify';
 
 
 interface SidebarProps { }
@@ -26,7 +27,7 @@ export const Sidebar = ({ }: SidebarProps) => {
 	const { selectedCustomer } = useCustomer();
 
 
-	async function handlePrint() {
+	async function handleSubmit() {
 		console.log('Invoice:', invoice);
 		console.log('InvoiceItems:', invoiceItemsQueue);
 		let data: any = invoice;
@@ -93,14 +94,15 @@ export const Sidebar = ({ }: SidebarProps) => {
 			</Button>
 			<Button
 				onClick={() => {
-					handlePrint();
+					toast.info('Coming Soon!');
 				}}
 			>
 				Print Invoice
 			</Button>
 			<Button
 				onClick={() => {
-					addInvoiceMutation(invoice);
+					// addInvoiceMutation(invoice);
+					handleSubmit();
 				}}
 				disabled={
 					Object.keys(selectedCustomer).length === 0 ||

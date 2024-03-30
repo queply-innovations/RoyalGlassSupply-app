@@ -72,6 +72,7 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		reference_no: '',
 		paid_amount: 0,
 		total_discount: 0,
+		status: 'approved'
 	} as Invoices);
 
 	function handleChange(key: string, value: Invoices[keyof Invoices]) {
