@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Http\Resources\InvoiceCollection;
 use App\Http\Resources\InvoiceResource;
+use App\Models\InventoryProduct;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 
@@ -37,9 +38,11 @@ class InvoiceController extends Controller
         foreach($invoice_items as $index =>$invoice_item){
             $invoice_items[$index]["invoice_id"] = $invoice->id;
             $invoice_items[$index]["unit"] = 'pcs';
+            $invoice_items[$index]["source_inventory"] = InventoryProduct::find($invoice_items[$index]["product_id"])->id;
         }
+        //return response()->json($invoice_items);
         $invoice_items = InvoiceItem::insert($invoice_items);
-
+        
         return new InvoiceResource($invoice);
     }
 
