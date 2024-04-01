@@ -25,4 +25,7 @@ export default defineConfig({
 		// 	renderer: {},
 		// }),
 	],
+	build:{
+		outDir: "build"
+	},
 });
