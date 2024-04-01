@@ -4,21 +4,21 @@ import { Invoices } from '../types';
 import { ChangeEvent, useState } from 'react';
 import { addInvoice, removeInvoice, updateInvoice } from '../api';
 import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-toastify';
 
 export const useInvoiceMutation = () => {
 	const queryClient = useQueryClient();
 	const { auth } = useAuth();
 	const { invoices } = useInvoice();
 
-	const [value, setValue] = useState<Invoices>({} as Invoices);
+	const [value, setValue] = useState<Partial<Invoices>>(
+		{} as Partial<Invoices>,
+	);
 
-	const handleChange = (
-		e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
-	) => {
-		const { name, value } = e.target;
-		setValue(prevInvoiceForm => ({
-			...(prevInvoiceForm as Invoices),
-			[name]: value,
+	const handleChange = (key: string, _value: Invoices[keyof Invoices]) => {
+		setValue(prev => ({
+			...prev,
+			[key]: _value,
 		}));
 	};
 
@@ -35,6 +35,7 @@ export const useInvoiceMutation = () => {
 			await queryClient.invalidateQueries({ queryKey: ['invoices'] });
 			// Reset form data
 			setValue({} as Invoices);
+			toast.success('Submitted successfully!');
 		},
 		onError: (error: Error) => {
 			console.error('Invoices Data failed', error.message);

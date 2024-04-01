@@ -96,6 +96,29 @@ export const fetchInventoryProductById = async (
 		});
 };
 
+export const fetchInventoryProductByWarehouseId = async (
+	id: number,
+): Promise<InventoryProduct[]> => {
+	return await axios
+		.post(
+			`${API_URLS.INVENTORY_PRODUCTS}/warehouse/searches-filters-sorts-by-warehouse`,
+			{ warehouse_id: id },
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error(
+				'Error fetching inventory product by warehouse id:',
+				error,
+			);
+			throw error;
+		});
+};
+
 export const addInventory = async (
 	data: Partial<Omit<InventoryDatabase, 'id'>>,
 ) => {

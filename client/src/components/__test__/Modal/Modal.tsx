@@ -49,7 +49,7 @@ export const ModalTest = ({
 								{title}
 							</span>
 							<span
-								className="close-button relative top-0 right-0 flex-none cursor-pointer justify-end"
+								className="close-button relative right-0 top-0 flex-none cursor-pointer justify-end"
 								onClick={onClose}
 							>
 								<X strokeWidth={2} size={28} />

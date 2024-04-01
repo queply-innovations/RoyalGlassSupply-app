@@ -3,7 +3,7 @@ import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoutesGrouped } from '../routes/SidebarRoutesGrouped';
 import { SidebarItem } from '../components/items/SidebarItem';
 import { Role } from '../types';
-import { useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';

@@ -30,6 +30,86 @@ export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 		});
 };
 
+export const fetchApprovedProductPrices = async (): Promise<
+	ProductPrices[]
+> => {
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
+			{
+				filter: {
+					approval_status: 'approved',
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching approved product prices:', error);
+			throw error;
+		});
+};
+
+export const fetchProductPricesFilters = async (
+	approval_status?: string,
+	warehouse_id?: number,
+): Promise<ProductPrices[]> => {
+	const filters: any = {};
+	if (approval_status) {
+		filters['approval_status'] = approval_status;
+	}
+	if (warehouse_id) {
+		filters['warehouse_id'] = warehouse_id;
+	}
+
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
+			{
+				filter: filters,
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching approved product prices:', error);
+			throw error;
+		});
+};
+
+export const fetchApprovedProductPricesFilterByWarehouse = async (
+	id: number,
+): Promise<ProductPrices[]> => {
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
+			{
+				filter: {
+					approval_status: 'approved',
+					warehouse_id: id,
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching approved product prices:', error);
+			throw error;
+		});
+};
+
 export const addProduct = async (data: Omit<Partial<Product>, 'id'>) => {
 	return await axios
 		.post(API_URLS.PRODUCTS, data, {
