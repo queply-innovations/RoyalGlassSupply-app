@@ -43,12 +43,18 @@ const { Return } = lazyImport(() => import('@/pages'), 'Return');
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
 // const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
-const { Transaction } = lazyImport(() => import('@/pages/__test__'), 'Transaction');
+const { Transaction } = lazyImport(
+	() => import('@/pages/__test__'),
+	'Transaction',
+);
 // const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserInfo } = lazyImport(() => import('@/pages/__test__'), 'UserInfo');
 // const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
 const { UserSales } = lazyImport(() => import('@/pages/__test__'), 'UserSales');
-const { RolePermissions } = lazyImport(() => import('@/pages/__test__'), 'RolePermissions');
+const { RolePermissions } = lazyImport(
+	() => import('@/pages/__test__'),
+	'RolePermissions',
+);
 // const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
 const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
@@ -80,7 +86,7 @@ const protectedRoutesConfig = [
 	{ path: '/user/information', element: <UserInfo /> },
 	{ path: '/user/sales', element: <UserSales /> },
 	{ path: '/user/role-perms', element: <RolePermissions /> },
-	{ path: '/test', element: <Invoice /> },
+	{ path: '/invoice', element: <Invoice /> },
 	// TODO ! add POS PAGE
 	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
 	{ path: '/pos/add-order', element: <PointOfSalePage /> },
