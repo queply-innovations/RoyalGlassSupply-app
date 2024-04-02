@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
 	addPermissions,
-	addUser, editUser, fetchPermissions, getPermissions, removePermissions,
+	addUser,
+	editUser,
+	fetchPermissions,
+	getPermissions,
+	removePermissions,
 } from '../api/UserInfo';
 import { useUserInfo } from '../context/UserInfoContext';
 import { useState, ChangeEvent, useEffect } from 'react';
@@ -18,7 +22,9 @@ export const useRoleInfoMutation = () => {
 
 	const [permissions, setPermissions] = useState<RolePermissions[]>([]); //current permissions of role
 	const [allPermissions, setAllPermissions] = useState<Permissions[]>([]); //all possible permissions
-	const [permissionChange, setPermissionChange] = useState<RolePermissions[]>([]); //permissions to be changed
+	const [permissionChange, setPermissionChange] = useState<RolePermissions[]>(
+		[],
+	); //permissions to be changed
 
 	const { data: allPermissionQuery } = useQuery({
 		queryKey: ['all-permissions'],
@@ -33,19 +39,16 @@ export const useRoleInfoMutation = () => {
 		}
 	}, [allPermissionQuery]);
 
-	const [ isChanged, setIsChanged ] = useState(false);
-	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
-	const [ error, setError ] = useState<string | null>(null);
-	const [ success, setSuccess ] = useState<string | null>(null);
+	const [isChanged, setIsChanged] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
 
-	const handleChangeSelect = (
-		key: string,
-		_value: any,
-	) => {
+	const handleChangeSelect = (key: string, _value: any) => {
 		setSuccess(null);
 		setError(null);
-		setRoleSelect(roles.find((role:any) => role.title === _value));
-		setRoleId(roles.find((role:any) => role.title === _value).id);
+		setRoleSelect(roles.find((role: any) => role.title === _value));
+		setRoleId(roles.find((role: any) => role.title === _value).id);
 	};
 
 	useEffect(() => {
@@ -72,42 +75,73 @@ export const useRoleInfoMutation = () => {
 	// 	}
 	// }, [permQuery]);
 
-	const handleChange = (e: any) => {
+	// const handleChange = (e: any) => {
+	// 	setIsChanged(true);
+	// 	setSuccess(null);
+	// 	setError(null);
+	// 	if (e.target.checked === false) {
+	// 		setPermissionChange(permissionChange.filter((permission) => permission.permission_id !== Number(e.target.value)));
+	// 	} else {
+	// 		setPermissionChange([...permissionChange, {
+	// 			id: null,
+	// 			role_id: roleId,
+	// 			permission_id: Number(e.target.value)
+	// 		}]);
+	// 	}
+	// };
+	const handleChange = (checked: boolean, perm_id: number) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		if (e.target.checked === false) {
-			setPermissionChange(permissionChange.filter((permission) => permission.permission_id !== Number(e.target.value)));
+		if (!checked) {
+			setPermissionChange(
+				permissionChange.filter(
+					permission => permission.permission_id !== perm_id,
+				),
+			);
 		} else {
-			setPermissionChange([...permissionChange, { 
-				id: null,
-				role_id: roleId, 
-				permission_id: Number(e.target.value) 
-			}]);
+			setPermissionChange([
+				...permissionChange,
+				{
+					id: null,
+					role_id: roleId,
+					permission_id: perm_id,
+				},
+			]);
 		}
 	};
 
 	const handleSubmit = async () => {
 		setIsSubmitting(true);
-		if (permissionChange.length > permissions.length) { //added permissions
-			const addedPermissions = permissionChange.filter((permission) => permission.id === null);
+		if (permissionChange.length > permissions.length) {
+			//added permissions
+			const addedPermissions = permissionChange.filter(
+				permission => permission.id === null,
+			);
 			if (addedPermissions.length > 1) {
-				addedPermissions.forEach(async (permission) => {
+				addedPermissions.forEach(async permission => {
 					await addRolePermission(permission);
 				});
 			} else {
 				return await addRolePermission(addedPermissions[0]);
 			}
-		} else if (permissionChange.length < permissions.length) { //removed permissions
-			const removedPermissions = permissions.filter((permission) => permissionChange.find((p) => p.permission_id === permission.permission_id) === undefined);
+		} else if (permissionChange.length < permissions.length) {
+			//removed permissions
+			const removedPermissions = permissions.filter(
+				permission =>
+					permissionChange.find(
+						p => p.permission_id === permission.permission_id,
+					) === undefined,
+			);
 			if (removedPermissions.length > 1) {
-				removedPermissions.forEach(async (permission) => {
+				removedPermissions.forEach(async permission => {
 					await deleteRolePermission(permission);
 				});
 			} else {
 				return await deleteRolePermission(removedPermissions[0]);
 			}
-		} else { //no changes
+		} else {
+			//no changes
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('No changes made');
@@ -155,6 +189,6 @@ export const useRoleInfoMutation = () => {
 		success,
 		handleSubmit,
 		handleChange,
-		handleChangeSelect
+		handleChangeSelect,
 	};
 };
