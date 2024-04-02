@@ -67,14 +67,20 @@ export function DataTable<TData, TValue>({
 		},
 	});
 
-	const label = (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) + " " + 
-		(filterWhat.split('_')[1] === 'no' ? 'number' : (filterWhat.split('_')[1] ? filterWhat.split('_')[1] : ''));
+	const label =
+		(filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) +
+		' ' +
+		(filterWhat.split('_')[1] === 'no'
+			? 'number'
+			: filterWhat.split('_')[1]
+				? filterWhat.split('_')[1]
+				: '');
 
 	const placeholderLabel = `Filter ${label.trim()}...`;
 
 	return (
-		<>
-			<div className="flex justify-between p-4">
+		<div className="flex flex-col">
+			<div className="flex flex-initial justify-between p-4">
 				<div className="w-1/2">
 					<Inputbox
 						placeholder={placeholderLabel}
@@ -101,14 +107,14 @@ export function DataTable<TData, TValue>({
 							fill={'green'}
 							onClick={openModal}
 							disabled={isLoading}
-							className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center"
+							className="flex h-8 flex-row items-center disabled:cursor-not-allowed disabled:opacity-40"
 						>
 							<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
 						</Button>
 					</div>
 				)}
 			</div>
-			<div className="rounded-md border">
+			<div className="w-full flex-1 border-y">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map(headerGroup => (
@@ -177,10 +183,12 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex flex-row justify-between space-x-2 py-4">
-				<div className="p-4 font-semibold">
+			<div className="flex flex-initial flex-row items-center justify-between space-x-2">
+				<div className="p-4 text-sm font-medium text-slate-700">
 					{table.getFilteredSelectedRowModel().rows?.length} of{' '}
-					{table.getFilteredRowModel().rows?.length} row(s) selected.
+					{table.getFilteredRowModel().rows?.length}{' '}
+					{table.getFilteredRowModel().rows?.length === 1 ? 'row' : 'rows'}{' '}
+					selected
 				</div>
 
 				<div>
@@ -191,6 +199,6 @@ export function DataTable<TData, TValue>({
 					/>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }

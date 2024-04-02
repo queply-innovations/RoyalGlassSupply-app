@@ -30,9 +30,9 @@ export const UserInfo = () => {
 		<>
 			<MainLayout title="User Information">
 				<UserInfoProvider>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<UserInfoTable openModal={openUserInfoModal}/>
+							<UserInfoTable openModal={openUserInfoModal} />
 						</div>
 					</div>
 					<ModalTest
@@ -41,16 +41,14 @@ export const UserInfo = () => {
 						title={
 							modalAction === 'edit'
 								? 'Edit User'
-								: modalAction === 'add' 
+								: modalAction === 'add'
 									? 'Add User'
 									: 'Edit User Role Permissions'
 						}
 					>
 						<>
 							{modalAction === 'add' && (
-								<UserInfoForm
-									onClose={closeModal}
-								/>
+								<UserInfoForm onClose={closeModal} />
 							)}
 							{modalAction === 'edit' && (
 								<UserInfoEdit onClose={closeModal} />

@@ -42,7 +42,7 @@ export const InventoryItemsPage = () => {
 		<>
 			<MainLayout title={`Inventory items`}>
 				<InventoryProdsProvider>
-					<div className="flex h-full flex-auto flex-col gap-5 rounded-lg border bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
 							<Button
 								onClick={() => handleNavigateBack()}
