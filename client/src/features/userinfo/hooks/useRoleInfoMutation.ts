@@ -96,7 +96,7 @@ export const useRoleInfoMutation = () => {
 					await addRolePermission(permission);
 				});
 			} else {
-				return await addRolePermission(addedPermissions);
+				return await addRolePermission(addedPermissions[0]);
 			}
 		} else if (permissionChange.length < permissions.length) { //removed permissions
 			const removedPermissions = permissions.filter((permission) => permissionChange.find((p) => p.permission_id === permission.permission_id) === undefined);
