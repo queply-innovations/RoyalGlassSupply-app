@@ -152,7 +152,7 @@ export const useRoleInfoMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['role-permission'] });
+			await queryClient.invalidateQueries({ queryKey: ['all-permissions'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('Role permissions have been updated');

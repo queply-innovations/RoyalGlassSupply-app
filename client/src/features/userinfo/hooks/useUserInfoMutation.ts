@@ -78,7 +78,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['user'] });
+			await queryClient.invalidateQueries({ queryKey: ['users'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('User info has been updated');

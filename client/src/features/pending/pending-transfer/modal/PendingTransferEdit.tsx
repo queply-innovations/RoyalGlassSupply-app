@@ -46,16 +46,16 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 		<Select
 			onValueChange={value => handleChangeSelect('approval_status', value)}
 			name="approval_status"
-			value={transfer.approval_status || ''}
+			value={selectedTransfer.approval_status || ''}
 		>
 			<SelectTrigger
 				name="approval_status"
 				className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 			>
 				<SelectValue placeholder={
-					transfer.approval_status ?
-					transfer.approval_status.charAt(0).toUpperCase() +
-					transfer.approval_status.slice(1) 
+					selectedTransfer.approval_status ?
+					selectedTransfer.approval_status.charAt(0).toUpperCase() +
+					selectedTransfer.approval_status.slice(1) 
 					: 'Choose status...'
 				} />
 				<SelectContent className="bg-white font-medium">
@@ -82,7 +82,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 			</SelectTrigger>
 		</Select>
  
-		{transferProducts.filter((prod) => prod.transfer_id === transfer.id).length === 0 && (
+		{transferProducts.filter((prod) => prod.transfer_id === selectedTransfer.id).length === 0 && (
 			<div className="flex align-center group">
 				<AlertTriangle size={30} strokeWidth={2} className="self-center text-yellow-600" />
 				<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 transition-opacity opacity-0 group-hover:opacity-100">
@@ -114,12 +114,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{warehouses[transfer.source - 1]?.name}
+							{warehouses[selectedTransfer.source.id - 1]?.name}
 							<span className="truncate text-xs text-slate-700/60">
 								{' '}•{' '} 
-									{warehouses[transfer.source - 1]?.code} 
+									{warehouses[selectedTransfer.source.id - 1]?.code} 
 									{' '}•{' '} 
-									{warehouses[transfer.source - 1]?.location}
+									{warehouses[selectedTransfer.source.id - 1]?.location}
 							</span>
 						</>
 					) }
@@ -141,7 +141,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={key}
 							value={warehouse.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${warehouse.id === transfer.source && 'selected'}`}
+								${warehouse.id === selectedTransfer.source.id && 'selected'}`}
 						>
 							{warehouse.name}
 
@@ -178,12 +178,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{warehouses[transfer.destination - 1]?.name}
+							{warehouses[selectedTransfer.destination.id - 1]?.name}
 							<span className="truncate text-xs text-slate-700/60">
 								{' '}•{' '} 
-									{warehouses[transfer.destination - 1]?.code} 
+									{warehouses[selectedTransfer.destination.id - 1]?.code} 
 									{' '}•{' '} 
-									{warehouses[transfer.destination - 1]?.location}
+									{warehouses[selectedTransfer.destination.id - 1]?.location}
 							</span>
 						</>
 					) }
@@ -205,7 +205,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={warehouse.code}
 							value={warehouse.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${warehouse.id === transfer.destination && 'selected'}`}
+								${warehouse.id === selectedTransfer.destination.id && 'selected'}`}
 						>
 							{warehouse.name}
 
@@ -226,16 +226,16 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 		<Select
 			onValueChange={value => handleChangeSelect('transfer_status', value)}
 			name="transfer_status"
-			value={transfer.transfer_status || ''}
+			value={selectedTransfer.transfer_status || ''}
 		>
 			<SelectTrigger
 				name="transfer_status"
 				className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 			>
 				<SelectValue placeholder={
-					transfer.transfer_status ?
-					transfer.transfer_status.charAt(0).toUpperCase() +
-					transfer.transfer_status.slice(1) 
+					selectedTransfer.transfer_status ?
+					selectedTransfer.transfer_status.charAt(0).toUpperCase() +
+					selectedTransfer.transfer_status.slice(1) 
 					: 'Choose status...'
 				} />
 				<SelectContent className="bg-white font-medium">
@@ -283,9 +283,9 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{transfer.received_by ? 
-								users[Number(transfer.received_by) - 1].firstname + ' ' 
-								+ users[Number(transfer.received_by) - 1].lastname
+							{selectedTransfer.received_by ? 
+								users[Number(selectedTransfer.received_by) - 1].firstname + ' ' 
+								+ users[Number(selectedTransfer.received_by) - 1].lastname
 								: 'Choose user...'
 							}
 						</>
@@ -308,7 +308,9 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={key}
 							value={user.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${user.id === transfer.received_by && 'selected'}`}
+								${selectedTransfer.received_by && 
+									user.id === selectedTransfer.received_by.id && 
+									'selected'}`}
 						>
 							{user.firstname + ' ' + user.lastname} 
 						</SelectItem>
@@ -329,6 +331,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 					e.preventDefault();
 				}}
 			>
+				{/* { transfer ? console.log("with") : console.log("without") } */}
 				<div className="flex max-w-2xl flex-col gap-4">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="col-span-4 flex flex-col justify-center gap-1">
@@ -391,12 +394,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 									)
 								}
 								{auth.rolePermissions.some((role) => role.permission_id === 22) ? (
-										transfer.approval_status?.toLowerCase() === 'pending' &&
+										selectedTransfer.approval_status?.toLowerCase() === 'pending' &&
 										approvalStatusChange
 									) : (
 										<>
-											{transfer.approval_status.charAt(0).toUpperCase() + 
-												transfer.approval_status.slice(1)}
+											{selectedTransfer.approval_status.charAt(0).toUpperCase() + 
+												selectedTransfer.approval_status.slice(1)}
 											<Clock
 												size={20}
 												strokeWidth={2}

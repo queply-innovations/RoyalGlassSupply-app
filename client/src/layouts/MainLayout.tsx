@@ -80,7 +80,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 									paddingTop: `100%`,
 								}}
 							>
-								<blockquote className="ml-12 items-end space-y-4 pt-28 text-white">
+								<blockquote className="ml-12 items-end space-y-4 text-white">
 									<p
 										className="text-6xl font-bold"
 										style={{ zIndex: 2 }}

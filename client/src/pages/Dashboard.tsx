@@ -61,19 +61,19 @@ export const Dashboard = () => {
 							</InfoCard>
 							<InfoCard background={'default'}>
 								<span className="text-sm font-bold uppercase text-white">
-									Gross Income
+									Net Profit
 								</span>
 								<span className="text-2xl font-bold text-white">999</span>
 							</InfoCard>
 							<InfoCard background={'default'}>
 								<span className="text-sm font-bold uppercase text-white">
-									Gross Income
+									Sales Return
 								</span>
 								<span className="text-2xl font-bold text-white">999</span>
 							</InfoCard>
 							<InfoCard background={'default'}>
 								<span className="text-sm font-bold uppercase text-white">
-									Gross Income
+									Total Income
 								</span>
 								<span className="text-2xl font-bold text-white">999</span>
 							</InfoCard>
