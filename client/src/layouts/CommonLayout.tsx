@@ -10,17 +10,17 @@ interface CommonLayoutProps {
 export const CommonLayout = ({ children, title }: CommonLayoutProps) => {
 	const networkState = useNetwork();
 	const { online } = networkState;
-	
+
 	return (
 		<>
-			<div className="flex h-screen flex-col gap-y-4">
-				<div className=" flex flex-row justify-between">
-					<h1 className="text-primary-dark-gray text-3xl font-bold self-center">
+			<div className="flex max-h-[calc(100%-40px)] flex-1 flex-col gap-y-4">
+				<div className="flex flex-initial flex-row justify-between">
+					<h1 className="text-primary-dark-gray self-center text-3xl font-bold">
 						{title}
 					</h1>
 					<Navbar />
 				</div>
-				{children}
+				<div className="max-h-[calc(100%-80px)] flex-auto">{children}</div>
 			</div>
 		</>
 	);

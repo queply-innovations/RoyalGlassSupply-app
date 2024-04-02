@@ -8,8 +8,11 @@ import { useState } from 'react';
 export const Transaction = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
-	
-	const openTransactionModal = (transactions: ITransaction, action: string) => {
+
+	const openTransactionModal = (
+		transactions: ITransaction,
+		action: string,
+	) => {
 		openModal();
 		setModalAction(action);
 		console.log('action', action);
@@ -19,7 +22,7 @@ export const Transaction = () => {
 		<>
 			<MainLayout title="Transaction">
 				<TransactionProvider>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<TransactionTable openModal={openTransactionModal} />
 						</div>
@@ -28,4 +31,4 @@ export const Transaction = () => {
 			</MainLayout>
 		</>
 	);
-}
+};

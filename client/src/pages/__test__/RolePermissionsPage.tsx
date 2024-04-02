@@ -1,33 +1,19 @@
-import { Inputbox } from '@/components/Inputbox';
-import RolePermissionsForm from '@/features/userinfo/components/RolePermissionsForm';
+import RolePermissionsForm from '@/features/userinfo/components/RolePermissionsForm2';
 import { UserInfoProvider } from '@/features/userinfo/context/UserInfoContext';
-import LayoutWrapper from '@/layouts/Layout';
+import { MainLayout } from '@/layouts/MainLayout';
 
 export const RolePermissions = () => {
 	return (
 		<>
-			<LayoutWrapper>
+			<MainLayout title="Role Permissions">
 				<UserInfoProvider>
-					<div className="flex h-full flex-col gap-y-4">
-						<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
-							Role Permissions
-						</h1>
-						<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-							<div className="flex flex-row justify-between">
-								<Inputbox
-									placeholder="Search"
-									variant={'searchbar'}
-									buttonIcon={'outside'}
-									className="w-1/2"
-								/>
-							</div>
-							<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-								<RolePermissionsForm />
-							</div>
+					<div className="flex h-full max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+							<RolePermissionsForm />
 						</div>
 					</div>
 				</UserInfoProvider>
-			</LayoutWrapper>
+			</MainLayout>
 		</>
 	);
 };

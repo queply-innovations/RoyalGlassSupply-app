@@ -71,8 +71,14 @@ export function DataTable<TData, TValue>({
 		},
 	});
 
-	const label = (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) + " " + 
-		(filterWhat.split('_')[1] === 'no' ? 'number' : (filterWhat.split('_')[1] ? filterWhat.split('_')[1] : ''));
+	const label =
+		(filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) +
+		' ' +
+		(filterWhat.split('_')[1] === 'no'
+			? 'number'
+			: filterWhat.split('_')[1]
+				? filterWhat.split('_')[1]
+				: '');
 
 	const placeholderLabel = `Filter ${label.trim()}...`;
 

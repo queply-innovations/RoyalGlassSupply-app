@@ -13,7 +13,7 @@ import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
 export const Transfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
-	
+
 	const openTransferModal = (transfers: ITransfer, action: string) => {
 		openModal();
 		setModalAction(action);
@@ -24,7 +24,7 @@ export const Transfer = () => {
 		<>
 			<MainLayout title="Transfer">
 				<TransferProvider>
-					<div className="flex flex-auto flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
 						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
 							<TransferTable openModal={openTransferModal} />
 						</div>
@@ -64,4 +64,4 @@ export const Transfer = () => {
 			</MainLayout>
 		</>
 	);
-}
+};

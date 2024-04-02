@@ -83,7 +83,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'inventory',
+				id: 'inventories',
 				permissionId: [18],
 				path: '/inventory',
 				itemProps: {
@@ -92,7 +92,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				},
 			},
 			{
-				id: 'transfer',
+				id: 'transfers',
 				permissionId: [12],
 				path: '/transfer',
 				itemProps: {
@@ -115,10 +115,10 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 		groupName: 'Management',
 		items: [
 			{
-				id: 'user',
+				id: 'users',
 				permissionId: [9],
 				itemProps: {
-					title: 'User',
+					title: 'Users',
 					icon: <CircleUserRound size={20} strokeWidth={1.75} />,
 				},
 				children: [

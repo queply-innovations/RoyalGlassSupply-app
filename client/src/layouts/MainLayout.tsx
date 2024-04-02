@@ -24,7 +24,6 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 	const { online } = networkState;
 
 	useEffect(() => {
-
 		toast.dismiss();
 		toast.loading('Checking internet connection....', { autoClose: 5000 });
 		setTimeout(() => {
@@ -32,56 +31,70 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 			if (online) {
 				toast.success('You are currently online!', { autoClose: 5000 });
 			} else {
-				toast.error('You are currently offline.', { autoClose: false, closeButton: false });
+				toast.error('You are currently offline.', {
+					autoClose: false,
+					closeButton: false,
+				});
 			}
 		}, 5500);
-		
 	}, [online]);
 
 	return (
 		<>
-			{ !auth.auth.authenticated && (<ToastContainer position="bottom-right" className="text-2xl" />) }
+			{!auth.auth.authenticated && (
+				<ToastContainer position="bottom-right" className="text-2xl" />
+			)}
 			{auth.auth.authenticated ? ( //checks if logged in
-				<div className="flex h-screen w-screen overflow-hidden">
+				<div className="flex h-screen w-screen">
 					<Sidebar />
-					<div className="flex h-screen max-h-screen flex-auto flex-col p-5">
-						<CommonLayout title={title!}>
-							{children}
-							<div className="flex flex-row justify-end text-sm pt-4">
-								<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
-									<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
-									</div>
-								</div>
-								{online ? "You're currently online" : "You're currently offline"}
+					<div className="flex max-h-full flex-auto flex-col overflow-hidden p-5">
+						<CommonLayout title={title!}>{children}</CommonLayout>
+						<div className="mt-auto flex flex-shrink-0 flex-grow-0 flex-row items-center justify-end gap-3 pt-4 text-base text-slate-700">
+							<div
+								className={`h-3 w-3 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'}`}
+							>
+								<div
+									className={`h-3 w-3 rounded-full ${online ? 'animate-ping bg-green-500' : 'bg-gray-500'}`}
+								></div>
 							</div>
-						</CommonLayout>
+							{online
+								? "You're currently online"
+								: "You're currently offline"}
+						</div>
 					</div>
 				</div>
 			) : (
 				// if not logged in, return loginlayout
-				<div className="flex h-screen w-screen items-center justify-center align-center">
-					<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md max-h-[80vh]">
-						<div className="flex flex-row justify-start">
-							{children}
-						</div>
-						<div className="relative h-max flex flex-col row-span-6 justify-end">
-								<div className="rounded-lg" style={{
+				<div className="flex h-screen w-screen items-center justify-center">
+					<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md">
+						<div className="flex flex-row justify-start">{children}</div>
+						<div className="relative row-span-6 flex h-max flex-col justify-end">
+							<div
+								className="rounded-lg"
+								style={{
 									backgroundImage: `url(${Sidebg})`,
 									backgroundSize: `cover`,
 									backgroundRepeat: `no-repeat`,
 									width: `680px`,
 									maxHeight: `80vh`,
 									paddingTop: `100%`,
-								}}>
-									<blockquote className="space-y-4 ml-12 mb-4 items-end text-white">
-										<p className="text-6xl font-bold" style={{zIndex: 2}}>
-											Welcome back!
-										</p>
-										<p className="text-2xl font-medium" style={{zIndex: 2}}>
-											The faster you log in, the faster we get to work
-										</p> 
-									</blockquote>
-								</div>
+								}}
+							>
+								<blockquote className="ml-12 items-end space-y-4 pt-28 text-white">
+									<p
+										className="text-6xl font-bold"
+										style={{ zIndex: 2 }}
+									>
+										Welcome back!
+									</p>
+									<p
+										className="text-2xl font-medium"
+										style={{ zIndex: 2 }}
+									>
+										The faster you log in, the faster we get to work
+									</p>
+								</blockquote>
+							</div>
 						</div>
 					</div>
 				</div>
