@@ -35,7 +35,8 @@ class InventoryProductResource extends JsonResource
             'transferred_stocks_count' => $transferred_stocks_count,
             'sold_count' => $sold_count,
             'miscellaneous_count' => $miscellaneous_count,
-            'remaining_stocks_count' => $remaining_stocks
+            'remaining_stocks_count' => $remaining_stocks,
+            'status' => $this->status
         ];
     }
 }
