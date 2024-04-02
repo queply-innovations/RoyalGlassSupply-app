@@ -103,12 +103,12 @@ export function DataTable<TData, TValue>({
 							no openModal prop passed, this would not render.
 							Useful for view-only table. */}
 					{openModal && (
-						<div className="flex flex-row-reverse gap-3">
+						<div className="flex flex-row-reverse">
 							<Button
 								fill={'green'}
 								onClick={openModal}
 								disabled={isLoading}
-								className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center"
+								className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center pl-2 pr-3"
 							>
 								<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
 							</Button>

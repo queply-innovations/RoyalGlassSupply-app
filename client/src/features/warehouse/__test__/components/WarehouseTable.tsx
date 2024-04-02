@@ -138,7 +138,7 @@ export const WarehouseTable = ({ openModal }: WarehouseTableProps) => {
 				filterWhat={'location'}
 				dataType={''}
 				isLoading={isFetching}
-				openModal={handleAddWarehouse}
+				openModal={undefined}
 			/>
 		</>
 	);

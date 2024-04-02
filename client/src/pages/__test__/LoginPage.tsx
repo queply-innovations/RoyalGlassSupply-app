@@ -7,7 +7,7 @@ export const Login = () => {
 
 	return (
 		<MainLayout>
-			<div className="mx-auto flex w-full flex-col justify-center space-y-6">
+			<div className="mx-auto flex w-full flex-col justify-center space-y-6 max-h-[80vh]">
 				<div className="flex flex-col w-[680px] space-y-2 text-center">
 					<img src={Logo} alt="RGS Logo" className="w-24 h-24 mx-auto" />
 				</div>

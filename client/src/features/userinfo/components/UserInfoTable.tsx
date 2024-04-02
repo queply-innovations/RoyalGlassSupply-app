@@ -133,13 +133,13 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 			),
 		},
 
-		{
-			accessorKey: 'contact_no',
-			header:	() => <div className="text-center">CONTACT</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.contact_no}</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'contact_no',
+		// 	header:	() => <div className="text-center">CONTACT #</div>,
+		// 	cell: ({ row }) => (
+		// 		<div className="text-center">{row.original.contact_no}</div>
+		// 	),
+		// },
 
 		{
 			accessorKey: 'email',

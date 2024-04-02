@@ -46,9 +46,9 @@ const LayoutWrapper: FC<LayoutProps> = ({
 					{...props}
 				>
 					{children}
-					<div className="flex flex-row justify-end text-xl pt-4">
-						<div className={`w-7 h-7 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
-							<div className={`w-7 h-7 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
+					<div className="flex flex-row justify-end text-sm pt-4">
+						<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
+							<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
 							</div>
 						</div>
 						{online ? "You're currently online" : "You're currently offline"}

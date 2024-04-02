@@ -47,9 +47,9 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 					<div className="flex h-screen max-h-screen flex-auto flex-col p-5">
 						<CommonLayout title={title!}>
 							{children}
-							<div className="flex flex-row justify-end text-lg pt-4">
-								<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
-									<div className={`w-6 h-6 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
+							<div className="flex flex-row justify-end text-sm pt-4">
+								<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'} mr-2`}>
+									<div className={`w-4 h-4 rounded-full ${online ? 'bg-green-500 animate-ping' : 'bg-gray-500'} mr-2`}>
 									</div>
 								</div>
 								{online ? "You're currently online" : "You're currently offline"}
@@ -59,8 +59,8 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 				</div>
 			) : (
 				// if not logged in, return loginlayout
-				<div className="flex h-screen w-screen items-center justify-center">
-					<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md">
+				<div className="flex h-screen w-screen items-center justify-center align-center">
+					<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md max-h-[80vh]">
 						<div className="flex flex-row justify-start">
 							{children}
 						</div>
@@ -70,10 +70,10 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 									backgroundSize: `cover`,
 									backgroundRepeat: `no-repeat`,
 									width: `680px`,
-									height: `960px`,
+									maxHeight: `80vh`,
 									paddingTop: `100%`,
 								}}>
-									<blockquote className="space-y-4 ml-12 pt-28 items-end text-white">
+									<blockquote className="space-y-4 ml-12 mb-4 items-end text-white">
 										<p className="text-6xl font-bold" style={{zIndex: 2}}>
 											Welcome back!
 										</p>
