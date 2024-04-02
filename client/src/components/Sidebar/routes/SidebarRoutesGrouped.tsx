@@ -11,6 +11,8 @@ import {
 	Warehouse,
 	Truck,
 	Boxes,
+	Laptop2,
+	Calculator,
 } from 'lucide-react';
 
 export type Role =
@@ -116,6 +118,15 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					icon: <Undo2 size={20} strokeWidth={1.75} />,
 				},
 			},
+			{
+				id: 'pos',
+				permissionId: [25],
+				path: '/pos',
+				itemProps: {
+					title: 'POS',
+					icon: <Laptop2 size={20} strokeWidth={1.75} />,
+				},
+			},
 		],
 	},
 	{
@@ -162,6 +173,15 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				itemProps: {
 					title: 'Finances',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
+				},
+			},
+			{
+				id: 'invoices',
+				permissionId: [10], //TODO EDIT PERMISSION ID
+				path: '/invoice',
+				itemProps: {
+					title: 'Invoices',
+					icon: <Calculator size={20} strokeWidth={1.75} />,
 				},
 			},
 			{
