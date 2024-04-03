@@ -6,7 +6,7 @@ import {
 	CommandList,
 } from '@/components/ui/command';
 import { useCustomer } from '../context/CustomerContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserRoundPlus } from 'lucide-react';
 import { useModal } from '@/utils/Modal';
@@ -27,6 +27,12 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 	// Command Search handlers
 	const [search, setSearch] = useState('');
 	const { invoice, setInvoice } = useInvoice();
+
+	useEffect(() => {
+		if (selectedCustomer) {
+			setSearch('');
+		}
+	}, [selectedCustomer]);
 
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
