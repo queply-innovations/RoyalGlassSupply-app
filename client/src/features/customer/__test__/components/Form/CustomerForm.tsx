@@ -2,7 +2,6 @@ import { Input } from '@/components/ui/input';
 import { MapPinned, Phone } from 'lucide-react';
 import { useCustomerMutation } from '../../hooks/useCustomerMutation';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
 import { Label } from '@/components/ui/label';
 import { UseModalProps } from '@/utils/Modal';
