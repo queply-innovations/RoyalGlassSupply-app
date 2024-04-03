@@ -71,7 +71,13 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 										<CommandItem
 											className=""
 											key={index}
-											value={customer.firstname}
+											value={
+												customer.id +
+												'' +
+												customer.firstname +
+												' ' +
+												customer.lastname
+											}
 											onSelect={() => {
 												setSelectedCustomer(customer);
 												setSearch('');
