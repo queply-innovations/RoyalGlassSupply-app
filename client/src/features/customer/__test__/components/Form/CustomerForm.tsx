@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
 import { Label } from '@/components/ui/label';
 import { UseModalProps } from '@/utils/Modal';
+import { useCustomer } from '../../context/CustomerContext';
 
 interface CustomerFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -18,6 +19,7 @@ export const CustomerForm = ({ onClose }: CustomerFormProps) => {
 		handleChange,
 		handleSubmit,
 	} = useCustomerMutation();
+	const { setSelectedCustomer } = useCustomer();
 
 	useEffect(() => {
 		setFormValue(prev => ({
@@ -37,7 +39,10 @@ export const CustomerForm = ({ onClose }: CustomerFormProps) => {
 					e.preventDefault();
 					const response = await handleSubmit(FormValue);
 					response?.status === 201 // Status 201 means resource successfully created
-						? (setIsSubmitting(!isSubmitting), onClose())
+						? (setIsSubmitting(!isSubmitting),
+							setSelectedCustomer(response.data.data),
+							onClose(),
+							console.log(response.data))
 						: (setIsSubmitting(!isSubmitting),
 							setError('Failed to add inventory'));
 				}}
