@@ -1,22 +1,56 @@
 import { UseModalProps } from '@/utils/Modal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useProductQuery } from '../../hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddProdPriceProdsTab } from '../forms/AddProdPriceProdsTab';
 import { AddProdPriceListingsTab } from '../forms/AddProdPriceListingsTab';
-
-import { Product } from '../../types';
+import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
+import { Inventory, InventoryProduct } from '@/features/inventory/types';
+import {
+	fetchInventoryByWarehouseId,
+	fetchInventoryProductById,
+} from '@/features/inventory/api/Inventory';
+import { Warehouse } from '@/features/warehouse/__test__/types';
 
 interface AddProductPriceProps {
 	onClose: UseModalProps['closeModal'];
 }
 
 export const AddProductPrice = ({ onClose }: AddProductPriceProps) => {
-	const { data, isLoading } = useProductQuery();
+	// WAREHOUSES - State and query
+	const { warehouses } = useWarehouseQuery();
+	const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse>();
+
+	// INVENTORIES - State and query
+	// Dependent on selectedWarehouse
+	const [inventories, setInventories] = useState<Inventory[]>([]);
+	const [selectedInventory, setSelectedInventory] = useState<Inventory>();
+	useEffect(() => {
+		setInventories([]);
+		if (selectedWarehouse) {
+			fetchInventoryByWarehouseId(selectedWarehouse.id).then(data => {
+				setInventories(data);
+			});
+		}
+	}, [selectedWarehouse]);
+
+	// INVENTORY PRODUCTS - State and query
+	// Dependent on selectedInventory
+	const [inventoryProducts, setInventoryProducts] = useState<
+		InventoryProduct[]
+	>([]);
+	const [selectedInventoryProduct, setSelectedInventoryProduct] =
+		useState<InventoryProduct>();
+	useEffect(() => {
+		setInventoryProducts([]);
+		if (selectedInventory) {
+			fetchInventoryProductById(selectedInventory.id).then(data => {
+				setInventoryProducts(data);
+			});
+		}
+	}, [selectedInventory]);
+
+	// TABS
 	const [openedTab, setOpenedTab] = useState('product');
-	const [selectedProduct, setSelectedProduct] = useState<Product>(
-		{} as Product,
-	);
 
 	return (
 		<>
@@ -34,7 +68,7 @@ export const AddProductPrice = ({ onClose }: AddProductPriceProps) => {
 						Product
 					</TabsTrigger>
 					<TabsTrigger
-						disabled={selectedProduct.name ? false : true}
+						disabled={selectedInventoryProduct ? false : true}
 						value="listings"
 						className="rounded-md py-1 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
@@ -42,23 +76,32 @@ export const AddProductPrice = ({ onClose }: AddProductPriceProps) => {
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="product">
-					{/* Products tab content */}
+					{/* Inventory products tab content */}
 					<AddProdPriceProdsTab
-						products={data}
-						selectedProduct={selectedProduct}
-						setSelectedProduct={setSelectedProduct}
-						isLoading={isLoading}
+						warehouses={warehouses}
+						selectedWarehouse={selectedWarehouse}
+						setSelectedWarehouse={setSelectedWarehouse}
+						inventories={inventories}
+						selectedInventory={selectedInventory}
+						setSelectedInventory={setSelectedInventory}
+						inventoryProducts={inventoryProducts}
+						selectedInventoryProduct={selectedInventoryProduct}
+						setSelectedInventoryProduct={setSelectedInventoryProduct}
 						setOpenedTab={setOpenedTab}
 						onClose={onClose}
 					/>
 				</TabsContent>
 				<TabsContent value="listings">
 					{/* Listing tab content */}
-					<AddProdPriceListingsTab
-						product={selectedProduct}
-						setOpenedTab={setOpenedTab}
-						onClose={onClose}
-					/>
+					{selectedInventoryProduct && (
+						<AddProdPriceListingsTab
+							selectedWarehouse={selectedWarehouse || ({} as Warehouse)}
+							selectedInventory={selectedInventory || ({} as Inventory)}
+							selectedInventoryProduct={selectedInventoryProduct}
+							setOpenedTab={setOpenedTab}
+							onClose={onClose}
+						/>
+					)}
 				</TabsContent>
 			</Tabs>
 		</>

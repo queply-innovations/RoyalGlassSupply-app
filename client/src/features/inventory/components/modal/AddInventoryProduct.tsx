@@ -104,7 +104,8 @@ export const AddInventoryProducts = ({
 					</Button>
 				</div>
 
-				<div className="relative min-h-[490px] min-w-[650px] overflow-x-clip">
+				<div className="relative min-h-[550px] min-w-[650px] overflow-x-clip">
+					{/* Keep min-h to even integer to avoid font blurring */}
 					<AnimatePresence initial={false}>
 						{activeTab === 'main' ? (
 							<m.div
@@ -113,7 +114,7 @@ export const AddInventoryProducts = ({
 								initial="hidden"
 								animate="animate"
 								exit="exit"
-								className="absolute h-[490px] w-full"
+								className="absolute h-full w-full overflow-x-auto antialiased"
 							>
 								<AddInventoryProductTable
 									data={inventoryProductsQueue}
@@ -132,7 +133,7 @@ export const AddInventoryProducts = ({
 								initial="hidden"
 								animate="animate"
 								exit="exit"
-								className="absolute max-h-[490px] w-full p-1"
+								className="absolute h-full w-full p-1"
 							>
 								<AddInventoryProductForm
 									// onClose={onClose}

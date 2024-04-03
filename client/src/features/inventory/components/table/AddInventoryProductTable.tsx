@@ -37,7 +37,7 @@ const tableCols = [
 ];
 
 interface AddInventoryProductTableProps {
-	data: (InventoryProductsQueueProps | undefined)[];
+	data: InventoryProductsQueueProps[];
 	products: Product[];
 	suppliers: Supplier[];
 	handleEditItem: (item: InventoryProductsQueueProps) => void;
@@ -211,6 +211,13 @@ export const AddInventoryProductTable = ({
 														)?.name
 													: row?.data.supplier_id}
 											</TableCell>
+											{/* Uncomment code below when status is implemented */}
+											{/* <TableCell
+												className="px-5 py-3 capitalize"
+												key={row?.id + 'status'}
+											>
+												{row?.data.status}
+											</TableCell> */}
 											<TableCell
 												className="px-5 py-3"
 												key={row?.id + 'capital_price'}

@@ -20,6 +20,7 @@ export interface InventoryProduct {
 	inventory_id: number;
 	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
 	supplier_id: { id: number; name: string };
+	// status: 'pending' | 'active' // This is not used in the current implementation
 	capital_price: number;
 	bundles_count: number;
 	bundles_unit: string;
