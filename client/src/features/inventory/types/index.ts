@@ -33,6 +33,7 @@ export interface InventoryProduct {
 	sold_count?: number;
 	miscellaneous_count?: number;
 	remaining_stocks_count?: number;
+	status: number;
 }
 
 export interface InventoryDatabase

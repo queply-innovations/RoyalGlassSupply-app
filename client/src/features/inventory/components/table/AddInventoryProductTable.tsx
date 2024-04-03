@@ -18,7 +18,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import { MoreVertical, PackageMinus, Pencil } from 'lucide-react';
+import {
+	CheckCircle,
+	Clock,
+	MoreVertical,
+	PackageMinus,
+	Pencil,
+} from 'lucide-react';
 import { Button as LegacyButton } from '@/components';
 import { useState } from 'react';
 
@@ -218,6 +224,24 @@ export const AddInventoryProductTable = ({
 											>
 												{row?.data.status}
 											</TableCell> */}
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'status'}
+											>
+												{!!row?.data.status ? (
+													<CheckCircle
+														size={20}
+														strokeWidth={2}
+														className="text-green-600"
+													/>
+												) : (
+													<Clock
+														size={20}
+														strokeWidth={2}
+														className="text-gray-600"
+													/>
+												)}
+											</TableCell>
 											<TableCell
 												className="px-5 py-3"
 												key={row?.id + 'capital_price'}
