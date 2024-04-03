@@ -1,5 +1,5 @@
 import {
-	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
@@ -22,6 +22,8 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 		isLoading,
 		selectedCustomer,
 		setSelectedCustomer,
+		openSearchCustomer,
+		setOpenSearchCustomer,
 	} = useCustomer();
 
 	// Command Search handlers
@@ -32,75 +34,78 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
 		if (selectedCustomer) {
 			setSearch('');
 		}
-	}, [selectedCustomer]);
+	}, [selectedCustomer, openSearchCustomer]);
 
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
 	return (
 		<>
-			<div>
-				<Command className="rounded-lg border p-1 shadow-md">
-					<CommandInput
-						value={search}
-						onValueChange={setSearch}
-						placeholder={
-							isLoading
-								? 'Loading Customers'
-								: selectedCustomer.id
-									? `${selectedCustomer.firstname} ${selectedCustomer.lastname}`
-									: 'Enter Customer Name'
-						}
-					/>
-					<CommandList className="">
-						{!search ? null : (
-							<>
-								<CommandEmpty className="flex flex-col gap-2 py-4 pb-1 text-center text-sm">
-									<span className="font-bold uppercase">
-										Customer Not Found
-									</span>
-									<Button
-										className="flex flex-row gap-4"
-										onClick={openModal}
+			<CommandDialog
+				open={openSearchCustomer}
+				onOpenChange={setOpenSearchCustomer}
+			>
+				<CommandInput
+					value={search}
+					onValueChange={setSearch}
+					placeholder={
+						isLoading
+							? 'Loading Customers'
+							: selectedCustomer.id
+								? `${selectedCustomer.firstname} ${selectedCustomer.lastname}`
+								: 'Enter Customer Name'
+					}
+				/>
+				<CommandList>
+					{!search ? null : (
+						<>
+							<CommandEmpty className="flex flex-col gap-2 py-4 pb-1 text-center text-sm">
+								<span className="font-bold uppercase">
+									Customer Not Found
+								</span>
+								<Button
+									className="flex flex-row gap-4"
+									onClick={() => {
+										openModal();
+										setOpenSearchCustomer(false);
+									}}
+								>
+									<UserRoundPlus color="#fff" />
+									<span className="text-white">Add Customer</span>
+								</Button>
+							</CommandEmpty>
+							{Customers.map((customer, index) => {
+								return (
+									<CommandItem
+										className=""
+										key={index}
+										value={
+											customer.id +
+											'' +
+											customer.firstname +
+											' ' +
+											customer.lastname
+										}
+										onSelect={() => {
+											setSelectedCustomer(customer);
+											setOpenSearchCustomer(false);
+											setSearch('');
+											setInvoice({
+												...invoice,
+												customer_id: customer.id,
+											});
+										}}
 									>
-										<UserRoundPlus color="#fff" />
-										<span className="text-white">Add Customer</span>
-									</Button>
-								</CommandEmpty>
-								{Customers.map((customer, index) => {
-									return (
-										<CommandItem
-											className=""
-											key={index}
-											value={
-												customer.id +
-												'' +
-												customer.firstname +
-												' ' +
-												customer.lastname
-											}
-											onSelect={() => {
-												setSelectedCustomer(customer);
-												setSearch('');
-												setInvoice({
-													...invoice,
-													customer_id: customer.id,
-												});
-											}}
-										>
-											<div className="flex flex-row gap-2">
-												<span className="">
-													{customer.firstname}
-												</span>
-												<span>{customer.lastname}</span>
-											</div>
-										</CommandItem>
-									);
-								})}
-							</>
-						)}
-					</CommandList>
-				</Command>
-			</div>
+										<div className="flex flex-row gap-2">
+											<span>{customer.firstname}</span>
+											<span>{customer.lastname}</span>
+										</div>
+									</CommandItem>
+								);
+							})}
+						</>
+					)}
+				</CommandList>
+			</CommandDialog>
 			<ModalTest isOpen={isOpen} onClose={closeModal} title="Add Customer">
 				<CustomerForm onClose={closeModal} />
 			</ModalTest>
