@@ -36,7 +36,7 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 
 	success && setTimeout(() => {
 		onClose();
-	}, 3000);
+	}, 1000);
 	
 	return (
 		<>

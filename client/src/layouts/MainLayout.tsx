@@ -23,27 +23,8 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 	const networkState = useNetwork();
 	const { online } = networkState;
 
-	useEffect(() => {
-		toast.dismiss();
-		toast.loading('Checking internet connection....', { autoClose: 5000 });
-		setTimeout(() => {
-			toast.dismiss();
-			if (online) {
-				toast.success('You are currently online!', { autoClose: 5000 });
-			} else {
-				toast.error('You are currently offline.', {
-					autoClose: false,
-					closeButton: false,
-				});
-			}
-		}, 5500);
-	}, [online]);
-
 	return (
 		<>
-			{!auth.auth.authenticated && (
-				<ToastContainer position="bottom-right" className="text-2xl" />
-			)}
 			{auth.auth.authenticated ? ( //checks if logged in
 				<div className="flex h-screen w-screen">
 					<Sidebar />

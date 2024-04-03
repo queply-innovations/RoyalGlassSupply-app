@@ -319,7 +319,7 @@ export const TransferEdit = ({ onClose }: TransferDetailsProps) => {
 
 	success && setTimeout(() => {
 		onClose();
-	}, 3000);
+	}, 1000);
 
 	return (
 		<>

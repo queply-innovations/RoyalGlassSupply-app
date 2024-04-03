@@ -91,29 +91,29 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			enableHiding: false,
 		},
 
-		{
-			accessorKey: 'id',
-			sortingFn: "basic",
-			enableSorting: true,
-			header:	({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row bg-transparent text-black items-center"
-						>
-							TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				);
-			},
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.id}</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'id',
+		// 	sortingFn: "basic",
+		// 	enableSorting: true,
+		// 	header:	({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="flex flex-row bg-transparent text-black items-center"
+		// 				>
+		// 					TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+		// 								column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// 	cell: ({ row }) => (
+		// 		<div className="text-center">{row.original.id}</div>
+		// 	),
+		// },
 
 		{
 			accessorKey: 'code',

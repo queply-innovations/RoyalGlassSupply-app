@@ -46,7 +46,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 
 	success && setTimeout(() => {
 		onClose();
-	}, 3000);
+	}, 1000);
 
 	return (
 		<>

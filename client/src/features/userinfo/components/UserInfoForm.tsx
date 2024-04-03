@@ -32,7 +32,7 @@ const UserInfoForm = ({
 
 	success && setTimeout(() => {
 		onClose();
-	}, 3000);
+	}, 1000);
 
 	
 	return (
