@@ -1,19 +1,17 @@
 import { LoginForm } from '@/features/auth';
 import { MainLayout } from '@/layouts/MainLayout';
 import Logo from '/RGS-logo.png';
-import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
-
 	return (
 		<MainLayout>
-			<div className="mx-auto flex w-full flex-col justify-center space-y-6 max-h-[80vh]">
-				<div className="flex flex-col w-[680px] space-y-2 text-center">
-					<img src={Logo} alt="RGS Logo" className="w-24 h-24 mx-auto" />
+			<div className="mx-auto flex w-full flex-col justify-center space-y-10">
+				<div className="flex flex-col space-y-2 text-center">
+					<img src={Logo} alt="RGS Logo" className="mx-auto h-24 w-24" />
 				</div>
 				<LoginForm />
-				<p className="px-8 text-center text-m text-muted-foreground">
-					Contact administration if you have any issues in logging in
+				<p className="text-muted-foreground px-8 text-center text-sm font-medium">
+					Contact administration if you have any issues logging in
 				</p>
 			</div>
 			{/* <LoginForm /> */}
