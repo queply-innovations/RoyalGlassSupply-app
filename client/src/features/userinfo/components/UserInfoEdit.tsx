@@ -146,21 +146,16 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								<SelectContent className="bg-white font-medium text-md">
 									{roles.length > 0 ? (
 										roles.map((role: Roles) => {
-											return (
-												// <option 
-												// 	key={role.id} 
-												// 	value={role.title}
-												// 	>
-												// 	{role.title.charAt(0).toUpperCase() + 
-												// 	role.title.slice(1)}
-												// </option>
-												<SelectItem
-													key={role.id}
-													value={role.title}>
-														{role.title.charAt(0).toUpperCase() + 
-															role.title.slice(1)}
-												</SelectItem>
-											);
+											if (role.title !== 'super_admin'){
+												return (
+													<SelectItem
+														key={role.id}
+														value={role.title}>
+															{role.title.charAt(0).toUpperCase() + 
+																role.title.slice(1)}
+													</SelectItem>
+												);
+											}
 										})
 									) : (
 										<div className="flex h-12 w-full items-center justify-center">
