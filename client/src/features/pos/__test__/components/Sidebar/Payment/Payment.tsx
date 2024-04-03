@@ -7,9 +7,9 @@ export const Payment = () => {
 		<div className="flex flex-col gap-2">
 			<PaymentType />
 			<TotalAmount />
+			<DiscountAmount />
 			<PaidAmount />
 			<ChangeAmount />
-			<DiscountAmount />
 		</div>
 	);
 };
