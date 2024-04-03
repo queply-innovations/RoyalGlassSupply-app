@@ -9,7 +9,7 @@ import { TotalItems } from './TotalItems';
 import { Payment } from './Payment';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 interface SidebarProps { }
@@ -38,7 +38,6 @@ export const Sidebar = ({ }: SidebarProps) => {
 	}
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[350px] flex-col gap-2 p-4">
-			<ToastContainer/>
 			{auth.role === 'admin' ? (
 				<>
 					<Tabs
