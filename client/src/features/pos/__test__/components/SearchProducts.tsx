@@ -18,7 +18,7 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 
 	const { invoiceItemsQueue, setInvoiceItemsQueue } = useInvoice();
 	return (
-		<div className="relative z-20 border pb-10">
+		<div className="relative z-20 pb-10">
 			<div className="absolute box-content flex w-full ">
 				<Command className="rounded-lg border p-1 shadow-md">
 					<CommandInput
@@ -52,7 +52,6 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 															invoiceItem.product_price_id ===
 															item.id,
 													);
-												console.log(selectedInvoiceItemIndex);
 												if (selectedInvoiceItemIndex !== -1) {
 													const updatedSelectedProducts = [
 														...invoiceItemsQueue,
@@ -85,23 +84,6 @@ export const SearchProducts = ({}: SearchProductsProps) => {
 														},
 													]);
 												}
-												// if (selectedInvoiceItem !== -1) {
-												// 	// If product already exists, update quantity
-												// 	const updatedSelectedProducts = [
-												// 		...invoiceItemsQueue,
-												// 	];
-												// 	updatedSelectedProducts[
-												// 		selectedInvoiceItem
-												// 	].quantity++;
-												// 	setInvoiceItemsQueue(
-												// 		updatedSelectedProducts,
-												// 	);
-												// } else {
-												// 	// If product doesn't exist, add it
-												// 	setInvoiceItemsQueue([
-												// 		...invoiceItemsQueue,
-												// 	]);
-												// }
 												setSearch('');
 											}}
 										>
