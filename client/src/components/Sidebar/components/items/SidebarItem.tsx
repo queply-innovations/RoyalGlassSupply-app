@@ -37,6 +37,9 @@ export const SidebarItem = ({
 		}
 	};
 
+	console.log(isItemOpened, item.children, pathname?.includes(item.id.slice(0, -1)));
+	// const isItemSelected = pathname === item.path;
+
 	return (
 		<li
 			className={`w-full divide-y divide-slate-400/20 overflow-clip rounded-md font-medium ${
@@ -108,7 +111,8 @@ export const SidebarItem = ({
 			)}
 			{/* Render submenu if isItemOpened state is true */}
 			<AnimatePresence>
-				{isItemOpened && item.children && (
+				{( (isItemOpened && item.children) ||
+				  (item.children && pathname?.includes(item.id.slice(0, -1))) ) && (
 					<m.ul
 						key={item.id}
 						variants={submenuMotion}

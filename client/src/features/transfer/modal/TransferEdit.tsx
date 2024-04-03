@@ -328,7 +328,7 @@ export const TransferEdit = ({ onClose }: TransferDetailsProps) => {
 					e.preventDefault();
 				}}
 			>
-				<div className="flex max-w-2xl flex-col gap-4">
+				<div className="flex max-w-4xl flex-col gap-4">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 						<div className="col-span-4 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Transfer Code</h3>
