@@ -1,5 +1,13 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Tooltip,
@@ -45,41 +53,30 @@ export const PaymentType = () => {
 						</TabsTrigger>
 					</TabsList>
 				</Tabs>
-				<Tabs
-					id="payment_method"
-					defaultValue="cash"
-					onValueChange={value => {
-						handleChange('payment_method', value);
-					}}
-				>
-					<TabsList className="flex flex-row">
-						<TabsTrigger
-							value="cash"
-							className="data-[state=active]:bg-primary w-full rounded-md
-                                text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
+				{invoice.type === 'payment' && (
+					<>
+						<Select
+							onValueChange={value => {
+								handleChange('payment_method', value);
+							}}
 						>
-							Cash
-						</TabsTrigger>
-						<TabsTrigger
-							value="credit"
-							className="data-[state=active]:bg-primary w-full rounded-md   text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
-						>
-							Credit
-						</TabsTrigger>
-						<TabsTrigger
-							value="debit"
-							className="data-[state=active]:bg-primary w-full rounded-md   text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
-						>
-							Debit
-						</TabsTrigger>
-						<TabsTrigger
-							value="wallet"
-							className="data-[state=active]:bg-primary w-full rounded-md   text-slate-800 hover:bg-slate-200 data-[state=active]:text-white"
-						>
-							Wallet
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
+							<SelectTrigger className="focus:ring-0 focus:ring-offset-0">
+								<SelectValue placeholder="Select a payment method" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectGroup>
+									<SelectItem value="cash">Cash</SelectItem>
+									<SelectItem value="purchase_order">
+										Purchase Order
+									</SelectItem>
+									<SelectItem value="check">Check</SelectItem>
+									<SelectItem value="voucher">Voucher</SelectItem>
+									<SelectItem value="e-wallet">E-Wallet</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					</>
+				)}
 			</div>
 			<TooltipProvider>
 				<Tooltip>
@@ -99,9 +96,10 @@ export const PaymentType = () => {
 									handleChange('reference_no', Number(e.target.value));
 								}}
 								disabled={
-									invoice.payment_method !== 'credit' &&
-									invoice.payment_method !== 'debit' &&
-									invoice.payment_method !== 'wallet'
+									invoice.payment_method !== 'check' &&
+									invoice.payment_method !== 'voucher' &&
+									invoice.payment_method !== 'e-wallet' &&
+									invoice.payment_method !== 'purchase_order'
 								}
 								className="pl-[3rem] text-base font-medium disabled:opacity-100"
 							/>
