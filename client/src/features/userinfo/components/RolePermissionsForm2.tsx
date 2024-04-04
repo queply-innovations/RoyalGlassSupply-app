@@ -62,25 +62,28 @@ const RolePermissionsForm = () => {
 
 	return (
 		<>
-			<div className="mx-auto flex h-full max-h-full w-full max-w-[1200px] flex-row divide-x">
+			<div className="mx-auto flex h-full max-h-full w-full flex-row divide-x">
 				<div className="flex w-60 flex-none flex-col p-2 pt-8">
 					<h3 className="ml-4 pb-1 text-xs font-semibold text-slate-500/80">
 						Roles
 					</h3>
 					<div className="w-full">
 						{roles ? (
-							roles.map((role: Roles) => (
-								<Button
-									key={role.id + role.title}
-									variant={'ghost'}
-									className={`w-full justify-start capitalize text-slate-700 ${roleSelect?.title === role.title && 'bg-slate-300/40'}`}
-									onClick={() =>
-										handleChangeSelect('roles', role.title)
-									}
-								>
-									{role.title.split('_').join(' ')}
-								</Button>
-							))
+							roles.map(
+								(role: Roles) =>
+									role.title !== 'super_admin' && (
+										<Button
+											key={role.id + role.title}
+											variant={'ghost'}
+											className={`w-full justify-start capitalize text-slate-700 ${roleSelect?.title === role.title && 'bg-slate-300/40'}`}
+											onClick={() =>
+												handleChangeSelect('roles', role.title)
+											}
+										>
+											{role.title.split('_').join(' ')}
+										</Button>
+									),
+							)
 						) : (
 							<div className="flex h-16 w-full items-center justify-center text-slate-500">
 								<Loader2
@@ -97,8 +100,8 @@ const RolePermissionsForm = () => {
 					</p>
 					{roleSelect?.title === auth.role && (
 						<p className="ml-4 pt-6 text-xs font-semibold text-red-500/80">
-							You are editing your current role, risking of LOCKING
-							yourself out. Review your changes carefully.
+							You are editing your current role. Review your changes
+							carefully.
 						</p>
 					)}
 					<div className="mt-auto w-full space-y-3">
@@ -132,186 +135,216 @@ const RolePermissionsForm = () => {
 						style={{ '--border': '216 12% 84%' } as React.CSSProperties}
 					>
 						<div
-							className={`flex w-full flex-1 flex-col p-6 pt-8 ${!roleSelect || isSubmitting ? 'pointer-events-none opacity-50' : null}`}
+							className={`mx-auto flex w-full max-w-[700px] flex-1 flex-col gap-8 p-6 pt-8 ${!roleSelect || isSubmitting ? 'pointer-events-none opacity-50' : null}`}
 						>
-							<p className="text-sm font-semibold text-slate-500/80">
-								User Management
-							</p>
-							<div className="w-full pb-12">
-								{userMgmt.length === 0 ? (
-									<div className="flex flex-col items-center">
-										<Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-										/>
-									</div>
-								) : (
-									userMgmt.map(perm => {
-										return (
-											<div
-												key={perm.id}
-												className="flex w-full flex-row items-center justify-between border-b py-6"
-											>
-												<Label
-													htmlFor={perm.title}
-													className="cursor-pointer text-base font-medium capitalize text-slate-700"
+							<div className="space-y-1">
+								<p className="ml-4 text-sm font-semibold text-slate-500/80">
+									User Management
+								</p>
+								<div className="w-full divide-y rounded-lg border">
+									{userMgmt.length === 0 ? (
+										<div className="flex flex-col items-center">
+											<Loader2
+												size={28}
+												strokeWidth={2}
+												className="animate-spin"
+											/>
+										</div>
+									) : (
+										userMgmt.map(perm => {
+											return (
+												<div
+													key={perm.id}
+													className="flex w-full flex-row items-center justify-between p-4"
 												>
-													{perm.title.split('_').join(' ')}
-												</Label>
-												<Switch
-													id={perm.title}
-													name={perm.title}
-													value={perm.id}
-													className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
-													checked={permissionChange.some(perms => {
-														return perms.permission_id === perm.id
-															? true
-															: false;
-													})}
-													// onChange={handleChange}
-													onCheckedChange={checked =>
-														handleChange(checked, perm.id)
-													}
-												/>
-											</div>
-										);
-									})
-								)}
+													<Label
+														htmlFor={perm.title}
+														className={`${
+															!(
+																roleSelect?.title ===
+																	'super_admin' ||
+																roleSelect?.title === 'admin'
+															) && 'cursor-pointer'
+														} text-sm capitalize text-slate-700`}
+													>
+														{perm.title.split('_').join(' ')}
+													</Label>
+													<Switch
+														id={perm.title}
+														name={perm.title}
+														value={perm.id}
+														disabled={
+															roleSelect?.title ===
+																'super_admin' ||
+															roleSelect?.title === 'admin'
+														}
+														className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+														checked={permissionChange.some(
+															perms => {
+																return perms.permission_id ===
+																	perm.id
+																	? true
+																	: false;
+															},
+														)}
+														// onChange={handleChange}
+														onCheckedChange={checked =>
+															handleChange(checked, perm.id)
+														}
+													/>
+												</div>
+											);
+										})
+									)}
+								</div>
 							</div>
-							<p className="text-sm font-semibold text-slate-500/80">
-								Products
-							</p>
-							<div className="w-full pb-12">
-								{prdctMgmt.length === 0 ? (
-									<div className="flex flex-col items-center">
-										<Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-										/>
-									</div>
-								) : (
-									prdctMgmt.map(perm => {
-										return (
-											<div
-												key={perm.id}
-												className="flex w-full flex-row items-center justify-between border-b py-6"
-											>
-												<Label
-													htmlFor={perm.title}
-													className="cursor-pointer text-base font-medium capitalize text-slate-700"
+							<div className="space-y-1">
+								<p className="ml-4 text-sm font-semibold text-slate-500/80">
+									Products
+								</p>
+								<div className="w-full divide-y rounded-lg border">
+									{prdctMgmt.length === 0 ? (
+										<div className="flex flex-col items-center">
+											<Loader2
+												size={28}
+												strokeWidth={2}
+												className="animate-spin"
+											/>
+										</div>
+									) : (
+										prdctMgmt.map(perm => {
+											return (
+												<div
+													key={perm.id}
+													className="flex w-full flex-row items-center justify-between p-4"
 												>
-													{perm.title.split('_').join(' ')}
-												</Label>
-												<Switch
-													id={perm.title}
-													name={perm.title}
-													value={perm.id}
-													className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
-													checked={permissionChange.some(perms => {
-														return perms.permission_id === perm.id
-															? true
-															: false;
-													})}
-													// onChange={handleChange}
-													onCheckedChange={checked =>
-														handleChange(checked, perm.id)
-													}
-												/>
-											</div>
-										);
-									})
-								)}
+													<Label
+														htmlFor={perm.title}
+														className="cursor-pointer text-sm capitalize text-slate-700"
+													>
+														{perm.title.split('_').join(' ')}
+													</Label>
+													<Switch
+														id={perm.title}
+														name={perm.title}
+														value={perm.id}
+														className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+														checked={permissionChange.some(
+															perms => {
+																return perms.permission_id ===
+																	perm.id
+																	? true
+																	: false;
+															},
+														)}
+														onCheckedChange={checked =>
+															handleChange(checked, perm.id)
+														}
+													/>
+												</div>
+											);
+										})
+									)}
+								</div>
 							</div>
-							<p className="text-sm font-semibold text-slate-500/80">
-								Transfers
-							</p>
-							<div className="w-full pb-12">
-								{trnfrMgmt.length === 0 ? (
-									<div className="flex flex-col items-center">
-										<Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-										/>
-									</div>
-								) : (
-									trnfrMgmt.map(perm => {
-										return (
-											<div
-												key={perm.id}
-												className="flex w-full flex-row items-center justify-between border-b py-6"
-											>
-												<Label
-													htmlFor={perm.title}
-													className="cursor-pointer text-base font-medium capitalize text-slate-700"
+							<div className="space-y-1">
+								<p className="ml-4 text-sm font-semibold text-slate-500/80">
+									Transfers
+								</p>
+								<div className="w-full divide-y rounded-lg border">
+									{trnfrMgmt.length === 0 ? (
+										<div className="flex flex-col items-center">
+											<Loader2
+												size={28}
+												strokeWidth={2}
+												className="animate-spin"
+											/>
+										</div>
+									) : (
+										trnfrMgmt.map(perm => {
+											return (
+												<div
+													key={perm.id}
+													className="flex w-full flex-row items-center justify-between p-4"
 												>
-													{perm.title.split('_').join(' ')}
-												</Label>
-												<Switch
-													id={perm.title}
-													name={perm.title}
-													value={perm.id}
-													className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
-													checked={permissionChange.some(perms => {
-														return perms.permission_id === perm.id
-															? true
-															: false;
-													})}
-													// onChange={handleChange}
-													onCheckedChange={checked =>
-														handleChange(checked, perm.id)
-													}
-												/>
-											</div>
-										);
-									})
-								)}
+													<Label
+														htmlFor={perm.title}
+														className="cursor-pointer text-sm capitalize text-slate-700"
+													>
+														{perm.title.split('_').join(' ')}
+													</Label>
+													<Switch
+														id={perm.title}
+														name={perm.title}
+														value={perm.id}
+														className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+														checked={permissionChange.some(
+															perms => {
+																return perms.permission_id ===
+																	perm.id
+																	? true
+																	: false;
+															},
+														)}
+														// onChange={handleChange}
+														onCheckedChange={checked =>
+															handleChange(checked, perm.id)
+														}
+													/>
+												</div>
+											);
+										})
+									)}
+								</div>
 							</div>
-							<p className="text-sm font-semibold text-slate-500/80">
-								Views
-							</p>
-							<div className="w-full pb-12">
-								{viewMgmt.length === 0 ? (
-									<div className="flex flex-col items-center">
-										<Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-										/>
-									</div>
-								) : (
-									viewMgmt.map(perm => {
-										return (
-											<div
-												key={perm.id}
-												className="flex w-full flex-row items-center justify-between border-b py-6"
-											>
-												<Label
-													htmlFor={perm.title}
-													className="cursor-pointer text-base font-medium capitalize text-slate-700"
+							<div className="space-y-1">
+								<p className="ml-4 text-sm font-semibold text-slate-500/80">
+									Views
+								</p>
+								<div className="w-full divide-y rounded-lg border">
+									{viewMgmt.length === 0 ? (
+										<div className="flex flex-col items-center">
+											<Loader2
+												size={28}
+												strokeWidth={2}
+												className="animate-spin"
+											/>
+										</div>
+									) : (
+										viewMgmt.map(perm => {
+											return (
+												<div
+													key={perm.id}
+													className="flex w-full flex-row items-center justify-between p-4"
 												>
-													{perm.title.split('_').join(' ')}
-												</Label>
-												<Switch
-													id={perm.title}
-													name={perm.title}
-													value={perm.id}
-													className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
-													checked={permissionChange.some(perms => {
-														return perms.permission_id === perm.id
-															? true
-															: false;
-													})}
-													onCheckedChange={checked =>
-														handleChange(checked, perm.id)
-													}
-												/>
-											</div>
-										);
-									})
-								)}
+													<Label
+														htmlFor={perm.title}
+														className="cursor-pointer text-sm capitalize text-slate-700"
+													>
+														{perm.title.split('_').join(' ')}
+													</Label>
+													<Switch
+														id={perm.title}
+														name={perm.title}
+														value={perm.id}
+														className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+														checked={permissionChange.some(
+															perms => {
+																return perms.permission_id ===
+																	perm.id
+																	? true
+																	: false;
+															},
+														)}
+														onCheckedChange={checked =>
+															handleChange(checked, perm.id)
+														}
+													/>
+												</div>
+											);
+										})
+									)}
+								</div>
 							</div>
 						</div>
 					</ScrollArea>

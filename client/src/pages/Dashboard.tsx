@@ -4,7 +4,7 @@ import InventoryTable from '@/components/Tables/Inventory/inventory';
 import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import LayoutWrapper from '@/layouts/Layout';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Button, Navbar } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
@@ -17,10 +17,15 @@ export const Dashboard = () => {
 	const { auth } = useAuth();
 
 	const navigate = useNavigate();
+	// Redirect to POS if user role includes 'encoder' or 'sales'
+	if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
+		return <Navigate to="/pos" />;
+	}
+
 	return (
 		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
-				<div className="flex flex-row justify-between ">
+				<div className=" flex flex-row justify-between">
 					<h1 className="page-title text-primary-dark-gray self-center text-3xl font-bold">
 						Dashboard
 					</h1>

@@ -29,6 +29,7 @@ export const UserSales = () => {
 						isOpen={isOpen}
 						onClose={closeModal}
 						title={modalAction === 'details' ? 'Invoice Details' : ''}
+						closeOnOverlayClick={modalAction === 'details'}
 					>
 						<>
 							{modalAction === 'details' && (

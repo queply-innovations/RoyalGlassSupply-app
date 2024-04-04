@@ -81,9 +81,9 @@ export const ProductPricesColumns = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Product name{' '}
+							Name{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp size={18} strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
@@ -169,78 +169,31 @@ export const ProductPricesColumns = ({
 			},
 		},
 		{
-			accessorKey: 'tax_amount',
-			header: () => <div className="justify-center uppercase">Tax</div>,
-			cell: ({ row }) => {
-				const formatted = new Intl.NumberFormat('en-US', {
-					style: 'currency',
-					currency: 'PHP',
-				}).format(row.original.tax_amount || 0);
-				return (
-					<div className="flex items-center uppercase">
-						<span>{formatted}</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'cost',
-			header: () => <div className="justify-center uppercase">Cost</div>,
-			cell: ({ row }) => {
-				const formatted = new Intl.NumberFormat('en-US', {
-					style: 'currency',
-					currency: 'PHP',
-				}).format(row.original.cost);
-				return (
-					<div className="flex items-center uppercase">
-						<span>{row.original.cost ? formatted : `—`}</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'on_sale',
-			header: () => <div className="justify-center uppercase">Sale?</div>,
-			cell: ({ row }) => {
-				const onSale = row.original.on_sale;
-				return (
-					<div className="group relative flex w-fit items-center">
-						{onSale === 1 ? (
-							<Check
-								size={20}
-								strokeWidth={2}
-								className="text-green-600"
-							/>
-						) : (
-							<span>
-								<X
-									size={20}
-									strokeWidth={2}
-									className="text-gray-700"
-								/>
-							</span>
-						)}
-						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-							{onSale === 1 ? 'On sale' : 'Not on sale'}
-						</span>
-					</div>
-				);
-			},
-			enableGlobalFilter: false,
-		},
-		{
 			accessorKey: 'sale_discount',
-			header: () => (
-				<div className="justify-center uppercase">Disc. Price</div>
-			),
+			header: () => <div className="justify-center uppercase">Discount</div>,
 			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
 					currency: 'PHP',
 				}).format(row.original.sale_discount || 0);
 				return (
-					<div className="flex items-center uppercase">
-						<span>{row.original.on_sale === 1 ? formatted : `—`}</span>
+					<div className="flex items-center">
+						<span>
+							{row.original.on_sale === 1 ? (
+								formatted
+							) : (
+								<div className="group relative flex w-fit items-center">
+									<X
+										size={20}
+										strokeWidth={2}
+										className="text-gray-700"
+									/>
+									<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm normal-case text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+										Not on sale
+									</span>
+								</div>
+							)}
+						</span>
 					</div>
 				);
 			},
@@ -340,7 +293,7 @@ export const ProductPricesColumns = ({
 								className="text-gray-600"
 							/>
 						)}
-						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm normal-case text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
 							{active === 'active' ? 'Active' : 'Inactive'}
 						</span>
 					</div>

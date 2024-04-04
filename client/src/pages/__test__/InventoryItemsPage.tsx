@@ -8,10 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import { InventoryProdsProvider } from '@/features/inventory/context/InventoryProdsContext';
 import { InventoryProductsTable } from '@/features/inventory/components/table/InventoryProductsTable';
-// import { fetchTransferProductsById } from '@/features/transfer/api/Transfer';
 import { InventoryProduct } from '@/features/inventory/types';
-// import { ImportTransferProducts } from '@/features/inventory/components/modal/ImportTransferProducts';
-// import { AddInventoryProductForm } from '@/features/inventory/components/forms/AddInventoryProductForm';
 import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 
@@ -57,15 +54,6 @@ export const InventoryItemsPage = () => {
 									{!isLoading ? inventoryItem?.code : 'Loading...'}
 								</span>
 							</div>
-							{/* {inventoryItem?.transfer_id && (
-								<Button
-									className="ml-auto flex flex-row items-center gap-3 whitespace-nowrap bg-gray-200 font-bold text-gray-700 hover:bg-gray-300 hover:text-gray-700"
-									onClick={() => modalHandler('import_transfer')}
-								>
-									<Import size={20} strokeWidth={2} />
-									<span>Import transferred items</span>
-								</Button>
-							)} */}
 						</div>
 						<div className="h-full w-full overflow-x-hidden rounded-lg">
 							<InventoryProductsTable

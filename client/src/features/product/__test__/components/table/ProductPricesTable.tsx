@@ -7,11 +7,13 @@ import { ProductPricesColumns, ProductPricesColumnsLimited } from '.';
 interface ProductsPricesTableProps {
 	openModal: (data: ProductPrices | Product, action: string) => void;
 	isModalOpen: boolean;
+	filterWarehouse?: number;
 }
 
 export const ProductPricesTable = ({
 	openModal,
 	isModalOpen,
+	filterWarehouse,
 }: ProductsPricesTableProps) => {
 	const { auth } = useAuth();
 	const { data, isLoading, setSelectedProductPrice } = useProductPrices();
@@ -52,7 +54,11 @@ export const ProductPricesTable = ({
 							})
 						: ProductPricesColumnsLimited
 				}
-				data={data}
+				data={
+					filterWarehouse
+						? data.filter(item => item.warehouse.id === filterWarehouse)
+						: data
+				}
 				filterWhat={'name'}
 				dataType={'Listing'}
 				openModal={handleAddProdPrice}

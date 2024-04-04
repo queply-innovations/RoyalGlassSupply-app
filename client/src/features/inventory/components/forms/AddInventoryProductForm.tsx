@@ -14,6 +14,13 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
 import { ChevronsUpDown, Loader2, ExternalLink } from 'lucide-react';
@@ -24,6 +31,7 @@ import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
 import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 interface AddInventoryProductFormProps {
 	setInventoryProductsQueue: React.Dispatch<
@@ -51,6 +59,7 @@ export const AddInventoryProductForm = ({
 	handleNavigation,
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
+	const { auth } = useAuth();
 	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
 	// State handlers for dropdowns/popovers
@@ -64,10 +73,13 @@ export const AddInventoryProductForm = ({
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
+		(auth.role === 'admin' || auth.role === 'super_admin') &&
+			handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
 			(handleChange('product_id', selectedProduct.data.product_id),
+			// ! handleChange('status', selectedProduct.data.status), // Uncomment this line to enable status change
 			handleChange('supplier_id', selectedProduct.data.supplier_id),
 			handleChange('capital_price', selectedProduct.data.capital_price),
 			handleChange('unit', selectedProduct.data.unit),
@@ -80,6 +92,11 @@ export const AddInventoryProductForm = ({
 			handleChange('stocks_count', selectedProduct.data.stocks_count),
 			handleChange('damage_count', selectedProduct.data.damage_count),
 			handleChange('total_count', selectedProduct.data.total_count));
+
+		// If authenticated user is not an admin, set the capital_price to 0.00
+		!selectedProduct &&
+			auth.role !== 'admin' &&
+			handleChange('capital_price', 0);
 	}, []);
 
 	// Calculate stocks count
@@ -150,7 +167,13 @@ export const AddInventoryProductForm = ({
 			>
 				<div className="flex w-full flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div
+							className={`${
+								auth.role === 'admin' || auth.role === 'super_admin'
+									? 'col-span-12'
+									: 'col-span-6'
+							} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="product_id"
 								className="text-sm font-bold text-gray-600"
@@ -200,7 +223,14 @@ export const AddInventoryProductForm = ({
 										/>
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent className="min-w-[315px] p-0 text-sm font-medium text-slate-700">
+								<PopoverContent
+									className={`${
+										auth.role === 'admin' ||
+										auth.role === 'super_admin'
+											? 'min-w-[642px]'
+											: 'min-w-[315px]'
+									}  p-0 text-sm font-medium text-slate-700`}
+								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />
 										{productsLoading && (
@@ -367,6 +397,35 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
+						{(auth.role === 'admin' || auth.role === 'super_admin') && (
+							<div className="col-span-6 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="status"
+									className="text-sm font-bold text-gray-600"
+								>
+									Status
+								</Label>
+								<Select
+									value={FormValue.status?.toString() || ''}
+									required
+									onValueChange={value =>
+										handleChange('status', Number(value))
+									}
+								>
+									<SelectTrigger
+										name="status"
+										id="status"
+										className="w-full px-4 text-sm font-bold text-slate-700"
+									>
+										<SelectValue placeholder="Select status..." />
+									</SelectTrigger>
+									<SelectContent className="text-sm font-medium">
+										<SelectItem value="1">Approved</SelectItem>
+										<SelectItem value="0">Pending</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">
@@ -386,6 +445,7 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
+								disabled={auth.role !== 'admin'} // Disable input if user is not an admin
 								defaultValue={FormValue.capital_price?.toFixed(2) || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined

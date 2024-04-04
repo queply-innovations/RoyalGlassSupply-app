@@ -20,6 +20,7 @@ import { EditInventoryForm } from '@/features/inventory/components/forms/EditInv
 export const Inventory = () => {
 	const { warehouses } = useWarehouseQuery();
 	const [filterWarehouse, setFilterWarehouse] = useState(0);
+	const [totalInventories, setTotalInventories] = useState<number>(0);
 
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
@@ -72,6 +73,7 @@ export const Inventory = () => {
 									filterWarehouse > 0 ? filterWarehouse : undefined
 								}
 								openModal={modalHandler}
+								setTotalInventories={setTotalInventories}
 							/>
 						</div>
 					</div>
@@ -88,11 +90,13 @@ export const Inventory = () => {
 										? 'Edit Inventory'
 										: ''
 						}
+						closeOnOverlayClick={modalAction === 'view_details'}
 					>
 						<>
 							{modalAction === 'add' && (
 								<AddInventoryForm
 									warehouses={warehouses}
+									totalInventories={totalInventories}
 									onClose={closeModal}
 								/>
 							)}

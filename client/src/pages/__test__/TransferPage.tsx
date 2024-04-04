@@ -44,6 +44,7 @@ export const Transfer = () => {
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={modalAction === 'details'}
 					>
 						<>
 							{modalAction === 'details' && (
