@@ -98,6 +98,10 @@ export const ProductPrices = () => {
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={
+							modalAction === 'details' ||
+							modalAction === 'toggle_active_stat'
+						}
 					>
 						<>
 							{modalAction === 'add' && (

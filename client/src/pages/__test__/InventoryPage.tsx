@@ -88,6 +88,7 @@ export const Inventory = () => {
 										? 'Edit Inventory'
 										: ''
 						}
+						closeOnOverlayClick={modalAction === 'view_details'}
 					>
 						<>
 							{modalAction === 'add' && (
