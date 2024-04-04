@@ -7,6 +7,8 @@ interface CustomerContextProps {
 	isLoading: boolean;
 	selectedCustomer: Customer;
 	setSelectedCustomer: (customer: Customer) => void;
+	openSearchCustomer: boolean;
+	setOpenSearchCustomer: (open: boolean) => void;
 }
 
 interface CustomerProviderProps {
@@ -23,12 +25,15 @@ export const CustomerProvider = ({ children }: CustomerProviderProps) => {
 	const [selectedCustomer, setSelectedCustomer] = useState<Customer>(
 		{} as Customer,
 	);
+	const [openSearchCustomer, setOpenSearchCustomer] = useState(false);
 
 	const value = {
 		data,
 		isLoading,
 		selectedCustomer,
 		setSelectedCustomer,
+		openSearchCustomer,
+		setOpenSearchCustomer,
 	};
 	return (
 		<CustomerContext.Provider value={value}>
