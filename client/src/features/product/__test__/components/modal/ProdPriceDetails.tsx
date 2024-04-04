@@ -1,6 +1,5 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useProductPrices } from '../..';
-import { Button } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
 import currency from 'currency.js';
@@ -98,37 +97,28 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold">Markup percent</h3>
+						<p className="text-sm text-gray-800">
+							{
+								currency(
+									(selectedProductPrice.markup_price /
+										selectedProductPrice.capital_price) *
+										100,
+									{ precision: 3 },
+								).value
+							}
+							%
+						</p>
+					</div>
+					<div className="col-span-2 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">Markup price</h3>
 						<p className="text-sm text-gray-800">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
 							}).format(selectedProductPrice.markup_price)}
-							<span className="text-xs text-gray-500">
-								&nbsp;(
-								{
-									currency(
-										(selectedProductPrice.markup_price /
-											selectedProductPrice.capital_price) *
-											100,
-										{ precision: 3 },
-									).value
-								}
-								%)
-							</span>
 						</p>
 					</div>
-					{/* <div className="col-span-2 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">
-							Tax amount
-						</h3>
-						<p className="text-sm text-gray-800">
-							{Intl.NumberFormat('en-US', {
-								style: 'currency',
-								currency: 'PHP',
-							}).format(selectedProductPrice.tax_amount)}
-						</p>
-					</div> */}
 					<div className="col-span-2 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">Cost</h3>
 						<p className="text-sm text-gray-800">
@@ -139,9 +129,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="relative col-span-2 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">
-							Sale discount
-						</h3>
+						<h3 className="text-sm font-bold">Sale discount</h3>
 						<p className="text-sm">
 							{selectedProductPrice.on_sale === 1
 								? Intl.NumberFormat('en-US', {
@@ -170,7 +158,7 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</div>
 					</div>
 					<div className="relative col-span-2 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Price</h3>
+						<h3 className="text-sm font-bold">Price</h3>
 						<p className="text-sm">
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',

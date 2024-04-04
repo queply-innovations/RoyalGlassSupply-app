@@ -79,7 +79,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	}, [FormValue.capital_price, markupPercentage]);
 
 	// COST VALUE CALCULATION
-	// cost = capital_price + markup_price + tax_amount
+	// cost = capital_price + markup_price
 	useEffect(() => {
 		const capitalPrice =
 			FormValue.capital_price !== undefined
@@ -89,16 +89,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 			FormValue.markup_price !== undefined
 				? FormValue.markup_price
 				: selectedProductPrice.markup_price;
-		const taxAmount =
-			FormValue.tax_amount !== undefined
-				? FormValue.tax_amount
-				: selectedProductPrice.tax_amount;
 
-		handleChange(
-			'cost',
-			currency(capitalPrice).add(markupPrice).add(taxAmount).value,
-		);
-	}, [FormValue.capital_price, FormValue.markup_price, FormValue.tax_amount]);
+		handleChange('cost', currency(capitalPrice).add(markupPrice).value);
+	}, [FormValue.capital_price, FormValue.markup_price]);
 
 	// PRICE CALCULATION
 	// price = cost - sale_discount
@@ -229,96 +222,58 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								₱
 							</span>
 						</div>
-						<div className="col-span-2 grid grid-cols-5 gap-1">
-							<div className="relative col-span-2 flex flex-col justify-center gap-1">
-								<Label
-									htmlFor="markup"
-									className="text-sm font-bold text-gray-600"
-								>
-									Markup
-								</Label>
-								<Input
-									id="markup"
-									name="markup"
-									type="number"
-									inputMode="numeric"
-									min={0}
-									max={1000}
-									step={0.001}
-									required
-									placeholder={'0'}
-									value={markupPercentage.toString()}
-									onChange={e => {
-										setMarkupPercentage(
-											currency(e.target.value, { precision: 3 })
-												.value,
-										);
-									}}
-									onBlur={e => {
-										e.target.value = markupPercentage.toString();
-									}}
-								/>
-								<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
-									%
-								</span>
-							</div>
-							<div className="relative col-span-3 flex flex-col justify-end gap-1">
-								<Input
-									id="markup_value"
-									name="markup_value"
-									type="number"
-									min={0}
-									max={1000}
-									readOnly
-									placeholder={'0'}
-									className="pl-7"
-									value={
-										FormValue.markup_price?.toFixed(2) ||
-										selectedProductPrice.markup_price.toFixed(2) ||
-										'0.00'
-									}
-								/>
-								<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
-									₱
-								</span>
-							</div>
-						</div>
 						<div className="relative col-span-2 flex flex-col justify-center gap-1">
 							<Label
-								htmlFor="tax_amount"
+								htmlFor="markup_percent"
 								className="text-sm font-bold text-gray-600"
 							>
-								Tax amount
+								Markup percent
 							</Label>
 							<Input
-								id="tax_amount"
-								name="tax_amount"
+								id="markup_percent"
+								name="markup_percent"
 								type="number"
 								inputMode="numeric"
 								min={0}
-								step={0.01}
+								max={1000}
+								step={0.001}
 								required
-								placeholder={'0.00'}
-								className="pl-7"
-								value={
-									FormValue.tax_amount ||
-									selectedProductPrice.tax_amount.toFixed(2) ||
-									'0.00'
-								}
+								placeholder={'0'}
+								value={markupPercentage.toString()}
 								onChange={e => {
-									handleChange(
-										'tax_amount',
-										currency(e.target.value).value,
+									setMarkupPercentage(
+										currency(e.target.value, { precision: 3 }).value,
 									);
 								}}
 								onBlur={e => {
-									FormValue.tax_amount !== undefined
-										? (e.target.value = Number(
-												FormValue.tax_amount,
-											).toFixed(2))
-										: selectedProductPrice.tax_amount.toFixed(2) ||
-											'0.00';
+									e.target.value = markupPercentage.toString();
 								}}
+							/>
+							<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
+								%
+							</span>
+						</div>
+						<div className="relative col-span-2 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="markup_price"
+								className="text-sm font-bold text-gray-600"
+							>
+								Markup price
+							</Label>
+							<Input
+								id="markup_price"
+								name="markup_price"
+								type="number"
+								min={0}
+								max={1000}
+								readOnly
+								placeholder={'0'}
+								className="pl-7"
+								value={
+									FormValue.markup_price?.toFixed(2) ||
+									selectedProductPrice.markup_price.toFixed(2) ||
+									'0.00'
+								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
