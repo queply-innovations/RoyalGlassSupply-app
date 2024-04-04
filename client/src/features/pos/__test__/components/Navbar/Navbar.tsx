@@ -1,6 +1,7 @@
 import { NavbarRoutes } from './NavbarRoutes';
 import { NavbarItem } from './NavbarItem';
 import Logo from '/RGS-logo.png';
+import { LogoutButton } from './LogoutButton';
 
 interface NavbarProps {}
 
@@ -28,6 +29,9 @@ export const Navbar = ({}: NavbarProps) => {
 							}
 						})}
 					</ul>
+				</div>
+				<div className="mt-auto">
+					<LogoutButton />
 				</div>
 			</nav>
 		</>

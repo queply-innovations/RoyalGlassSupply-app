@@ -18,9 +18,17 @@ import {
 	CommandInput,
 	CommandItem,
 } from '@/components/ui/command';
+import {
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	SelectValue,
+} from '@/components/ui/select';
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/context/AuthContext';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -29,6 +37,7 @@ interface EditInventoryProductFormProps {
 export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
+	const { auth } = useAuth();
 	const { selectedInventoryProduct } = useInventoryProds();
 	const {
 		value: FormValue,
@@ -103,7 +112,9 @@ export const EditInventoryProductForm = ({
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div
+							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-12' : 'col-span-6'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="product"
 								className="text-sm font-bold text-gray-600"
@@ -210,6 +221,37 @@ export const EditInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
+						{(auth.role === 'admin' || auth.role === 'super_admin') && (
+							<div className="col-span-6 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="status"
+									className="text-sm font-bold text-gray-600"
+								>
+									Status
+								</Label>
+								<Select
+									value={
+										selectedInventoryProduct.status?.toString() || ''
+									}
+									required
+									onValueChange={value =>
+										handleChange('status', Number(value))
+									}
+								>
+									<SelectTrigger
+										name="status"
+										id="status"
+										className="w-full px-4 text-sm font-bold text-slate-700"
+									>
+										<SelectValue placeholder="Select status..." />
+									</SelectTrigger>
+									<SelectContent className="text-sm font-medium">
+										<SelectItem value="1">Approved</SelectItem>
+										<SelectItem value="0">Pending</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">
@@ -228,7 +270,8 @@ export const EditInventoryProductForm = ({
 								step={0.01}
 								required
 								className="pl-8"
-								placeholder={'e.g. 2000.00'}
+								placeholder={'0.00'}
+								readOnly={auth.role !== 'admin'}
 								defaultValue={selectedInventoryProduct?.capital_price.toFixed(
 									2,
 								)}
@@ -262,7 +305,6 @@ export const EditInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. pcs...'}
 								defaultValue={selectedInventoryProduct?.unit}
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
@@ -281,9 +323,7 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
-								// defaultValue={selectedInventoryProduct?.bundles_count}
 								value={
 									FormValue.bundles_count !== undefined
 										? FormValue.bundles_count
@@ -313,8 +353,6 @@ export const EditInventoryProductForm = ({
 								type="text"
 								maxLength={40}
 								required
-								placeholder={'e.g. boxes...'}
-								// defaultValue={selectedInventoryProduct?.bundles_unit}
 								value={
 									FormValue.bundles_unit !== undefined
 										? FormValue.bundles_unit
@@ -339,7 +377,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								required
 								value={
 									FormValue.quantity_per_bundle !== undefined
@@ -372,7 +409,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								value={stocksCount || 0}
 								readOnly
 							/>
@@ -391,7 +427,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={stocksCount || 9999999}
 								step={1}
-								placeholder="0"
 								required
 								value={
 									FormValue.damage_count !== undefined
@@ -423,7 +458,6 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								placeholder="0"
 								value={totalCount || 0}
 								readOnly
 							/>

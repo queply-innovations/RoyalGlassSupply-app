@@ -13,16 +13,20 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	CheckCircle,
+	Clock,
 	MoreVertical,
 	Pencil,
 } from 'lucide-react';
 
 interface InventoryProductsColsProps {
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
+	handleToggleStatus: (inventoryProductID: number, status: number) => void;
 }
 
 export const InventoryProductsCols = ({
 	handleEditInventoryProduct,
+	handleToggleStatus,
 }: InventoryProductsColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
@@ -59,7 +63,7 @@ export const InventoryProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center whitespace-nowrap bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center whitespace-nowrap bg-transparent uppercase text-slate-700"
 						>
 							Name{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -105,7 +109,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'bundles_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Bund. count
+					Bundles
 				</div>
 			),
 		},
@@ -129,7 +133,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'stocks_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Stocks Count
+					Stocks
 				</div>
 			),
 		},
@@ -137,7 +141,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'damage_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Damage Count
+					Damaged
 				</div>
 			),
 		},
@@ -145,7 +149,7 @@ export const InventoryProductsCols = ({
 			accessorKey: 'total_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Total Count
+					Total
 				</div>
 			),
 		},
@@ -167,6 +171,26 @@ export const InventoryProductsCols = ({
 			accessorKey: 'remaining_stocks_count',
 			header: () => (
 				<div className="justify-center uppercase">Remaining</div>
+			),
+		},
+		{
+			accessorKey: 'status',
+			header: () => <div className="justify-center uppercase">Status</div>,
+			cell: ({ row }) => (
+				<div className="group relative mx-auto flex w-fit items-center justify-center">
+					{row.original.status === 1 ? (
+						<CheckCircle
+							size={20}
+							strokeWidth={2}
+							className="text-green-600"
+						/>
+					) : (
+						<Clock size={20} strokeWidth={2} className="text-gray-600" />
+					)}
+					<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+						{!!row.original.status ? 'Approved' : 'Pending'}
+					</span>
+				</div>
 			),
 		},
 		{
@@ -192,6 +216,29 @@ export const InventoryProductsCols = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span>Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() =>
+										handleToggleStatus(
+											inventoryItemRow.id,
+											+!inventoryItemRow.status,
+											// converts current status to 0 or 1
+										)
+									}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										{!!inventoryItemRow.status ? (
+											<Clock size={16} strokeWidth={2.25} />
+										) : (
+											<CheckCircle size={16} strokeWidth={2.25} />
+										)}
+									</span>
+									<span>
+										{!!inventoryItemRow.status
+											? 'Set pending'
+											: 'Set approved'}
+									</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

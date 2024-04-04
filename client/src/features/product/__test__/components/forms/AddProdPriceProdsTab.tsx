@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
 	Command,
-	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
@@ -15,61 +14,100 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
-import { Product } from '../../types';
+import { Inventory, InventoryProduct } from '@/features/inventory/types';
+import { Warehouse } from '@/features/warehouse/__test__/types';
+import { Label } from '@/components/ui/label';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+import { Link } from 'react-router-dom';
 
 interface AddProdPriceProdTabProps {
-	products: Product[];
-	selectedProduct: Product;
-	setSelectedProduct: (product: Product) => void;
-	isLoading: boolean;
+	warehouses: Warehouse[] | undefined;
+	selectedWarehouse: Warehouse | undefined;
+	setSelectedWarehouse: React.Dispatch<
+		React.SetStateAction<Warehouse | undefined>
+	>;
+
+	inventories: Inventory[] | undefined;
+	selectedInventory: Inventory | undefined;
+	setSelectedInventory: React.Dispatch<
+		React.SetStateAction<Inventory | undefined>
+	>;
+
+	inventoryProducts: InventoryProduct[] | undefined;
+	selectedInventoryProduct: InventoryProduct | undefined;
+	setSelectedInventoryProduct: React.Dispatch<
+		React.SetStateAction<InventoryProduct | undefined>
+	>;
+
 	setOpenedTab: React.Dispatch<React.SetStateAction<string>>;
 	onClose: () => void;
 }
 
 export const AddProdPriceProdsTab = ({
-	products,
-	selectedProduct,
-	setSelectedProduct,
-	isLoading,
+	warehouses,
+	selectedWarehouse,
+	setSelectedWarehouse,
+	inventories,
+	selectedInventory,
+	setSelectedInventory,
+	inventoryProducts,
+	selectedInventoryProduct,
+	setSelectedInventoryProduct,
 	setOpenedTab,
 	onClose,
 }: AddProdPriceProdTabProps) => {
-	const [productsListOpen, setProductsListOpen] = useState(false);
+	const [inventoriesListOpen, setInventoriesListOpen] = useState(false);
+	const [inventoryProductsListOpen, setInventoryProductsListOpen] =
+		useState(false);
 	return (
-		<div className="w-full">
-			<p className="text-sm font-medium text-slate-700">
-				Choose a product to add a listing for:
-			</p>
-			<Popover open={productsListOpen} onOpenChange={setProductsListOpen}>
-				<PopoverTrigger className="relative my-2 w-full" asChild>
-					<Button
-						role="combobox"
-						className="w-full justify-between text-sm font-bold text-slate-700"
-						variant={'outline'}
+		<div className="grid w-full grid-cols-12 gap-4">
+			<div className="col-span-4 flex flex-col justify-center gap-1">
+				<Label
+					htmlFor="warehouse"
+					className="text-sm font-bold text-gray-600"
+				>
+					Warehouse
+				</Label>
+				<Select
+					required
+					value={selectedWarehouse?.id.toString()}
+					onValueChange={value => {
+						setSelectedWarehouse(
+							warehouses?.find(w => w.id === Number(value)),
+						);
+						setSelectedInventory(undefined);
+						setSelectedInventoryProduct(undefined);
+					}}
+				>
+					<SelectTrigger
+						id="warehouse"
+						name="warehouse"
+						className="flex flex-row items-center gap-3 truncate bg-white text-sm font-bold text-slate-600"
 					>
-						{selectedProduct.name ? (
-							<div className="flex items-baseline gap-4">
-								<span>{selectedProduct.name}</span>
-								<span className="font-baseline text-xs text-slate-700/50">
-									{selectedProduct.serial_no}
-								</span>{' '}
-							</div>
+						<SelectValue placeholder={'Choose warehouse...'} />
+					</SelectTrigger>
+					<SelectContent className="bg-white font-medium">
+						{warehouses ? (
+							warehouses.map(warehouse => (
+								<SelectItem
+									key={warehouse.code}
+									value={warehouse.id.toString()}
+									className="text-sm font-medium text-slate-700"
+								>
+									{warehouse.name}
+									<span className="truncate text-xs text-slate-700/60">
+										{' • ' + warehouse.code}
+									</span>
+								</SelectItem>
+							))
 						) : (
-							<span>Select a product...</span>
-						)}
-
-						<ChevronsUpDown
-							size={14}
-							strokeWidth={2}
-							className="h-4 w-4 opacity-70"
-						/>
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-[672px] p-0 text-sm font-medium text-slate-700">
-					<Command>
-						<CommandInput placeholder="Product name or serial number..." />
-						{isLoading && (
-							<div className="flex h-16 w-full items-center justify-center">
+							<div className="flex h-12 w-full items-center justify-center">
 								<Loader2
 									size={22}
 									strokeWidth={2.5}
@@ -77,50 +115,265 @@ export const AddProdPriceProdsTab = ({
 								/>
 							</div>
 						)}
-						<CommandEmpty>No match found</CommandEmpty>
-						<ScrollArea className="max-h-[200px] overflow-y-scroll">
-							<CommandGroup>
-								{products.map(product => (
-									<CommandItem
-										key={product.id}
-										className="cursor-pointer justify-between rounded-sm"
-										onSelect={() => {
-											setSelectedProduct(product);
-											setProductsListOpen(false);
-										}}
-									>
-										<span>{product.name}</span>
-										<span className="text-xs font-semibold text-slate-700/50">
-											{product.serial_no}
-										</span>
-									</CommandItem>
-								))}
-							</CommandGroup>
-						</ScrollArea>
-					</Command>
-				</PopoverContent>
-			</Popover>
-			{selectedProduct.id && (
-				<div className="mt-4 grid grid-flow-row grid-cols-3 gap-4 text-sm text-slate-700">
-					<div className="flex flex-col gap-1">
-						<h3 className="font-bold">Serial Number</h3>
-						<p className="font-medium">{selectedProduct.serial_no}</p>
-					</div>
-					<div className="flex flex-col gap-1">
-						<h3 className="font-bold">Size</h3>
-						<p className="font-medium">{selectedProduct.size}</p>
-					</div>
-					<div className="flex flex-col gap-1">
-						<h3 className="font-bold">Color</h3>
-						<p className="font-medium">{selectedProduct.color}</p>
+					</SelectContent>
+				</Select>
+			</div>
+			<div className="col-span-8 flex flex-col justify-center gap-1">
+				<Label
+					htmlFor="inventory"
+					className="text-sm font-bold text-gray-600"
+				>
+					Inventory
+				</Label>
+				<Popover
+					open={inventoriesListOpen}
+					onOpenChange={setInventoriesListOpen}
+				>
+					<PopoverTrigger
+						id="inventory"
+						name="inventory"
+						className="relative w-full"
+						disabled={!selectedWarehouse}
+						asChild
+					>
+						<Button
+							role="combobox"
+							className="justify-between truncate bg-white text-sm font-bold text-slate-600"
+							variant={'outline'}
+						>
+							{selectedInventory ? (
+								<div className="font-bold text-slate-600">
+									{selectedInventory.code}
+								</div>
+							) : (
+								<span>Select an inventory...</span>
+							)}
+
+							<ChevronsUpDown
+								size={14}
+								strokeWidth={2}
+								className="h-4 w-4 opacity-70"
+							/>
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="w-[442px] p-0 text-sm font-medium text-slate-700">
+						<Command defaultValue={selectedInventory?.code || ''}>
+							<CommandInput placeholder="Inventory code..." />
+							{!inventories && (
+								<div className="flex h-16 w-full items-center justify-center">
+									<Loader2
+										size={22}
+										strokeWidth={2.5}
+										className="animate-spin text-slate-700/50"
+									/>
+								</div>
+							)}
+							{/* <CommandEmpty>No match found</CommandEmpty> */}
+							<ScrollArea className="max-h-[200px] overflow-y-scroll">
+								{inventories?.length === 0 && (
+									<div className="flex h-16 w-full items-center justify-center pt-2">
+										No inventories.&nbsp;
+										<Link to={'/inventory'} className="underline">
+											Add inventory
+										</Link>
+									</div>
+								)}
+								<CommandGroup>
+									{inventories &&
+										inventories.map(inventory => (
+											<CommandItem
+												key={inventory.id}
+												className="cursor-pointer justify-between rounded-sm"
+												value={inventory.code}
+												onSelect={() => {
+													setSelectedInventory(inventory);
+													setSelectedInventoryProduct(undefined);
+													setInventoriesListOpen(false);
+												}}
+											>
+												<span>{inventory.code}</span>
+												<span className="text-xs font-semibold text-slate-700/50">
+													{inventory.type +
+														' • ' +
+														inventory.date_received}
+												</span>
+											</CommandItem>
+										))}
+								</CommandGroup>
+							</ScrollArea>
+						</Command>
+					</PopoverContent>
+				</Popover>
+			</div>
+			<div className="col-span-12 flex flex-col justify-center gap-1">
+				<Label
+					htmlFor="inventory-product"
+					className="text-sm font-bold text-gray-600"
+				>
+					Inventory product
+				</Label>
+				<Popover
+					open={inventoryProductsListOpen}
+					onOpenChange={setInventoryProductsListOpen}
+				>
+					<PopoverTrigger
+						id="inventory-product"
+						name="inventory-product"
+						className="relative w-full"
+						disabled={!selectedInventory}
+						asChild
+					>
+						<Button
+							role="combobox"
+							className="justify-between truncate bg-white text-sm font-bold text-slate-600"
+							variant={'outline'}
+						>
+							{selectedInventoryProduct ? (
+								<div className="font-bold text-slate-600">
+									{selectedInventoryProduct.product.name}
+								</div>
+							) : (
+								<span>Select an inventory product...</span>
+							)}
+
+							<ChevronsUpDown
+								size={14}
+								strokeWidth={2}
+								className="h-4 w-4 opacity-70"
+							/>
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="w-[672px] p-0 text-sm font-medium text-slate-700">
+						<Command
+							defaultValue={
+								selectedInventoryProduct
+									? selectedInventoryProduct.id +
+										selectedInventoryProduct.product.name
+									: ''
+							}
+						>
+							<CommandInput placeholder="Product name..." />
+							{!inventoryProducts && (
+								<div className="flex h-16 w-full items-center justify-center">
+									<Loader2
+										size={22}
+										strokeWidth={2.5}
+										className="animate-spin text-slate-700/50"
+									/>
+								</div>
+							)}
+							{/* <CommandEmpty>No match found</CommandEmpty> */}
+							<ScrollArea className="max-h-[200px] overflow-y-scroll">
+								{inventoryProducts?.length === 0 && (
+									<div className="flex h-16 w-full items-center justify-center pt-2">
+										No inventory products.&nbsp;
+										<Link
+											to={`/inventory/items/${selectedInventory?.id}`}
+											className="underline"
+										>
+											Add inventory product
+										</Link>
+									</div>
+								)}
+								<CommandGroup>
+									{inventoryProducts &&
+										inventoryProducts.map(inventoryProduct => {
+											// Filter out products with no remaining stocks
+											if (
+												inventoryProduct.remaining_stocks_count ??
+												0 > 0
+											)
+												return (
+													<CommandItem
+														key={inventoryProduct.id}
+														className="cursor-pointer justify-between rounded-sm"
+														value={
+															inventoryProduct.id +
+															inventoryProduct.product.name
+														}
+														onSelect={() => {
+															setSelectedInventoryProduct(
+																inventoryProduct,
+															);
+															setInventoryProductsListOpen(
+																false,
+															);
+														}}
+													>
+														<span>
+															{inventoryProduct.product.name}
+														</span>
+														<span className="text-xs font-semibold text-slate-700/50">
+															{inventoryProduct.supplier_id
+																.name +
+																' • ' +
+																inventoryProduct.total_count +
+																' remaining' +
+																' • ' +
+																Intl.NumberFormat('en-US', {
+																	currency: 'PHP',
+																	style: 'currency',
+																}).format(
+																	inventoryProduct.capital_price,
+																)}
+														</span>
+													</CommandItem>
+												);
+										})}
+								</CommandGroup>
+							</ScrollArea>
+						</Command>
+					</PopoverContent>
+				</Popover>
+			</div>
+			{selectedInventoryProduct && (
+				<div className="col-span-12 grid grid-flow-row grid-cols-12 gap-4 text-sm text-slate-700">
+					<div className="col-span-6 flex flex-col gap-1">
+						<h3 className="font-bold">Supplier</h3>
+						<p className="font-medium">
+							{selectedInventoryProduct.supplier_id.name}
+						</p>
 					</div>
 					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Notes</h3>
-						<p className="font-medium">{selectedProduct.notes}</p>
+						<h3 className="font-bold">Size</h3>
+						<p className="font-medium">
+							{selectedInventoryProduct.product.size}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col gap-1">
+						<h3 className="font-bold">Color</h3>
+						<p className="font-medium">
+							{selectedInventoryProduct.product.color}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col gap-1">
+						<h3 className="font-bold">Capital price</h3>
+						<p className="font-medium">
+							{Intl.NumberFormat('en-US', {
+								currency: 'PHP',
+								style: 'currency',
+							}).format(selectedInventoryProduct.capital_price)}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col gap-1">
+						<h3 className="font-bold">Unit</h3>
+						<p className="font-medium">{selectedInventoryProduct.unit}</p>
+					</div>
+					<div className="col-span-3 flex flex-col gap-1">
+						<h3 className="font-bold">Bundles unit</h3>
+						<p className="font-medium">
+							{selectedInventoryProduct.bundles_unit}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col gap-1">
+						<h3 className="font-bold">Remaining stocks</h3>
+						<p className="font-medium">
+							{selectedInventoryProduct.remaining_stocks_count}
+						</p>
 					</div>
 				</div>
 			)}
-			<div className="flex w-full justify-between whitespace-nowrap pt-4">
+			<div className="col-span-12 flex w-full justify-between whitespace-nowrap pt-4">
 				<div className="ml-auto flex flex-row gap-4">
 					<LegacyButton
 						fill={'default'}
@@ -131,7 +384,7 @@ export const AddProdPriceProdsTab = ({
 					</LegacyButton>
 					<LegacyButton
 						fill={'green'}
-						disabled={!selectedProduct.id}
+						disabled={!selectedInventoryProduct}
 						onClick={() => setOpenedTab('listings')}
 						className={`flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50`}
 					>
