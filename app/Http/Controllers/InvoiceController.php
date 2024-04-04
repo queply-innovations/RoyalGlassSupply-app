@@ -8,6 +8,8 @@ use App\Http\Resources\InvoiceResource;
 use App\Models\InventoryProduct;
 use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -34,7 +36,13 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $invoice_items = $request->invoice_items;
-        $invoice = Invoice::create($request->except('invoice_items') + ['reference_no' => 'asdasd', 'warehouse_id' => 1]);
+        $invoice = Invoice::create($request->except(['invoice_items', 'reference_no']));
+        $invoice->update([
+            'code' => 'IVC-'.$request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
+            'reference_no' => $request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
+            'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
+        ]);
+
         foreach($invoice_items as $index =>$invoice_item){
             $invoice_items[$index]["invoice_id"] = $invoice->id;
             $invoice_items[$index]["unit"] = 'pcs';
@@ -122,5 +130,19 @@ class InvoiceController extends Controller
         }
 
         return new InvoiceCollection($query->get());
+    }
+
+    /**
+     * Search code
+     */
+    public function searchCode(Request $request) 
+    {
+        $query = Invoice::with('invoiceItems')->where('code', $request->search)->first();
+
+        if(!$query) {
+            return response()->json([ 'message' => 'Code not found. Please try again.' ], 422);
+        }
+
+        return new InvoiceResource($query);
     }
 }
