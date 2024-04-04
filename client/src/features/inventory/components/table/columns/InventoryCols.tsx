@@ -54,6 +54,32 @@ export const InventoryCols = ({
 				/>
 			),
 		},
+		// {
+		// 	accessorKey: 'id',
+		// 	sortingFn: 'text',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+		// 				>
+		// 					Id{' '}
+		// 					{column.getIsSorted() === 'asc' ? (
+		// 						<ArrowUp size={18} strokeWidth={2} />
+		// 					) : column.getIsSorted() === 'desc' ? (
+		// 						<ArrowDown size={18} strokeWidth={2} />
+		// 					) : (
+		// 						<ArrowUpDown size={18} strokeWidth={2} />
+		// 					)}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
 			accessorKey: 'code',
 			sortingFn: 'text',
@@ -65,7 +91,7 @@ export const InventoryCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Code{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -91,7 +117,7 @@ export const InventoryCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							WHS{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -106,32 +132,32 @@ export const InventoryCols = ({
 				);
 			},
 		},
-		{
-			accessorKey: 'type',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Type{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
-		},
+		// {
+		// 	accessorKey: 'type',
+		// 	sortingFn: 'text',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+		// 				>
+		// 					Type{' '}
+		// 					{column.getIsSorted() === 'asc' ? (
+		// 						<ArrowUp size={18} strokeWidth={2} />
+		// 					) : column.getIsSorted() === 'desc' ? (
+		// 						<ArrowDown size={18} strokeWidth={2} />
+		// 					) : (
+		// 						<ArrowUpDown size={18} strokeWidth={2} />
+		// 					)}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
 			accessorKey: 'date_received',
 			header: () => <div className="justify-center uppercase">Received</div>,
@@ -159,7 +185,7 @@ export const InventoryCols = ({
 			cell: ({ row }) => {
 				return (
 					<div className="uppercase">
-						<span>
+						<span className="max-w-[25ch] truncate">
 							{row.original.created_by.firstname}{' '}
 							{row.original.created_by.lastname}
 						</span>
@@ -167,40 +193,40 @@ export const InventoryCols = ({
 				);
 			},
 		},
-		{
-			accessorKey: 'created_at',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Created at{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
-			cell: ({ row }) => {
-				const formattedDate = formatUTCDate(row.original.created_at);
-				return (
-					<div className="uppercase">
-						<span>{formattedDate}</span>
-					</div>
-				);
-			},
-		},
+		// {
+		// 	accessorKey: 'created_at',
+		// 	sortingFn: 'text',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() =>
+		// 						column.toggleSorting(column.getIsSorted() === 'asc')
+		// 					}
+		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+		// 				>
+		// 					Created at{' '}
+		// 					{column.getIsSorted() === 'asc' ? (
+		// 						<ArrowUp size={18} strokeWidth={2} />
+		// 					) : column.getIsSorted() === 'desc' ? (
+		// 						<ArrowDown size={18} strokeWidth={2} />
+		// 					) : (
+		// 						<ArrowUpDown size={18} strokeWidth={2} />
+		// 					)}
+		// 				</Button>
+		// 			</div>
+		// 		);
+		// 	},
+		// 	cell: ({ row }) => {
+		// 		const formattedDate = formatUTCDate(row.original.created_at);
+		// 		return (
+		// 			<div className="uppercase">
+		// 				<span>{formattedDate}</span>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
 			accessorKey: 'notes',
 			header: () => <div className="justify-center uppercase">Notes</div>,
