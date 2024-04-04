@@ -83,7 +83,7 @@ export const ProductPricesColumns = ({
 							}
 							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
-							Product name{' '}
+							Name{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp size={18} strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
