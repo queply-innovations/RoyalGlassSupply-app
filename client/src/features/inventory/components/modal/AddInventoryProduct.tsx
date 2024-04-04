@@ -8,6 +8,7 @@ import { useProductQuery } from '@/features/product/__test__/hooks';
 import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useInventoryProdsMutation } from '../../hooks';
 import { AddInventoryProductTable } from '../table/AddInventoryProductTable';
+import { useAuth } from '@/context/AuthContext';
 
 interface AddInventoryProductProps {
 	onClose: () => void;
@@ -53,6 +54,7 @@ export const AddInventoryProducts = ({
 	onClose,
 	inventoryId,
 }: AddInventoryProductProps) => {
+	const { auth } = useAuth();
 	// Query and state handlers for PRODUCTS and SUPPLIERS
 	const { data: products, isLoading: productsLoading } = useProductQuery();
 	const { suppliers, isFetching: suppliersLoading } = useSupplierQuery();
@@ -104,8 +106,16 @@ export const AddInventoryProducts = ({
 					</Button>
 				</div>
 
-				<div className="relative min-h-[550px] min-w-[650px] overflow-x-clip">
-					{/* Keep min-h to even integer to avoid font blurring */}
+				<div
+					className={`relative min-w-[650px] overflow-x-clip transition-all duration-300 
+					${
+						activeTab === 'form'
+							? auth.role === 'admin' || auth.role === 'super_admin'
+								? 'min-h-[558px]'
+								: 'min-h-[490px]'
+							: 'min-h-[490px]'
+					}`}
+				>
 					<AnimatePresence initial={false}>
 						{activeTab === 'main' ? (
 							<m.div
@@ -133,7 +143,7 @@ export const AddInventoryProducts = ({
 								initial="hidden"
 								animate="animate"
 								exit="exit"
-								className="absolute h-full w-full p-1"
+								className="absolute max-h-[642px] w-full p-1"
 							>
 								<AddInventoryProductForm
 									// onClose={onClose}

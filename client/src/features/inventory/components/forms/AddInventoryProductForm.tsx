@@ -73,7 +73,8 @@ export const AddInventoryProductForm = ({
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
-		// ! handleChange('status', 'pending'); // Set status to 'pending' by default
+		(auth.role === 'admin' || auth.role === 'super_admin') &&
+			handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
@@ -165,8 +166,14 @@ export const AddInventoryProductForm = ({
 				}}
 			>
 				<div className="flex w-full flex-col gap-3">
-					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-12 flex flex-col justify-center gap-1">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
+						<div
+							className={`${
+								auth.role === 'admin' || auth.role === 'super_admin'
+									? 'col-span-12'
+									: 'col-span-6'
+							} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="product_id"
 								className="text-sm font-bold text-gray-600"
@@ -216,7 +223,14 @@ export const AddInventoryProductForm = ({
 										/>
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent className="min-w-[642px] p-0 text-sm font-medium text-slate-700">
+								<PopoverContent
+									className={`${
+										auth.role === 'admin' ||
+										auth.role === 'super_admin'
+											? 'min-w-[642px]'
+											: 'min-w-[315px]'
+									}  p-0 text-sm font-medium text-slate-700`}
+								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />
 										{productsLoading && (
@@ -383,49 +397,35 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="status"
-								className="text-sm font-bold text-gray-600"
-							>
-								Status
-							</Label>
-							<Select
-								required
-								disabled={auth.role !== 'admin'} // Disable select if user is not an admin
-								defaultValue="pending"
-								onValueChange={value => {
-									// ! Status field is yet to be implemented
-									// ! Also, add status column to AddInventoryProductTable and InventoryProductsCols
-									// handleChange('status', value); // Uncomment this line to enable status change
-									console.log('Inventory item status: ', value); // Remove this line when status field is implemented
-								}}
-							>
-								<SelectTrigger
-									id="status"
-									name="status"
-									className="flex flex-row items-center gap-3 bg-white text-sm font-bold text-slate-700"
+						{(auth.role === 'admin' || auth.role === 'super_admin') && (
+							<div className="col-span-6 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="status"
+									className="text-sm font-bold text-gray-600"
 								>
-									<SelectValue placeholder={'Choose status...'} />
-								</SelectTrigger>
-								<SelectContent className="bg-white font-medium">
-									<SelectItem
-										key="status-pending"
-										value="pending"
-										className="text-sm font-medium text-slate-700"
+									Status
+								</Label>
+								<Select
+									value={FormValue.status?.toString() || ''}
+									required
+									onValueChange={value =>
+										handleChange('status', Number(value))
+									}
+								>
+									<SelectTrigger
+										name="status"
+										id="status"
+										className="w-full px-4 text-sm font-bold text-slate-700"
 									>
-										Pending
-									</SelectItem>
-									<SelectItem
-										key="status-active"
-										value="active"
-										className="text-sm font-medium text-slate-700"
-									>
-										Active
-									</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
+										<SelectValue placeholder="Select status..." />
+									</SelectTrigger>
+									<SelectContent className="text-sm font-medium">
+										<SelectItem value="1">Approved</SelectItem>
+										<SelectItem value="0">Pending</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">

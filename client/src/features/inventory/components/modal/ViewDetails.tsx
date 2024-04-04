@@ -99,7 +99,7 @@ export const ViewDetails = ({ onClose }: ViewDetailsProps) => {
 						</p>
 					</div>
 				</div>
-				<div className="flex w-full flex-row justify-end pt-4">
+				{/* <div className="flex w-full flex-row justify-end pt-4">
 					<div className="flex flex-row gap-4 whitespace-nowrap">
 						<Button
 							fill={'default'}
@@ -109,7 +109,7 @@ export const ViewDetails = ({ onClose }: ViewDetailsProps) => {
 							Close
 						</Button>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</>
 	);
