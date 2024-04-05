@@ -29,6 +29,7 @@ import { Button as LegacyButton } from '@/components';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAddProductPos } from '../..';
+import { useAuth } from '@/context/AuthContext';
 
 const tableCols = [
 	'',
@@ -64,6 +65,7 @@ export const AddInventoryProductTable = ({
 	handleRemoveItem,
 	handleSubmit,
 }: AddInventoryProductTableProps) => {
+	const { auth } = useAuth();
 	const { setActiveTab, setSelectedInventory } = useAddProductPos();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -80,7 +82,7 @@ export const AddInventoryProductTable = ({
 						autoClose: 5000,
 						closeButton: true,
 					});
-          setSelectedInventory(undefined);
+					setSelectedInventory(undefined);
 					setActiveTab(undefined);
 				}
 			})
@@ -136,14 +138,19 @@ export const AddInventoryProductTable = ({
 								className="hover:bg-white"
 							>
 								{tableCols.map(colName => {
-									return (
-										<TableHead
-											key={colName + '_head'}
-											className="whitespace-nowrap px-5 py-3 text-center text-xs font-bold uppercase"
-										>
-											{colName}
-										</TableHead>
-									);
+									if (
+										!(colName === 'Capital price') ||
+										auth?.role?.includes('admin')
+									) {
+										return (
+											<TableHead
+												key={colName + '_head'}
+												className="whitespace-nowrap px-5 py-3 text-center text-xs font-bold uppercase"
+											>
+												{colName}
+											</TableHead>
+										);
+									}
 								})}
 							</TableRow>
 						</TableHeader>
@@ -234,13 +241,6 @@ export const AddInventoryProductTable = ({
 														)?.name
 													: row?.data.supplier_id}
 											</TableCell>
-											{/* Uncomment code below when status is implemented */}
-											{/* <TableCell
-												className="px-5 py-3 capitalize"
-												key={row?.id + 'status'}
-											>
-												{row?.data.status}
-											</TableCell> */}
 											<TableCell
 												className="px-5 py-3"
 												key={row?.id + 'status'}
@@ -259,15 +259,17 @@ export const AddInventoryProductTable = ({
 													/>
 												)}
 											</TableCell>
-											<TableCell
-												className="px-5 py-3"
-												key={row?.id + 'capital_price'}
-											>
-												{Intl.NumberFormat('en-US', {
-													style: 'currency',
-													currency: 'PHP',
-												}).format(row?.data.capital_price || 0)}
-											</TableCell>
+											{auth?.role?.includes('admin') && (
+												<TableCell
+													className="px-5 py-3"
+													key={row?.id + 'capital_price'}
+												>
+													{Intl.NumberFormat('en-US', {
+														style: 'currency',
+														currency: 'PHP',
+													}).format(row?.data.capital_price || 0)}
+												</TableCell>
+											)}
 											<TableCell
 												className="px-5 py-3"
 												key={row?.id + 'unit'}

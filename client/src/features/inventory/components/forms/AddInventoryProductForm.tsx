@@ -73,8 +73,7 @@ export const AddInventoryProductForm = ({
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
-		(auth.role === 'admin' || auth.role === 'super_admin') &&
-			handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
+		auth.role?.includes('admin') && handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
@@ -95,7 +94,7 @@ export const AddInventoryProductForm = ({
 
 		// If authenticated user is not an admin, set the capital_price to 0.00
 		!selectedProduct &&
-			auth.role !== 'admin' &&
+			!auth.role?.includes('admin') &&
 			handleChange('capital_price', 0);
 	}, []);
 
@@ -445,7 +444,7 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								disabled={auth.role !== 'admin'} // Disable input if user is not an admin
+								disabled={!auth.role?.includes('admin')} // Disable input if user is not an admin
 								defaultValue={FormValue.capital_price?.toFixed(2) || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined
