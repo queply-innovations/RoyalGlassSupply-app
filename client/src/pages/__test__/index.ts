@@ -16,3 +16,4 @@ export * from './RolePermissionsPage';
 export * from './InventoryPage';
 export * from './InventoryItemsPage';
 export * from './ExpensesPage';
+export * from './ReportsPage';

@@ -16,13 +16,17 @@ import { useAuth } from '@/context/AuthContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SupplierTab } from './tabs/SupplierTab';
 import { TransferTab } from './tabs/TransferTab';
+import { generateInventoryCode } from '../../helpers';
 
 interface AddInventoryFormProps {
 	onClose: UseModalProps['closeModal'];
+	totalInventories: number;
 	warehouses: Warehouse[];
 }
+
 export const AddInventoryForm = ({
 	onClose,
+	totalInventories,
 	warehouses,
 }: AddInventoryFormProps) => {
 	const { auth } = useAuth();
@@ -39,6 +43,17 @@ export const AddInventoryForm = ({
 		handleChange('created_by', auth.user.id);
 		handleChange('type', 'supplier');
 	}, []);
+
+	const [selectedWarehouse, setSelectedWarehouse] = useState<string | null>();
+	useEffect(() => {
+		if (selectedWarehouse) {
+			const inv_code = generateInventoryCode(
+				selectedWarehouse,
+				totalInventories + 1, // increment total inventories by 1
+			);
+			handleChange('code', inv_code);
+		}
+	}, [selectedWarehouse]);
 
 	return (
 		<>
@@ -73,10 +88,9 @@ export const AddInventoryForm = ({
 								id="code"
 								name="code"
 								type="text"
-								maxLength={50}
-								required
+								value={FormValue.code || ''}
+								readOnly
 								placeholder="Code..."
-								onChange={e => handleChange('code', e.target.value)}
 							/>
 						</div>
 						<div className="col-span-6 flex flex-col justify-center gap-1">
@@ -87,9 +101,14 @@ export const AddInventoryForm = ({
 								Warehouse
 							</Label>
 							<Select
-								onValueChange={value =>
-									handleChange('warehouse_id', Number(value))
-								}
+								onValueChange={value => {
+									handleChange('warehouse_id', Number(value));
+									setSelectedWarehouse(
+										warehouses.find(
+											warehouse => warehouse.id === Number(value),
+										)?.code,
+									);
+								}}
 								required
 							>
 								<SelectTrigger
@@ -182,7 +201,9 @@ export const AddInventoryForm = ({
 							type="submit"
 							fill={'green'}
 							disabled={
-								isSubmitting || Object.keys(FormValue).length <= 2
+								isSubmitting ||
+								Object.keys(FormValue).length <= 2 ||
+								!selectedWarehouse
 							} // Disable button if there are no changes or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>

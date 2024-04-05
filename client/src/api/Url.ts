@@ -1,8 +1,6 @@
 import storage from '@/utils/storage';
 
-// export const API_BASE_URL = 'http://127.0.0.1:8000/api';
 export const API_BASE_URL = 'https://staging.royalglasssupply.com/api';
-// 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
 
 export const API_URLS = {
 	PRODUCTS: `${API_BASE_URL}/products`,
@@ -34,5 +32,6 @@ export const API_HEADERS = () => {
 		Authorization: `Bearer ${storage.getToken()}`,
 		Accept: 'application/json',
 		'Content-Type': 'application/json',
+		'ngrok-skip-browser-warning': true,
 	};
 };

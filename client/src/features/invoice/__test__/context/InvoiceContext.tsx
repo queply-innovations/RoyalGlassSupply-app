@@ -10,6 +10,7 @@ import { useInvoiceQuery } from '../hooks/useInvoiceQuery';
 import { useAuth } from '@/context/AuthContext';
 import { formatUTCDateOnly, getDateNow } from '@/utils/timeUtils';
 import { Warehouse } from '@/features/warehouse/__test__/types';
+import { useProductPrices } from '@/features/product/__test__';
 
 interface InvoiceContextProps {
 	invoices: Invoices[];
@@ -72,8 +73,10 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		reference_no: '',
 		paid_amount: 0,
 		total_discount: 0,
-		status: 'approved'
+		status: 'approved',
 	} as Invoices);
+
+	const { data: productPrices } = useProductPrices();
 
 	function handleChange(key: string, value: Invoices[keyof Invoices]) {
 		setInvoice(prev => ({
@@ -94,9 +97,20 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 						...item,
 						[key]: value,
 					};
-					updatedItem.total_price =
-						updatedItem.product_price * updatedItem.quantity -
-						updatedItem.item_discount;
+					if (updatedItem.item_discount === 0) {
+						const productPrice = productPrices.find(
+							item => item.id === updatedItem.product_price_id,
+						);
+						if (productPrice) {
+							updatedItem.total_price =
+								productPrice.price * updatedItem.quantity;
+						}
+					} else {
+						updatedItem.total_price =
+							updatedItem.total_price * updatedItem.quantity -
+							updatedItem.item_discount;
+					}
+
 					return updatedItem;
 				}
 				return item;
@@ -231,16 +245,15 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		setInvoice({
 			...invoice,
 			issued_by: auth.user.id,
-			id: invoices.length + 1,
 			// code: `IVC-${selectedWarehouse.id}-${invoice?.id}`,
 			// warehouse_id: selectedWarehouse.id,
 			total_amount_due: 0,
 			change_amount: 0,
 			subtotal: 0,
-			payment_method: 'payment',
 			reference_no: '',
 			paid_amount: 0,
 			total_discount: 0,
+			type: 'payment',
 		});
 	}, []);
 	return (

@@ -18,7 +18,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import { MoreVertical, PackageMinus, Pencil } from 'lucide-react';
+import {
+	CheckCircle,
+	Clock,
+	MoreVertical,
+	PackageMinus,
+	Pencil,
+} from 'lucide-react';
 import { Button as LegacyButton } from '@/components';
 import { useState } from 'react';
 
@@ -26,6 +32,7 @@ const tableCols = [
 	'',
 	'Product name',
 	'Supplier',
+	'Status',
 	'Capital price',
 	'Unit',
 	'Bundles count',
@@ -37,7 +44,7 @@ const tableCols = [
 ];
 
 interface AddInventoryProductTableProps {
-	data: (InventoryProductsQueueProps | undefined)[];
+	data: InventoryProductsQueueProps[];
 	products: Product[];
 	suppliers: Supplier[];
 	handleEditItem: (item: InventoryProductsQueueProps) => void;
@@ -210,6 +217,31 @@ export const AddInventoryProductTable = ({
 																row.data.supplier_id,
 														)?.name
 													: row?.data.supplier_id}
+											</TableCell>
+											{/* Uncomment code below when status is implemented */}
+											{/* <TableCell
+												className="px-5 py-3 capitalize"
+												key={row?.id + 'status'}
+											>
+												{row?.data.status}
+											</TableCell> */}
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'status'}
+											>
+												{!!row?.data.status ? (
+													<CheckCircle
+														size={20}
+														strokeWidth={2}
+														className="text-green-600"
+													/>
+												) : (
+													<Clock
+														size={20}
+														strokeWidth={2}
+														className="text-gray-600"
+													/>
+												)}
 											</TableCell>
 											<TableCell
 												className="px-5 py-3"

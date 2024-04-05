@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
+import { useInvoiceCodeQuery } from '@/features/invoice/__test__/hooks/useInvoiceQuery';
 import { InvoiceItems, Invoices } from '@/features/invoice/__test__/types';
 import { useProductPricesFilter } from '@/features/product/__test__/hooks';
 import { ProductPrices } from '@/features/product/__test__/types';
@@ -17,13 +18,18 @@ interface PosContextProps {
 
 	invoiceItemsQueue: InvoiceItems[];
 	setInvoiceItemsQueue: (invoiceItems: InvoiceItems[]) => void;
-
 	setFilter: (filter: object) => void;
 	quantityHandler: (
 		productId: number,
 		newQuantity: number,
 		maxQuantity: number,
 	) => void;
+
+	selectedWarehouse: string;
+	setSelectedWarehouse: (warehouse: string) => void;
+
+	// invoiceCodeResult: Invoices;
+	setInvoiceCode: (code: string) => void;
 }
 
 interface PosProviderProps {
@@ -37,10 +43,14 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		[],
 	);
 
+	const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
+
 	const [filter, setFilter] = useState<object>({
 		approval_status: 'approved',
 	});
+	const [invoiceCode, setInvoiceCode] = useState<string>('');
 
+	// const { invoice: invoiceCodeResult } = useInvoiceCodeQuery(invoiceCode);
 	const { data: productListing, isLoading } = useProductPricesFilter(filter);
 
 	const quantityHandler = (
@@ -84,6 +94,10 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		invoiceItemsQueue,
 		setInvoiceItemsQueue,
 		quantityHandler,
+		selectedWarehouse,
+		setSelectedWarehouse,
+		// invoiceCodeResult,
+		setInvoiceCode,
 	};
 	return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
 };

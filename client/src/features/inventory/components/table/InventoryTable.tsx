@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 interface InventoryTableProps {
 	openModal: (data: Inventory, action: string) => void;
 	filterWarehouse?: number; // this should match the warehouse id in warehouse type
+	setTotalInventories: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const InventoryTable = ({
 	openModal,
 	filterWarehouse,
+	setTotalInventories,
 }: InventoryTableProps) => {
 	const [inventoryData, setInventoryData] = useState<Inventory[]>([]);
 	const { data, isLoading, setSelectedInventory } = useInventory();
@@ -28,6 +30,8 @@ export const InventoryTable = ({
 		} else {
 			setInventoryData(data);
 		}
+
+		setTotalInventories(data.length);
 	}, [data, filterWarehouse]);
 
 	const handleAddInventory = () => {

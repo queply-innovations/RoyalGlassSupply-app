@@ -13,7 +13,8 @@ export const ChangeAmount = () => {
 		} else {
 			return (
 				(invoice.paid_amount ?? 0) -
-				invoiceItemsQueue.reduce((acc, item) => acc + item.total_price, 0)
+				invoiceItemsQueue.reduce((acc, item) => acc + item.total_price, 0) +
+				(invoice.total_discount ?? 0)
 			);
 		}
 	}

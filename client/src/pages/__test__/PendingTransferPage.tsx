@@ -41,6 +41,7 @@ export const PendingTransfer = () => {
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={modalAction === 'details'}
 					>
 						<>
 							{modalAction === 'details' && (

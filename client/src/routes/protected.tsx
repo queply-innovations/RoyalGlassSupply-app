@@ -20,6 +20,10 @@ const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PointOfSalePage',
 );
+const { AddProductPOSPage } = lazyImport(
+	() => import('@/pages/__test__/pos'),
+	'AddProductPOSPage',
+);
 const { PendingInventory } = lazyImport(
 	() => import('@/pages'),
 	'PendingInventory',
@@ -38,17 +42,23 @@ const { ProductPrices } = lazyImport(
 	() => import('@/pages/__test__'),
 	'ProductPrices',
 );
-const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
+const { Reports } = lazyImport(() => import('@/pages/__test__'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
 // const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
-const { Transaction } = lazyImport(() => import('@/pages/__test__'), 'Transaction');
+const { Transaction } = lazyImport(
+	() => import('@/pages/__test__'),
+	'Transaction',
+);
 // const { UserInfo } = lazyImport(() => import('@/pages'), 'UserInfo');
 const { UserInfo } = lazyImport(() => import('@/pages/__test__'), 'UserInfo');
 // const { UserSales } = lazyImport(() => import('@/pages'), 'UserSales');
 const { UserSales } = lazyImport(() => import('@/pages/__test__'), 'UserSales');
-const { RolePermissions } = lazyImport(() => import('@/pages/__test__'), 'RolePermissions');
+const { RolePermissions } = lazyImport(
+	() => import('@/pages/__test__'),
+	'RolePermissions',
+);
 // const { Warehouse } = lazyImport(() => import('@/pages'), 'Warehouse');
 const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
@@ -80,11 +90,11 @@ const protectedRoutesConfig = [
 	{ path: '/user/information', element: <UserInfo /> },
 	{ path: '/user/sales', element: <UserSales /> },
 	{ path: '/user/role-perms', element: <RolePermissions /> },
-	{ path: '/test', element: <Invoice /> },
+	{ path: '/invoice', element: <Invoice /> },
 	// TODO ! add POS PAGE
 	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
 	{ path: '/pos/add-order', element: <PointOfSalePage /> },
-	{ path: '/pos/add-product', element: <PointOfSalePage /> },
+	{ path: '/pos/add-product', element: <AddProductPOSPage /> },
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
 	{ path: '/pending/inventory', element: <PendingInventory /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
@@ -96,8 +106,8 @@ const protectedRoutesConfig = [
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
-	// { path: '/reports', element: <Reports /> },
 	{ path: '/expenses', element: <Expenses /> },
+	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },

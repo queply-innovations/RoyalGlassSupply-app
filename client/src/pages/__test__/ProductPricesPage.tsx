@@ -14,11 +14,21 @@ import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { ProductPricesForm } from '../../features/product/__test__/components/forms/ProductPricesForm';
 import { AddProductPrice } from '@/features/product/__test__/components';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 
 export const ProductPrices = () => {
+	const { warehouses } = useWarehouseQuery();
+	const [filterWarehouse, setFilterWarehouse] = useState(0);
+
 	const { isOpen, openModal, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
-	console.log('modal state: ', isOpen);
 
 	const modalHandler = (
 		productPrice: ProdPriceType | ProductType,
@@ -33,10 +43,44 @@ export const ProductPrices = () => {
 			<MainLayout title="Product Listings">
 				<ProductPricesProvider>
 					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+						<div className="ml-auto flex flex-row items-center space-x-4">
+							<span className="text-sm font-medium">
+								Filter warehouse:{' '}
+							</span>
+							{/* //* Warehouse id of zero is assumed 'all' */}
+							<Select
+								defaultValue="0"
+								onValueChange={value =>
+									setFilterWarehouse(Number(value))
+								}
+							>
+								<SelectTrigger className="w-[300px] text-sm font-medium">
+									<SelectValue placeholder="All" />
+								</SelectTrigger>
+								<SelectContent className="text-sm font-medium capitalize">
+									<SelectItem key="all" value="0">
+										All
+									</SelectItem>
+									{warehouses.map(warehouse => (
+										<SelectItem
+											key={warehouse.id}
+											value={warehouse.id.toString()}
+										>
+											{warehouse.name} ({warehouse.code})
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
 							<ProductPricesTable
 								openModal={modalHandler}
 								isModalOpen={isOpen}
+								filterWarehouse={
+									// If filterWarehouse is given (greater than 0),
+									// filter the inventory data by warehouse code
+									filterWarehouse > 0 ? filterWarehouse : undefined
+								}
 							/>
 						</div>
 					</div>
@@ -54,6 +98,10 @@ export const ProductPrices = () => {
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={
+							modalAction === 'details' ||
+							modalAction === 'toggle_active_stat'
+						}
 					>
 						<>
 							{modalAction === 'add' && (

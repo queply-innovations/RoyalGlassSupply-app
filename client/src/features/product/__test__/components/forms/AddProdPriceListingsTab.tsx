@@ -1,5 +1,5 @@
-import { Product, ProductPricesDatabase } from '../../types';
-import { Loader2 } from 'lucide-react';
+import { ProductPricesDatabase } from '../../types';
+import { Inventory, InventoryProduct } from '@/features/inventory/types';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -12,23 +12,26 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { Button } from '@/components';
 import { useProductPricesMutation } from '../../hooks';
 import currency from 'currency.js';
+import { Warehouse } from '@/features/warehouse/__test__/types';
 
 interface AddProdPriceListingsTabProps {
-	product: Product;
+	selectedWarehouse: Warehouse;
+	selectedInventory: Inventory;
+	selectedInventoryProduct: InventoryProduct;
 	setOpenedTab: React.Dispatch<React.SetStateAction<string>>;
 	onClose: () => void;
 }
 export const AddProdPriceListingsTab = ({
-	product,
+	selectedWarehouse,
+	selectedInventory,
+	selectedInventoryProduct,
 	setOpenedTab,
 	onClose,
 }: AddProdPriceListingsTabProps) => {
 	const { auth } = useAuth();
-	const { warehouses } = useWarehouseQuery();
 	const {
 		value: FormValue,
 		setValue: setFormValue,
@@ -40,25 +43,27 @@ export const AddProdPriceListingsTab = ({
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const [markupPercentage, setMarkupPercentage] = useState<number>(0);
-
 	useEffect(() => {
 		// Initialize form values that may be not set in the form
 		setFormValue(
 			_prev =>
 				({
 					..._prev,
-					product_id: product.id,
+					product_id: selectedInventoryProduct?.product.id,
+					warehouse_id: selectedWarehouse.id,
 					active_status: 'active',
 					approval_status: 'pending',
 					created_by: auth.user.id,
 					on_sale: 0,
 					sale_discount: 0,
+					tax_amount: 0, // remove tax_amount when this column is removed from the database
 				}) as Partial<ProductPricesDatabase>,
 		);
 	}, []);
 
-	// Markup value calculation
+	// MARKUP PERCENT & PRICE
+	// markup_price = capital_price * (markup_percentage / 100)
+	const [markupPercentage, setMarkupPercentage] = useState<number>(0);
 	useEffect(() => {
 		const capitalPrice = FormValue.capital_price || 0;
 		const markup = currency(capitalPrice).multiply(
@@ -68,19 +73,17 @@ export const AddProdPriceListingsTab = ({
 		handleChange('markup_price', markup.value);
 	}, [FormValue.capital_price, markupPercentage]);
 
-	// Cost value calculation
+	// COST VALUE CALCULATION
+	// cost = capital_price + markup_price
 	useEffect(() => {
 		const capitalPrice = FormValue.capital_price || 0;
 		const markupPrice = FormValue.markup_price || 0;
-		const taxAmount = FormValue.tax_amount || 0;
 
-		handleChange(
-			'cost',
-			currency(capitalPrice).add(markupPrice).add(taxAmount).value,
-		);
-	}, [FormValue.capital_price, FormValue.markup_price, FormValue.tax_amount]);
+		handleChange('cost', currency(capitalPrice).add(markupPrice).value);
+	}, [FormValue.capital_price, FormValue.markup_price]);
 
-	// Price value calculation
+	// PRICE CALCULATION
+	// price = cost - sale_discount
 	useEffect(() => {
 		const cost = FormValue.cost || 0;
 		const saleDiscount = FormValue.sale_discount || 0;
@@ -105,80 +108,63 @@ export const AddProdPriceListingsTab = ({
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3 font-medium">
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-3 gap-y-5">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Name</h3>
-							<p className="text-sm">{product.name}</p>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.name}
+							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
-								Product ID
+								Supplier
 							</h3>
-							<p className="text-sm">{product.id}</p>
+							<p className="text-sm">
+								{selectedInventoryProduct.supplier_id.name}
+							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
-								Serial Number
+								Warehouse
 							</h3>
-							<p className="text-sm">{product.serial_no}</p>
+							<p className="text-sm">{selectedWarehouse.code}</p>
+						</div>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Inventory
+							</h3>
+							<p className="text-sm">{selectedInventory.code}</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
-							<p className="text-sm">{product.size}</p>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.size}
+							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Color</h3>
-							<p className="text-sm">{product.color}</p>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.color}
+							</p>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="warehouse"
-								className="text-sm font-bold text-gray-600"
-							>
-								Warehouse
-							</Label>
-							<Select
-								value={FormValue.warehouse_id?.toString() || ''}
-								onValueChange={value =>
-									handleChange('warehouse_id', Number(value))
-								}
-								required
-							>
-								<SelectTrigger
-									name="warehouse"
-									className="flex flex-row items-center gap-3 truncate bg-white text-sm"
-								>
-									<SelectValue placeholder={'Choose warehouse...'} />
-								</SelectTrigger>
-								<SelectContent className="bg-white font-medium">
-									{warehouses.length <= 0 ? (
-										<div className="flex h-12 w-full items-center justify-center">
-											<Loader2
-												size={22}
-												strokeWidth={2.5}
-												className="animate-spin text-slate-700/50"
-											/>
-										</div>
-									) : (
-										warehouses.map(warehouse => (
-											<SelectItem
-												key={warehouse.code}
-												value={warehouse.id.toString()}
-												className="text-sm font-medium text-slate-700"
-											>
-												{warehouse.name}
-
-												<span className="truncate text-xs text-slate-700/60">
-													{' • ' +
-														warehouse.code +
-														' • ' +
-														warehouse.location}
-												</span>
-											</SelectItem>
-										))
-									)}
-								</SelectContent>
-							</Select>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Remaining stocks
+							</h3>
+							<p className="text-sm">
+								{selectedInventoryProduct.remaining_stocks_count}
+							</p>
+						</div>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Capital price
+							</h3>
+							<p className="text-sm">
+								{Intl.NumberFormat('en-US', {
+									currency: 'PHP',
+									style: 'currency',
+								}).format(selectedInventoryProduct.capital_price)}
+							</p>
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
@@ -191,9 +177,35 @@ export const AddProdPriceListingsTab = ({
 								Type
 							</Label>
 							<Select
-								value={FormValue.type || ''}
-								onValueChange={value => handleChange('type', value)}
 								required
+								value={FormValue.type || ''}
+								onValueChange={value => {
+									handleChange('type', value);
+									if (value === 'retail') {
+										handleChange(
+											'unit',
+											selectedInventoryProduct.unit,
+										);
+										handleChange(
+											'stocks_unit',
+											selectedInventoryProduct.unit,
+										);
+										handleChange('stocks_quantity', 1);
+									} else {
+										handleChange(
+											'unit',
+											selectedInventoryProduct.bundles_unit,
+										);
+										handleChange(
+											'stocks_unit',
+											selectedInventoryProduct.unit,
+										);
+										handleChange(
+											'stocks_quantity',
+											selectedInventoryProduct.quantity_per_bundle,
+										);
+									}
+								}}
 							>
 								<SelectTrigger
 									name="type"
@@ -230,13 +242,11 @@ export const AddProdPriceListingsTab = ({
 								id="unit"
 								name="unit"
 								type="text"
-								required
-								placeholder={'e.g. pcs...'}
+								readOnly
 								value={FormValue.unit || ''}
-								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
+						<div className="relative col-span-1 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="stocks_quantity"
 								className="text-sm font-bold text-gray-600"
@@ -247,17 +257,8 @@ export const AddProdPriceListingsTab = ({
 								id="stocks_quantity"
 								name="stocks_quantity"
 								type="number"
-								min={0}
-								max={9999999}
-								required
-								placeholder={'e.g. 100...'}
+								readOnly
 								value={FormValue.stocks_quantity || ''}
-								onChange={e =>
-									handleChange(
-										'stocks_quantity',
-										Number(e.target.value),
-									)
-								}
 							/>
 						</div>
 						<div className="col-span-1 flex flex-col justify-center gap-1">
@@ -271,12 +272,8 @@ export const AddProdPriceListingsTab = ({
 								id="stocks_unit"
 								name="stocks_unit"
 								type="text"
-								required
-								placeholder={'e.g. pcs...'}
+								readOnly
 								value={FormValue.stocks_unit || ''}
-								onChange={e =>
-									handleChange('stocks_unit', e.target.value)
-								}
 							/>
 						</div>
 					</div>
@@ -316,90 +313,59 @@ export const AddProdPriceListingsTab = ({
 								₱
 							</span>
 						</div>
-						<div className="col-span-2 grid grid-cols-5 gap-1">
-							<div className="relative col-span-2 flex flex-col justify-center gap-1">
-								<Label
-									htmlFor="markup"
-									className="text-sm font-bold text-gray-600"
-								>
-									Markup
-								</Label>
-								<Input
-									id="markup"
-									name="markup"
-									type="number"
-									inputMode="numeric"
-									min={0}
-									max={1000}
-									step={0.001}
-									required
-									placeholder={'0'}
-									value={markupPercentage.toString() || ''}
-									onChange={e => {
-										setMarkupPercentage(
-											currency(e.target.value, { precision: 3 })
-												.value,
-										);
-									}}
-									onBlur={e => {
-										e.target.value = markupPercentage.toString();
-									}}
-								/>
-								<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
-									%
-								</span>
-							</div>
-							<div className="relative col-span-3 flex flex-col justify-end gap-1">
-								<Input
-									id="markup_value"
-									name="markup_value"
-									type="number"
-									min={0}
-									max={1000}
-									step={0.01}
-									readOnly
-									placeholder={'0.00'}
-									className="pl-7"
-									value={
-										FormValue.markup_price
-											? FormValue.markup_price.toFixed(2)
-											: '0.00'
-									}
-								/>
-								<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
-									₱
-								</span>
-							</div>
-						</div>
 						<div className="relative col-span-2 flex flex-col justify-center gap-1">
 							<Label
-								htmlFor="tax_amount"
+								htmlFor="markup_percent"
 								className="text-sm font-bold text-gray-600"
 							>
-								Tax amount
+								Markup percent
 							</Label>
 							<Input
-								id="tax_amount"
-								name="tax_amount"
+								id="markup_percent"
+								name="markup_percent"
 								type="number"
 								inputMode="numeric"
 								min={0}
-								step={0.01}
+								max={1000}
+								step={0.001}
 								required
-								placeholder={'0.00'}
-								className="pl-7"
-								value={FormValue.tax_amount || ''}
+								placeholder={'0'}
+								value={markupPercentage.toString() || ''}
 								onChange={e => {
-									handleChange(
-										'tax_amount',
-										currency(e.target.value).value,
+									setMarkupPercentage(
+										currency(e.target.value, { precision: 3 }).value,
 									);
 								}}
 								onBlur={e => {
-									e.target.value = Number(
-										FormValue.tax_amount,
-									).toFixed(2);
+									e.target.value = markupPercentage.toString();
 								}}
+							/>
+							<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
+								%
+							</span>
+						</div>
+						<div className="relative col-span-2 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="markup_price"
+								className="text-sm font-bold text-gray-600"
+							>
+								Markup price
+							</Label>
+							<Input
+								id="markup_price"
+								name="markup_price"
+								type="number"
+								min={0}
+								max={1000}
+								step={0.01}
+								readOnly
+								placeholder={'0.00'}
+								className="pl-7"
+								value={
+									FormValue.markup_price
+										? FormValue.markup_price.toFixed(2)
+										: '0.00'
+								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
@@ -604,12 +570,7 @@ export const AddProdPriceListingsTab = ({
 						<Button
 							type="submit"
 							fill={'green'}
-							disabled={
-								isSubmitting ||
-								Object.keys(FormValue).length <= 6 ||
-								FormValue.warehouse_id === undefined ||
-								FormValue.type === undefined
-							} // Disable button if there are no changes or form is submitting
+							disabled={isSubmitting || FormValue.type === undefined} // Disable button if no type or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{!isSubmitting ? 'Add listing' : 'Submitting...'}

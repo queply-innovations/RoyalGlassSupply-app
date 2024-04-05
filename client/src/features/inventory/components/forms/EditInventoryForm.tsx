@@ -3,7 +3,7 @@ import { useInventoryMutation } from '../../hooks/useInventoryMutation';
 import { useInventory } from '../../context/InventoryContext';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Select,
 	SelectContent,
@@ -30,6 +30,7 @@ import {
 	CommandItem,
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { generateInventoryCode } from '../../helpers';
 
 interface EditInventoryFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -63,6 +64,18 @@ export const EditInventoryForm = ({
 		return transfers.find(item => id === item.id);
 	};
 
+	const [selectedWarehouse, setSelectedWarehouse] = useState<string | null>();
+	useEffect(() => {
+		if (selectedWarehouse) {
+			const inv_code = generateInventoryCode(
+				selectedWarehouse,
+				selectedInventory.id, // current inventory id, should stay the same
+				new Date(selectedInventory.created_at), // date from creation, should stay the same
+			);
+			handleChange('code', inv_code);
+		}
+	}, [selectedWarehouse]);
+
 	return (
 		<>
 			<form
@@ -93,17 +106,9 @@ export const EditInventoryForm = ({
 								id="code"
 								name="code"
 								type="text"
-								maxLength={50}
-								required
+								value={FormValue.code || selectedInventory.code || ''}
+								readOnly
 								placeholder="Code..."
-								defaultValue={
-									FormValue.code
-										? FormValue.code
-										: selectedInventory.code
-											? selectedInventory.code
-											: undefined
-								}
-								onChange={e => handleChange('code', e.target.value)}
 							/>
 						</div>
 						<div className="col-span-6 flex flex-col justify-center gap-1">
@@ -114,9 +119,14 @@ export const EditInventoryForm = ({
 								Warehouse
 							</Label>
 							<Select
-								onValueChange={value =>
-									handleChange('warehouse_id', Number(value))
-								}
+								onValueChange={value => {
+									handleChange('warehouse_id', Number(value));
+									setSelectedWarehouse(
+										warehouses.find(
+											warehouse => warehouse.id === Number(value),
+										)?.code,
+									);
+								}}
 								defaultValue={selectedInventory.warehouse.id.toString()}
 								required
 							>
