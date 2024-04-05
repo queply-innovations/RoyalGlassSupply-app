@@ -56,22 +56,39 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 		openModal(invoice, 'details');
 	};
 
-	console.log(invoices);
+	invoices.map((invoice) => {
+		// const invoicePerDate = invoice.created_at.split("T")[0];
+		const details = { 
+			year: 'numeric', 
+			month: 'long', 
+			day: 'numeric' };
+		const format = new Date(invoice.created_at).toLocaleDateString([], details);
+		// console.log(invoicePerDate);
+		if (!invoiceDates.includes(format)) {
+			setInvoiceDates([...invoiceDates, format]);
+		}
+	});
 
 	useEffect(() => {
-		invoices.map((invoice) => {
-			const invoicePerDate = invoice.created_at.split("T")[0];
-			if (!invoiceDates.includes(invoicePerDate)) {
-				setInvoiceDates([...invoiceDates, invoicePerDate]);
-			}
+		// console.log(invoiceDates);
+		invoiceDates.map((date) => {
+			const details = { 
+				year: 'numeric', 
+				month: 'long', 
+				day: 'numeric' };
+			const filteringByDate = invoices.filter((invoice) => date === new Date(invoice.created_at).toLocaleDateString([], details));
+			setInvoiceData(prev => [...prev, {
+				date: date,
+				invoices: filteringByDate
+			}]);
 		});
-	}, [invoices]);
+	}, [invoiceDates]);
 
 	useEffect(() => {
-		console.log(invoiceDates);
-	}, [invoiceDates]);
+		invoiceData.sort((a,b) => (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0));
+	}, [invoiceData]);
 	
-	const ExpensesTableHeader: ColumnDef<Invoice>[] = [
+	const ExpensesTableHeader: ColumnDef<InvoiceDate>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -93,12 +110,106 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 			enableHiding: false,
 		},
 
+		{
+			accessorKey: 'date',
+			sortingFn: "datetime",
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() => {
+								column.toggleSorting(column.getIsSorted() === "asc"); 
+							}}
+							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+						>
+							DATE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+						</Button>
+					</div>
+				)
+			},
+			cell: ({ row }) => {
+				const sched: any = row.getValue('date');
+				if (sched.toString() !== '0000-00-00') {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
+			},
+		},
+
+		{
+			id: 'expenses',
+			header:	({ column }) => {
+				return ( <div className="text-center"> TOTAL AMOUNT OF EXPENSES </div> );
+			},
+			cell: ({ row }) => {
+				const initial = row.original.invoices.filter((invoice) => invoice.status === "approved");
+
+				const total = row.original.invoices.reduce(
+					(total: number, invoice: Invoice) => 
+						total + invoice.paid_amount
+					, 0);
+
+				const formatted = new Intl.NumberFormat("en-US", {
+						style: "currency",
+						currency: "PHP",
+					}).format(total);
+				
+				return(
+					<div className="text-center">
+						{formatted}
+					</div>
+				);
+			},
+		},
+
+		{
+			id: 'actions',
+			header:	() => <div></div>,
+			cell: ({ row }) => {
+				const invoicesRow = row.original.invoices;
+				return (
+					<div className="flex flex-row text-xs font-normal uppercase">
+						<DropdownMenu>
+							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+								<MoreVertical size={16} strokeWidth={2.25} />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleInvoiceDetails(invoicesRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<List size={16} strokeWidth={2.25} />
+									</span>
+									<span>Details</span>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div>
+				);
+			}
+		}
+
 	];
 
 	return (
 		<>
 			<DataTable
-				data={invoices}
+				data={invoiceData}
 				columns={ExpensesTableHeader}
 				filterWhat={""}
 				hideFilter={true}

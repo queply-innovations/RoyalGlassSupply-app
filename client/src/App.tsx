@@ -12,18 +12,15 @@ function App() {
 	
 	useEffect(() => {
 		toast.dismiss();
-		toast.loading('Checking internet connection....', { autoClose: 2000 });
-		setTimeout(() => {
-			toast.dismiss();
-			if (online) {
-				toast.success('You are currently online!', { autoClose: 5000 });
-			} else {
-				toast.error('You are currently offline.', {
-					autoClose: false,
-					closeButton: false,
-				});
-			}
-		}, 2500);
+		if (online) {
+			toast.success('You are currently online!', { autoClose: 3000, closeButton: false });
+		} 
+		else {
+			toast.error('You are currently offline.', {
+				autoClose: false,
+				closeButton: false,
+			});
+		}
 	}, [online]);
 
 	return (
@@ -32,7 +29,7 @@ function App() {
 			<AppRouter />
 			{/* //! PANG TEST LANG NI */}
 			{/* <TestRoute /> */}
-			<ToastContainer/>
+			<ToastContainer />
 		</AppProvider>
 	);
 }

@@ -138,7 +138,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row bg-transparent text-black items-center z-10"
 						>
 							TRANSFER STATUS {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
@@ -162,7 +162,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row bg-transparent text-black items-center z-10"
 						>
 							SCHEDULE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}

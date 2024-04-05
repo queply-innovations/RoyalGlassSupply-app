@@ -19,6 +19,8 @@ import { EditInventoryForm } from '@/features/inventory/components/forms/EditInv
 import { Invoice } from '@/features/expenses/types';
 import ExpensesTable from '@/features/expenses/components/table/ExpensesTable';
 import { ExpensesProvider } from '@/features/expenses/context';
+import { InvoicesDetails } from '@/features/usersales/modal/InvoicesDetails';
+import { ExpensesDetails } from '@/features/expenses/components/modal/ExpensesDetails';
 
 export const Expenses = () => {
 
@@ -47,6 +49,9 @@ export const Expenses = () => {
 						title={'Add Expenses'}
 					>
 						<>
+							{modalAction === 'details' && (
+								<ExpensesDetails onClose={closeModal} />
+							)}
 							{/* {modalAction === 'add' && (
 								<AddInventoryForm
 									warehouses={warehouses}
