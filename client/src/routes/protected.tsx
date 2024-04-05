@@ -20,6 +20,10 @@ const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PointOfSalePage',
 );
+const { AddProductPOSPage } = lazyImport(
+	() => import('@/pages/__test__/pos'),
+	'AddProductPOSPage',
+);
 const { PendingInventory } = lazyImport(
 	() => import('@/pages'),
 	'PendingInventory',
@@ -90,7 +94,7 @@ const protectedRoutesConfig = [
 	// TODO ! add POS PAGE
 	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
 	{ path: '/pos/add-order', element: <PointOfSalePage /> },
-	{ path: '/pos/add-product', element: <PointOfSalePage /> },
+	{ path: '/pos/add-product', element: <AddProductPOSPage /> },
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
 	{ path: '/pending/inventory', element: <PendingInventory /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
