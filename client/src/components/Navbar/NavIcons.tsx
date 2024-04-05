@@ -21,7 +21,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 	icon,
 	dropdown,
 	pendingProdPrices,
-	pendingTransfers
+	pendingTransfers,
 }) => {
 	const accountMenu = [
 		{
@@ -58,14 +58,15 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 						{icon}
 					</div>
 					<div className="navicon-dropdown flex flex-row items-center">
-						<span className="nav-title text-primary-dark-gray text-xs font-bold mt-2 mr-2">
+						<span className="nav-title text-primary-dark-gray mr-2 mt-2 text-xs font-bold">
 							{title}
 						</span>
 						{dropdownVisible ? (
 							<>
-								<BiSolidUpArrow className="dropdown-arrow text-primary-dark-gray text-xs mt-2" />
-								<div className="dropdown-container absolute right-5 top-20 flex flex-col rounded-md bg-white p-4 mt-4 z-50">
-									<ul className="dropdown-menu flex flex-col gap-y-2 bg-white">
+								<BiSolidUpArrow className="dropdown-arrow text-primary-dark-gray mt-2 text-xs" />
+								<div className="dropdown-container absolute right-5 top-20 z-50 mt-4 flex flex-col space-y-2 rounded-md border bg-white p-4 shadow-xl">
+									<h3 className="text-lg font-bold">Notifications</h3>
+									<ul className="dropdown-menu flex flex-col gap-y-2">
 										{/* {accountMenu.map((item, index) => (
 											<Link to={item.link} key={index}>
 												<li className="dropdown-item flex flex-row items-center gap-x-2 rounded-md pr-16 hover:bg-gray-200">
@@ -79,23 +80,30 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 											</Link>
 										))} */}
 										<Link to="/pending/transfer">
-											<li className="dropdown-item flex flex-row items-center gap-x-2 rounded-md bg-white hover:bg-gray-200">
-												<div className="dropdown-icon-container bg-light-gray rounded-full p-2">
-													<ExternalLink size={20} strokeWidth={1.75} />
+											<li className="dropdown-item flex flex-row items-center gap-x-4 rounded-md bg-white px-4 py-2 hover:bg-gray-200">
+												<div className="dropdown-icon-container bg-light-gray rounded-full">
+													<ExternalLink
+														size={20}
+														strokeWidth={1.75}
+													/>
 												</div>
-												<span className="dropdown-title text-sm">
-													You have {pendingTransfers.length} pending <br /> transfers waiting for approval.
+												<span className="dropdown-title text-sm font-medium">
+													You have {pendingTransfers.length}{' '}
+													pending <br /> transfers waiting for
+													approval.
 												</span>
 											</li>
 										</Link>
 
 										<Link to="/products/listings">
-											<li className="dropdown-item flex flex-row items-center gap-x-2 rounded-md bg-white hover:bg-gray-200">
-												<div className="dropdown-icon-container bg-light-gray rounded-full p-2">
+											<li className="dropdown-item flex flex-row items-center gap-x-4 rounded-md bg-white px-4 py-2 hover:bg-gray-200">
+												<div className="dropdown-icon-container bg-light-gray rounded-full">
 													<Boxes size={20} strokeWidth={1.75} />
 												</div>
-												<span className="dropdown-title text-sm">
-													You have {pendingProdPrices.length} pending product <br /> prices waiting for approval.
+												<span className="dropdown-title text-sm font-medium">
+													You have {pendingProdPrices.length}{' '}
+													pending product <br /> prices waiting for
+													approval.
 												</span>
 											</li>
 										</Link>
@@ -103,7 +111,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 								</div>
 							</>
 						) : (
-							<BiSolidDownArrow className="dropdown-arrow text-primary-dark-gray text-xs mt-2" />
+							<BiSolidDownArrow className="dropdown-arrow text-primary-dark-gray mt-2 text-xs" />
 						)}
 					</div>
 				</>
@@ -112,7 +120,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 					<div className="navicon-container flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white hover:bg-gray-200">
 						{icon}
 					</div>
-					<span className="nav-title text-primary-dark-gray text-xs font-bold mt-2">
+					<span className="nav-title text-primary-dark-gray mt-2 text-xs font-bold">
 						{title}
 					</span>
 				</>
