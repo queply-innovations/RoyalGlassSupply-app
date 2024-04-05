@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
 	Command,
+	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
@@ -19,8 +20,12 @@ import { Label } from '@/components/ui/label';
 
 export const SelectInventory = () => {
 	const { auth } = useAuth();
-	const { inventories, selectedInventory, setSelectedInventory } =
-		useAddProductPos();
+	const {
+		inventories,
+		isInventoriesLoading,
+		selectedInventory,
+		setSelectedInventory,
+	} = useAddProductPos();
 	// Filter inventories based on user role to show only inventories
 	// that the user has access to.
 	// Like 'encoder_ILI' => warehouse.code === 'ILI'
@@ -76,7 +81,7 @@ export const SelectInventory = () => {
 				<PopoverContent className="w-[calc(100vw-170px)] max-w-[974px] p-0 text-sm font-medium text-slate-700">
 					<Command defaultValue={selectedInventory?.code || ''}>
 						<CommandInput placeholder="Inventory code..." />
-						{!inventories && (
+						{isInventoriesLoading && (
 							<div className="flex h-16 w-full items-center justify-center">
 								<Loader2
 									size={22}
@@ -85,6 +90,7 @@ export const SelectInventory = () => {
 								/>
 							</div>
 						)}
+						<CommandEmpty>No results found</CommandEmpty>
 						<ScrollArea className="max-h-[200px] overflow-y-scroll">
 							<CommandGroup>
 								{filteredInventories &&

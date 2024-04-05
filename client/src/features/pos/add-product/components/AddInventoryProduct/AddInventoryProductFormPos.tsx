@@ -29,7 +29,6 @@ import { InventoryProductDatabase } from '@/features/inventory/types';
 import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
 import { InventoryProductsQueueProps } from './AddInventoryProductPos';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
 interface AddInventoryProductFormProps {
