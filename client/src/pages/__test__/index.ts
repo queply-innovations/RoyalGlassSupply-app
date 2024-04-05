@@ -13,3 +13,4 @@ export * from './UserSalesPage';
 export * from './RolePermissionsPage';
 export * from './InventoryPage';
 export * from './InventoryItemsPage';
+export * from './ReportsPage';
