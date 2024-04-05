@@ -17,9 +17,15 @@ import {
 } from '@/components/ui/tooltip';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { Hash } from 'lucide-react';
+import { useEffect } from 'react';
 
 export const PaymentType = () => {
 	const { handleChange, invoice } = useInvoice();
+	useEffect(() => {
+		if (invoice.type === 'exit') {
+			handleChange('payment_method', 'exit');
+		}
+	}, [invoice.type]);
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="flex flex-col gap-1">
@@ -60,18 +66,29 @@ export const PaymentType = () => {
 								handleChange('payment_method', value);
 							}}
 						>
-							<SelectTrigger className="focus:ring-0 focus:ring-offset-0">
+							<SelectTrigger className="font-medium focus:ring-0 focus:ring-offset-0">
 								<SelectValue placeholder="Select a payment method" />
 							</SelectTrigger>
 							<SelectContent>
 								<SelectGroup>
-									<SelectItem value="cash">Cash</SelectItem>
-									<SelectItem value="purchase_order">
+									<SelectItem className="font-medium" value="cash">
+										Cash
+									</SelectItem>
+									<SelectItem
+										className="font-medium"
+										value="purchase_order"
+									>
 										Purchase Order
 									</SelectItem>
-									<SelectItem value="check">Check</SelectItem>
-									<SelectItem value="voucher">Voucher</SelectItem>
-									<SelectItem value="e-wallet">E-Wallet</SelectItem>
+									<SelectItem className="font-medium" value="check">
+										Check
+									</SelectItem>
+									<SelectItem className="font-medium" value="voucher">
+										Voucher
+									</SelectItem>
+									<SelectItem className="font-medium" value="e-wallet">
+										E-Wallet
+									</SelectItem>
 								</SelectGroup>
 							</SelectContent>
 						</Select>
