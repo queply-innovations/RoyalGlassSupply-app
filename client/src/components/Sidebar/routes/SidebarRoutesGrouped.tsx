@@ -149,11 +149,11 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'finances',
+				id: 'expenses',
 				permissionId: [10],
-				path: '/finance',
+				path: '/expenses',
 				itemProps: {
-					title: 'Finances',
+					title: 'Expenses',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
 				},
 			},

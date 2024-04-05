@@ -63,13 +63,13 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 			enableHiding: false,
 		},
 
-		{
-			accessorKey: 'id',
-			header:	() => <div className="text-center">ID</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.id}</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'id',
+		// 	header:	() => <div className="text-center">ID</div>,
+		// 	cell: ({ row }) => (
+		// 		<div className="text-center">{row.original.id}</div>
+		// 	),
+		// },
 
 		{
 			accessorKey: 'issued_by',
@@ -144,9 +144,11 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 				)
 			},
 			cell: ({ row }) => {
-				const total = row.original.invoices.reduce(
+				const initial = row.original.invoices.filter((invoice) => invoice.status === "approved");
+
+				const total = initial.reduce(
 					(total: number, invoice: Invoice) => 
-						total + invoice.total_amount_due
+						total + invoice.paid_amount
 					, 0);
 
 				const formatted = new Intl.NumberFormat("en-US", {
@@ -199,9 +201,10 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 			<DataTable
 				data={userSales}
 				columns={UserSalesTableHeader}
-				filterWhat={"issued_by"}
+				filterWhat={''}
+				hideFilter={true}
 				dataType={""}
-				openModal={handleInvoice}
+				openModal={undefined}
 				isLoading={isFetching} />
 		</>
 	);

@@ -4,23 +4,22 @@ import { formatUTCDate } from '@/utils/timeUtils';
 import { ColumnDef } from '@tanstack/react-table';
 import { useUserSales } from '../context/UserSalesContext';
 import { Invoice } from '../types';
-import { ArrowUp, ArrowDown, ArrowUpDown, MoreVertical, List } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowUpDown, MoreVertical, List, Ban, Check, Clock } from 'lucide-react';
 import { DataTable } from '@/components/Tables/DataTable';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface InvoicesDetailsProps {
 	onClose: UseModalProps['closeModal'];
-	openModal: (data: Invoice, action: string) => void;
 }
 
-export const InvoicesDetails = ({ onClose, openModal }: InvoicesDetailsProps) => {
+export const InvoicesDetails = ({ onClose }: InvoicesDetailsProps) => {
 	const { selectedInvoice, isFetching } = useUserSales();
 
-	const handleAdd = () => {
-		openModal({} as Invoice, 'add');
-	};
+	// const handleAdd = () => {
+	// 	openModal({} as Invoice, 'add');
+	// };
 
 	const currentInvoice = selectedInvoice[0];
-	console.log(selectedInvoice);
 
 	const InvoicesTableHeader: ColumnDef<Invoice>[] = [
 		{
@@ -44,39 +43,39 @@ export const InvoicesDetails = ({ onClose, openModal }: InvoicesDetailsProps) =>
 			enableHiding: false,
 		},
 
-		{
-			accessorKey: 'id',
-			header:	() => <div className="text-center">ID</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.id}</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'id',
+		// 	header:	() => <div className="text-center">ID</div>,
+		// 	cell: ({ row }) => (
+		// 		<div className="text-center">{row.original.id}</div>
+		// 	),
+		// },
 
-		{
-			accessorKey: 'code',
-			sortingFn: "alphanumeric",
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() => {
-								column.toggleSorting(column.getIsSorted() === "asc"); 
-							}}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
-						>
-							CODE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				)
-			},
-			cell: ({ row }) => (
-				<div className="text-center">
-					{row.original.code}
-				</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'code',
+		// 	sortingFn: "alphanumeric",
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<div>
+		// 				<Button
+		// 					onClick={() => {
+		// 						column.toggleSorting(column.getIsSorted() === "asc"); 
+		// 					}}
+		// 					className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+		// 				>
+		// 					CODE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+		// 								column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+		// 				</Button>
+		// 			</div>
+		// 		)
+		// 	},
+		// 	cell: ({ row }) => (
+		// 		<div className="text-center">
+		// 			{row.original.code}
+		// 		</div>
+		// 	),
+		// },
 
 		{
 			accessorKey: 'or_no',
@@ -184,6 +183,38 @@ export const InvoicesDetails = ({ onClose, openModal }: InvoicesDetailsProps) =>
 					{row.original.type}
 				</div>
 			),
+		},
+
+		{
+			accessorKey: 'status',
+			header:	() => <div className="text-center">STATUS</div>,
+			cell: ({ row }) => {
+				return (
+					<div className="flex mx-auto items-center justify-center">
+						{
+							row.original.status.toLowerCase() === 'approved' ? ( 
+								<Check
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/> 
+							) : row.original.status.toLowerCase() === 'rejected' ? (
+								<Ban
+									size={20}
+									strokeWidth={2}
+									className="text-red-600"
+								/>
+							) : (
+								<Clock
+									size={20}
+									strokeWidth={2}
+									className="text-amber-500"
+								/>
+							)
+						}
+					</div>
+				);
+			},
 		},
 
 		{
@@ -365,18 +396,20 @@ export const InvoicesDetails = ({ onClose, openModal }: InvoicesDetailsProps) =>
 
 	return (
 		<>
-			<div className="flex max-w-6xl flex-col gap-4">
+			<div className="flex max-w-4xl max-h-96 flex-col gap-4">
 				<p className="text-lg font-semibold">
 					Issuer: {currentInvoice.issued_by.firstname + " " + currentInvoice.issued_by.lastname}
 				</p>
 
-				<DataTable
-					data={selectedInvoice}
-					columns={InvoicesTableHeader}
-					filterWhat={"or_no"}
-					dataType={""}
-					openModal={handleAdd}
-					isLoading={isFetching} />
+				<div className="overflow-x-hidden">
+					<DataTable
+						data={selectedInvoice}
+						columns={InvoicesTableHeader}
+						filterWhat={"or_no"}
+						dataType={""}
+						openModal={undefined}
+						isLoading={isFetching} />
+				</div>
 			</div>
 		</>
 	);

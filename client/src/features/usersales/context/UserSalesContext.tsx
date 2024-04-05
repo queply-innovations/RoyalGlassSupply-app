@@ -27,6 +27,7 @@ export const UserSalesProvider = ({ children }: UserSalesProviderProps) => {
 	const [ userSales, setUserSales ] = useState<UserSales[]>([]);
 
 	invoices.map((invoice) => {
+		console.log(invoice);
 		if (!users.includes(invoice.issued_by.id)) {
 			setUser([...users, invoice.issued_by.id ]);
 		}
