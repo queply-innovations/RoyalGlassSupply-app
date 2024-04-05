@@ -38,7 +38,7 @@ const { ProductPrices } = lazyImport(
 	() => import('@/pages/__test__'),
 	'ProductPrices',
 );
-const { Reports } = lazyImport(() => import('@/pages'), 'Reports');
+const { Reports } = lazyImport(() => import('@/pages/__test__'), 'Reports');
 const { Return } = lazyImport(() => import('@/pages'), 'Return');
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
@@ -102,7 +102,7 @@ const protectedRoutesConfig = [
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
-	// { path: '/reports', element: <Reports /> },
+	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },

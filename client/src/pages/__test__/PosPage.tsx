@@ -1,12 +1,7 @@
-import { Header } from '@/features/pos/__test__/components/Header/Header';
 import { Navbar } from '@/features/pos/__test__/components/Navbar/Navbar';
 import { CreateOrderTable } from '@/features/pos/__test__/components/Table/CreateOrderTable';
 import { Sidebar } from '@/features/pos/__test__/components/Sidebar/Sidebar';
-import { PosTable } from '@/features/pos/__test__/components/Table/PosTable';
-import {
-	PosProvider,
-	usePos,
-} from '@/features/pos/__test__/context/__test__/PosContext';
+import { PosProvider } from '@/features/pos/__test__/context/__test__/PosContext';
 import { SearchProducts } from '@/features/pos/__test__/components/SearchProducts';
 import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
 import { CustomerProvider } from '@/features/customer/__test__/context/CustomerContext';
@@ -19,8 +14,8 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 	return (
 		<>
 			<InventoryProdsProvider>
-				<InvoiceProvider>
-					<ProductPricesProvider>
+				<ProductPricesProvider>
+					<InvoiceProvider>
 						<CustomerProvider>
 							<PosProvider>
 								<div className="flex flex-row">
@@ -35,8 +30,8 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 								</div>
 							</PosProvider>
 						</CustomerProvider>
-					</ProductPricesProvider>
-				</InvoiceProvider>
+					</InvoiceProvider>
+				</ProductPricesProvider>
 			</InventoryProdsProvider>
 		</>
 	);

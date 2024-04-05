@@ -2,6 +2,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { Invoices } from '../types/index';
 import { useEffect, useState } from 'react';
 import {
+	fetchInvoiceByCode,
 	// fetchInvoiceDiscounts,
 	// fetchInvoiceItems,
 	// fetchInvoiceTaxes,
@@ -48,4 +49,21 @@ export const useInvoiceQuery = () => {
 		}
 	}, [invoiceQuery]);
 	return { invoices, invoiceQuery };
+};
+
+export const useInvoiceCodeQuery = (code: string) => {
+	const [invoice, setInvoice] = useState<Invoices | null>(null);
+
+	const { data: result, isFetching: isLoading } = useQuery({
+		queryKey: ['ivc-code'],
+		queryFn: () => fetchInvoiceByCode(code),
+		refetchOnWindowFocus: false,
+	});
+	useEffect(() => {
+		if (!isLoading && result) {
+			setInvoice(result);
+		}
+	}, [result, isLoading]);
+
+	return { invoice, isLoading };
 };
