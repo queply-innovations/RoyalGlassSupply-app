@@ -1,13 +1,12 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
+import { useInventoryProdsMutation } from '@/features/inventory/hooks';
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
-	CommandSeparator,
 } from '@/components/ui/command';
 import {
 	Popover,
@@ -23,13 +22,13 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
-import { ChevronsUpDown, Loader2, ExternalLink } from 'lucide-react';
+import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { InventoryProductDatabase } from '../../types';
+import { InventoryProductDatabase } from '@/features/inventory/types';
 import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
-import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
+import { InventoryProductsQueueProps } from './AddInventoryProductPos';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
@@ -67,8 +66,6 @@ export const AddInventoryProductForm = ({
 	const [suppliersListOpen, setSuppliersListOpen] = useState(false);
 
 	const [error, setError] = useState<string | null>(null);
-
-	const navigate = useNavigate();
 
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
@@ -227,9 +224,9 @@ export const AddInventoryProductForm = ({
 									className={`${
 										auth.role === 'admin' ||
 										auth.role === 'super_admin'
-											? 'min-w-[642px]'
-											: 'min-w-[315px]'
-									}  p-0 text-sm font-medium text-slate-700`}
+											? 'max-w-[966px]'
+											: 'max-w-[477px]'
+									} w-[calc(100vw-170px)] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />
@@ -244,25 +241,6 @@ export const AddInventoryProductForm = ({
 										)}
 										<CommandEmpty>No match found</CommandEmpty>
 										<ScrollArea className="max-h-[200px] overflow-y-scroll">
-											<CommandGroup forceMount>
-												<CommandItem
-													key={'create-new-product'}
-													className="cursor-pointer justify-between rounded-sm"
-													onSelect={() => {
-														navigate('/products');
-														setSuppliersListOpen(false);
-													}}
-													forceMount
-												>
-													<span>Add new product...</span>
-													<ExternalLink
-														size={16}
-														strokeWidth={2.25}
-														className="text-slate-700/50"
-													/>
-												</CommandItem>
-											</CommandGroup>
-											<CommandSeparator />
 											<CommandGroup>
 												{products.map((product, key) => (
 													<CommandItem
@@ -340,7 +318,7 @@ export const AddInventoryProductForm = ({
 										/>
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent className="min-w-[315px] p-0 text-sm font-medium text-slate-700">
+								<PopoverContent className="min-w-[477px] p-0 text-sm font-medium text-slate-700">
 									<Command>
 										<CommandInput placeholder="Supplier name or address..." />
 										{suppliersLoading && (
@@ -354,24 +332,6 @@ export const AddInventoryProductForm = ({
 										)}
 										<CommandEmpty>No match found</CommandEmpty>
 										<ScrollArea className="max-h-[200px] overflow-y-scroll">
-											<CommandGroup forceMount>
-												<CommandItem
-													key={'create-new-supplier'}
-													className="cursor-pointer justify-between rounded-sm"
-													onSelect={() => {
-														navigate('/supplier');
-														setSuppliersListOpen(false);
-													}}
-												>
-													<span>Add new supplier...</span>
-													<ExternalLink
-														size={16}
-														strokeWidth={2.25}
-														className="text-slate-700/50"
-													/>
-												</CommandItem>
-											</CommandGroup>
-											<CommandSeparator />
 											<CommandGroup>
 												{suppliers.map((supplier, key) => (
 													<CommandItem
@@ -428,7 +388,7 @@ export const AddInventoryProductForm = ({
 						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">
+					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div className="relative col-span-3 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="capital_price"

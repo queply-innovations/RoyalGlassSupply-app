@@ -9,7 +9,7 @@ import {
 import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
+import { InventoryProductsQueueProps } from './AddInventoryProductPos';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -27,6 +27,8 @@ import {
 } from 'lucide-react';
 import { Button as LegacyButton } from '@/components';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAddProductPos } from '../..';
 
 const tableCols = [
 	'',
@@ -52,7 +54,6 @@ interface AddInventoryProductTableProps {
 	handleSubmit: (
 		args: any,
 	) => Promise<number[] | { status: number; data: any }>;
-	onClose: () => void;
 }
 
 export const AddInventoryProductTable = ({
@@ -62,8 +63,8 @@ export const AddInventoryProductTable = ({
 	handleEditItem,
 	handleRemoveItem,
 	handleSubmit,
-	onClose,
 }: AddInventoryProductTableProps) => {
+	const { setActiveTab, setSelectedInventory } = useAddProductPos();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -72,7 +73,23 @@ export const AddInventoryProductTable = ({
 		const response = await handleSubmit({
 			action: 'batch-add',
 			data: data.map(item => item?.data),
-		});
+		})
+			.then(res => {
+				if (Array.isArray(res) && res.length > 0) {
+					toast.success('Items added to inventory', {
+						autoClose: 5000,
+						closeButton: true,
+					});
+          setSelectedInventory(undefined);
+					setActiveTab(undefined);
+				}
+			})
+			.catch(() => {
+				toast.error('Error adding items to inventory', {
+					autoClose: 5000,
+					closeButton: true,
+				});
+			});
 
 		// Check if there are errors in the response array
 		const errors = Array.isArray(response)
@@ -82,7 +99,6 @@ export const AddInventoryProductTable = ({
 			setError('Error adding items to inventory');
 		} else {
 			setIsSubmitting(false);
-			onClose();
 		}
 	};
 
@@ -308,19 +324,10 @@ export const AddInventoryProductTable = ({
 					)}
 					<div className="ml-auto flex flex-row gap-4">
 						<LegacyButton
-							fill={'default'}
-							type="reset"
-							onClick={() => onClose()}
-							className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
-						>
-							Cancel
-						</LegacyButton>
-						<LegacyButton
 							type="submit"
 							fill={'green'}
 							disabled={data.length <= 0 || isSubmitting} // Disable button if no item in list
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-							// ! TODO: Add submit handler
 							onClick={e => {
 								e.preventDefault();
 								submitItems();
