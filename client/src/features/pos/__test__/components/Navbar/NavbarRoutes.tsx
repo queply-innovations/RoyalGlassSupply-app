@@ -11,7 +11,13 @@ export const NavbarRoutes: NavbarRoute[] = [
 		path: '/dashbard',
 	},
 	{
-		allowedRoles: ['super_admin', 'admin', 'manager'],
+		allowedRoles: [
+			'super_admin',
+			'admin',
+			'manager',
+			'encoder',
+			'sales_person',
+		],
 		navbarProps: {
 			displayText: 'Add Order',
 			icon: <Banknote className="h-10 w-10 text-[#CCCCCC]" />,
@@ -19,7 +25,13 @@ export const NavbarRoutes: NavbarRoute[] = [
 		path: '/pos/add-order',
 	},
 	{
-		allowedRoles: ['super_admin', 'admin', 'manager'],
+		allowedRoles: [
+			'super_admin',
+			'admin',
+			'manager',
+			'encoder',
+			'sales_person',
+		],
 		navbarProps: {
 			displayText: 'Add Product',
 			icon: <PackagePlus className="h-10 w-10 text-[#CCCCCC]" />,
