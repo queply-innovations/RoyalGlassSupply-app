@@ -64,7 +64,7 @@ export const NavIcons: React.FC<NaviconsProps> = ({
 						{dropdownVisible ? (
 							<>
 								<BiSolidUpArrow className="dropdown-arrow text-primary-dark-gray text-xs mt-2" />
-								<div className="dropdown-container absolute right-5 top-20 flex flex-col rounded-md bg-white p-4 mt-4 z-100">
+								<div className="dropdown-container absolute right-5 top-20 flex flex-col rounded-md bg-white p-4 mt-4 z-50">
 									<ul className="dropdown-menu flex flex-col gap-y-2 bg-white">
 										{/* {accountMenu.map((item, index) => (
 											<Link to={item.link} key={index}>

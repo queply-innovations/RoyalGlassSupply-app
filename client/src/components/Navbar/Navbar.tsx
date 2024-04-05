@@ -22,14 +22,9 @@ export const Navbar = () => {
 
 	const numberNotif = pendingProductPrices.length + pendingTransfers.length;
 
-	const pendingList = () => {
-		toast('Pending Product Prices');
-	};
-
 	return (
 		// <div className="navbar-container flex flex-row items-end place-content-end justify-between">
 			<div className="nav-icon flex flex-row items-end justify-end gap-x-5">
-				<ToastContainer className="flex mt-20" autoClose={false}/>
 				<Link to="/dashboard">
 					<NavIcons
 						icon={

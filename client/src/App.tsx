@@ -13,9 +13,8 @@ function App() {
 	useEffect(() => {
 		toast.dismiss();
 		if (online) {
-			toast.success('You are currently online!', { autoClose: 3000, closeButton: false });
-		} 
-		else {
+			toast.success('You are currently online!', { autoClose: 3000 });
+		} else {
 			toast.error('You are currently offline.', {
 				autoClose: false,
 				closeButton: false,
@@ -29,7 +28,7 @@ function App() {
 			<AppRouter />
 			{/* //! PANG TEST LANG NI */}
 			{/* <TestRoute /> */}
-			<ToastContainer />
+			<ToastContainer limit={1}/>
 		</AppProvider>
 	);
 }
