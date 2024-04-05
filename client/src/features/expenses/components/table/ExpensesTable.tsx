@@ -1,9 +1,13 @@
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
-import { Invoice, UserSales, User } from '../types';
+import {
+	Inventory,
+	InventoryDatabase,
+	InventoryProduct,
+	InventoryProductDatabase,
+} from '../../types';
 import { ColumnDef } from '@tanstack/react-table';
-import { FC } from 'react';
-import { useUserSales } from '../context/UserSalesContext';
+import { FC, useEffect, useState } from 'react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -24,24 +28,67 @@ import {
 	Check,
 	Clock,
 } from 'lucide-react';
+import { useExpenses } from '../../context';
+import { Invoice, InvoiceDate } from '../../types';
+import { set } from 'date-fns';
 
-interface UserSalesTableProps {
-	openModal: (data: UserSales, action: string) => void;
+interface ExpensesTableProps {
+	openModal: (data: Invoice[], action: string) => void;
 }
 
-export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSalesTableProps) =>{
-	const { invoices, isFetching, users, userSales, setSelectedInvoice } = useUserSales();
+export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTableProps) =>{
+	const { invoices,
+		isFetching,
+		selectedInventory,
+		setSelectedInventory,
+		selectedInvoice,
+		setSelectedInvoice } = useExpenses();
 
-	const handleInvoice = () => {
-		openModal({} as UserSales, 'add');
-	};
+	const [ invoiceDates, setInvoiceDates ] = useState<string[]>([]);
+	const [ invoiceData, setInvoiceData ] = useState<InvoiceDate[]>([]);
 
-	const handleInvoiceDetails = (invoice: UserSales) => {
-		setSelectedInvoice(invoice.invoices);
+	// const handleInvoice = () => {
+	// 	openModal({} as UserSales, 'add');
+	// };
+
+	const handleInvoiceDetails = (invoice: Invoice[]) => {
+		setSelectedInvoice(invoice);
 		openModal(invoice, 'details');
 	};
+
+	invoices.map((invoice) => {
+		// const invoicePerDate = invoice.created_at.split("T")[0];
+		const details = { 
+			year: 'numeric', 
+			month: 'long', 
+			day: 'numeric' };
+		const format = new Date(invoice.created_at).toLocaleDateString([], details);
+		// console.log(invoicePerDate);
+		if (!invoiceDates.includes(format)) {
+			setInvoiceDates([...invoiceDates, format]);
+		}
+	});
+
+	useEffect(() => {
+		// console.log(invoiceDates);
+		invoiceDates.map((date) => {
+			const details = { 
+				year: 'numeric', 
+				month: 'long', 
+				day: 'numeric' };
+			const filteringByDate = invoices.filter((invoice) => date === new Date(invoice.created_at).toLocaleDateString([], details));
+			setInvoiceData(prev => [...prev, {
+				date: date,
+				invoices: filteringByDate
+			}]);
+		});
+	}, [invoiceDates]);
+
+	useEffect(() => {
+		invoiceData.sort((a,b) => (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0));
+	}, [invoiceData]);
 	
-	const UserSalesTableHeader: ColumnDef<UserSales>[] = [
+	const ExpensesTableHeader: ColumnDef<InvoiceDate>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -63,17 +110,9 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 			enableHiding: false,
 		},
 
-		// {
-		// 	accessorKey: 'id',
-		// 	header:	() => <div className="text-center">ID</div>,
-		// 	cell: ({ row }) => (
-		// 		<div className="text-center">{row.original.id}</div>
-		// 	),
-		// },
-
 		{
-			accessorKey: 'issued_by',
-			sortingFn: "text",
+			accessorKey: 'date',
+			sortingFn: "datetime",
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
@@ -84,69 +123,40 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 							}}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							FULL NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				)
-			},
-			cell: ({ row }) => (
-				<div className="text-center">
-					{row.original.invoices[0].issued_by.firstname + 
-						" " + row.original.invoices[0].issued_by.lastname}
-				</div>
-			),
-		},
-
-		{
-			id: 'total_sales',
-			sortingFn: "basic",
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() => {
-								column.toggleSorting(column.getIsSorted() === "asc"); 
-							}}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
-						>
-							NUMBER OF SALES {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				)
-			},
-			cell: ({ row }) => (
-				<div className="text-center">
-					{row.original.invoices.length}
-				</div>
-			),
-		},
-
-		{
-			id: 'amount_sales',
-			sortingFn: "basic",
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() => {
-								column.toggleSorting(column.getIsSorted() === "asc"); 
-							}}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
-						>
-							TOTAL AMOUNT OF SALES {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+							DATE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)
 			},
 			cell: ({ row }) => {
+				const sched: any = row.getValue('date');
+				if (sched.toString() !== '0000-00-00') {
+					const details = { 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric' };
+					const format = new Date(sched).toLocaleDateString([], details);
+					return (
+						<div className="text-center">{format}</div>
+					);
+				} else {
+					return (
+						<div className="text-center">N/A</div>
+					);
+				}
+			},
+		},
+
+		{
+			id: 'expenses',
+			header:	({ column }) => {
+				return ( <div className="text-center"> TOTAL AMOUNT OF EXPENSES </div> );
+			},
+			cell: ({ row }) => {
 				const initial = row.original.invoices.filter((invoice) => invoice.status === "approved");
 
-				const total = initial.reduce(
+				const total = row.original.invoices.reduce(
 					(total: number, invoice: Invoice) => 
 						total + invoice.paid_amount
 					, 0);
@@ -168,7 +178,7 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 			id: 'actions',
 			header:	() => <div></div>,
 			cell: ({ row }) => {
-				const userSalesRow = row.original;
+				const invoicesRow = row.original.invoices;
 				return (
 					<div className="flex flex-row text-xs font-normal uppercase">
 						<DropdownMenu>
@@ -179,7 +189,7 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
 								<DropdownMenuItem
-									onClick={() => handleInvoiceDetails(userSalesRow)}
+									onClick={() => handleInvoiceDetails(invoicesRow)}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
@@ -199,9 +209,9 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 	return (
 		<>
 			<DataTable
-				data={userSales}
-				columns={UserSalesTableHeader}
-				filterWhat={''}
+				data={invoiceData}
+				columns={ExpensesTableHeader}
+				filterWhat={""}
 				hideFilter={true}
 				dataType={""}
 				openModal={undefined}
@@ -210,4 +220,4 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({ openModal }: UserSales
 	);
 };
 
-export default UserSalesTable;
+export default ExpensesTable;

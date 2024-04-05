@@ -49,18 +49,25 @@ export const useUserRoleMutation = () => {
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<string | null>(null);
 
-	const handleChange = (e: any) => {
+	const handleChange = (checked: boolean, perm_id: number) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		if (e.target.checked === false) {
-			setPermissionChange(permissionChange.filter((permission) => permission.permission_id !== Number(e.target.value)));
+		if (!checked) {
+			setPermissionChange(
+				permissionChange.filter(
+					permission => permission.permission_id !== perm_id,
+				),
+			);
 		} else {
-			setPermissionChange([...permissionChange, { 
-				id: null,
-				role_id: roleId[0].id, 
-				permission_id: Number(e.target.value) 
-			}]);
+			setPermissionChange([
+				...permissionChange,
+				{
+					id: null,
+					role_id: roleId,
+					permission_id: perm_id,
+				},
+			]);
 		}
 	};
 
@@ -95,7 +102,7 @@ export const useUserRoleMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['role-permission'] });
+			await queryClient.invalidateQueries({ queryKey: ['all-permissions'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('Role permissions have been updated');

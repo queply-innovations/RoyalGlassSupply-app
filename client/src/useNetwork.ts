@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-function getNetworkConnection() {
-	return (
-		navigator.connection ||
-		navigator.mozConnection ||
-		navigator.webkitConnection ||
-		null
-	);
-}
+// function getNetworkConnection() {
+// 	return (
+// 		navigator.connection ||
+// 		navigator.mozConnection ||
+// 		navigator.webkitConnection ||
+// 		null
+// 	);
+// }
 // function getNetworkConnectionInfo() {
 // 	const connection = getNetworkConnection();
 // 	if (!connection) {

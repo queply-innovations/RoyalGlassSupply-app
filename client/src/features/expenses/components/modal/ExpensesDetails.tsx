@@ -3,25 +3,28 @@ import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMe
 import { formatUTCDate } from '@/utils/timeUtils';
 import { ColumnDef } from '@tanstack/react-table';
 import { useUserSales } from '../context/UserSalesContext';
-import { Invoice } from '../types';
+import { Invoice } from '../../types';
 import { ArrowUp, ArrowDown, ArrowUpDown, MoreVertical, List, Ban, Check, Clock } from 'lucide-react';
 import { DataTable } from '@/components/Tables/DataTable';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useExpenses } from '../../context';
 
-interface InvoicesDetailsProps {
+interface ExpensesDetailsProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-export const InvoicesDetails = ({ onClose }: InvoicesDetailsProps) => {
-	const { selectedInvoice, isFetching } = useUserSales();
+export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
+	const { invoices,
+		isFetching,
+		selectedInvoice } = useExpenses();
 
 	// const handleAdd = () => {
 	// 	openModal({} as Invoice, 'add');
 	// };
 
-	const currentInvoice = selectedInvoice[0];
+	// const currentInvoice = selectedInvoice[0];
 
-	const InvoicesTableHeader: ColumnDef<Invoice>[] = [
+	const ExpensesDetailsTableHeader: ColumnDef<Invoice>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -397,14 +400,10 @@ export const InvoicesDetails = ({ onClose }: InvoicesDetailsProps) => {
 	return (
 		<>
 			<div className="flex max-w-4xl max-h-96 flex-col gap-4">
-				<p className="text-lg font-semibold">
-					Issuer: {currentInvoice.issued_by.firstname + " " + currentInvoice.issued_by.lastname}
-				</p>
-
 				<div className="overflow-x-hidden">
 					<DataTable
 						data={selectedInvoice}
-						columns={InvoicesTableHeader}
+						columns={ExpensesDetailsTableHeader}
 						filterWhat={"or_no"}
 						dataType={""}
 						openModal={undefined}

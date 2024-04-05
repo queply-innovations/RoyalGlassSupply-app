@@ -232,7 +232,7 @@ export const useTransferMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['transfer'] });
+			await queryClient.invalidateQueries({ queryKey: ['transfers'] });
 			if (arrived){
 				setFirstStep(true);
 			} else {
@@ -282,7 +282,7 @@ export const useTransferMutation = () => {
 	const mutationConfigReTrfProd = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['initInventoryProduct'] });
+			await queryClient.invalidateQueries({ queryKey: ['transfer_products'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('Transfer info has been edited');

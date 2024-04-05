@@ -43,6 +43,9 @@ export const Dashboard = () => {
 									{formatCurrency(999)}
 								</span>
 							</InfoCard>
+							<InfoCard background={'default'}>
+								<span className="text-sm font-bold uppercase text-white">
+									Net Profit
 							<InfoCard background={'white'}>
 								<span className="text-sm font-bold uppercase text-slate-800">
 									Total Capital

@@ -5,7 +5,7 @@ import { z } from 'zod';
 // import { useAuth } from '@/context/__test__AuthContext';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, Mail, LockKeyhole } from 'lucide-react';
+import { Loader2, Mail, LockKeyhole, Eye, EyeOff } from 'lucide-react';
 
 // Define the form schema
 const schema = z.object({
@@ -51,40 +51,77 @@ export const LoginForm = () => {
 		</div>
 	);
 
+	// Pasword show state
+	const [showPass, setShowPass] = useState<boolean>(false);
+	const changeStat = () => {
+		setShowPass(!showPass);
+	};
+
 	// Login form layout
 	const layout = (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<div className="grid gap-6">
-				<div className="grid gap-4">
-					<div className="flex flex-row rounded-lg border border-gray-300 p-2 w-[420px] h-[56px] items-center align-center">
-						<Mail size={26} strokeWidth={1} className="ml-2" />
-						<input
-							className="ml-4 w-full"
-							{...register('email', { required: true })}
-							type="email"
-							placeholder="Email"
-						/>
-					</div>
-					{errors.email && (
-						<div className="text-base text-red-500">{errors.email.message}</div>
-					)}
-					<div className="flex flex-row rounded-lg border border-gray-300 p-2 w-[420px] h-[56px] items-center align-center">
-						<LockKeyhole size={26} strokeWidth={1} className="ml-2" />
-						<input
-							className="ml-4 w-full"
-							{...register('password', { required: true })}
-							type="password"
-							placeholder="Password"
-						/>
-					</div>
-					{errors.password && (
-						<div className="text-base text-red-500">
-							{errors.password.message}
+			<div className="grid gap-8">
+				<div className="grid gap-2">
+					<div className="space-y-1">
+						<div className="relative h-[56px] w-[420px]">
+							<Mail
+								size={24}
+								strokeWidth={1}
+								className="pointer-events-none absolute left-0 top-1/2 mx-4 -translate-y-1/2"
+							/>
+							<input
+								className="h-full w-full rounded-lg border border-gray-300 pl-14"
+								{...register('email', { required: true })}
+								type="email"
+								placeholder="Email"
+							/>
 						</div>
-					)}
+						{errors.email && (
+							<div className="text-base font-medium text-red-500">
+								{errors.email.message}
+							</div>
+						)}
+					</div>
+					<div className="space-y-1">
+						<div className="relative h-[56px] w-[420px]">
+							<LockKeyhole
+								size={26}
+								strokeWidth={1}
+								className="pointer-events-none absolute left-0 top-1/2 mx-4 -translate-y-1/2"
+							/>
+							<input
+								className="h-full w-full rounded-lg border border-gray-300 px-14"
+								{...register('password', { required: true })}
+								type={showPass ? 'text' : 'password'}
+								placeholder="Password"
+							/>
+							{showPass ? (
+								<Eye
+									size={26}
+									strokeWidth={1}
+									className="absolute right-0 top-1/2 mx-4 -translate-y-1/2 cursor-pointer"
+									onClick={changeStat}
+								/>
+							) : (
+								<EyeOff
+									size={26}
+									strokeWidth={1}
+									className="absolute right-0 top-1/2 mx-4 -translate-y-1/2 cursor-pointer"
+									onClick={changeStat}
+								/>
+							)}
+						</div>
+						{errors.password && (
+							<div className="text-base font-medium text-red-500">
+								{errors.password.message}
+							</div>
+						)}
+					</div>
 				</div>
-				<Button disabled={isSubmitting} 
-					className="rounded-md w-[420px] h-[56px] bg-login-button hover:bg-blue-950 font-extrabold">
+				<Button
+					disabled={isSubmitting}
+					className="bg-login-button h-[56px] w-[420px] rounded-md font-extrabold hover:bg-blue-950"
+				>
 					{isSubmitting && (
 						<div className="flex items-center justify-center text-slate-800/60">
 							<Loader2
@@ -96,6 +133,16 @@ export const LoginForm = () => {
 					)}
 					Log in
 				</Button>
+				{
+					// Error message
+					errors.root && (
+						<div className="text-center text-base font-medium text-red-500">
+							{errors.root.message?.includes('credentials')
+								? 'Invalid login credentials'
+								: errors.root.message}
+						</div>
+					)
+				}
 			</div>
 		</Form>
 	);

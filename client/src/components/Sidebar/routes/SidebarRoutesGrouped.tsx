@@ -15,13 +15,6 @@ import {
 	Calculator,
 } from 'lucide-react';
 
-export type Role =
-	| 'super_admin'
-	| 'admin'
-	| 'manager'
-	| 'encoder'
-	| 'sales_person';
-
 interface SidebarGroup {
 	groupName?: string;
 	items: SidebarListItems[];
@@ -167,11 +160,11 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				],
 			},
 			{
-				id: 'finances',
+				id: 'expenses',
 				permissionId: [10],
-				path: '/finance',
+				path: '/expenses',
 				itemProps: {
-					title: 'Finances',
+					title: 'Expenses',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
 				},
 			},
