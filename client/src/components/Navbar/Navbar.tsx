@@ -15,42 +15,50 @@ export const Navbar = () => {
 	const { logout } = useAuth();
 
 	const { data: productPrices, isLoading } = useProductPricesQuery();
-	const { transfers, transferProducts, isFetching, progress } = useTransferQuery();
+	const { transfers, transferProducts, isFetching, progress } =
+		useTransferQuery();
 
-	const pendingProductPrices = productPrices.filter((prodPrice) => prodPrice.approval_status === 'pending');
-	const pendingTransfers = transfers.filter((transfer) => transfer.approval_status === 'pending');
+	const pendingProductPrices = productPrices.filter(
+		prodPrice => prodPrice.approval_status === 'pending',
+	);
+	const pendingTransfers = transfers.filter(
+		transfer => transfer.approval_status === 'pending',
+	);
 
 	const numberNotif = pendingProductPrices.length + pendingTransfers.length;
 
 	return (
-		// <div className="navbar-container flex flex-row items-end place-content-end justify-between">
-			<div className="nav-icon flex flex-row items-end justify-end gap-x-5">
-				<Link to="/dashboard">
-					<NavIcons
-						icon={
-							<GoHomeFill className="text-primary-dark-gray text-xl" />
-						}
-						title={'Home'}
-					/>
-				</Link>
-				{/* <Link> */}
-				
+		// <div className="flex flex-row items-end justify-between navbar-container place-content-end">
+		<div className="nav-icon flex flex-row items-end justify-end gap-x-5">
+			<Link to="/dashboard">
 				<NavIcons
-					icon={
-						<IoNotifications className="text-primary-dark-gray text-xl" />
-					}
-					title={'Notifications'}
-					dropdown={true}
-					pendingProdPrices={pendingProductPrices}
-					pendingTransfers={pendingTransfers}
+					icon={<GoHomeFill className="text-primary-dark-gray text-xl" />}
+					title={'Home'}
 				/>
+			</Link>
+			{/* <Link> */}
 
-				<div className={`absolute w-5 h-5 top-5 right-6 rounded-full bg-red-500 mr-2 text-white font-bold`}>
-					<div className={`w-5 h-5 top-5 right-5 rounded-full bg-red-500 ${numberNotif !== 0 && 'animate-ping'} mr-2`}></div>
-					<p className="absolute left-1.5 -bottom-0.5">{numberNotif}</p>
+			<NavIcons
+				icon={
+					<IoNotifications className="text-primary-dark-gray text-xl" />
+				}
+				title={'Notifications'}
+				dropdown={true}
+				pendingProdPrices={pendingProductPrices}
+				pendingTransfers={pendingTransfers}
+			/>
+
+			<div
+				className={`absolute right-6 top-5 mr-2 h-5 w-5 rounded-full bg-red-500 font-bold text-white`}
+			>
+				<div
+					className={`flex h-5 w-5 content-center items-center justify-center rounded-full bg-red-500 ${numberNotif !== 0} mr-2`}
+				>
+					<p className="text-[12px] ">{numberNotif}</p>
 				</div>
-				{/* </Link> */}
 			</div>
+			{/* </Link> */}
+		</div>
 		// </div>
 	);
 };
