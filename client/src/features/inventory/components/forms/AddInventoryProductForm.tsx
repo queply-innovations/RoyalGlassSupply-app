@@ -79,7 +79,7 @@ export const AddInventoryProductForm = ({
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
 			(handleChange('product_id', selectedProduct.data.product_id),
-			// ! handleChange('status', selectedProduct.data.status), // Uncomment this line to enable status change
+			handleChange('status', selectedProduct.data.status),
 			handleChange('supplier_id', selectedProduct.data.supplier_id),
 			handleChange('capital_price', selectedProduct.data.capital_price),
 			handleChange('unit', selectedProduct.data.unit),
