@@ -39,11 +39,11 @@ export const AddProductMain = () => {
 					{activeTab === 'main' ? 'Go back' : 'Main menu'}
 				</Button>
 			</div>
-			{activeTab === 'main' ? (
+			{(activeTab === 'main' || activeTab === undefined) && (
 				<MainMenuButtons />
-			) : activeTab === 'select_inventory' ? (
-				<AddInventoryProductsPOS />
-			) : (
+			)}
+			{activeTab === 'select_inventory' && <AddInventoryProductsPOS />}{' '}
+			{activeTab === 'add_product' && (
 				<ProductsTablePos openModal={modalHandler} />
 			)}
 			<div>

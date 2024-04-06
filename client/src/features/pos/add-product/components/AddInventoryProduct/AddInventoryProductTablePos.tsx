@@ -66,7 +66,7 @@ export const AddInventoryProductTable = ({
 	handleSubmit,
 }: AddInventoryProductTableProps) => {
 	const { auth } = useAuth();
-	const { setActiveTab, setSelectedInventory } = useAddProductPos();
+	const { setSelectedInventory } = useAddProductPos();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -82,8 +82,7 @@ export const AddInventoryProductTable = ({
 						autoClose: 5000,
 						closeButton: true,
 					});
-					setSelectedInventory(undefined);
-					setActiveTab(undefined);
+					setSelectedInventory(undefined); // clear selected inventory
 				}
 			})
 			.catch(() => {
