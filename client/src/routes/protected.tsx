@@ -13,7 +13,7 @@ import { ProductPricesProvider } from '@/features/product/__test__';
 import { JSX } from 'react/jsx-runtime';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
-const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
+const { ExpensesPage } = lazyImport(() => import('@/pages/__test__'), 'ExpensesPage');
 // const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
 // const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
 const { Inventory } = lazyImport(() => import('@/pages/__test__'), 'Inventory');
@@ -29,6 +29,7 @@ const { PointOfSalePage } = lazyImport(
 const { PosReturnsPage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PosReturnsPage',
+);
 const { AddProductPOSPage } = lazyImport(
 	() => import('@/pages/__test__/pos'),
 	'AddProductPOSPage',
@@ -111,12 +112,12 @@ const protectedRoutesConfig = [
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
 	{ path: '/transfer', element: <Transfer /> },
 	{ path: '/transaction', element: <Transaction /> },
-	{ path: '/transaction/expenses', element: <Expenses /> },
+	// { path: '/transaction/expenses', element: <Expenses /> },
 	{ path: '/returns', element: <Return /> },
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
-	{ path: '/expenses', element: <Expenses /> },
+	{ path: '/expenses', element: <ExpensesPage /> },
 	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },

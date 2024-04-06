@@ -1,10 +1,8 @@
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
 import {
-	Inventory,
-	InventoryDatabase,
-	InventoryProduct,
-	InventoryProductDatabase,
+	Expenses,
+	ExpensesRaw
 } from '../../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC, useEffect, useState } from 'react';
@@ -29,66 +27,30 @@ import {
 	Clock,
 } from 'lucide-react';
 import { useExpenses } from '../../context';
-import { Invoice, InvoiceDate } from '../../types';
 import { set } from 'date-fns';
+import { FaPencilAlt } from 'react-icons/fa';
 
 interface ExpensesTableProps {
-	openModal: (data: Invoice[], action: string) => void;
+	openModal: (data: ExpensesRaw[] | Expenses, action: string) => void;
 }
 
 export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTableProps) =>{
-	const { invoices,
+	const { expenses,
 		isFetching,
-		selectedInventory,
-		setSelectedInventory,
-		selectedInvoice,
-		setSelectedInvoice } = useExpenses();
+		selectedExpenses,
+		setSelectedExpenses,
+		dateToday } = useExpenses();
 
-	const [ invoiceDates, setInvoiceDates ] = useState<string[]>([]);
-	const [ invoiceData, setInvoiceData ] = useState<InvoiceDate[]>([]);
-
-	// const handleInvoice = () => {
-	// 	openModal({} as UserSales, 'add');
-	// };
-
-	const handleInvoiceDetails = (invoice: Invoice[]) => {
-		setSelectedInvoice(invoice);
-		openModal(invoice, 'details');
+	const handleAddExpenses = () => {
+		openModal({} as Expenses, 'add');
 	};
 
-	invoices.map((invoice) => {
-		// const invoicePerDate = invoice.created_at.split("T")[0];
-		const details = { 
-			year: 'numeric', 
-			month: 'long', 
-			day: 'numeric' };
-		const format = new Date(invoice.created_at).toLocaleDateString([], details);
-		// console.log(invoicePerDate);
-		if (!invoiceDates.includes(format)) {
-			setInvoiceDates([...invoiceDates, format]);
-		}
-	});
-
-	useEffect(() => {
-		// console.log(invoiceDates);
-		invoiceDates.map((date) => {
-			const details = { 
-				year: 'numeric', 
-				month: 'long', 
-				day: 'numeric' };
-			const filteringByDate = invoices.filter((invoice) => date === new Date(invoice.created_at).toLocaleDateString([], details));
-			setInvoiceData(prev => [...prev, {
-				date: date,
-				invoices: filteringByDate
-			}]);
-		});
-	}, [invoiceDates]);
-
-	useEffect(() => {
-		invoiceData.sort((a,b) => (a.date > b.date) ? -1 : ((b.date > a.date) ? 1 : 0));
-	}, [invoiceData]);
+	const handleEditExpenses = (expenses: ExpensesRaw[]) => {
+		setSelectedExpenses(expenses[0]);
+		openModal(expenses, 'edit');
+	};
 	
-	const ExpensesTableHeader: ColumnDef<InvoiceDate>[] = [
+	const ExpensesTableHeader: ColumnDef<ExpensesRaw>[] = [
 		{
 			id: "select",
 			header: ({ table }) => (
@@ -111,7 +73,7 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 		},
 
 		{
-			accessorKey: 'date',
+			accessorKey: 'date_of_operation',
 			sortingFn: "datetime",
 			enableSorting: true,
 			header: ({ column }) => {
@@ -123,14 +85,14 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 							}}
 							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
 						>
-							DATE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
+							DATE OF OPERATION {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
 						</Button>
 					</div>
 				)
 			},
 			cell: ({ row }) => {
-				const sched: any = row.getValue('date');
+				const sched: any = row.getValue('date_of_operation');
 				if (sched.toString() !== '0000-00-00') {
 					const details = { 
 						year: 'numeric', 
@@ -149,23 +111,30 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 		},
 
 		{
-			id: 'expenses',
+			accessorKey: 'title',
 			header:	({ column }) => {
-				return ( <div className="text-center"> TOTAL AMOUNT OF EXPENSES </div> );
+				return ( <div className="text-center"> TITLE </div> );
 			},
 			cell: ({ row }) => {
-				const initial = row.original.invoices.filter((invoice) => invoice.status === "approved");
+				return(
+					<div className="text-center">
+						{row.original.title}
+					</div>
+				);
+			},
+		},
 
-				const total = row.original.invoices.reduce(
-					(total: number, invoice: Invoice) => 
-						total + invoice.paid_amount
-					, 0);
-
+		{
+			accessorKey: 'amount',
+			header:	({ column }) => {
+				return ( <div className="text-center"> AMOUNT </div> );
+			},
+			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat("en-US", {
-						style: "currency",
-						currency: "PHP",
-					}).format(total);
-				
+					style: "currency",
+					currency: "PHP",
+				}).format(row.original.amount);
+
 				return(
 					<div className="text-center">
 						{formatted}
@@ -175,46 +144,69 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 		},
 
 		{
-			id: 'actions',
-			header:	() => <div></div>,
+			accessorKey: 'notes',
+			header:	({ column }) => {
+				return ( <div className="text-center"> NOTES </div> );
+			},
 			cell: ({ row }) => {
-				const invoicesRow = row.original.invoices;
-				return (
-					<div className="flex flex-row text-xs font-normal uppercase">
-						<DropdownMenu>
-							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
-								<MoreVertical size={16} strokeWidth={2.25} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="relative z-50 w-44 bg-white">
-								<DropdownMenuLabel>Actions</DropdownMenuLabel>
-								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() => handleInvoiceDetails(invoicesRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<List size={16} strokeWidth={2.25} />
-									</span>
-									<span>Details</span>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+				return(
+					<div className="text-center">
+						{row.original.notes}
 					</div>
 				);
-			}
-		}
+			},
+		},
+
+		{
+			accessorKey: 'created_by',
+			header:	({ column }) => {
+				return ( <div className="text-center"> CREATED BY </div> );
+			},
+			cell: ({ row }) => {
+				return(
+					<div className="text-center">
+						{row.original.created_by.firstname} {row.original.created_by.lastname}
+					</div>
+				);
+			},
+		},
+
+		{
+			id: 'actions',
+			header: () => (
+				<div className="flex flex-row justify-center">ACTIONS</div>
+			),
+			cell: ({ row }) => {
+				const expensesRow = row.original;
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<Button
+							fill="empty"
+							textColor={'black'}
+							onClick={() => handleEditExpenses([expensesRow])}
+							className="flex flex-row items-center gap-2"
+						>
+							<FaPencilAlt /> Edit
+						</Button>
+					</div>
+				);
+			},
+		},
 
 	];
+
+	const checkerDate = expenses.some((expense) => {
+		return expense.date_of_operation === dateToday;
+	});
 
 	return (
 		<>
 			<DataTable
-				data={invoiceData}
+				data={expenses}
 				columns={ExpensesTableHeader}
-				filterWhat={""}
-				hideFilter={true}
-				dataType={""}
-				openModal={undefined}
+				filterWhat={"notes"}
+				dataType={"Today's Expenses"}
+				openModal={checkerDate ? undefined : handleAddExpenses}
 				isLoading={isFetching} />
 		</>
 	);
