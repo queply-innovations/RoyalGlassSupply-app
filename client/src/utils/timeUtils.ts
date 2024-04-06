@@ -45,6 +45,33 @@ export const formatUTCDate = (date: string) => {
 	return formattedDateTime;
 };
 
+export const formatUTCMMDDYYYY = (date: string) => {
+	const months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December',
+	];
+	const utcDate = new Date(date); // Convert the UTC date string to a JavaScript Date object
+	const year = utcDate.getFullYear(); // Extract individual components of the date
+	const month = months[utcDate.getMonth()];
+	const day = utcDate.getDate();
+	let hours = utcDate.getHours();
+	const amOrPm = hours >= 12 ? 'PM' : 'AM';
+	const formattedDateTime = `${month} ${
+		day < 10 ? '0' : ''
+	}${day} ${year} at ${hours}:${utcDate.getMinutes()} ${amOrPm}`;
+
+	return formattedDateTime;
+};
 export const formatUTCDateOnly = (date: string) => {
 	const utcDate = new Date(date); // Convert the UTC date string to a JavaScript Date object
 	const year = utcDate.getFullYear(); // Extract individual components of the date
