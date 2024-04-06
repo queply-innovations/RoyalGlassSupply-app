@@ -13,26 +13,26 @@ interface PointOfSalePageProps {}
 export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 	return (
 		<>
-			<InventoryProdsProvider>
+			{/* <InventoryProdsProvider>
 				<ProductPricesProvider>
 					<InvoiceProvider>
 						<CustomerProvider>
-							<PosProvider>
-								<div className="flex flex-row">
-									<Navbar />
-									<div id="main" className="flex w-screen flex-row">
-										<div className="flex flex-1 flex-col gap-6 p-6">
-											<SearchProducts />
-											<CreateOrderTable />
-										</div>
-										<Sidebar />
-									</div>
-								</div>
-							</PosProvider>
+							<PosProvider> */}
+			<div className="flex flex-row">
+				<Navbar />
+				<div id="main" className="flex w-screen flex-row">
+					<div className="flex flex-1 flex-col gap-6 p-6">
+						<SearchProducts />
+						<CreateOrderTable />
+					</div>
+					<Sidebar />
+				</div>
+			</div>
+			{/* </PosProvider>
 						</CustomerProvider>
 					</InvoiceProvider>
 				</ProductPricesProvider>
-			</InventoryProdsProvider>
+			</InventoryProdsProvider> */}
 		</>
 	);
 };

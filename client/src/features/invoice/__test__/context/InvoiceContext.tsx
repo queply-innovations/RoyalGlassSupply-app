@@ -39,6 +39,8 @@ interface InvoiceContextProps {
 		value: InvoiceItemDatabase[keyof InvoiceItemDatabase],
 	) => void;
 	handleRemoveInvoiceItem: (TIndex: number) => void;
+	selectedInvoiceCode: any | undefined;
+	setSelectedInvoiceCode: React.Dispatch<any>;
 }
 
 interface InvoiceProviderProps {
@@ -56,7 +58,9 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 	const [invoiceItemsQueue, setInvoiceItemsQueue] = useState<
 		InvoiceItemDatabase[]
 	>([]);
-
+	const [selectedInvoiceCode, setSelectedInvoiceCode] = useState<
+		any | undefined
+	>(undefined);
 	const [invoiceSelected, setInvoiceSelected] = useState<Invoices>(
 		{} as Invoices,
 	);
@@ -240,6 +244,8 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		handleInvoiceItemsChange,
 		handleRemoveInvoiceItem,
 		setInvoice,
+		selectedInvoiceCode,
+		setSelectedInvoiceCode,
 	};
 	useEffect(() => {
 		setInvoice({

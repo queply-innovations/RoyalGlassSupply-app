@@ -17,3 +17,4 @@ export * from './InventoryPage';
 export * from './InventoryItemsPage';
 export * from './ExpensesPage';
 export * from './ReportsPage';
+export * from './PosReturnPage';
