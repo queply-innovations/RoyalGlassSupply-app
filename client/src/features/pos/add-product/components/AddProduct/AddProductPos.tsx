@@ -1,4 +1,4 @@
-import { useProducts } from '@/api/Products';
+import { useProducts } from '@/features/product/__test__';
 import { DataTable } from '@/components/Tables/DataTable';
 import { ProductsColsLimited } from '@/features/product/__test__/components/table';
 import { Product } from '@/features/product/__test__/types';
@@ -19,7 +19,7 @@ export const ProductsTablePos = ({ openModal }: ProductsTableProps) => {
 		<div className="rounded-lg border bg-white p-4">
 			<DataTable
 				columns={ProductsColsLimited}
-				data={data || []}
+				data={data}
 				filterWhat={'name'}
 				dataType={'Product'}
 				openModal={handleAddProduct}
