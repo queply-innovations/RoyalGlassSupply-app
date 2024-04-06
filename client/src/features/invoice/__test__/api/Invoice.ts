@@ -39,7 +39,7 @@ export const fetchInvoiceByCode = async (code: string): Promise<any> => {
 			return response.data.data;
 		})
 		.catch(error => {
-			return error.response.data.message;
+			throw error.response.data;
 		});
 };
 
