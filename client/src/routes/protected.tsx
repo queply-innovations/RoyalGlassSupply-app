@@ -1,14 +1,20 @@
-import { Suspense } from 'react';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+// import { ReactNode, Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 // import { Spinner } from '@/components/Loader';
 // import { Loading } from '@/components/Loading';
 import { lazyImport } from '@/utils/lazyImport';
-import { ProgressBar } from '@/components';
+// import { ProgressBar } from '@/components';
+import { PosProvider } from '@/features/pos/__test__/context/__test__/PosContext';
+import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
+import { CustomerProvider } from '@/features/customer/__test__/context/CustomerContext';
+import { InventoryProdsProvider } from '@/features/inventory/context';
+import { ProductPricesProvider } from '@/features/product/__test__';
+import { JSX } from 'react/jsx-runtime';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { Expenses } = lazyImport(() => import('@/pages'), 'Expenses');
-const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
+// const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
 // const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
 const { Inventory } = lazyImport(() => import('@/pages/__test__'), 'Inventory');
 const { InventoryItemsPage } = lazyImport(
@@ -19,6 +25,10 @@ const { Invoice } = lazyImport(() => import('@/pages/__test__'), 'Invoice');
 const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PointOfSalePage',
+);
+const { PosReturnsPage } = lazyImport(
+	() => import('@/pages/__test__'),
+	'PosReturnsPage',
 );
 const { PendingInventory } = lazyImport(
 	() => import('@/pages'),
@@ -60,24 +70,24 @@ const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 const { Transfer } = lazyImport(() => import('@/pages/__test__'), 'Transfer');
 
-const App = () => {
-	return (
-		<Suspense
-			fallback={
-				<div className="flex h-screen w-full flex-col items-center justify-center space-y-0 px-20">
-					{/* <Spinner size="xl" /> */}
-					{/* <Loading /> */}
-					<ProgressBar />
-					<h2 className="text-primary-dark-gray text-2xl font-bold">
-						Loading Routes....
-					</h2>
-				</div>
-			}
-		>
-			<Outlet />
-		</Suspense>
-	);
-};
+// const App = () => {
+// 	return (
+// 		<Suspense
+// 			fallback={
+// 				<div className="flex flex-col items-center justify-center w-full h-screen px-20 space-y-0">
+// 					{/* <Spinner size="xl" /> */}
+// 					{/* <Loading /> */}
+// 					<ProgressBar />
+// 					<h2 className="text-2xl font-bold text-primary-dark-gray">
+// 						Loading Routes....
+// 					</h2>
+// 				</div>
+// 			}
+// 		>
+// 			<Outlet />
+// 		</Suspense>
+// 	);
+// };
 
 const protectedRoutesConfig = [
 	{ path: '*', element: <Navigate to="." /> },
@@ -91,6 +101,7 @@ const protectedRoutesConfig = [
 	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
 	{ path: '/pos/add-order', element: <PointOfSalePage /> },
 	{ path: '/pos/add-product', element: <PointOfSalePage /> },
+	{ path: '/pos/return/:code', element: <PosReturnsPage /> },
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
 	{ path: '/pending/inventory', element: <PendingInventory /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
@@ -114,9 +125,33 @@ export const ProtectedRoutes = () => {
 		<>
 			<Routes>
 				{protectedRoutesConfig.map(({ path, element }) => (
-					<Route key={path} path={path} element={element} />
+					<Route
+						key={path}
+						path={path}
+						element={wrapWithProviders(path, element)}
+					/>
 				))}
 			</Routes>
 		</>
 	);
+};
+const wrapWithProviders = (
+	path: string,
+	element: JSX.Element | null | undefined,
+) => {
+	if (path.startsWith('/pos')) {
+		return (
+			<InventoryProdsProvider>
+				<ProductPricesProvider>
+					<InvoiceProvider>
+						<CustomerProvider>
+							<PosProvider>{element}</PosProvider>
+						</CustomerProvider>
+					</InvoiceProvider>
+				</ProductPricesProvider>
+			</InventoryProdsProvider>
+		);
+	} else {
+		return element;
+	}
 };
