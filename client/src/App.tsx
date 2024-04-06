@@ -11,7 +11,7 @@ function App() {
 			<AppRouter />
 			{/* //! PANG TEST LANG NI */}
 			{/* <TestRoute /> */}
-			<ToastContainer/>
+			<ToastContainer position="top-right" />
 		</AppProvider>
 	);
 }
