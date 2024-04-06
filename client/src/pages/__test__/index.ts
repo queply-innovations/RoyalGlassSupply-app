@@ -14,3 +14,4 @@ export * from './RolePermissionsPage';
 export * from './InventoryPage';
 export * from './InventoryItemsPage';
 export * from './ReportsPage';
+export * from './PosReturnPage';
