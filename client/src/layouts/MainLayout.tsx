@@ -25,6 +25,11 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 
 	return (
 		<>
+			{!auth.auth.authenticated && (
+				<>
+					{/* // <ToastContainer position="bottom-right" className="text-2xl" /> */}
+				</>
+			)}
 			{auth.auth.authenticated ? ( //checks if logged in
 				<div className="flex h-screen w-screen">
 					<Sidebar />
