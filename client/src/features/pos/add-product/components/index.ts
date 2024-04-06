@@ -1,3 +1,4 @@
 export * from './ActionButton';
 export * from './AddInventoryProductsPOS';
-export * from './MainMenu';
+export * from './MainMenuButtons';
+export * from './AddProductMain';

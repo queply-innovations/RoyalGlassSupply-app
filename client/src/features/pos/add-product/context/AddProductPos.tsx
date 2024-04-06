@@ -6,9 +6,11 @@ interface AddProductPosContextProps {
 	inventories: Inventory[];
 	isInventoriesLoading: boolean;
 	selectedInventory: Inventory | undefined;
-	setSelectedInventory: React.Dispatch<React.SetStateAction<Inventory | undefined>>;
+	setSelectedInventory: React.Dispatch<
+		React.SetStateAction<Inventory | undefined>
+	>;
 	activeTab: string | undefined;
-	setActiveTab: React.Dispatch<React.SetStateAction<string | undefined>>;
+	setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface AddProductPosProviderProps {
@@ -23,7 +25,7 @@ export const AddProductPosProvider = ({
 	children,
 }: AddProductPosProviderProps) => {
 	// Active tab in the menu
-	const [activeTab, setActiveTab] = useState<string | undefined>();
+	const [activeTab, setActiveTab] = useState<string>('main');
 
 	const [selectedInventory, setSelectedInventory] = useState<
 		Inventory | undefined
