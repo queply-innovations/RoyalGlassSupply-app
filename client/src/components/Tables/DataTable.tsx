@@ -30,6 +30,8 @@ interface DataTableProps<TData, TValue> {
 	dataType: string;
 	openModal?: () => void;
 	isLoading?: boolean;
+	hidePagination?: boolean;
+	hideFilter?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +41,8 @@ export function DataTable<TData, TValue>({
 	dataType,
 	openModal,
 	isLoading,
+	hidePagination,
+	hideFilter
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -79,42 +83,46 @@ export function DataTable<TData, TValue>({
 	const placeholderLabel = `Filter ${label.trim()}...`;
 
 	return (
-		<div className="flex flex-col">
-			<div className="flex flex-initial justify-between p-4">
-				<div className="w-1/2">
-					<Inputbox
-						placeholder={placeholderLabel}
-						value={
-							(table
-								.getColumn(filterWhat)
-								?.getFilterValue() as string) ?? ''
-						}
-						onChange={event =>
-							table
-								.getColumn(filterWhat)
-								?.setFilterValue(event.target.value)
-						}
-						variant={'searchbar'}
-						buttonIcon={'outside'}
-					/>
+		<>
+			{!hideFilter && openModal && (
+				<div className="flex justify-between p-4">
+					{hideFilter ? null : (
+						<div className="w-1/2">
+							<Inputbox
+								placeholder={placeholderLabel}
+								value={
+									(table
+										.getColumn(filterWhat)
+										?.getFilterValue() as string) ?? ''
+								}
+								onChange={event =>
+									table
+										.getColumn(filterWhat)
+										?.setFilterValue(event.target.value)
+								}
+								variant={'searchbar'}
+								buttonIcon={'outside'}
+							/>
+						</div>
+					)}
+					{/* Made this render conditionally, so that if
+							no openModal prop passed, this would not render.
+							Useful for view-only table. */}
+					{openModal && (
+						<div className="flex flex-row-reverse">
+							<Button
+								fill={'green'}
+								onClick={openModal}
+								disabled={isLoading}
+								className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center pl-2 pr-3"
+							>
+								<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
+							</Button>
+						</div>
+					)}
 				</div>
-				{/* Made this render conditionally, so that if
-						no openModal prop passed, this would not render.
-						Useful for view-only table. */}
-				{openModal && (
-					<div className="flex flex-row-reverse gap-3">
-						<Button
-							fill={'green'}
-							onClick={openModal}
-							disabled={isLoading}
-							className="flex h-8 flex-row items-center disabled:cursor-not-allowed disabled:opacity-40"
-						>
-							<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
-						</Button>
-					</div>
-				)}
-			</div>
-			<div className="w-full flex-1 border-y">
+			)}
+			<div className="rounded-md border z-0">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map(headerGroup => (
@@ -183,22 +191,22 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex flex-initial flex-row items-center justify-between space-x-2">
-				<div className="p-4 text-sm font-medium text-slate-700">
-					{table.getFilteredSelectedRowModel().rows?.length} of{' '}
-					{table.getFilteredRowModel().rows?.length}{' '}
-					{table.getFilteredRowModel().rows?.length === 1 ? 'row' : 'rows'}{' '}
-					selected
-				</div>
+			{hidePagination ? null : (
+				<div className="flex flex-row justify-between space-x-2 py-4">
+					<div className="p-4 font-semibold">
+						{table.getFilteredSelectedRowModel().rows?.length} of{' '}
+						{table.getFilteredRowModel().rows?.length} row(s) selected.
+					</div>
 
-				<div>
-					<Pagination
-						onClickPrev={() => table.previousPage()}
-						onClickNext={() => table.nextPage()}
-						table={table}
-					/>
+					<div>
+						<Pagination
+							onClickPrev={() => table.previousPage()}
+							onClickNext={() => table.nextPage()}
+							table={table}
+						/>
+					</div>
 				</div>
-			</div>
-		</div>
+			)}
+		</>
 	);
 }

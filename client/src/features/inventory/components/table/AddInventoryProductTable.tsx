@@ -32,6 +32,7 @@ const tableCols = [
 	'',
 	'Product name',
 	'Supplier',
+	'Status',
 	'Capital price',
 	'Unit',
 	'Bundles count',

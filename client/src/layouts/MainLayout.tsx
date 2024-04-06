@@ -23,22 +23,6 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 	const networkState = useNetwork();
 	const { online } = networkState;
 
-	useEffect(() => {
-		toast.dismiss();
-		toast.loading('Checking internet connection....', { autoClose: 5000 });
-		setTimeout(() => {
-			toast.dismiss();
-			if (online) {
-				toast.success('You are currently online!', { autoClose: 5000 });
-			} else {
-				toast.error('You are currently offline.', {
-					autoClose: false,
-					closeButton: false,
-				});
-			}
-		}, 5500);
-	}, [online]);
-
 	return (
 		<>
 			{!auth.auth.authenticated && (
@@ -67,36 +51,35 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 				</div>
 			) : (
 				// if not logged in, return loginlayout
-				<div className="flex h-screen w-screen items-center justify-center">
-					<div className="flex flex-row rounded-lg border-[0.5px] bg-white shadow-md">
-						<div className="flex flex-row justify-start">{children}</div>
-						<div className="relative row-span-6 flex h-max flex-col justify-end">
-							<div
-								className="rounded-lg"
-								style={{
-									backgroundImage: `url(${Sidebg})`,
-									backgroundSize: `cover`,
-									backgroundRepeat: `no-repeat`,
-									width: `680px`,
-									height: `960px`,
-									paddingTop: `100%`,
-								}}
-							>
-								<blockquote className="ml-12 items-end space-y-4 pt-28 text-white">
-									<p
-										className="text-6xl font-bold"
-										style={{ zIndex: 2 }}
-									>
-										Welcome back!
-									</p>
-									<p
-										className="text-2xl font-medium"
-										style={{ zIndex: 2 }}
-									>
-										The faster you log in, the faster we get to work
-									</p>
-								</blockquote>
-							</div>
+				<div className="flex h-screen w-screen items-center justify-center bg-slate-50 p-6">
+					<div className="flex h-full max-h-[896px] w-full max-w-[1280px] flex-row gap-4 overflow-clip rounded-lg border-[0.5px] bg-white shadow-lg">
+						<div className="flex basis-1/2 flex-row justify-start">
+							{children}
+						</div>
+						<div
+							className="relative flex h-full basis-1/2 flex-col justify-end p-8 pb-12"
+							style={{
+								backgroundImage: `url(${Sidebg})`,
+								backgroundSize: `cover`,
+								backgroundRepeat: `no-repeat`,
+								backgroundPosition: `center center`,
+							}}
+						>
+							<div className="absolute left-0 top-0 z-0 h-full w-full bg-gradient-to-t from-black/20 via-black/0 to-black/0"></div>
+							<blockquote className="z-10 items-end space-y-4 text-white">
+								<p
+									className="text-6xl font-semibold tracking-tight"
+									style={{ zIndex: 2 }}
+								>
+									Welcome back!
+								</p>
+								<p
+									className="text-xl font-normal"
+									style={{ zIndex: 2 }}
+								>
+									The faster you log in, the faster we get to work
+								</p>
+							</blockquote>
 						</div>
 					</div>
 				</div>

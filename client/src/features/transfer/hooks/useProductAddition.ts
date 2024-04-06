@@ -137,7 +137,7 @@ export const useProductAddition = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['transfer-product'] });
+			await queryClient.invalidateQueries({ queryKey: ['transfer_products'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('Transfer product has been added');

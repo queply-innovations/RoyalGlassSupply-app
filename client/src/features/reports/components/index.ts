@@ -1,3 +1,3 @@
 export * from './ReportCard';
-export * from './CustomerCard';
-export * from './CustomerChart';
+export * from './TopProductsCard';
+export * from './ProductsChart';

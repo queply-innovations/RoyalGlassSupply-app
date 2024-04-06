@@ -108,7 +108,8 @@ export const SidebarItem = ({
 			)}
 			{/* Render submenu if isItemOpened state is true */}
 			<AnimatePresence>
-				{isItemOpened && item.children && (
+				{( (isItemOpened && item.children) ||
+				  (item.children && pathname?.includes(item.id.slice(0, -1))) ) && (
 					<m.ul
 						key={item.id}
 						variants={submenuMotion}

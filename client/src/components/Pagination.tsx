@@ -61,12 +61,12 @@ export const Pagination: FC<PaginationProps> = ({
 							|| (currentPage == 1 && pgNumber == currentPage + 2)
 							|| (currentPage == table.getPageCount() && pgNumber == currentPage - 2) ? (
 
-								<li key={"pgNumber" + pgNumber} 
+								<li key={"pgNumber-" + pgNumber} 
 									className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
 									<a onClick={() => table.setPageIndex(pgNumber - 1)} 
 										className='page-link'
-										key={"alink" + pgNumber} >
+										key={"alink-" + pgNumber} >
 
 										{pgNumber}
 
@@ -76,12 +76,12 @@ export const Pagination: FC<PaginationProps> = ({
 							) : (''))}
 						</>
 					) : (
-						<li key={"pgNumber" + pgNumber} 
+						<li key={"pgNumber-" + pgNumber} 
 							className= {`page-item ${currentPage == pgNumber ? 'active' : ''} `} >
 
 							<a onClick={() => table.setPageIndex(pgNumber - 1)} 
 								className='page-link' 
-								key={"alink" + pgNumber} >
+								key={"alink-" + pgNumber} >
 
 								{pgNumber}
 							</a>

@@ -4,10 +4,15 @@ import Logo from '/RGS-logo.png';
 import { LogoutButton } from './LogoutButton';
 
 import { SearchReturns } from './SearchReturns';
+import { useAuth } from '@/context/AuthContext';
+import { Role } from '../../types';
 
 interface NavbarProps {}
 
 export const Navbar = ({}: NavbarProps) => {
+	const { auth } = useAuth();
+
+	console.log(auth.role);
 	return (
 		<>
 			<nav
@@ -24,8 +29,14 @@ export const Navbar = ({}: NavbarProps) => {
 							/>
 						</div>
 						{NavbarRoutes.map((route, index) => {
-							if (route.navbarProps) {
-								return <NavbarItem key={index} item={route} />;
+							if (auth.role && route.navbarProps) {
+								if (
+									!!route.allowedRoles.find(role =>
+										role.includes(auth.role!.split('_')[0] as Role),
+									)
+								) {
+									return <NavbarItem key={index} item={route} />;
+								}
 							} else {
 								return null;
 							}

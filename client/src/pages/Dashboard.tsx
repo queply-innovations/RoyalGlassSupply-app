@@ -25,7 +25,7 @@ export const Dashboard = () => {
 	return (
 		<LayoutWrapper>
 			<div className="flex h-screen flex-col gap-y-4">
-				<div className=" flex flex-row justify-between">
+				<div className="flex flex-row justify-between ">
 					<h1 className="page-title text-primary-dark-gray self-center text-3xl font-bold">
 						Dashboard
 					</h1>
@@ -70,7 +70,7 @@ export const Dashboard = () => {
 						</div>
 						<div className="row-container flex h-full flex-col gap-6 ">
 							<div className="row-container flex flex-row justify-between gap-8">
-								<GrossAndNetProfit />
+								<GrossAndNetProfit className="max-w-[70%]" />
 								<TransferStatus />
 							</div>
 							<div className="row-container flex h-full flex-row justify-between gap-8">

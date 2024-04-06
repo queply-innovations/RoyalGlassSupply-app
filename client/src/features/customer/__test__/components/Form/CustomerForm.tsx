@@ -46,7 +46,7 @@ export const CustomerForm = ({ onClose }: CustomerFormProps) => {
 							setError('Failed to add inventory'));
 				}}
 			>
-				<div className="flex max-w-2xl flex-col gap-2 ">
+				<div className="flex max-w-4xl flex-col gap-2 ">
 					<div className="flex flex-col gap-4">
 						<div className="flex flex-row gap-2">
 							<div className="flex flex-col gap-2">

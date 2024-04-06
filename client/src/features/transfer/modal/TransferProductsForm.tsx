@@ -57,7 +57,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 
 	success && setTimeout(() => {
 		onClose();
-	}, 3000);
+	}, 1000);
 
 	return (
 		<>
@@ -66,7 +66,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 					e.preventDefault();
 				}}
 			>
-				<div className="flex flex-col gap-5">
+				<div className="flex max-w-2xl flex-col gap-5">
 					<div className="grid grid-cols-12 gap-3 justify-center">
 						<div className="flex flex-col col-span-3 gap-1">
 							<span className="text-sm font-bold uppercase">

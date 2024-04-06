@@ -1,7 +1,28 @@
+import { cn } from '@/utils/cn.utils';
+import { VariantProps, cva } from 'class-variance-authority';
 import { FC, RefObject, useEffect, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
 
-export const GrossAndNetProfit: FC = () => {
+const GraphVariants = cva('graph', {
+	variants: {
+		variant: {
+			default:
+				'flex h-full w-full rounded-md border border-black/10 bg-black p-5 bg-white flex-col',
+		},
+	},
+	defaultVariants: {
+		variant: 'default',
+	},
+});
+
+interface GrossAndNetProfitProps
+	extends React.HTMLAttributes<HTMLDivElement>,
+		VariantProps<typeof GraphVariants> {}
+
+export const GrossAndNetProfit: FC<GrossAndNetProfitProps> = ({
+	className,
+	variant,
+}) => {
 	const ref: RefObject<HTMLDivElement> = useRef(null);
 
 	const [width, setWidth] = useState(0);
@@ -25,10 +46,7 @@ export const GrossAndNetProfit: FC = () => {
 	}, []);
 	return (
 		<>
-			<div
-				className="gross-and-netprofit-chart flex h-full min-h-[370px] w-full max-w-[70%] flex-col rounded-md border border-black/10 bg-white p-5"
-				ref={ref}
-			>
+			<div className={cn(GraphVariants({ variant, className }))} ref={ref}>
 				<h2 className="gross-and-netprofit-title text-base font-bold uppercase text-black">
 					Gross And Net Profit
 				</h2>

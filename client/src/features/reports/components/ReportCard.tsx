@@ -6,6 +6,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { getDateNowByMonth } from '@/utils/timeUtils';
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
@@ -15,6 +22,7 @@ interface ReportCardProps {
 	date?: boolean;
 	formatAmount?: boolean;
 	children?: React.ReactNode;
+	filter?: string[];
 }
 
 export const ReportCard = ({
@@ -22,10 +30,11 @@ export const ReportCard = ({
 	date,
 	children,
 	formatAmount,
+	filter,
 }: ReportCardProps) => {
 	return (
 		<>
-			<Card className="min-w-[320px] max-w-[360px]">
+			<Card className="w-full min-w-[320px] max-w-[460px]">
 				<CardHeader className="flex flex-row items-center justify-between gap-4 pb-2">
 					<CardTitle className="text-xl font-bold">{title}</CardTitle>
 					{date && (
@@ -57,9 +66,24 @@ export const ReportCard = ({
 								20%
 							</span>
 						</div>
-						<span className="text-muted-foreground text-sm font-medium lowercase">
-							vs yesterday
-						</span>
+						{filter && (
+							<>
+								<Select>
+									<SelectTrigger className="max-w-[50%]">
+										<SelectValue placeholder="filter by" />
+									</SelectTrigger>
+									<SelectContent>
+										{filter.map((item, index) => {
+											return (
+												<SelectItem key={index} value={item}>
+													{item}
+												</SelectItem>
+											);
+										})}
+									</SelectContent>
+								</Select>
+							</>
+						)}
 					</div>
 				</CardFooter>
 			</Card>

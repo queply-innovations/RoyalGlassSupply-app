@@ -44,4 +44,5 @@ export interface Invoice {
 	or_no: string;
 	created_at: string;
 	updated_at: string;
+	status: string;
 }

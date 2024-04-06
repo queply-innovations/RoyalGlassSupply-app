@@ -92,30 +92,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		},
 
 		{
-			accessorKey: 'id',
-			sortingFn: "basic",
-			enableSorting: true,
-			header:	({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row bg-transparent text-black items-center"
-						>
-							TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				);
-			},
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.id}</div>
-			),
-		},
-
-		{
 			accessorKey: 'code',
 			sortingFn: "alphanumeric",
 			enableSorting: true,
@@ -162,7 +138,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row bg-transparent text-black items-center z-10"
 						>
 							TRANSFER STATUS {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
@@ -186,7 +162,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row bg-transparent text-black items-center z-10"
 						>
 							SCHEDULE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
 										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
@@ -212,46 +188,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 						<div className="text-center">N/A</div>
 					);
 				}
-			},
-		},
-
-		{
-			accessorKey: 'date_received',
-			enableSorting: true,
-			header:	({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row bg-transparent text-black items-center"
-						>
-							DATE RECEIVED {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-						</Button>
-					</div>
-				);
-			},
-			cell: ({ row }) => {
-				const sched: any = row.getValue('date_received');
-				if (sched) {
-					const details = { 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric', 
-						hour:'numeric',
-						minute:'numeric' };
-					const format = new Date(sched).toLocaleDateString([], details);
-					return (
-						<div className="text-center">{format}</div>
-					);
-				} else {
-					return (
-						<div className="text-center">N/A</div>
-					);
-				}
-				
 			},
 		},
 
@@ -284,22 +220,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 						}
 					</div>
 				);
-			},
-		},
-
-		{
-			accessorKey: 'approved_by',
-			header:	() => <div className="text-center">APPROVED / REJECTED BY</div>,
-			cell: ({ row }) => {
-				const approved_by: any = row.getValue('approved_by');
-				if (approved_by){
-					const format = approved_by.firstname + ' ' + approved_by.lastname;
-					return (
-						<div id={approved_by.id} className="text-center">{format}</div>
-					);
-				} else {
-					return (<div className="text-center">N/A</div>);
-				}
 			},
 		},
 
