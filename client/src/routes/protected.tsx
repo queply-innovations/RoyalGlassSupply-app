@@ -28,7 +28,7 @@ const { PointOfSalePage } = lazyImport(
 );
 const { PosReturnsPage } = lazyImport(
 	() => import('@/pages/__test__'),
-	'PosReturnsPage',
+	'PosReturnsPage',)
 const { AddProductPOSPage } = lazyImport(
 	() => import('@/pages/__test__/pos'),
 	'AddProductPOSPage',
