@@ -1,22 +1,23 @@
 import { UseModalProps } from '@/utils/Modal';
-import { Button, Inputbox, Loading } from '@/components';
+import { Button,  Inputbox, Loading } from '@/components';
 import { Textarea } from '@/components/ui/textarea';
-import { useExpensesMutation } from '../../hooks';
+import { useExpensesAddition, useExpensesMutation } from '../../hooks';
 
 interface ExpensesDetailsProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
+export const ExpensesAdd = ({ onClose }: ExpensesDetailsProps) => {
 	const { 
-		expensesEdit,
+		expensesAdd,
 		isChanged,
 		isSubmitting,
 		error,
 		success,
 		handleSubmit,
 		handleChange,
-	} = useExpensesMutation();
+		dateToday
+	} = useExpensesAddition();
 
 	success && setTimeout(() => {
 		onClose();
@@ -36,7 +37,7 @@ export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
 								name="date_of_operation"
 								placeholder="2024-04-06"
 								className="inputbox rounded-md"
-								value={expensesEdit.date_of_operation}
+								value={dateToday}
 								disabled
 								readOnly
 							/>
@@ -48,7 +49,7 @@ export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
 								name="title"
 								placeholder="Title"
 								className="inputbox rounded-md bg-slate-100"
-								value={expensesEdit.title}
+								value={expensesAdd.title || ''}
 								onChange={handleChange}
 								required
 							/>
@@ -60,7 +61,7 @@ export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
 								name="amount"
 								placeholder="₱500.00"
 								className="inputbox rounded-md bg-slate-100"
-								value={expensesEdit.amount}
+								value={expensesAdd.amount || ''}
 								onChange={handleChange}
 								required
 							/>
@@ -74,7 +75,7 @@ export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
 								name="notes"
 								placeholder="Notes here...."
 								className="text-base rounded-md bg-slate-100"
-								value={expensesEdit.notes}
+								value={expensesAdd.notes || ''}
 								onChange={handleChange}
 							/>
 						</div>
@@ -88,7 +89,7 @@ export const ExpensesDetails = ({ onClose }: ExpensesDetailsProps) => {
 								disabled={isChanged ? false : true}
 								onClick={handleSubmit}
 							>
-								{!isSubmitting ? 'Edit Expenses' : 'Submitting'}
+								{!isSubmitting ? 'Add Expenses' : 'Submitting'}
 							</Button>
 						</div>
 						<div className="flex flex-col col-span-6 items-start">

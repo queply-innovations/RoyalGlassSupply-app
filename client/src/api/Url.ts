@@ -25,6 +25,7 @@ export const API_URLS = {
 	TRANSFER: `${API_BASE_URL}/transfers`,
 	TRANSFER_PRODUCTS: `${API_BASE_URL}/transfer-products`,
 	CUSTOMERS: `${API_BASE_URL}/customers`,
+	EXPENSES: `${API_BASE_URL}/operation_expenses`,
 };
 
 export const API_HEADERS = () => {

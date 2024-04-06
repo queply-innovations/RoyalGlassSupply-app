@@ -1,2 +1,3 @@
 export * from './useExpensesQuery';
-export * from './useInventoryMutation';
+export * from './useExpensesMutation';
+export * from './useExpensesAddition';

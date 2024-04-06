@@ -1,14 +1,13 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
-import { Inventory, Invoice } from '../types';
-import { useExpensesQuery, useInventoryQuery } from '../hooks';
+import { ExpensesRaw } from '../types';
+import { useExpensesQuery } from '../hooks';
 
 interface ExpensesContextProps {
-	invoices: Invoice[];
+	expenses: ExpensesRaw[];
 	isFetching: boolean;
-	selectedInventory: Inventory;
-	setSelectedInventory: (inventory: Inventory) => void;
-	selectedInvoice: Invoice[];
-	setSelectedInvoice: (invoice: Invoice[]) => void;
+	selectedExpenses: ExpensesRaw;
+	setSelectedExpenses: (expenses: ExpensesRaw) => void;
+	dateToday: string;
 }
 
 interface ExpensesProviderProps {
@@ -20,20 +19,19 @@ const ExpensesContext = createContext<ExpensesContextProps | undefined>(
 );
 export const ExpensesProvider = ({ children }: ExpensesProviderProps) => {
 	// State of the selected inventory
-	const [selectedInventory, setSelectedInventory] = useState<Inventory>(
-		{} as Inventory,
+	const [selectedExpenses, setSelectedExpenses] = useState<ExpensesRaw>(
+		{} as ExpensesRaw,
 	);
-	const [selectedInvoice, setSelectedInvoice] =
-		useState<Invoice[]>([]);
 	// Destructured response data and loading state from useInventoryQuery hook
-	const { invoices, invoiceQuery, isFetching } = useExpensesQuery();
+	const { expenses, expensesQuery, isFetching } = useExpensesQuery();
+	const dateToday = new Date().toISOString().split('T')[0];
+
 	const value = {
-		invoices,
+		expenses,
 		isFetching,
-		selectedInventory,
-		setSelectedInventory,
-		selectedInvoice,
-		setSelectedInvoice
+		selectedExpenses,
+		setSelectedExpenses,
+		dateToday
 	};
 
 	return (
@@ -48,7 +46,7 @@ export function useExpenses() {
 
 	if (!context) {
 		throw new Error(
-			'useExpenses hook must be used within InventoryProvider',
+			'useExpenses hook must be used within ExpensesProvider',
 		);
 	}
 	return context;
