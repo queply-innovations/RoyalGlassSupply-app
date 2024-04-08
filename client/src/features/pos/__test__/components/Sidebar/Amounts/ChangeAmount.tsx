@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { HandCoins } from 'lucide-react';
+import { useEffect } from 'react';
 
 export const ChangeAmount = () => {
-	const { invoice, invoiceItemsQueue } = useInvoice();
+	const { invoice, invoiceItemsQueue, handleChange } = useInvoice();
 
 	function getChange() {
 		if (invoice.paid_amount === 0) {
@@ -18,6 +19,9 @@ export const ChangeAmount = () => {
 			);
 		}
 	}
+	useEffect(() => {
+		handleChange('change_amount', getChange().toFixed(2));
+	}, [getChange()]);
 	return (
 		<>
 			<Button
