@@ -168,15 +168,16 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					icon: <Banknote size={20} strokeWidth={1.75} />,
 				},
 			},
-			{
-				id: 'invoices',
-				permissionId: [10], //TODO EDIT PERMISSION ID
-				path: '/invoice',
-				itemProps: {
-					title: 'Invoices',
-					icon: <Calculator size={20} strokeWidth={1.75} />,
-				},
-			},
+			//TODO: add invoice page,
+			// {
+			// 	id: 'invoices',
+			// 	permissionId: [10], //TODO EDIT PERMISSION ID
+			// 	path: '/invoice',
+			// 	itemProps: {
+			// 		title: 'Invoices',
+			// 		icon: <Calculator size={20} strokeWidth={1.75} />,
+			// 	},
+			// },
 			{
 				id: 'reports',
 				permissionId: [19],

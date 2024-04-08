@@ -70,7 +70,7 @@ export const Dashboard = () => {
 						</div>
 						<div className="row-container flex h-full flex-col gap-6 ">
 							<div className="row-container flex flex-row justify-between gap-8">
-								<GrossAndNetProfit className="max-w-[70%]" />
+								<GrossAndNetProfit className="min-h-[440px] max-w-[70%]" />
 								<TransferStatus />
 							</div>
 							<div className="row-container flex h-full flex-row justify-between gap-8">
