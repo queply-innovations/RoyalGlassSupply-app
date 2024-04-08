@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 export const PaidAmount = () => {
 	const { invoice, handleChange, invoiceItemsQueue } = useInvoice();
 	const inputRef = useRef<HTMLInputElement>(null);
+
 	return (
 		<>
 			<Button
@@ -40,19 +41,6 @@ export const PaidAmount = () => {
 					}}
 					onChange={e => {
 						handleChange('paid_amount', Number(e.target.value));
-						handleChange(
-							'change_amount',
-							Number(
-								Number(
-									Number(e.target.value) -
-										invoiceItemsQueue.reduce(
-											(acc, item) => acc + item.total_price,
-											0,
-										),
-								).toFixed(2),
-							),
-						);
-						console.log('change:', invoice.change_amount);
 					}}
 					onFocus={e => {
 						e.target.value = e.target.value.replace(/[^\d.]/g, '');
