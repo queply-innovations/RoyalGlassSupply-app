@@ -24,7 +24,7 @@ class InventoryProductResource extends JsonResource
             'inventory_id' => $this->inventory_id,
             'product' => new ProductResource($this->product),
             'supplier_id' => new SupplierResource($this->supplier),
-            'capital_price' => $this->capital_price,
+            'capital_price' => round($this->capital_price, 2),
             'bundles_count' => $this->bundles_count,
             'bundles_unit' => $this->bundles_unit,
             'quantity_per_bundle' => $this->quantity_per_bundle,
@@ -36,7 +36,7 @@ class InventoryProductResource extends JsonResource
             'sold_count' => $sold_count,
             'miscellaneous_count' => $miscellaneous_count,
             'remaining_stocks_count' => $remaining_stocks,
-            'status' => $this->status
+            'status' => $this->status ? $this->status : 'pending'
         ];
     }
 }

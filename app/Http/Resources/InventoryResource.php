@@ -25,7 +25,8 @@ class InventoryResource extends JsonResource
             'notes' => $this->notes,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'inventory_products' => new InventoryProductCollection($this->whenLoaded('inventoryProducts'))
+            'inventory_products' => new InventoryProductCollection($this->whenLoaded('inventoryProducts')),
+            'status' => $this->status ? $this->status : 'pending'
         ];
     }
 }
