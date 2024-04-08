@@ -13,6 +13,7 @@ import {
 	Boxes,
 	Laptop2,
 	Calculator,
+	BookUser,
 } from 'lucide-react';
 
 interface SidebarGroup {
@@ -166,6 +167,15 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				itemProps: {
 					title: 'Expenses',
 					icon: <Banknote size={20} strokeWidth={1.75} />,
+				},
+			},
+			{
+				id: 'customers',
+				permissionId: [26],
+				path: '/customers',
+				itemProps: {
+					title: 'Customers',
+					icon: <BookUser size={20} strokeWidth={1.75} />,
 				},
 			},
 			//TODO: add invoice page,

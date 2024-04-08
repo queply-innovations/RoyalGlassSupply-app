@@ -2,25 +2,20 @@ import { UseModalProps } from '@/utils/Modal';
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { ColumnDef } from '@tanstack/react-table';
-import { useUserSales } from '../context/UserSalesContext';
 import { Invoice } from '../types';
 import { ArrowUp, ArrowDown, ArrowUpDown, MoreVertical, List, Ban, Check, Clock } from 'lucide-react';
 import { DataTable } from '@/components/Tables/DataTable';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useCustomers } from '../context/CustomersContext';
 
 interface InvoicesDetailsProps {
 	onClose: UseModalProps['closeModal'];
 }
 
 export const InvoicesDetails = ({ onClose }: InvoicesDetailsProps) => {
-	const { selectedInvoice, isFetching } = useUserSales();
-
-	// const handleAdd = () => {
-	// 	openModal({} as Invoice, 'add');
-	// };
+	const { invoices, isFetching, customers, selectedInvoice } = useCustomers();
 
 	const currentInvoice = selectedInvoice[0];
-	console.log(selectedInvoice[0].customer);
 
 	const InvoicesTableHeader: ColumnDef<Invoice>[] = [
 		{

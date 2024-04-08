@@ -73,6 +73,7 @@ const { RolePermissions } = lazyImport(
 const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 const { Transfer } = lazyImport(() => import('@/pages/__test__'), 'Transfer');
+const { Customers } = lazyImport(() => import('@/pages/__test__'), 'Customers');
 
 // const App = () => {
 // 	return (
@@ -118,6 +119,7 @@ const protectedRoutesConfig = [
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
 	{ path: '/expenses', element: <ExpensesPage /> },
+	{ path: '/customers', element: <Customers /> },
 	{ path: '/reports', element: <Reports /> },
 	{ path: '/warehouse', element: <Warehouse /> },
 	{ path: '/products', element: <Products /> },
