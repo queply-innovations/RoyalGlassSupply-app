@@ -178,18 +178,20 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 			),
 			cell: ({ row }) => {
 				const expensesRow = row.original;
-				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<Button
-							fill="empty"
-							textColor={'black'}
-							onClick={() => handleEditExpenses([expensesRow])}
-							className="flex flex-row items-center gap-2"
-						>
-							<FaPencilAlt /> Edit
-						</Button>
-					</div>
-				);
+				if (expensesRow.date_of_operation === dateToday) {
+					return (
+						<div className="flex flex-row justify-center text-xs font-normal uppercase">
+							<Button
+								fill="empty"
+								textColor={'black'}
+								onClick={() => handleEditExpenses([expensesRow])}
+								className="flex flex-row items-center gap-2"
+							>
+								<FaPencilAlt /> Edit
+							</Button>
+						</div>
+					);
+				}
 			},
 		},
 
@@ -199,12 +201,26 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 		return expense.date_of_operation === dateToday;
 	});
 
+	expenses.sort((a, b) => {
+		let fa = a.date_of_operation,
+			fb = b.date_of_operation;
+	
+		if (fa < fb) {
+			return 1;
+		}
+		if (fa > fb) {
+			return -1;
+		}
+		return 0;
+	});
+
 	return (
 		<>
 			<DataTable
 				data={expenses}
 				columns={ExpensesTableHeader}
-				filterWhat={"notes"}
+				filterWhat={""}
+				hideFilter={true}
 				dataType={"Today's Expenses"}
 				openModal={checkerDate ? undefined : handleAddExpenses}
 				isLoading={isFetching} />

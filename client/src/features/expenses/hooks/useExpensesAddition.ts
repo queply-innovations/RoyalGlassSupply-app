@@ -18,7 +18,7 @@ export const useExpensesAddition = () => {
 		date_of_operation: dateToday,
 		amount: 0,
 		notes: '',
-		created_by: auth.id,
+		created_by: auth.user.id,
 		created_at: '',
 		updated_at: '',
 	});
