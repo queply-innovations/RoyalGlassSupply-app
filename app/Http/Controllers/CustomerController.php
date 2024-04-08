@@ -81,7 +81,11 @@ class CustomerController extends Controller
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
-                $query->where($search_key, 'like', '%'.$search_value.'%');
+                if($search_key == array_key_first($request->search)) {
+                    $query->where($search_key, 'like', '%'.$search_value.'%');
+                } else {
+                    $query->orWhere($search_key, 'like', '%'.$search_value.'%');
+                }
             }
         }
         
