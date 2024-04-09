@@ -51,7 +51,7 @@ export const Navbar = () => {
 							isActive={notifsOpen}
 						/>
 					</PopoverTrigger>
-					<PopoverContent className="w-fit rounded-lg px-2 pb-2 shadow-xl">
+					<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
 						<Notifications
 							pendingTransfers={pendingTransfers.length}
 							pendingProdPrices={pendingProductPrices.length}
@@ -59,7 +59,7 @@ export const Navbar = () => {
 					</PopoverContent>
 				</Popover>
 				{numberNotif > 0 && (
-					<span className="pointer-events-none absolute right-0 top-0 z-50 flex -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-red-500 px-2 py-1 ">
+					<span className="pointer-events-none absolute right-0 top-0 flex -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-red-500 px-2 py-1 ">
 						<p className="line-clamp-1 text-xs font-medium leading-tight text-white">
 							{numberNotif <= 100 ? numberNotif : '100+'}
 						</p>

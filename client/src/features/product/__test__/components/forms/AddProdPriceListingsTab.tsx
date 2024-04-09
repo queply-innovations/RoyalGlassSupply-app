@@ -1,5 +1,4 @@
 import { ProductPricesDatabase } from '../../types';
-import { Inventory, InventoryProduct } from '@/features/inventory/types';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -16,22 +15,27 @@ import { Button } from '@/components';
 import { useProductPricesMutation } from '../../hooks';
 import currency from 'currency.js';
 import { Warehouse } from '@/features/warehouse/__test__/types';
+import {
+	getMarkupPercentage,
+	getMarkupValue,
+	getCostValue,
+	getPriceValue,
+} from '../../helpers/useProductPriceCalculations';
+import { toast } from 'react-toastify';
+import { useProducts } from '../../context/ProductContext';
 
 interface AddProdPriceListingsTabProps {
 	selectedWarehouse: Warehouse;
-	selectedInventory: Inventory;
-	selectedInventoryProduct: InventoryProduct;
 	setOpenedTab: React.Dispatch<React.SetStateAction<string>>;
 	onClose: () => void;
 }
 export const AddProdPriceListingsTab = ({
 	selectedWarehouse,
-	selectedInventory,
-	selectedInventoryProduct,
 	setOpenedTab,
 	onClose,
 }: AddProdPriceListingsTabProps) => {
 	const { auth } = useAuth();
+	const { selectedProduct, setSelectedProduct } = useProducts();
 	const {
 		value: FormValue,
 		setValue: setFormValue,
@@ -49,232 +53,129 @@ export const AddProdPriceListingsTab = ({
 			_prev =>
 				({
 					..._prev,
-					product_id: selectedInventoryProduct?.product.id,
+					product_id: selectedProduct?.id,
 					warehouse_id: selectedWarehouse.id,
+					unit: 'pcs',
 					active_status: 'active',
 					approval_status: 'pending',
 					created_by: auth.user.id,
 					on_sale: 0,
 					sale_discount: 0,
-					tax_amount: 0, // remove tax_amount when this column is removed from the database
 				}) as Partial<ProductPricesDatabase>,
 		);
 	}, []);
 
-	// MARKUP PERCENT & PRICE
-	// markup_price = capital_price * (markup_percentage / 100)
-	const [markupPercentage, setMarkupPercentage] = useState<number>(0);
+	const [capitalPrice, setCapitalPrice] = useState<number>(0);
+	const [markupPercent, setMarkupPercent] = useState<number>(10);
+	const [markupValue, setMarkupValue] = useState<number>(0);
+
+	const handleCapitalPriceChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		const value = e.target.value;
+		setCapitalPrice(currency(value).value);
+		handleChange('capital_price', currency(value).value);
+		setMarkupValue(getMarkupValue(currency(value).value, markupPercent));
+	};
+
+	const handleMarkupPercentChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		const value = Number(e.target.value);
+		setMarkupPercent(value);
+		setMarkupValue(getMarkupValue(capitalPrice, value));
+	};
+
+	const handleMarkupValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = currency(e.target.value).value;
+		setMarkupValue(value);
+		setMarkupPercent(getMarkupPercentage(capitalPrice, value, 3));
+	};
+
 	useEffect(() => {
-		const capitalPrice = FormValue.capital_price || 0;
-		const markup = currency(capitalPrice).multiply(
-			(markupPercentage || 0) / 100,
+		handleChange('capital_price', capitalPrice);
+		handleChange('markup_price', markupValue);
+		handleChange('cost', getCostValue(capitalPrice, markupValue));
+	}, [capitalPrice, markupPercent, markupValue]);
+
+	useEffect(() => {
+		handleChange(
+			'price',
+			getPriceValue(FormValue.cost ?? 0, FormValue.sale_discount ?? 0),
 		);
-
-		handleChange('markup_price', markup.value);
-	}, [FormValue.capital_price, markupPercentage]);
-
-	// COST VALUE CALCULATION
-	// cost = capital_price + markup_price
-	useEffect(() => {
-		const capitalPrice = FormValue.capital_price || 0;
-		const markupPrice = FormValue.markup_price || 0;
-
-		handleChange('cost', currency(capitalPrice).add(markupPrice).value);
-	}, [FormValue.capital_price, FormValue.markup_price]);
-
-	// PRICE CALCULATION
-	// price = cost - sale_discount
-	useEffect(() => {
-		const cost = FormValue.cost || 0;
-		const saleDiscount = FormValue.sale_discount || 0;
-
-		handleChange('price', currency(cost).subtract(saleDiscount).value);
 	}, [FormValue.cost, FormValue.sale_discount]);
 
 	return (
 		<>
 			<form
-				onSubmit={async e => {
+				onSubmit={e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'add',
 						data: FormValue,
-					});
-					response?.status === 201 // 201 means resource successfully created
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to add product listing'));
+					})
+						.then(() => {
+							setIsSubmitting(!isSubmitting);
+							setSelectedProduct(undefined);
+							toast.success('Product listing added successfully');
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(!isSubmitting);
+							setError('Failed to add product listing');
+							toast.error('Failed to add product listing');
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3 font-medium">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-3 gap-y-5">
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">Name</h3>
-							<p className="text-sm">
-								{selectedInventoryProduct.product.name}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Supplier
-							</h3>
-							<p className="text-sm">
-								{selectedInventoryProduct.supplier_id.name}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Warehouse
-							</h3>
-							<p className="text-sm">{selectedWarehouse.code}</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Inventory
-							</h3>
-							<p className="text-sm">{selectedInventory.code}</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">Size</h3>
-							<p className="text-sm">
-								{selectedInventoryProduct.product.size}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">Color</h3>
-							<p className="text-sm">
-								{selectedInventoryProduct.product.color}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Remaining stocks
-							</h3>
-							<p className="text-sm">
-								{selectedInventoryProduct.remaining_stocks_count}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Capital price
-							</h3>
-							<p className="text-sm">
-								{Intl.NumberFormat('en-US', {
-									currency: 'PHP',
-									style: 'currency',
-								}).format(selectedInventoryProduct.capital_price)}
-							</p>
-						</div>
-					</div>
-					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-					<div className="grid w-full grid-flow-row grid-cols-4 gap-3">
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="type"
-								className="text-sm font-bold text-gray-600"
-							>
-								Type
-							</Label>
-							<Select
-								required
-								value={FormValue.type || ''}
-								onValueChange={value => {
-									handleChange('type', value);
-									if (value === 'retail') {
-										handleChange(
-											'unit',
-											selectedInventoryProduct.unit,
-										);
-										handleChange(
-											'stocks_unit',
-											selectedInventoryProduct.unit,
-										);
-										handleChange('stocks_quantity', 1);
-									} else {
-										handleChange(
-											'unit',
-											selectedInventoryProduct.bundles_unit,
-										);
-										handleChange(
-											'stocks_unit',
-											selectedInventoryProduct.unit,
-										);
-										handleChange(
-											'stocks_quantity',
-											selectedInventoryProduct.quantity_per_bundle,
-										);
-									}
-								}}
-							>
-								<SelectTrigger
-									name="type"
-									className="flex flex-row items-center gap-3 bg-white text-sm"
+						<div className="col-span-12 grid grid-flow-row grid-cols-12 gap-4 text-sm text-slate-700">
+							<div className="col-span-4 flex flex-col gap-1">
+								<h3 className="font-bold">Name</h3>
+								<p className="font-medium">{selectedProduct?.name}</p>
+							</div>
+							<div className="col-span-4 flex flex-col gap-1">
+								<h3 className="font-bold">Serial Number</h3>
+								<p className="font-medium">
+									{selectedProduct?.serial_no}
+								</p>
+							</div>
+							<div className="col-span-4 flex flex-col gap-1">
+								<h3 className="font-bold">Brand</h3>
+								<p className="font-medium">
+									{selectedProduct?.brand || (
+										<span className="opacity-60">No brand</span>
+									)}
+								</p>
+							</div>
+							<div className="col-span-4 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="unit"
+									className="text-sm font-bold text-gray-600"
 								>
-									<SelectValue placeholder={'Choose type...'} />
-								</SelectTrigger>
-								<SelectContent className="bg-white font-medium">
-									<SelectItem
-										key="retail"
-										className="rounded-md"
-										value="retail"
-									>
-										Retail
-									</SelectItem>
-									<SelectItem
-										key="wholesale"
-										className="rounded-md"
-										value="wholesale"
-									>
-										Wholesale
-									</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Unit
-							</Label>
-							<Input
-								id="unit"
-								name="unit"
-								type="text"
-								readOnly
-								value={FormValue.unit || ''}
-							/>
-						</div>
-						<div className="relative col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="stocks_quantity"
-								className="text-sm font-bold text-gray-600"
-							>
-								Stocks quantity
-							</Label>
-							<Input
-								id="stocks_quantity"
-								name="stocks_quantity"
-								type="number"
-								readOnly
-								value={FormValue.stocks_quantity || ''}
-							/>
-						</div>
-						<div className="col-span-1 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="stocks_unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Stocks unit
-							</Label>
-							<Input
-								id="stocks_unit"
-								name="stocks_unit"
-								type="text"
-								readOnly
-								value={FormValue.stocks_unit || ''}
-							/>
+									Unit
+								</Label>
+								<Input
+									id="unit"
+									name="unit"
+									type="text"
+									maxLength={20}
+									required
+									value={FormValue.unit || ''}
+									onChange={e => {
+										handleChange('unit', e.target.value);
+									}}
+								/>
+							</div>
+							<div className="col-span-4 flex flex-col gap-1">
+								<h3 className="font-bold">Size</h3>
+								<p className="font-medium">{selectedProduct?.size}</p>
+							</div>
+							<div className="col-span-4 flex flex-col gap-1">
+								<h3 className="font-bold">Color</h3>
+								<p className="font-medium">{selectedProduct?.color}</p>
+							</div>
 						</div>
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
@@ -294,19 +195,14 @@ export const AddProdPriceListingsTab = ({
 								min={0}
 								step={0.01}
 								required
-								placeholder={'0.00'}
+								autoFocus
 								className="pl-7"
-								value={FormValue.capital_price || ''}
-								onChange={e => {
-									handleChange(
-										'capital_price',
-										currency(e.target.value).value,
-									);
-								}}
+								value={capitalPrice || ''}
+								onChange={handleCapitalPriceChange}
 								onBlur={e => {
-									e.target.value = Number(
-										FormValue.capital_price,
-									).toFixed(2);
+									e.target.value = Number(capitalPrice || 0).toFixed(
+										2,
+									);
 								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -329,15 +225,12 @@ export const AddProdPriceListingsTab = ({
 								max={1000}
 								step={0.001}
 								required
-								placeholder={'0'}
-								value={markupPercentage.toString() || ''}
-								onChange={e => {
-									setMarkupPercentage(
-										currency(e.target.value, { precision: 3 }).value,
-									);
-								}}
+								value={markupPercent || ''}
+								onChange={handleMarkupPercentChange}
 								onBlur={e => {
-									e.target.value = markupPercentage.toString();
+									e.target.value = currency(markupPercent, {
+										precision: 3,
+									}).value.toString();
 								}}
 							/>
 							<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -356,16 +249,13 @@ export const AddProdPriceListingsTab = ({
 								name="markup_price"
 								type="number"
 								min={0}
-								max={1000}
 								step={0.01}
-								readOnly
-								placeholder={'0.00'}
 								className="pl-7"
-								value={
-									FormValue.markup_price
-										? FormValue.markup_price.toFixed(2)
-										: '0.00'
-								}
+								value={markupValue || ''}
+								onChange={handleMarkupValueChange}
+								onBlur={e => {
+									e.target.value = Number(markupValue).toFixed(2);
+								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
@@ -387,7 +277,8 @@ export const AddProdPriceListingsTab = ({
 								className="pl-7"
 								readOnly
 								value={
-									FormValue.cost ? FormValue.cost.toFixed(2) : '0.00'
+									getCostValue(capitalPrice, markupValue).toFixed(2) ||
+									'0.00'
 								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -415,7 +306,6 @@ export const AddProdPriceListingsTab = ({
 										: FormValue.on_sale === 0
 								}
 								required
-								placeholder="0.00"
 								className="pl-7"
 								value={FormValue.sale_discount || ''}
 								onChange={e => {
@@ -439,7 +329,7 @@ export const AddProdPriceListingsTab = ({
 									id="on_sale"
 									type="checkbox"
 									className="h-4 w-fit"
-									checked={FormValue.on_sale === 1 || false}
+									checked={!!FormValue.on_sale}
 									onChange={e => {
 										handleChange('on_sale', e.target.checked ? 1 : 0);
 										handleChange('sale_discount', 0);
@@ -570,7 +460,7 @@ export const AddProdPriceListingsTab = ({
 						<Button
 							type="submit"
 							fill={'green'}
-							disabled={isSubmitting || FormValue.type === undefined} // Disable button if no type or form is submitting
+							disabled={isSubmitting} // Disable button if no type or form is submitting
 							className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{!isSubmitting ? 'Add listing' : 'Submitting...'}

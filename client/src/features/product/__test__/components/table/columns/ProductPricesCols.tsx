@@ -26,6 +26,11 @@ import {
 	ArrowUpDown,
 } from 'lucide-react';
 import currency from 'currency.js';
+import {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+} from '@/components/ui/tooltip';
 
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
@@ -101,34 +106,7 @@ export const ProductPricesColumns = ({
 			header: () => <div className="justify-center uppercase">WHS</div>,
 		},
 		{
-			accessorKey: 'type',
-			header: () => <div className="justify-center uppercase">Type</div>,
-			cell: ({ row }) => {
-				const type = row.original.type;
-				return (
-					<div className="group relative flex w-fit items-center">
-						{type === 'retail' ? (
-							<Box size={20} strokeWidth={2} className="text-gray-700" />
-						) : (
-							<Boxes
-								size={20}
-								strokeWidth={1.75}
-								className="text-gray-700"
-							/>
-						)}
-						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-							{type}
-						</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'stocks_quantity',
-			header: () => <div className="justify-center uppercase">QTY</div>,
-		},
-		{
-			accessorKey: 'stocks_unit',
+			accessorKey: 'unit',
 			header: () => <div className="justify-center uppercase">Unit</div>,
 		},
 		{
@@ -179,18 +157,24 @@ export const ProductPricesColumns = ({
 				return (
 					<div className="flex items-center">
 						<span>
-							{row.original.on_sale === 1 ? (
+							{!!row.original.on_sale ? (
 								formatted
 							) : (
 								<div className="group relative flex w-fit items-center">
-									<X
-										size={20}
-										strokeWidth={2}
-										className="text-gray-700"
-									/>
-									<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm normal-case text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-										Not on sale
-									</span>
+									<Tooltip>
+										<TooltipTrigger>
+											<X
+												size={20}
+												strokeWidth={2}
+												className="text-gray-700"
+											/>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p className="text-sm font-medium normal-case">
+												Not on sale
+											</p>
+										</TooltipContent>
+									</Tooltip>
 								</div>
 							)}
 						</span>
@@ -216,36 +200,62 @@ export const ProductPricesColumns = ({
 
 		{
 			accessorKey: 'approval_status',
-			header: () => (
-				<div className="mx-auto w-fit text-center uppercase">Approval</div>
-			),
+			sortingFn: 'basic',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+						>
+							Approval{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
 			cell: ({ row }) => {
 				const status = row.original.approval_status;
 				return (
 					<>
 						<div className="group relative mx-auto flex w-fit items-center justify-center">
-							{status === 'approved' ? (
-								<Check
-									size={20}
-									strokeWidth={2}
-									className="text-green-600"
-								/>
-							) : status === 'rejected' ? (
-								<Ban
-									size={20}
-									strokeWidth={2}
-									className="text-red-600"
-								/>
-							) : (
-								<Clock
-									size={20}
-									strokeWidth={2}
-									className="text-amber-500"
-								/>
-							)}
-							<span className="absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-								{status}
-							</span>
+							<Tooltip>
+								<TooltipTrigger>
+									{status === 'approved' ? (
+										<Check
+											size={20}
+											strokeWidth={2}
+											className="text-green-600"
+										/>
+									) : status === 'rejected' ? (
+										<Ban
+											size={20}
+											strokeWidth={2}
+											className="text-red-600"
+										/>
+									) : (
+										<Clock
+											size={20}
+											strokeWidth={2}
+											className="text-amber-500"
+										/>
+									)}
+								</TooltipTrigger>
+								<TooltipContent>
+									<p className="text-sm font-medium capitalize">
+										{status}
+									</p>
+								</TooltipContent>
+							</Tooltip>
 						</div>
 					</>
 				);
@@ -280,22 +290,28 @@ export const ProductPricesColumns = ({
 				const active = row.original.active_status;
 				return (
 					<div className="group relative mx-auto flex w-fit items-center justify-center">
-						{active === 'active' ? (
-							<Check
-								size={20}
-								strokeWidth={2}
-								className="text-green-600"
-							/>
-						) : (
-							<CircleOff
-								size={20}
-								strokeWidth={2}
-								className="text-gray-600"
-							/>
-						)}
-						<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm normal-case text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-							{active === 'active' ? 'Active' : 'Inactive'}
-						</span>
+						<Tooltip>
+							<TooltipTrigger>
+								{active === 'active' ? (
+									<Check
+										size={20}
+										strokeWidth={2}
+										className="text-green-600"
+									/>
+								) : (
+									<CircleOff
+										size={20}
+										strokeWidth={2}
+										className="text-gray-600"
+									/>
+								)}
+							</TooltipTrigger>
+							<TooltipContent>
+								<p className="text-sm font-medium capitalize">
+									{active}
+								</p>
+							</TooltipContent>
+						</Tooltip>
 					</div>
 				);
 			},
