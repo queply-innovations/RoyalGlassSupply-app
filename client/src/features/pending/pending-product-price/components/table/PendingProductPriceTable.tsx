@@ -9,11 +9,13 @@ import { toast } from 'react-toastify';
 interface PendingProductPriceTableProps {
 	openModal: (data: ProductPrices, action: string) => void;
 	isModalOpen: boolean;
+	filterWarehouse?: number;
 }
 
 export const PendingProductPriceTable = ({
 	openModal,
 	isModalOpen,
+	filterWarehouse,
 }: PendingProductPriceTableProps) => {
 	const { data, isLoading, setSelectedProductPrice } =
 		usePendingProductPrice();
@@ -60,7 +62,13 @@ export const PendingProductPriceTable = ({
 						handleApproveProdPrice,
 						handleRejectProdPrice,
 					})}
-					data={data}
+					data={
+						filterWarehouse
+							? data.filter(
+									item => item.warehouse.id === filterWarehouse,
+								)
+							: data
+					}
 					filterWhat={'name'}
 					dataType={'Listing'}
 					isLoading={isLoading}
