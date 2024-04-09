@@ -109,9 +109,7 @@ export const ProductPrices = () => {
 								{modalAction === 'add' && (
 									<AddProductPrice onClose={closeModal} />
 								)}
-								{modalAction === 'details' && (
-									<ProdPriceDetails onClose={closeModal} />
-								)}
+								{modalAction === 'details' && <ProdPriceDetails />}
 								{modalAction === 'edit' && (
 									<ProductPricesForm onClose={closeModal} />
 								)}

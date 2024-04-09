@@ -118,14 +118,14 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-3 gap-y-5 font-medium text-gray-700">
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-4 gap-y-5 font-medium text-gray-700">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Name</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.name}
 							</p>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Brand</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.brand || (
@@ -133,7 +133,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								)}
 							</p>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+						<div className="col-span-6 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
 								Serial Number
 							</h3>
@@ -141,7 +141,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								{selectedProductPrice.product.serial_no}
 							</p>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="unit"
 								className="text-sm font-bold text-gray-600"
@@ -160,16 +160,24 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								}}
 							/>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.size}
 							</p>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Color</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.color}
+							</p>
+						</div>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Warehouse
+							</h3>
+							<p className="text-sm">
+								{selectedProductPrice.warehouse.name}
 							</p>
 						</div>
 					</div>
