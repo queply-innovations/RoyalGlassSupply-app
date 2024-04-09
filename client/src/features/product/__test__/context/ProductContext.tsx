@@ -5,8 +5,10 @@ import { useProductQuery } from '../hooks';
 interface ProductContextProps {
 	data: Product[];
 	isLoading: boolean;
-	selectedProduct: Product;
-	setSelectedProduct: (product: Product) => void;
+	selectedProduct: Product | undefined;
+	setSelectedProduct: React.Dispatch<
+		React.SetStateAction<Product | undefined>
+	>;
 }
 interface ProductProviderProps {
 	children: ReactNode;
@@ -17,9 +19,9 @@ const ProductContext = createContext<ProductContextProps | undefined>(
 
 export const ProductsProvider = ({ children }: ProductProviderProps) => {
 	// State of the selected product
-	const [selectedProduct, setSelectedProduct] = useState<Product>(
-		{} as Product,
-	);
+	const [selectedProduct, setSelectedProduct] = useState<
+		Product | undefined
+	>();
 	// Destructured response data and loading state from useProductQuery hook
 	const { data, isLoading } = useProductQuery();
 	const value = {

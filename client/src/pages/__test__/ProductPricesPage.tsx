@@ -22,6 +22,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
+import { ProductsProvider } from '@/features/product/__test__/context/ProductContext';
 
 export const ProductPrices = () => {
 	const { warehouses } = useWarehouseQuery();
@@ -41,84 +42,86 @@ export const ProductPrices = () => {
 	return (
 		<>
 			<MainLayout title="Product Listings">
-				<ProductPricesProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="ml-auto flex flex-row items-center space-x-4">
-							<span className="text-sm font-medium">
-								Filter warehouse:{' '}
-							</span>
-							{/* //* Warehouse id of zero is assumed 'all' */}
-							<Select
-								defaultValue="0"
-								onValueChange={value =>
-									setFilterWarehouse(Number(value))
-								}
-							>
-								<SelectTrigger className="w-[300px] text-sm font-medium">
-									<SelectValue placeholder="All" />
-								</SelectTrigger>
-								<SelectContent className="text-sm font-medium capitalize">
-									<SelectItem key="all" value="0">
-										All
-									</SelectItem>
-									{warehouses.map(warehouse => (
-										<SelectItem
-											key={warehouse.id}
-											value={warehouse.id.toString()}
-										>
-											{warehouse.name} ({warehouse.code})
+				<ProductsProvider>
+					<ProductPricesProvider>
+						<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+							<div className="ml-auto flex flex-row items-center space-x-4">
+								<span className="text-sm font-medium">
+									Filter warehouse:{' '}
+								</span>
+								{/* //* Warehouse id of zero is assumed 'all' */}
+								<Select
+									defaultValue="0"
+									onValueChange={value =>
+										setFilterWarehouse(Number(value))
+									}
+								>
+									<SelectTrigger className="w-[300px] text-sm font-medium">
+										<SelectValue placeholder="All" />
+									</SelectTrigger>
+									<SelectContent className="text-sm font-medium capitalize">
+										<SelectItem key="all" value="0">
+											All
 										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+										{warehouses.map(warehouse => (
+											<SelectItem
+												key={warehouse.id}
+												value={warehouse.id.toString()}
+											>
+												{warehouse.name} ({warehouse.code})
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
+								<ProductPricesTable
+									openModal={modalHandler}
+									isModalOpen={isOpen}
+									filterWarehouse={
+										// If filterWarehouse is given (greater than 0),
+										// filter the inventory data by warehouse code
+										filterWarehouse > 0 ? filterWarehouse : undefined
+									}
+								/>
+							</div>
 						</div>
-						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
-							<ProductPricesTable
-								openModal={modalHandler}
-								isModalOpen={isOpen}
-								filterWarehouse={
-									// If filterWarehouse is given (greater than 0),
-									// filter the inventory data by warehouse code
-									filterWarehouse > 0 ? filterWarehouse : undefined
-								}
-							/>
-						</div>
-					</div>
-					<ModalTest
-						title={
-							modalAction === 'add'
-								? 'Add Listing'
-								: modalAction === 'details'
-									? 'Listing Details'
-									: modalAction === 'edit'
-										? 'Edit Listing'
-										: modalAction === 'toggle_active_stat'
-											? 'Toggle Active Status'
-											: ''
-						}
-						isOpen={isOpen}
-						onClose={closeModal}
-						closeOnOverlayClick={
-							modalAction === 'details' ||
-							modalAction === 'toggle_active_stat'
-						}
-					>
-						<>
-							{modalAction === 'add' && (
-								<AddProductPrice onClose={closeModal} />
-							)}
-							{modalAction === 'details' && (
-								<ProdPriceDetails onClose={closeModal} />
-							)}
-							{modalAction === 'edit' && (
-								<ProductPricesForm onClose={closeModal} />
-							)}
-							{modalAction === 'toggle_active_stat' && (
-								<ProdPriceActiveToggle onClose={closeModal} />
-							)}
-						</>
-					</ModalTest>
-				</ProductPricesProvider>
+						<ModalTest
+							title={
+								modalAction === 'add'
+									? 'Add Listing'
+									: modalAction === 'details'
+										? 'Listing Details'
+										: modalAction === 'edit'
+											? 'Edit Listing'
+											: modalAction === 'toggle_active_stat'
+												? 'Toggle Active Status'
+												: ''
+							}
+							isOpen={isOpen}
+							onClose={closeModal}
+							closeOnOverlayClick={
+								modalAction === 'details' ||
+								modalAction === 'toggle_active_stat'
+							}
+						>
+							<>
+								{modalAction === 'add' && (
+									<AddProductPrice onClose={closeModal} />
+								)}
+								{modalAction === 'details' && (
+									<ProdPriceDetails onClose={closeModal} />
+								)}
+								{modalAction === 'edit' && (
+									<ProductPricesForm onClose={closeModal} />
+								)}
+								{modalAction === 'toggle_active_stat' && (
+									<ProdPriceActiveToggle onClose={closeModal} />
+								)}
+							</>
+						</ModalTest>
+					</ProductPricesProvider>
+				</ProductsProvider>
 			</MainLayout>
 		</>
 	);

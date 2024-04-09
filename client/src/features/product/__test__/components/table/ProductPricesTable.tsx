@@ -1,8 +1,8 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { useProductPrices } from '../..';
 import { Product, ProductPrices } from '../../types';
-import { useAuth } from '@/context/AuthContext';
-import { ProductPricesColumns, ProductPricesColumnsLimited } from '.';
+import { ProductPricesColumns } from '.';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface ProductsPricesTableProps {
 	openModal: (data: ProductPrices | Product, action: string) => void;
@@ -15,7 +15,6 @@ export const ProductPricesTable = ({
 	isModalOpen,
 	filterWarehouse,
 }: ProductsPricesTableProps) => {
-	const { auth } = useAuth();
 	const { data, isLoading, setSelectedProductPrice } = useProductPrices();
 
 	const handleAddProdPrice = () => {
@@ -42,28 +41,26 @@ export const ProductPricesTable = ({
 
 	return (
 		<>
-			<DataTable
-				columns={
-					// If user is a super admin or admin, show all columns
-					// else, show only limited columns
-					auth.role === 'super_admin' || auth.role === 'admin'
-						? ProductPricesColumns({
-								handleProdPriceDetails,
-								handleEditProdPrice,
-								handleToggleActiveStatus,
-							})
-						: ProductPricesColumnsLimited
-				}
-				data={
-					filterWarehouse
-						? data.filter(item => item.warehouse.id === filterWarehouse)
-						: data
-				}
-				filterWhat={'name'}
-				dataType={'Listing'}
-				openModal={handleAddProdPrice}
-				isLoading={isLoading}
-			/>
+			<TooltipProvider>
+				<DataTable
+					columns={ProductPricesColumns({
+						handleProdPriceDetails,
+						handleEditProdPrice,
+						handleToggleActiveStatus,
+					})}
+					data={
+						filterWarehouse
+							? data.filter(
+									item => item.warehouse.id === filterWarehouse,
+								)
+							: data
+					}
+					filterWhat={'name'}
+					dataType={'Listing'}
+					openModal={handleAddProdPrice}
+					isLoading={isLoading}
+				/>
+			</TooltipProvider>
 		</>
 	);
 };
