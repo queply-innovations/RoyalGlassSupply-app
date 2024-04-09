@@ -38,9 +38,6 @@ const tableCols = [
 	'Status',
 	'Capital price',
 	'Unit',
-	'Bundles count',
-	'Bundles unit',
-	'Qty/bundle',
 	'Stocks',
 	'Damaged',
 	'Total',
@@ -274,24 +271,6 @@ export const AddInventoryProductTable = ({
 												key={row?.id + 'unit'}
 											>
 												{row?.data.unit}
-											</TableCell>
-											<TableCell
-												className="px-5 py-3"
-												key={row?.id + 'bundles_count'}
-											>
-												{row?.data.bundles_count}
-											</TableCell>
-											<TableCell
-												className="px-5 py-3"
-												key={row?.id + 'bundles_unit'}
-											>
-												{row?.data.bundles_unit}
-											</TableCell>
-											<TableCell
-												className="px-5 py-3"
-												key={row?.id + 'quantity_per_bundle'}
-											>
-												{row?.data.quantity_per_bundle}
 											</TableCell>
 											<TableCell
 												className="px-5 py-3"

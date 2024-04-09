@@ -4,6 +4,7 @@ import { useInventoryProductByIdQuery } from '../../hooks/useInventoryProdsQuery
 import { InventoryProduct } from '../../types';
 import { useInventoryProds } from '../../context/InventoryProdsContext';
 import { useInventoryProdsMutation } from '../../hooks';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface InventoryProductsTableProps {
 	id: number;
@@ -37,17 +38,19 @@ export const InventoryProductsTable = ({
 
 	return (
 		<div className="w-full rounded-lg border bg-white">
-			<DataTable
-				columns={InventoryProductsCols({
-					handleEditInventoryProduct,
-					handleToggleStatus,
-				})}
-				data={data ? data : []}
-				filterWhat={'product'}
-				dataType={'Items'}
-				openModal={handleAddInventoryProduct}
-				isLoading={isLoading}
-			/>
+			<TooltipProvider>
+				<DataTable
+					columns={InventoryProductsCols({
+						handleEditInventoryProduct,
+						handleToggleStatus,
+					})}
+					data={data ? data : []}
+					filterWhat={'product'}
+					dataType={'Items'}
+					openModal={handleAddInventoryProduct}
+					isLoading={isLoading}
+				/>
+			</TooltipProvider>
 		</div>
 	);
 };
