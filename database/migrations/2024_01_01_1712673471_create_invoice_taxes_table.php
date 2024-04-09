@@ -8,13 +8,15 @@ class CreateInvoiceTaxesTable extends Migration
 {
     public function up()
     {
-        Schema::create('invoice_taxes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('invoice_id');
-            $table->string('item',40);
-            $table->double('amount');
-            $table->text('notes');
-        });
+        if(!Schema::hasTable('invoice_taxes')) {
+            Schema::create('invoice_taxes', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('invoice_id');
+                $table->string('item',40);
+                $table->double('amount');
+                $table->text('notes');
+            });
+        }
     }
 
     public function down()

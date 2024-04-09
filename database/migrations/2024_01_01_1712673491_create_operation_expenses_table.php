@@ -8,15 +8,17 @@ class CreateOperationExpensesTable extends Migration
 {
     public function up()
     {
-        Schema::create('operation_expenses', function (Blueprint $table) {
-            $table->id();
-            $table->string('title',100)->default('');
-            $table->date('date_of_operation');
-            $table->double('amount');
-            $table->text('notes');
-            $table->unsignedBigInteger('created_by');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('operation_expenses')) {
+            Schema::create('operation_expenses', function (Blueprint $table) {
+                $table->id();
+                $table->string('title',100)->default('');
+                $table->date('date_of_operation');
+                $table->double('amount');
+                $table->text('notes');
+                $table->unsignedBigInteger('created_by');
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()

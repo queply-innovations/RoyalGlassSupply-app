@@ -8,15 +8,17 @@ class CreateProductsTable extends Migration
 {
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('serial_no',100)->default('');
-            $table->string('name',500)->default('');
-            $table->string('brand',100)->default('');
-            $table->string('size',100);
-            $table->string('color',40);
-            $table->text('notes')->nullable();
-        });
+        if(!Schema::hasTable('products')) {
+            Schema::create('products', function (Blueprint $table) {
+                $table->id();
+                $table->string('serial_no',100)->default('');
+                $table->string('name',500)->default('');
+                $table->string('brand',100)->default('');
+                $table->string('size',100);
+                $table->string('color',40);
+                $table->text('notes')->nullable();
+            });
+        }
     }
 
     public function down()

@@ -8,13 +8,15 @@ class CreateVouchersTable extends Migration
 {
     public function up()
     {
-        Schema::create('vouchers', function (Blueprint $table) {
-            $table->id();
-            $table->string('code',100);
-            $table->unsignedBigInteger('generated_by');
-            $table->text('notes')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('vouchers')) {
+            Schema::create('vouchers', function (Blueprint $table) {
+                $table->id();
+                $table->string('code',100);
+                $table->unsignedBigInteger('generated_by');
+                $table->text('notes')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()

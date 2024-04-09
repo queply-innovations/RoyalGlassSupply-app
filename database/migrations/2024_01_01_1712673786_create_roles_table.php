@@ -8,10 +8,12 @@ class CreateRolesTable extends Migration
 {
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('title',40);
-        });
+        if(!Schema::hasTable('roles')) {
+            Schema::create('roles', function (Blueprint $table) {
+                $table->id();
+                $table->string('title',40);
+            });
+        }
     }
 
     public function down()

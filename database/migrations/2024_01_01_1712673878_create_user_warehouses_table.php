@@ -8,11 +8,13 @@ class CreateUserWarehousesTable extends Migration
 {
     public function up()
     {
-        Schema::create('user_warehouses', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('warehouse_id')->index();
-        });
+        if(!Schema::hasTable('user_warehouses')) {
+            Schema::create('user_warehouses', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id')->index();
+                $table->unsignedBigInteger('warehouse_id')->index();
+            });
+        }
     }
 
     public function down()
