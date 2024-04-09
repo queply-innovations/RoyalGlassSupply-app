@@ -1,8 +1,18 @@
 import { UseModalProps } from '@/utils/Modal';
-import { useProductPrices } from '../..';
-import { useProductPricesMutation } from '../../hooks';
-import { Input } from '@/components/ui/input';
+import { useAuth } from '@/context/AuthContext';
+import { usePendingProductPrice } from '../..';
+import { useProductPricesMutation } from '@/features/product/__test__/hooks';
+import { useEffect, useState } from 'react';
+import {
+	getCostValue,
+	getMarkupPercentage,
+	getMarkupValue,
+	getPriceValue,
+} from '@/features/product/__test__/helpers/useProductPriceCalculations';
+import currency from 'currency.js';
+import { toast } from 'react-toastify';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
 	Select,
@@ -11,26 +21,18 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useEffect, useState } from 'react';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components';
-import { useAuth } from '@/context/AuthContext';
-import currency from 'currency.js';
-import {
-	getMarkupPercentage,
-	getMarkupValue,
-	getCostValue,
-	getPriceValue,
-} from '../../helpers/useProductPriceCalculations';
-import { toast } from 'react-toastify';
 
-interface ProductPricesFormProps {
+interface PendingProductPriceEditProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
+export const PendingProductPriceEdit = ({
+	onClose,
+}: PendingProductPriceEditProps) => {
 	const { auth } = useAuth();
-	const { selectedProductPrice } = useProductPrices();
+	const { selectedProductPrice } = usePendingProductPrice();
 	const {
 		value: FormValue,
 		handleChange,

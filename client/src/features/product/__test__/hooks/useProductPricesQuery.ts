@@ -37,6 +37,7 @@ export const useProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
+
 export const useProductPricesQueryFilterByApproved = () => {
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 

@@ -57,7 +57,13 @@ export const useProductPricesMutation = () => {
 
 	const mutationConfig = {
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ['productPrices'] });
+			await queryClient.invalidateQueries({
+				predicate: query => {
+					return ['productPrices', 'productPricesTEST'].includes(
+						query.queryKey[0] as string,
+					);
+				},
+			});
 
 			setValue({} as Partial<ProductPricesDatabase>);
 		},

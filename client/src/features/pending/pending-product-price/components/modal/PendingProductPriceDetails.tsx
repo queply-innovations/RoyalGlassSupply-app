@@ -1,11 +1,10 @@
-import { UseModalProps } from '@/utils/Modal';
-import { useProductPrices } from '../..';
-import { formatUTCDate } from '@/utils/timeUtils';
-import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
+import { usePendingProductPrice } from '../../context/PendingProductPriceContext';
 import currency from 'currency.js';
+import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
+import { formatUTCDate } from '@/utils/timeUtils';
 
-export const ProdPriceDetails = () => {
-	const { selectedProductPrice } = useProductPrices();
+export const PendingProductPriceDetails = () => {
+	const { selectedProductPrice } = usePendingProductPrice();
 
 	return (
 		<>

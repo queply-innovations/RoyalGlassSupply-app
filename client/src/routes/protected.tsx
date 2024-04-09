@@ -13,7 +13,10 @@ import { ProductPricesProvider } from '@/features/product/__test__';
 import { JSX } from 'react/jsx-runtime';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
-const { ExpensesPage } = lazyImport(() => import('@/pages/__test__'), 'ExpensesPage');
+const { ExpensesPage } = lazyImport(
+	() => import('@/pages/__test__'),
+	'ExpensesPage',
+);
 // const { Finance } = lazyImport(() => import('@/pages'), 'Finance');
 // const { Inventory } = lazyImport(() => import('@/pages'), 'Inventory');
 const { Inventory } = lazyImport(() => import('@/pages/__test__'), 'Inventory');
@@ -46,6 +49,10 @@ const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
 const { PendingTransfer } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PendingTransfer',
+);
+const { PendingProductPrice } = lazyImport(
+	() => import('@/pages/__test__'),
+	'PendingProductPrice',
 );
 const { Products } = lazyImport(() => import('@/pages/__test__'), 'Products');
 const { ProductPrices } = lazyImport(
@@ -110,6 +117,7 @@ const protectedRoutesConfig = [
 	{ path: '/pending/inventory', element: <PendingInventory /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
+	{ path: '/pending/product-listing', element: <PendingProductPrice /> },
 	{ path: '/transfer', element: <Transfer /> },
 	{ path: '/transaction', element: <Transaction /> },
 	// { path: '/transaction/expenses', element: <Expenses /> },
