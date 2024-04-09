@@ -22,7 +22,8 @@ class InventoryProduct extends Model
         'stocks_count',
         'damage_count',
         'total_count',
-        'unit'
+        'unit',
+        'status'
     ];
 
     public $timestamps = false;

@@ -79,7 +79,13 @@ class InventoryProductController extends Controller
     {
 
         //returns a filtered list of products of a particular inventory
-        $query = InventoryProduct::where('inventory_id', $request->inventory_id);
+        $filterByInventory = $request->exists('inventory_id') ? $request->inventory_id : null;
+
+        if($filterByInventory) {
+            $query = InventoryProduct::where('inventory_id', $request->inventory_id);
+        } else {
+            $query = InventoryProduct::query();
+        }
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){

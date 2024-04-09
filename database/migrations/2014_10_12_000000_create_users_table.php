@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('users', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('username')->unique();
-        //     $table->string('email')->unique();
-        //     $table->timestamp('email_verified_at')->nullable();
-        //     $table->string('password');
-        //     $table->string('firstname');
-        //     $table->string('lastname');
-        //     $table->string('contact_no');
-        //     $table->string('position');
-        //     $table->string('active_status');
-        //     $table->rememberToken();
-        //     $table->timestamps();
-        // });
+        if(!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('username',100)->default('')->index();
+                $table->string('email',100)->default('')->index();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password',100);
+                $table->string('firstname',100)->default('');
+                $table->string('lastname',100)->default('');
+                $table->string('contact_no',40);
+                $table->string('position',40);
+                $table->string('active_status',40);
+                $table->string('remember_token',100)->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 };
