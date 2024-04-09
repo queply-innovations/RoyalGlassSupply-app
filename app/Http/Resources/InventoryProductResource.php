@@ -33,7 +33,7 @@ class InventoryProductResource extends JsonResource
             'sold_count' => $sold_count,
             'miscellaneous_count' => $miscellaneous_count,
             'remaining_stocks_count' => $remaining_stocks,
-            'status' => $this->status ? $this->status : 'pending'
+            'status' => $this->status
         ];
     }
 }
