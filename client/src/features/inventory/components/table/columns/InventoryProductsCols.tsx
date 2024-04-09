@@ -18,6 +18,11 @@ import {
 	MoreVertical,
 	Pencil,
 } from 'lucide-react';
+import {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+} from '@/components/ui/tooltip';
 
 interface InventoryProductsColsProps {
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
@@ -106,30 +111,6 @@ export const InventoryProductsCols = ({
 			header: () => <div className="justify-center uppercase">Unit</div>,
 		},
 		{
-			accessorKey: 'bundles_count',
-			header: () => (
-				<div className="justify-center whitespace-nowrap uppercase">
-					Bundles
-				</div>
-			),
-		},
-		{
-			accessorKey: 'bundles_unit',
-			header: () => (
-				<div className="justify-center whitespace-nowrap uppercase">
-					Bund. unit
-				</div>
-			),
-		},
-		{
-			accessorKey: 'quantity_per_bundle',
-			header: () => (
-				<div className="justify-center whitespace-nowrap uppercase">
-					Qty/Bund.
-				</div>
-			),
-		},
-		{
 			accessorKey: 'stocks_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
@@ -177,20 +158,30 @@ export const InventoryProductsCols = ({
 			accessorKey: 'status',
 			header: () => <div className="justify-center uppercase">Status</div>,
 			cell: ({ row }) => (
-				<div className="group relative mx-auto flex w-fit items-center justify-center">
-					{row.original.status === 1 ? (
-						<CheckCircle
-							size={20}
-							strokeWidth={2}
-							className="text-green-600"
-						/>
-					) : (
-						<Clock size={20} strokeWidth={2} className="text-gray-600" />
-					)}
-					<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-						{!!row.original.status ? 'Approved' : 'Pending'}
-					</span>
-				</div>
+				<Tooltip>
+					<div className="group relative flex w-fit items-center">
+						<TooltipTrigger>
+							{!!row.original.status ? (
+								<CheckCircle
+									size={20}
+									strokeWidth={2}
+									className="text-green-600"
+								/>
+							) : (
+								<Clock
+									size={20}
+									strokeWidth={2}
+									className="text-gray-600"
+								/>
+							)}
+						</TooltipTrigger>
+						<TooltipContent>
+							<p className="text-sm font-medium normal-case">
+								{!!row.original.status ? 'Approved' : 'Pending'}
+							</p>
+						</TooltipContent>
+					</div>
+				</Tooltip>
 			),
 		},
 		{

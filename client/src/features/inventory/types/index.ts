@@ -20,11 +20,8 @@ export interface InventoryProduct {
 	inventory_id: number;
 	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
 	supplier_id: { id: number; name: string };
-	// status: 'pending' | 'active' // This is not used in the current implementation
+	status: number;
 	capital_price: number;
-	bundles_count: number;
-	bundles_unit: string;
-	quantity_per_bundle: number;
 	stocks_count: number;
 	damage_count: number;
 	total_count: number;
@@ -33,7 +30,6 @@ export interface InventoryProduct {
 	sold_count?: number;
 	miscellaneous_count?: number;
 	remaining_stocks_count?: number;
-	status: number;
 }
 
 export interface InventoryDatabase
