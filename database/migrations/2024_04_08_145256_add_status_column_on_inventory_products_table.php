@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('inventory_products', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->boolean('status')->change();
         });
     }
 };
