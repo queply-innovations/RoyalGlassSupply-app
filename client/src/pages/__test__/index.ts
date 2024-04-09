@@ -18,3 +18,4 @@ export * from './InventoryItemsPage';
 export * from './ExpensesPage';
 export * from './ReportsPage';
 export * from './PosReturnPage';
+export * from './PendingProductPricePage';

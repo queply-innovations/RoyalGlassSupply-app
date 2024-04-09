@@ -56,6 +56,14 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 							title: 'Pending Return',
 						},
 					},
+					{
+						id: 'pending-listing',
+						permissionId: [13],
+						path: '/pending/product-listing',
+						itemProps: {
+							title: 'Pending Listing',
+						},
+					},
 				],
 			},
 			{
