@@ -11,81 +11,81 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('inventories', function (Blueprint $table) {
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('transfer_id')->references('id')->on('transfers')->onDelete('cascade');
-        });
+        // Schema::table('inventories', function (Blueprint $table) {
+        //     $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+        //     $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('transfer_id')->references('id')->on('transfers')->onDelete('cascade');
+        // });
 
-        Schema::table('inventory_products', function (Blueprint $table) {
-            $table->foreign('inventory_id')->references('id')->on('inventories')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
-        });
+        // Schema::table('inventory_products', function (Blueprint $table) {
+        //     $table->foreign('inventory_id')->references('id')->on('inventories')->onDelete('cascade');
+        //     $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        //     $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+        // });
 
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
-            $table->foreign('issued_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        // Schema::table('invoices', function (Blueprint $table) {
+        //     $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+        //     $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+        //     $table->foreign('issued_by')->references('id')->on('users')->onDelete('cascade');
+        // });
 
-        Schema::table('invoice_discounts', function (Blueprint $table) {
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
-            $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        // Schema::table('invoice_discounts', function (Blueprint $table) {
+        //     $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+        //     $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
+        //     $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
+        // });
 
-        Schema::table('invoice_items', function (Blueprint $table) {
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('product_price_id')->references('id')->on('product_prices')->onDelete('cascade');
-            $table->foreign('source_inventory')->references('id')->on('inventory_products')->onDelete('cascade');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        // Schema::table('invoice_items', function (Blueprint $table) {
+        //     $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+        //     $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        //     $table->foreign('product_price_id')->references('id')->on('product_prices')->onDelete('cascade');
+        //     $table->foreign('source_inventory')->references('id')->on('inventory_products')->onDelete('cascade');
+        //     $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
+        // });
 
-        Schema::table('invoice_taxes', function (Blueprint $table) {
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
-        });
+        // Schema::table('invoice_taxes', function (Blueprint $table) {
+        //     $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+        // });
 
-        Schema::table('operation_expenses', function (Blueprint $table) {
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        // Schema::table('operation_expenses', function (Blueprint $table) {
+        //     $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+        // });
 
-        Schema::table('product_prices', function (Blueprint $table) {
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
-        });
+        // Schema::table('product_prices', function (Blueprint $table) {
+        //     $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        //     $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+        // });
 
-        Schema::table('return_transactions', function (Blueprint $table) {
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
-            $table->foreign('issued_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
-        });
+        // Schema::table('return_transactions', function (Blueprint $table) {
+        //     $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+        //     $table->foreign('issued_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
+        // });
 
-        Schema::table('return_transaction_items', function (Blueprint $table) {
-            $table->foreign('return_transaction_id')->references('id')->on('return_transactions')->onDelete('cascade');
-            $table->foreign('invoice_item_id')->references('id')->on('invoice_items')->onDelete('cascade');
-        });
+        // Schema::table('return_transaction_items', function (Blueprint $table) {
+        //     $table->foreign('return_transaction_id')->references('id')->on('return_transactions')->onDelete('cascade');
+        //     $table->foreign('invoice_item_id')->references('id')->on('invoice_items')->onDelete('cascade');
+        // });
 
-        Schema::table('role_permissions', function (Blueprint $table) {
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
-            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
-        });
+        // Schema::table('role_permissions', function (Blueprint $table) {
+        //     $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+        //     $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+        // });
 
-        Schema::table('transfers', function (Blueprint $table) {
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('source')->references('id')->on('warehouses')->onDelete('cascade');
-            $table->foreign('destination')->references('id')->on('warehouses')->onDelete('cascade');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('received_by')->references('id')->on('users')->onDelete('cascade');
-        });
+        // Schema::table('transfers', function (Blueprint $table) {
+        //     $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('source')->references('id')->on('warehouses')->onDelete('cascade');
+        //     $table->foreign('destination')->references('id')->on('warehouses')->onDelete('cascade');
+        //     $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('received_by')->references('id')->on('users')->onDelete('cascade');
+        // });
 
-        Schema::table('user_roles', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
-        });
+        // Schema::table('user_roles', function (Blueprint $table) {
+        //     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+        // });
     }
 
     /**
