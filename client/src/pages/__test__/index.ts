@@ -19,3 +19,4 @@ export * from './ExpensesPage';
 export * from './ReportsPage';
 export * from './PosReturnPage';
 export * from './CustomersPage';
+export * from './PendingReturnPage';

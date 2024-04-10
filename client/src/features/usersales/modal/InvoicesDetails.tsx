@@ -13,14 +13,13 @@ interface InvoicesDetailsProps {
 }
 
 export const InvoicesDetails = ({ onClose }: InvoicesDetailsProps) => {
-	const { selectedInvoice, isFetching } = useUserSales();
+	const { invoices, selectedInvoice, isFetching } = useUserSales();
 
 	// const handleAdd = () => {
 	// 	openModal({} as Invoice, 'add');
 	// };
 
 	const currentInvoice = selectedInvoice[0];
-	console.log(selectedInvoice[0].customer);
 
 	const InvoicesTableHeader: ColumnDef<Invoice>[] = [
 		{

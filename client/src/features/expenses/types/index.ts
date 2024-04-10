@@ -28,6 +28,6 @@ export interface ExpensesRaw {
 		created_at: string;
 		updated_at: string;
 	}
-	created_at: number;
-	updated_at: number;
+	created_at: string;
+	updated_at: string;
 }

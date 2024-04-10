@@ -34,7 +34,7 @@ export const UserSalesProvider = ({ children }: UserSalesProviderProps) => {
 
 	useEffect(() => {
 		users.map((user: number) => {
-			setUserSales([...userSales, { 
+			setUserSales(prev => [...prev, { 
 				id: user, 
 				invoices: invoices.filter((invoice) => invoice.issued_by.id === user) 
 			}]);

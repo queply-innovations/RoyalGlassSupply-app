@@ -38,7 +38,8 @@ const { PendingInventory } = lazyImport(
 	() => import('@/pages'),
 	'PendingInventory',
 );
-const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
+// const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
+const { PendingReturn } = lazyImport(() => import('@/pages/__test__'), 'PendingReturn');
 // const { PendingTransfer } = lazyImport(
 // 	() => import('@/pages'),
 // 	'PendingTransfer',

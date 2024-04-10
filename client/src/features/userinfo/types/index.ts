@@ -19,6 +19,7 @@ export interface UserAdd {
 	password: string;
 	password_confirmation: string;
 	active_status: string;
+	position: string;
 }
 
 export interface UserResponse {

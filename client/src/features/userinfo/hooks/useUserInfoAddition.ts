@@ -61,12 +61,20 @@ export const useUserInfoAddition = () => {
 			...prev,
 			[e.target.name]: e.target.value,
 		}));
-		if (e.target.name === "position"){
-			setUser(prev => ({
-				...prev,
-				role_id: roles.find((role: any) => role.title === e.target.value)?.id,
-			}));
-		}
+	};
+
+	const handleChangeSelect = (
+		key: string,
+		_value: any,
+	) => {
+		setIsChanged(true);
+		setSuccess(null);
+		setError(null);
+		setUser(prev => ({
+			...prev,
+			[key]: _value,
+			role_id: roles.find((role: any) => role.title === _value)?.id,
+		}));
 	};
 
 	const handleSubmit = async () => {
@@ -91,7 +99,7 @@ export const useUserInfoAddition = () => {
 		},
 		onError: (error: any) => {
 			console.error(error);
-			setError(error.message);
+			setError(error.response.data.message);
 			setIsSubmitting(false);
 		},
 	};
@@ -112,6 +120,7 @@ export const useUserInfoAddition = () => {
 		success,
 		handleSubmit,
 		handleChange,
+		handleChangeSelect,
 		addUserMutation,
 	};
 };
