@@ -30,7 +30,7 @@ import { Product } from '@/features/product/__test__/types';
 import { Supplier } from '@/features/supplier/types';
 import { InventoryProductsQueueProps } from './AddInventoryProductPos';
 import { useAuth } from '@/context/AuthContext';
-
+import { getTotalCount } from '@/features/inventory/helpers';
 interface AddInventoryProductFormProps {
 	setInventoryProductsQueue: React.Dispatch<
 		React.SetStateAction<InventoryProductsQueueProps[]>
@@ -58,6 +58,7 @@ export const AddInventoryProductForm = ({
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
 	const { auth } = useAuth();
+	const isAdmin = auth.role?.includes('admin');
 	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
 	// State handlers for dropdowns/popovers
@@ -69,7 +70,8 @@ export const AddInventoryProductForm = ({
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
-		auth.role?.includes('admin') && handleChange('status', 1);; // automatically set status to approved if user is admin or super_admin
+		handleChange('unit', 'pcs'); // Default unit is pcs
+		isAdmin && handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
@@ -78,51 +80,21 @@ export const AddInventoryProductForm = ({
 			handleChange('supplier_id', selectedProduct.data.supplier_id),
 			handleChange('capital_price', selectedProduct.data.capital_price),
 			handleChange('unit', selectedProduct.data.unit),
-			handleChange('bundles_count', selectedProduct.data.bundles_count),
-			handleChange('bundles_unit', selectedProduct.data.bundles_unit),
-			handleChange(
-				'quantity_per_bundle',
-				selectedProduct.data.quantity_per_bundle,
-			),
 			handleChange('stocks_count', selectedProduct.data.stocks_count),
 			handleChange('damage_count', selectedProduct.data.damage_count),
 			handleChange('total_count', selectedProduct.data.total_count));
 
 		// If authenticated user is not an admin, set the capital_price to 0.00
-		!selectedProduct &&
-			!auth.role?.includes('admin') &&
-			handleChange('capital_price', 0);
+		!selectedProduct && !isAdmin && handleChange('capital_price', 0);
 	}, []);
-
-	// Calculate stocks count
-	const [stocksCount, setStocksCount] = useState<number | undefined>();
-	useEffect(() => {
-		const bundlesCount =
-			FormValue.bundles_count !== undefined
-				? FormValue.bundles_count
-				: selectedProduct?.data.bundles_count || 0;
-		const quantityPerBundle =
-			FormValue.quantity_per_bundle !== undefined
-				? FormValue.quantity_per_bundle
-				: selectedProduct?.data.quantity_per_bundle || 0;
-		const stocksCountCalc = bundlesCount * quantityPerBundle;
-
-		setStocksCount(stocksCountCalc);
-		handleChange('stocks_count', stocksCountCalc);
-	}, [FormValue.bundles_count, FormValue.quantity_per_bundle]);
 
 	// Calculate total count
 	const [totalCount, setTotalCount] = useState<number | undefined>();
 	useEffect(() => {
-		const damageCount =
-			FormValue.damage_count !== undefined
-				? FormValue.damage_count
-				: selectedProduct?.data.damage_count || 0;
-		const stocksCount =
-			FormValue.stocks_count !== undefined
-				? FormValue.stocks_count
-				: selectedProduct?.data.stocks_count || 0;
-		const totalCountCalc = stocksCount - damageCount;
+		const totalCountCalc = getTotalCount(
+			FormValue.stocks_count || 0,
+			FormValue.damage_count || 0,
+		);
 
 		setTotalCount(totalCountCalc);
 		handleChange('total_count', totalCountCalc);
@@ -164,9 +136,7 @@ export const AddInventoryProductForm = ({
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div
 							className={`${
-								auth.role === 'admin' || auth.role === 'super_admin'
-									? 'col-span-12'
-									: 'col-span-6'
+								isAdmin ? 'col-span-12' : 'col-span-6'
 							} flex flex-col justify-center gap-1`}
 						>
 							<Label
@@ -183,6 +153,7 @@ export const AddInventoryProductForm = ({
 									id="product_id"
 									className="relative w-full"
 									asChild
+									autoFocus
 								>
 									<Button
 										role="combobox"
@@ -199,7 +170,9 @@ export const AddInventoryProductForm = ({
 													return (
 														<div className="flex w-full items-baseline gap-4 capitalize">
 															<span className="max-w-full truncate">
-																{selectedProduct?.name}
+																{selectedProduct?.name}{' '}
+																{selectedProduct?.brand &&
+																	`(${selectedProduct.brand})`}
 															</span>
 															<span className="font-baseline text-xs text-slate-700/50">
 																{selectedProduct?.serial_no}
@@ -220,10 +193,7 @@ export const AddInventoryProductForm = ({
 								</PopoverTrigger>
 								<PopoverContent
 									className={`${
-										auth.role === 'admin' ||
-										auth.role === 'super_admin'
-											? 'max-w-[966px]'
-											: 'max-w-[477px]'
+										isAdmin ? 'max-w-[966px]' : 'max-w-[477px]'
 									} w-[calc(100vw-170px)] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
@@ -244,6 +214,11 @@ export const AddInventoryProductForm = ({
 													<CommandItem
 														key={key}
 														className="cursor-pointer justify-between rounded-sm"
+														value={
+															product.name +
+															product.serial_no +
+															product.brand
+														}
 														onSelect={() => {
 															handleChange(
 																'product_id',
@@ -252,9 +227,17 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<span>{product.name}</span>
-														<span className="text-xs font-semibold text-slate-700/50">
-															{product.serial_no}
+														<span className="max-w-[50%] truncate">
+															{product.name}{' '}
+															{product.brand &&
+																`(${product.brand})`}
+														</span>
+														<span className="max-w-[49%] truncate text-xs font-semibold text-slate-700/50">
+															{product.serial_no +
+																' • ' +
+																product.size +
+																' • ' +
+																product.color}
 														</span>
 													</CommandItem>
 												))}
@@ -355,7 +338,7 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						{(auth.role === 'admin' || auth.role === 'super_admin') && (
+						{isAdmin && (
 							<div className="col-span-6 flex flex-col justify-center gap-1">
 								<Label
 									htmlFor="status"
@@ -364,7 +347,7 @@ export const AddInventoryProductForm = ({
 									Status
 								</Label>
 								<Select
-									value={FormValue.status?.toString() || ''}
+									value={FormValue.status?.toString()}
 									required
 									onValueChange={value =>
 										handleChange('status', Number(value))
@@ -388,7 +371,7 @@ export const AddInventoryProductForm = ({
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div
-							className={`relative col-span-3 flex flex-col justify-center gap-1 ${!auth.role?.includes('admin') && 'hidden'}`}
+							className={`relative flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-6' : 'hidden'}`}
 						>
 							<Label
 								htmlFor="capital_price"
@@ -405,8 +388,8 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								disabled={!auth.role?.includes('admin')} // Disable input if user is not an admin
-								defaultValue={FormValue.capital_price?.toFixed(2) || ''}
+								disabled={!isAdmin} // Disable input if user is not an admin
+								value={FormValue.capital_price || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined
 										? (e.target.value = Number(
@@ -425,7 +408,9 @@ export const AddInventoryProductForm = ({
 								₱
 							</span>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
+						<div
+							className={`flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-6' : 'col-span-3'}`}
+						>
 							<Label
 								htmlFor="unit"
 								className="text-sm font-bold text-gray-600"
@@ -442,97 +427,8 @@ export const AddInventoryProductForm = ({
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="bundles_count"
-								className="text-sm font-bold text-gray-600"
-							>
-								Bundles count
-							</Label>
-							<Input
-								id="bundles_count"
-								name="bundles_count"
-								type="number"
-								min={0}
-								max={9999999}
-								step={1}
-								required
-								value={
-									FormValue.bundles_count !== undefined
-										? FormValue.bundles_count
-										: ''
-								}
-								onBlur={e => {
-									e.target.value !== ''
-										? (e.target.value = Number(
-												e.target.value,
-											).toFixed(0))
-										: '';
-								}}
-								onChange={e => {
-									handleChange(
-										'bundles_count',
-										Number(Number(e.target.value).toFixed(0)),
-									);
-								}}
-							/>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="bundles_unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Bundles unit
-							</Label>
-							<Input
-								id="bundles_unit"
-								name="bundles_unit"
-								type="text"
-								maxLength={40}
-								required
-								value={FormValue.bundles_unit || ''}
-								onChange={e =>
-									handleChange('bundles_unit', e.target.value)
-								}
-							/>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="quantity_per_bundle"
-								className="text-sm font-bold text-gray-600"
-							>
-								Quantity per bundle
-							</Label>
-							<Input
-								id="quantity_per_bundle"
-								name="quantity_per_bundle"
-								type="number"
-								min={0}
-								max={9999999}
-								step={1}
-								required
-								value={
-									FormValue.quantity_per_bundle !== undefined
-										? FormValue.quantity_per_bundle
-										: ''
-								}
-								onBlur={e => {
-									e.target.value !== ''
-										? (e.target.value = Number(
-												e.target.value,
-											).toFixed(0))
-										: '';
-								}}
-								onChange={e =>
-									handleChange(
-										'quantity_per_bundle',
-										Number(Number(e.target.value).toFixed(0)),
-									)
-								}
-							/>
-						</div>
 						<div
-							className={`flex flex-col justify-center gap-1 ${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'}`}
+							className={`flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-4' : 'col-span-3'}`}
 						>
 							<Label
 								htmlFor="stocks_count"
@@ -547,12 +443,18 @@ export const AddInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								value={stocksCount || '0'}
-								readOnly
+								value={FormValue.stocks_count?.toFixed(0)}
+								required
+								onChange={e => {
+									handleChange(
+										'stocks_count',
+										Number(Number(e.target.value).toFixed(0)),
+									);
+								}}
 							/>
 						</div>
 						<div
-							className={`flex flex-col justify-center gap-1 ${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'}`}
+							className={`flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-4' : 'col-span-3'}`}
 						>
 							<Label
 								htmlFor="damage_count"
@@ -565,21 +467,10 @@ export const AddInventoryProductForm = ({
 								name="damage_count"
 								type="number"
 								min={0}
-								max={stocksCount || 9999999}
+								max={FormValue.stocks_count ?? 0}
 								step={1}
 								required
-								value={
-									FormValue.damage_count !== undefined
-										? FormValue.damage_count
-										: ''
-								}
-								onBlur={e => {
-									FormValue.damage_count !== undefined
-										? (e.target.value = Number(
-												FormValue.damage_count,
-											).toFixed(0))
-										: undefined;
-								}}
+								value={FormValue.damage_count?.toFixed(0)}
 								onChange={e =>
 									handleChange(
 										'damage_count',
@@ -589,7 +480,7 @@ export const AddInventoryProductForm = ({
 							/>
 						</div>
 						<div
-							className={`flex flex-col justify-center gap-1 ${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'}`}
+							className={`flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-4' : 'col-span-3'}`}
 						>
 							<Label
 								htmlFor="total_count"
@@ -605,7 +496,8 @@ export const AddInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								readOnly
-								value={totalCount ? totalCount : '0'}
+								value={totalCount ?? '0'}
+								className={`${totalCount && totalCount < 0 && 'text-red-600'}`}
 							/>
 						</div>
 					</div>

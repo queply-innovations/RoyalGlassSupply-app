@@ -107,13 +107,13 @@ export const AddInventoryProducts = ({
 				</div>
 
 				<div
-					className={`relative min-w-[650px] overflow-x-clip transition-all duration-300 
+					className={`relative min-w-[850px] overflow-x-clip transition-all duration-300 
 					${
 						activeTab === 'form'
 							? auth.role === 'admin' || auth.role === 'super_admin'
-								? 'min-h-[558px]'
-								: 'min-h-[490px]'
-							: 'min-h-[490px]'
+								? 'min-h-[400px]'
+								: 'min-h-[336px]'
+							: 'min-h-[600px]'
 					}`}
 				>
 					<AnimatePresence initial={false}>
@@ -143,7 +143,7 @@ export const AddInventoryProducts = ({
 								initial="hidden"
 								animate="animate"
 								exit="exit"
-								className="absolute max-h-[642px] w-full p-1"
+								className="absolute max-h-[406px] w-full p-1"
 							>
 								<AddInventoryProductForm
 									// onClose={onClose}

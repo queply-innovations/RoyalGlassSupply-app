@@ -10,9 +10,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useInventoryQuery } from '@/features/inventory/hooks';
 import { useTransferQuery } from '@/features/transfer/hooks';
 import { useProductPricesQuery } from '@/features/product/__test__/hooks';
+import { useState } from 'react';
+import { NavItem } from './NavItem';
+import { Bell, Home } from 'lucide-react';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+import { Notifications } from './Notifications';
 
 export const Navbar = () => {
 	const { logout } = useAuth();
+	const [notifsOpen, setNotifsOpen] = useState(false);
 
 	const { data: productPrices, isLoading } = useProductPricesQuery();
 	const { transfers, transferProducts, isFetching, progress } =
@@ -28,37 +38,34 @@ export const Navbar = () => {
 	const numberNotif = pendingProductPrices.length + pendingTransfers.length;
 
 	return (
-		// <div className="flex flex-row items-end justify-between navbar-container place-content-end">
-		<div className="nav-icon flex flex-row items-end justify-end gap-x-5">
+		<div className="nav-icon flex flex-row items-end justify-end gap-x-2">
 			<Link to="/dashboard">
-				<NavIcons
-					icon={<GoHomeFill className="text-primary-dark-gray text-xl" />}
-					title={'Home'}
-				/>
+				<NavItem title="Home" icon={<Home size={20} />} />
 			</Link>
-			{/* <Link> */}
-
-			<NavIcons
-				icon={
-					<IoNotifications className="text-primary-dark-gray text-xl" />
-				}
-				title={'Notifications'}
-				dropdown={true}
-				pendingProdPrices={pendingProductPrices}
-				pendingTransfers={pendingTransfers}
-			/>
-
-			<div
-				className={`absolute right-6 top-5 mr-2 h-5 w-5 rounded-full bg-red-500 font-bold text-white`}
-			>
-				<div
-					className={`flex h-5 w-5 content-center items-center justify-center rounded-full bg-red-500 ${numberNotif !== 0} mr-2`}
-				>
-					<p className="text-[12px] ">{numberNotif}</p>
-				</div>
+			<div className="relative">
+				<Popover onOpenChange={() => setNotifsOpen(!notifsOpen)}>
+					<PopoverTrigger asChild>
+						<NavItem
+							title="Notifications"
+							icon={<Bell size={20} />}
+							isActive={notifsOpen}
+						/>
+					</PopoverTrigger>
+					<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
+						<Notifications
+							pendingTransfers={pendingTransfers.length}
+							pendingProdPrices={pendingProductPrices.length}
+						/>
+					</PopoverContent>
+				</Popover>
+				{numberNotif > 0 && (
+					<span className="pointer-events-none absolute right-0 top-0 flex -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-red-500 px-2 py-1 ">
+						<p className="line-clamp-1 text-xs font-medium leading-tight text-white">
+							{numberNotif <= 100 ? numberNotif : '100+'}
+						</p>
+					</span>
+				)}
 			</div>
-			{/* </Link> */}
 		</div>
-		// </div>
 	);
 };

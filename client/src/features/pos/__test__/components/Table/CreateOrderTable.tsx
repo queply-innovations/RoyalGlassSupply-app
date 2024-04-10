@@ -160,7 +160,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		{
 			id: 'total_price',
 			accessorKey: 'total_price',
-			header: () => <div className="justify-center">Total</div>,
+			header: () => <div className="justify-center">Subtotal</div>,
 			cell: ({ row }) => (
 				<div className="">
 					<span>{formatCurrency(row.original.total_price)}</span>

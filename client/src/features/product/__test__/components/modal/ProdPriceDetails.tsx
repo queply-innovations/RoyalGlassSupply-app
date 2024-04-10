@@ -4,33 +4,37 @@ import { formatUTCDate } from '@/utils/timeUtils';
 import { Check, CheckCircle, CircleOff, X } from 'lucide-react';
 import currency from 'currency.js';
 
-interface ProdPriceDetailsProps {
-	onClose: UseModalProps['closeModal'];
-}
-
-export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
+export const ProdPriceDetails = () => {
 	const { selectedProductPrice } = useProductPrices();
 
 	return (
 		<>
 			<div className="flex max-w-2xl flex-col gap-4 font-medium">
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Name</h3>
 						<p className="text-sm text-gray-800">
 							{selectedProductPrice.product.name}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold">Product ID</h3>
+						<h3 className="text-sm font-bold">Brand</h3>
 						<p className="text-sm text-gray-800">
-							{selectedProductPrice.product.id}
+							{selectedProductPrice.product.brand || (
+								<span className="opacity-60">No brand</span>
+							)}
 						</p>
 					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold">Listing ID</h3>
+					<div className="col-span-6 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold">Serial number</h3>
 						<p className="text-sm text-gray-800">
-							{selectedProductPrice.id}
+							{selectedProductPrice.product.serial_no}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center	gap-1">
+						<h3 className="text-sm font-bold">Unit</h3>
+						<p className="text-sm text-gray-800">
+							{selectedProductPrice.unit}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -46,42 +50,9 @@ export const ProdPriceDetails = ({ onClose }: ProdPriceDetailsProps) => {
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Warehouse Code</h3>
-						<p className="text-sm text-gray-800">
-							{selectedProductPrice.warehouse.code}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">Warehouse</h3>
 						<p className="text-sm text-gray-800">
 							{selectedProductPrice.warehouse.name}
-						</p>
-					</div>
-				</div>
-				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-				<div className="grid w-full grid-flow-row grid-cols-4 gap-x-6 gap-y-4">
-					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Type</h3>
-						<p className="text-sm capitalize text-gray-800">
-							{selectedProductPrice.type}
-						</p>
-					</div>
-					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Unit</h3>
-						<p className="text-sm text-gray-800">
-							{selectedProductPrice.unit}
-						</p>
-					</div>
-					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Stocks quantity</h3>
-						<p className="text-sm text-gray-800">
-							{selectedProductPrice.stocks_quantity}
-						</p>
-					</div>
-					<div className="col-span-1 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Stocks unit</h3>
-						<p className="text-sm text-gray-800">
-							{selectedProductPrice.stocks_unit}
 						</p>
 					</div>
 				</div>

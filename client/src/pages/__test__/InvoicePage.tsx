@@ -7,6 +7,8 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
 import { getDateNow } from '@/utils/timeUtils';
 import { useState } from 'react';
+import { ProductPricesProvider } from '@/features/product/__test__';
+import { InvoicesTable } from '@/features/invoice/__test__/components/table/InvoicesTable';
 
 interface InvoiceProps {}
 
@@ -22,27 +24,16 @@ export const Invoice = ({}: InvoiceProps) => {
 	console.log(getDateNow());
 	return (
 		<>
-			<MainLayout title="Invoice">
-				<InvoiceProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
-							<InvoiceTable modalHandler={modalHandler} />
+			<MainLayout title="Transactions">
+				<ProductPricesProvider>
+					<InvoiceProvider>
+						<div className="flex h-full max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+							<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
+								<InvoicesTable openModal={modalHandler} />
+							</div>
 						</div>
-					</div>
-					<ModalTest
-						isOpen={isOpen}
-						onClose={closeModal}
-						title={
-							modalAction === 'update'
-								? 'Edit Invoice'
-								: modalAction === 'remove'
-									? 'Remove Invoice'
-									: 'Add Invoice'
-						}
-					>
-						<InvoiceForm onClose={closeModal} formAction={modalAction} />
-					</ModalTest>
-				</InvoiceProvider>
+					</InvoiceProvider>
+				</ProductPricesProvider>
 			</MainLayout>
 		</>
 	);
