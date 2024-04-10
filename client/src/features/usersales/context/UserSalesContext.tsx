@@ -27,7 +27,6 @@ export const UserSalesProvider = ({ children }: UserSalesProviderProps) => {
 	const [ userSales, setUserSales ] = useState<UserSales[]>([]);
 
 	invoices.map((invoice) => {
-		console.log(invoice);
 		if (!users.includes(invoice.issued_by.id)) {
 			setUser([...users, invoice.issued_by.id ]);
 		}
@@ -35,7 +34,7 @@ export const UserSalesProvider = ({ children }: UserSalesProviderProps) => {
 
 	useEffect(() => {
 		users.map((user: number) => {
-			setUserSales([...userSales, { 
+			setUserSales(prev => [...prev, { 
 				id: user, 
 				invoices: invoices.filter((invoice) => invoice.issued_by.id === user) 
 			}]);

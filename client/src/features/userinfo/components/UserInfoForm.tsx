@@ -7,6 +7,14 @@ import { useUserInfoAddition } from '../hooks';
 import { useUserInfo } from '../context/UserInfoContext';
 import { Roles } from '../types';
 import { Loader2 } from 'lucide-react';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+
 interface UserInfoFormProps {
 	isUpdate?: boolean;
 	onClose: UseModalProps['closeModal'];
@@ -23,12 +31,16 @@ const UserInfoForm = ({
 		success,
 		handleSubmit,
 		handleChange,
+		handleChangeSelect
 	} = useUserInfoAddition();
 	// TODO: Need to handle setValue when isUpdate and isDelete is true to pass data to form
 	// TODO: maybe need to pass UserInfoData selected from Context to setValue
 	//TODO: Check what's wrong with form when filling up values
 	const { roles } = useUserInfo();
-	const rolesArr: string[] = roles ? roles.map((role: Roles) => role.title) : [];
+	const rolesFilter = roles?.filter((role: Roles) => role.title !== "super_admin");
+	const rolesArr: string[] = rolesFilter ? rolesFilter.map((role: Roles) => 
+			role.title.replace("_", " ")
+		) : [];
 
 	success && setTimeout(() => {
 		onClose();
@@ -113,14 +125,48 @@ const UserInfoForm = ({
 							<span className="text-sm font-bold uppercase">
 								User Position
 							</span>
-							<Selectbox 
-								name="position"
-								className="text-lg" 
-								placeholder="---Select Position---" 
-								onChange={handleChange}
-								options={rolesArr}
-								required >
-							</Selectbox>
+							<Select
+								onValueChange={value =>
+									handleChangeSelect('position', value)
+								}
+							>
+								<SelectTrigger
+									name="position"
+									className="flex flex-row items-center gap-3 truncate text-md rounded-md bg-slate-100"
+								>
+									<SelectValue placeholder={
+										user.position ? 
+											user.position.charAt(0).toUpperCase() +
+											user.position.slice(1) :
+										'Choose position...'
+									} />
+								</SelectTrigger>
+
+								<SelectContent className="bg-white font-medium text-md">
+									{roles.length > 0 ? (
+										roles.map((role: Roles) => {
+											if (role.title !== 'super_admin'){
+												return (
+													<SelectItem
+														key={role.id}
+														value={role.title}>
+															{role.title.charAt(0).toUpperCase() + 
+																role.title.slice(1).replace("_", " ")}
+													</SelectItem>
+												);
+											}
+										})
+									) : (
+										<div className="flex h-12 w-full items-center justify-center">
+											<Loader2
+												size={22}
+												strokeWidth={2.5}
+												className="animate-spin text-slate-700/50"
+											/>
+										</div>
+									)}
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 
@@ -168,16 +214,6 @@ const UserInfoForm = ({
 					
 					<div className="flex flex-row justify-center gap-1">
 						<div className="mt-3 grid w-full grid-flow-row grid-cols-10 gap-4 text-center">
-							<div className="flex flex-col col-span-2 gap-3">
-								<Button
-									type="submit"
-									fill={isChanged ? 'green' : null}
-									disabled={isChanged ? false : true}
-									onClick={handleSubmit}
-								>
-									{!isSubmitting ? 'Add User' : 'Submitting'}
-								</Button>
-							</div>
 							<div className="flex flex-col col-span-5 items-start">
 								{success && (
 									<div className="font-bold text-green-700">{success}</div>
@@ -190,14 +226,25 @@ const UserInfoForm = ({
 										<Loading width={30} height={30} /> 
 									</div>}
 							</div>
-							<div className="flex flex-col col-span-3 gap-3 items-end">
-								<Button
-									type="reset"
-									fill={'red'}
-									onClick={onClose}
-								>
-									Cancel
-								</Button>
+							<div className="flex flex-col col-span-5 gap-3 items-end">
+								<div className="flex flex-row gap-4">
+									<Button
+										type="reset"
+										fill={'default'}
+										className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
+										onClick={onClose}
+									>
+										Cancel
+									</Button>
+
+									{isChanged && (<Button
+										type="submit"
+										fill={'green'}
+										onClick={handleSubmit}
+									>
+										{!isSubmitting ? 'Add User' : 'Submitting'}
+									</Button>)}
+								</div>
 							</div>
 						</div>
 					</div>
