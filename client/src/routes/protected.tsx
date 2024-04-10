@@ -119,7 +119,7 @@ const protectedRoutesConfig = [
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
 	{ path: '/pending/product-listing', element: <PendingProductPrice /> },
 	{ path: '/transfer', element: <Transfer /> },
-	{ path: '/transaction', element: <Transaction /> },
+	{ path: '/transaction', element: <Invoice /> },
 	// { path: '/transaction/expenses', element: <Expenses /> },
 	{ path: '/returns', element: <Return /> },
 	{ path: '/inventory', element: <Inventory /> },
