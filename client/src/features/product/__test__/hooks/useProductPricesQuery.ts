@@ -38,7 +38,6 @@ export const useProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
-<<<<<<< HEAD
 export const usePendingProductPricesQuery = () => {
 	// State of the response data
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
@@ -59,9 +58,6 @@ export const usePendingProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
-=======
-
->>>>>>> bf12048f6c561049ec46a1a24da4ba40ba05d57c
 export const useProductPricesQueryFilterByApproved = () => {
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
