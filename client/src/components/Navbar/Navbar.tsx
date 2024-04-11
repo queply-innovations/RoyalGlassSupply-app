@@ -42,7 +42,7 @@ export const Navbar = () => {
 		returnItem => returnItem.refund_status === 'pending',
 	);
 
-	const numberNotif = pendingProductPrices.length + pendingTransfers.length;
+	const numberNotif = pendingProductPrices.length + pendingTransfers.length + pendingReturns.length;
 
 	return (
 		<div className="nav-icon flex flex-row items-end justify-end gap-x-2">
@@ -62,6 +62,7 @@ export const Navbar = () => {
 						<Notifications
 							pendingTransfers={pendingTransfers.length}
 							pendingProdPrices={pendingProductPrices.length}
+							pendingReturns={pendingReturns.length}
 						/>
 					</PopoverContent>
 				</Popover>
