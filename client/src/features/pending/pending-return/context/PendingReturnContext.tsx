@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
-import { useReturnQuery } from '../hooks';
+import { usePendingReturnQuery, useReturnQuery } from '../hooks';
 import { ReturnTransactions, ReturnTransactionsRaw } from '../types';
 
 interface ReturnContextProps {
@@ -22,7 +22,7 @@ export const ReturnProvider = ({ children }: ReturnProviderProps) => {
 	const [selectedReturn, setSelectedReturn] =
 		useState<ReturnTransactionsRaw>({} as ReturnTransactionsRaw);
 
-	const { returns, returnsQuery, isFetching } = useReturnQuery();
+	const { returns, isFetching } = usePendingReturnQuery();
 
 	const value = { 
 		returns,

@@ -15,3 +15,39 @@ export const fetchReturnTransactions = async (): Promise<ReturnTransactionsRaw[]
 			throw error;
 		});
 };
+
+export const fetchPendingReturnTransactions = async (): Promise<ReturnTransactionsRaw[]> => {
+	return await axios
+		.post(
+			`${API_URLS.RETURN_TRANSACTIONS}/searches-filters-sorts`,
+			{
+				filter: {
+					refund_status: 'pending',
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching pending return transactions:', error);
+			throw error;
+		});
+};
+
+export const editReturnTransactions = async (data: ReturnTransactions) => {
+	return await axios
+		.put(`${API_URLS.RETURN_TRANSACTIONS}/${data.id}`, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error editing return transactions:', error);
+			throw error;
+		});
+};

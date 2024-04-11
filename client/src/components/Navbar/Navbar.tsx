@@ -8,21 +8,28 @@ import { Button } from '..';
 import { useAuth } from '@/context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import { useInventoryQuery } from '@/features/inventory/hooks';
-import { useTransferQuery } from '@/features/transfer/hooks';
-import { useProductPricesQuery } from '@/features/product/__test__/hooks';
+import { usePendingTransfersQuery, useTransferQuery } from '@/features/transfer/hooks';
+import { usePendingProductPricesQuery, useProductPricesQuery } from '@/features/product/__test__/hooks';
+import { usePendingReturnQuery, useReturnQuery } from '@/features/pending/pending-return/hooks';
 
 export const Navbar = () => {
 	const { logout } = useAuth();
 
-	const { data: productPrices, isLoading } = useProductPricesQuery();
-	const { transfers, transferProducts, isFetching, progress } =
-		useTransferQuery();
+	const { data: productPrices, isLoading } = usePendingProductPricesQuery();
+	const { transfers, isFetching } =
+		usePendingTransfersQuery();
+	const { returns, isFetching: isFetching2 } = usePendingReturnQuery();
+
+	const allIsFetching = isLoading && isFetching && isFetching2;
 
 	const pendingProductPrices = productPrices.filter(
 		prodPrice => prodPrice.approval_status === 'pending',
 	);
 	const pendingTransfers = transfers.filter(
 		transfer => transfer.approval_status === 'pending',
+	);
+	const pendingReturns = returns.filter(
+		returnItem => returnItem.refund_status === 'pending',
 	);
 
 	const numberNotif = pendingProductPrices.length + pendingTransfers.length;
@@ -46,6 +53,8 @@ export const Navbar = () => {
 				dropdown={true}
 				pendingProdPrices={pendingProductPrices}
 				pendingTransfers={pendingTransfers}
+				pendingReturns={pendingReturns}
+				allIsFetching={allIsFetching}
 			/>
 
 			<div

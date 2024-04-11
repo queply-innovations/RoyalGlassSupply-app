@@ -30,6 +30,30 @@ export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 		});
 };
 
+export const fetchPendingProductPrices = async (): Promise<
+	ProductPrices[]
+> => {
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
+			{
+				filter: {
+					approval_status: 'pending',
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching pending product prices:', error);
+			throw error;
+		});
+};
+
 export const fetchApprovedProductPrices = async (): Promise<
 	ProductPrices[]
 > => {

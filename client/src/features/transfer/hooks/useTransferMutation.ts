@@ -253,7 +253,7 @@ export const useTransferMutation = () => {
 	};
 
 	const { mutateAsync: editTransferMutation } = useMutation({
-		mutationKey: ['editTransfer'],
+		mutationKey: ['transfers'],
 		mutationFn: editTransfer,
 		...mutationConfig,
 	});

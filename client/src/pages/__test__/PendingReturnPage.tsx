@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { ReturnProvider } from '@/features/pending/pending-return/context';
 import PendingReturnTable from '@/features/pending/pending-return/components/PendingReturnTable';
+import { PendingReturnDetails } from '@/features/pending/pending-return/modal/PendingReturnDetails';
+import { PendingReturnEdit } from '@/features/pending/pending-return/modal/PendingReturnEdit';
 
 export const PendingReturn = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -38,12 +40,13 @@ export const PendingReturn = () => {
 						onClose={closeModal}
 					>
 						<>
-							{/* {modalAction === 'details' && (
-								<PendingTransferDetails onClose={closeModal} />
+							{modalAction === 'details' && (
+								<PendingReturnDetails onClose={closeModal} />
 							)}
+							
 							{modalAction === 'edit' && (
-								<PendingTransferEdit onClose={closeModal} />
-							)} */}
+								<PendingReturnEdit onClose={closeModal} />
+							)}
 						</>
 					</ModalTest>
 				</ReturnProvider>
