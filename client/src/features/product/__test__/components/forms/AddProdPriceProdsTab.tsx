@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Command,
 	CommandGroup,
@@ -14,7 +14,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Button as LegacyButton } from '@/components';
-import { Inventory, InventoryProduct } from '@/features/inventory/types';
 import { Warehouse } from '@/features/warehouse/__test__/types';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,24 +24,15 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
+import { useProducts } from '../../context/ProductContext';
+import { Product } from '../../types';
+import { useProductPrices } from '../../context/ProductPricesContext';
 
 interface AddProdPriceProdTabProps {
 	warehouses: Warehouse[] | undefined;
 	selectedWarehouse: Warehouse | undefined;
 	setSelectedWarehouse: React.Dispatch<
 		React.SetStateAction<Warehouse | undefined>
-	>;
-
-	inventories: Inventory[] | undefined;
-	selectedInventory: Inventory | undefined;
-	setSelectedInventory: React.Dispatch<
-		React.SetStateAction<Inventory | undefined>
-	>;
-
-	inventoryProducts: InventoryProduct[] | undefined;
-	selectedInventoryProduct: InventoryProduct | undefined;
-	setSelectedInventoryProduct: React.Dispatch<
-		React.SetStateAction<InventoryProduct | undefined>
 	>;
 
 	setOpenedTab: React.Dispatch<React.SetStateAction<string>>;
@@ -53,18 +43,36 @@ export const AddProdPriceProdsTab = ({
 	warehouses,
 	selectedWarehouse,
 	setSelectedWarehouse,
-	inventories,
-	selectedInventory,
-	setSelectedInventory,
-	inventoryProducts,
-	selectedInventoryProduct,
-	setSelectedInventoryProduct,
 	setOpenedTab,
 	onClose,
 }: AddProdPriceProdTabProps) => {
-	const [inventoriesListOpen, setInventoriesListOpen] = useState(false);
-	const [inventoryProductsListOpen, setInventoryProductsListOpen] =
-		useState(false);
+	const {
+		data: products,
+		selectedProduct,
+		setSelectedProduct,
+		isLoading: isProductsLoading,
+	} = useProducts();
+	const { data: productPrices } = useProductPrices();
+	const [productsListOpen, setProductsListOpen] = useState(false);
+	const [filteredProducts, setFilteredProducts] = useState<
+		Product[] | undefined
+	>();
+
+	// Filter out products that already have a price listing in the selected warehouse
+	useEffect(() => {
+		if (selectedWarehouse) {
+			const filteredProductPrices = productPrices.filter(
+				pricing => pricing.warehouse.id === selectedWarehouse?.id,
+			);
+			const idsToRemove = [
+				...new Set(filteredProductPrices.map(item => item.product.id)),
+			];
+			setFilteredProducts(
+				products?.filter(product => !idsToRemove.includes(product.id)),
+			);
+		}
+	}, [selectedWarehouse]);
+
 	return (
 		<div className="grid w-full grid-cols-12 gap-4">
 			<div className="col-span-4 flex flex-col justify-center gap-1">
@@ -81,8 +89,7 @@ export const AddProdPriceProdsTab = ({
 						setSelectedWarehouse(
 							warehouses?.find(w => w.id === Number(value)),
 						);
-						setSelectedInventory(undefined);
-						setSelectedInventoryProduct(undefined);
+						setSelectedProduct(undefined);
 					}}
 				>
 					<SelectTrigger
@@ -101,9 +108,6 @@ export const AddProdPriceProdsTab = ({
 									className="text-sm font-medium text-slate-700"
 								>
 									{warehouse.name}
-									<span className="truncate text-xs text-slate-700/60">
-										{' • ' + warehouse.code}
-									</span>
 								</SelectItem>
 							))
 						) : (
@@ -120,18 +124,15 @@ export const AddProdPriceProdsTab = ({
 			</div>
 			<div className="col-span-8 flex flex-col justify-center gap-1">
 				<Label
-					htmlFor="inventory"
+					htmlFor="product"
 					className="text-sm font-bold text-gray-600"
 				>
-					Inventory
+					Product
 				</Label>
-				<Popover
-					open={inventoriesListOpen}
-					onOpenChange={setInventoriesListOpen}
-				>
+				<Popover open={productsListOpen} onOpenChange={setProductsListOpen}>
 					<PopoverTrigger
-						id="inventory"
-						name="inventory"
+						id="product"
+						name="product"
 						className="relative w-full"
 						disabled={!selectedWarehouse}
 						asChild
@@ -141,12 +142,12 @@ export const AddProdPriceProdsTab = ({
 							className="justify-between truncate bg-white text-sm font-bold text-slate-600"
 							variant={'outline'}
 						>
-							{selectedInventory ? (
+							{selectedProduct ? (
 								<div className="font-bold text-slate-600">
-									{selectedInventory.code}
+									{selectedProduct.name}
 								</div>
 							) : (
-								<span>Select an inventory...</span>
+								<span>Select a product...</span>
 							)}
 
 							<ChevronsUpDown
@@ -157,103 +158,17 @@ export const AddProdPriceProdsTab = ({
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="w-[442px] p-0 text-sm font-medium text-slate-700">
-						<Command defaultValue={selectedInventory?.code || ''}>
-							<CommandInput placeholder="Inventory code..." />
-							{!inventories && (
-								<div className="flex h-16 w-full items-center justify-center">
-									<Loader2
-										size={22}
-										strokeWidth={2.5}
-										className="animate-spin text-slate-700/50"
-									/>
-								</div>
-							)}
-							{/* <CommandEmpty>No match found</CommandEmpty> */}
-							<ScrollArea className="max-h-[200px] overflow-y-scroll">
-								{inventories?.length === 0 && (
-									<div className="flex h-16 w-full items-center justify-center pt-2">
-										No inventories.&nbsp;
-										<Link to={'/inventory'} className="underline">
-											Add inventory
-										</Link>
-									</div>
-								)}
-								<CommandGroup>
-									{inventories &&
-										inventories.map(inventory => (
-											<CommandItem
-												key={inventory.id}
-												className="cursor-pointer justify-between rounded-sm"
-												value={inventory.code}
-												onSelect={() => {
-													setSelectedInventory(inventory);
-													setSelectedInventoryProduct(undefined);
-													setInventoriesListOpen(false);
-												}}
-											>
-												<span>{inventory.code}</span>
-												<span className="text-xs font-semibold text-slate-700/50">
-													{inventory.type +
-														' • ' +
-														inventory.date_received}
-												</span>
-											</CommandItem>
-										))}
-								</CommandGroup>
-							</ScrollArea>
-						</Command>
-					</PopoverContent>
-				</Popover>
-			</div>
-			<div className="col-span-12 flex flex-col justify-center gap-1">
-				<Label
-					htmlFor="inventory-product"
-					className="text-sm font-bold text-gray-600"
-				>
-					Inventory product
-				</Label>
-				<Popover
-					open={inventoryProductsListOpen}
-					onOpenChange={setInventoryProductsListOpen}
-				>
-					<PopoverTrigger
-						id="inventory-product"
-						name="inventory-product"
-						className="relative w-full"
-						disabled={!selectedInventory}
-						asChild
-					>
-						<Button
-							role="combobox"
-							className="justify-between truncate bg-white text-sm font-bold text-slate-600"
-							variant={'outline'}
-						>
-							{selectedInventoryProduct ? (
-								<div className="font-bold text-slate-600">
-									{selectedInventoryProduct.product.name}
-								</div>
-							) : (
-								<span>Select an inventory product...</span>
-							)}
-
-							<ChevronsUpDown
-								size={14}
-								strokeWidth={2}
-								className="h-4 w-4 opacity-70"
-							/>
-						</Button>
-					</PopoverTrigger>
-					<PopoverContent className="w-[672px] p-0 text-sm font-medium text-slate-700">
 						<Command
-							defaultValue={
-								selectedInventoryProduct
-									? selectedInventoryProduct.id +
-										selectedInventoryProduct.product.name
+							value={
+								selectedProduct
+									? selectedProduct.id +
+										selectedProduct.name +
+										selectedProduct.serial_no
 									: ''
 							}
 						>
 							<CommandInput placeholder="Product name..." />
-							{!inventoryProducts && (
+							{isProductsLoading && (
 								<div className="flex h-16 w-full items-center justify-center">
 									<Loader2
 										size={22}
@@ -264,61 +179,48 @@ export const AddProdPriceProdsTab = ({
 							)}
 							{/* <CommandEmpty>No match found</CommandEmpty> */}
 							<ScrollArea className="max-h-[200px] overflow-y-scroll">
-								{inventoryProducts?.length === 0 && (
+								{filteredProducts?.length === 0 && (
 									<div className="flex h-16 w-full items-center justify-center pt-2">
-										No inventory products.&nbsp;
-										<Link
-											to={`/inventory/items/${selectedInventory?.id}`}
-											className="underline"
-										>
-											Add inventory product
+										No products.&nbsp;
+										<Link to={`/products`} className="underline">
+											Add a product
 										</Link>
 									</div>
 								)}
 								<CommandGroup>
-									{inventoryProducts &&
-										inventoryProducts.map(inventoryProduct => {
+									{filteredProducts &&
+										filteredProducts.map(product => {
 											// Filter out products with no remaining stocks
-											if (
-												inventoryProduct.remaining_stocks_count ??
-												0 > 0
-											)
-												return (
-													<CommandItem
-														key={inventoryProduct.id}
-														className="cursor-pointer justify-between rounded-sm"
-														value={
-															inventoryProduct.id +
-															inventoryProduct.product.name
-														}
-														onSelect={() => {
-															setSelectedInventoryProduct(
-																inventoryProduct,
-															);
-															setInventoryProductsListOpen(
-																false,
-															);
-														}}
-													>
-														<span>
-															{inventoryProduct.product.name}
-														</span>
-														<span className="text-xs font-semibold text-slate-700/50">
-															{inventoryProduct.supplier_id
-																.name +
-																' • ' +
-																inventoryProduct.total_count +
-																' remaining' +
-																' • ' +
-																Intl.NumberFormat('en-US', {
-																	currency: 'PHP',
-																	style: 'currency',
-																}).format(
-																	inventoryProduct.capital_price,
-																)}
-														</span>
-													</CommandItem>
-												);
+											// if (!!inventoryProduct.remaining_stocks_count)
+											return (
+												<CommandItem
+													key={
+														product.id +
+														product.name +
+														product.serial_no
+													}
+													className="cursor-pointer justify-between rounded-sm"
+													value={
+														product.id +
+														product.name +
+														product.serial_no
+													}
+													onSelect={() => {
+														setSelectedProduct(product);
+														setProductsListOpen(false);
+													}}
+												>
+													<span>
+														{product.name}
+														{product.brand && (
+															<span> ({product.brand})</span>
+														)}
+													</span>
+													<span className="text-xs font-semibold text-slate-700/50">
+														{product.serial_no}
+													</span>
+												</CommandItem>
+											);
 										})}
 								</CommandGroup>
 							</ScrollArea>
@@ -326,65 +228,62 @@ export const AddProdPriceProdsTab = ({
 					</PopoverContent>
 				</Popover>
 			</div>
-			{selectedInventoryProduct && (
-				<div className="col-span-12 grid grid-flow-row grid-cols-12 gap-4 text-sm text-slate-700">
-					<div className="col-span-6 flex flex-col gap-1">
-						<h3 className="font-bold">Supplier</h3>
-						<p className="font-medium">
-							{selectedInventoryProduct.supplier_id.name}
-						</p>
+
+			{selectedProduct && (
+				<>
+					<div className="col-span-12 grid grid-flow-row grid-cols-12 gap-4 text-sm text-slate-700">
+						<div className="col-span-4 flex flex-col gap-1">
+							<h3 className="font-bold">Serial Number</h3>
+							<p className="font-medium">{selectedProduct.serial_no}</p>
+						</div>
+						<div className="col-span-3 flex flex-col gap-1">
+							<h3 className="font-bold">Brand</h3>
+							<p className="font-medium">
+								{selectedProduct?.brand || (
+									<span className="opacity-60">No brand</span>
+								)}
+							</p>
+						</div>
+						<div className="col-span-2 flex flex-col gap-1">
+							<h3 className="font-bold">Size</h3>
+							<p className="font-medium">{selectedProduct.size}</p>
+						</div>
+						<div className="col-span-2 flex flex-col gap-1">
+							<h3 className="font-bold">Color</h3>
+							<p className="font-medium">{selectedProduct.color}</p>
+						</div>
+						<div className="col-span-12 flex flex-col gap-1">
+							<h3 className="font-bold">Notes</h3>
+							<p className="font-medium">
+								{selectedProduct.notes || (
+									<span className="opacity-70">No notes provided</span>
+								)}
+							</p>
+						</div>
 					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Size</h3>
-						<p className="font-medium">
-							{selectedInventoryProduct.product.size}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Color</h3>
-						<p className="font-medium">
-							{selectedInventoryProduct.product.color}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Capital price</h3>
-						<p className="font-medium">
-							{Intl.NumberFormat('en-US', {
-								currency: 'PHP',
-								style: 'currency',
-							}).format(selectedInventoryProduct.capital_price)}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Unit</h3>
-						<p className="font-medium">{selectedInventoryProduct.unit}</p>
-					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Bundles unit</h3>
-						<p className="font-medium">
-							{selectedInventoryProduct.bundles_unit}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col gap-1">
-						<h3 className="font-bold">Remaining stocks</h3>
-						<p className="font-medium">
-							{selectedInventoryProduct.remaining_stocks_count}
-						</p>
-					</div>
-				</div>
+				</>
 			)}
+			<hr className="col-span-12 border-t border-slate-200" />
+			<p className="col-span-12 text-sm font-medium text-slate-700">
+				You can only add a product price/listing to a warehouse once. If the
+				product is not in the list, it is likely that it already has a
+				listing for that warehouse.
+			</p>
 			<div className="col-span-12 flex w-full justify-between whitespace-nowrap pt-4">
 				<div className="ml-auto flex flex-row gap-4">
 					<LegacyButton
 						fill={'default'}
-						onClick={() => onClose()}
+						onClick={() => {
+							onClose();
+							setSelectedProduct(undefined);
+						}}
 						className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
 					>
 						Cancel
 					</LegacyButton>
 					<LegacyButton
 						fill={'green'}
-						disabled={!selectedInventoryProduct}
+						disabled={!selectedProduct}
 						onClick={() => setOpenedTab('listings')}
 						className={`flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50`}
 					>

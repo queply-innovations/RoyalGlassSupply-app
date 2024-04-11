@@ -1,7 +1,8 @@
 export interface Product {
 	id: number;
 	name: string;
-	serial_no: number;
+	serial_no: string;
+	brand?: string;
 	size: string;
 	color: string;
 	notes: string;

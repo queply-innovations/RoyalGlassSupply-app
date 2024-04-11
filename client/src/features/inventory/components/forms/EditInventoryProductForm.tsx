@@ -29,6 +29,7 @@ import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
+import { getTotalCount } from '../../helpers';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -51,35 +52,13 @@ export const EditInventoryProductForm = ({
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	// Calculate stocks count
-	const [stocksCount, setStocksCount] = useState<number | undefined>();
-	useEffect(() => {
-		const bundlesCount =
-			FormValue.bundles_count !== undefined
-				? FormValue.bundles_count
-				: selectedInventoryProduct?.bundles_count || 0;
-		const quantityPerBundle =
-			FormValue.quantity_per_bundle !== undefined
-				? FormValue.quantity_per_bundle
-				: selectedInventoryProduct?.quantity_per_bundle || 0;
-		const stocksCountCalc = bundlesCount * quantityPerBundle;
-
-		setStocksCount(stocksCountCalc);
-		handleChange('stocks_count', stocksCountCalc);
-	}, [FormValue.bundles_count, FormValue.quantity_per_bundle]);
-
 	// Calculate total count
 	const [totalCount, setTotalCount] = useState<number | undefined>();
 	useEffect(() => {
-		const damageCount =
-			FormValue.damage_count !== undefined
-				? FormValue.damage_count
-				: selectedInventoryProduct?.damage_count || 0;
-		const stocksCount =
-			FormValue.stocks_count !== undefined
-				? FormValue.stocks_count
-				: selectedInventoryProduct?.stocks_count || 0;
-		const totalCountCalc = stocksCount - damageCount;
+		const totalCountCalc = getTotalCount(
+			FormValue.stocks_count ?? selectedInventoryProduct.stocks_count,
+			FormValue.damage_count ?? selectedInventoryProduct.damage_count,
+		);
 
 		setTotalCount(totalCountCalc);
 		handleChange('total_count', totalCountCalc);
@@ -231,11 +210,13 @@ export const EditInventoryProductForm = ({
 								</Label>
 								<Select
 									value={
-										selectedInventoryProduct.status?.toString() || ''
+										FormValue.status
+											? FormValue.status.toString()
+											: selectedInventoryProduct.status.toString()
 									}
 									required
 									onValueChange={value =>
-										handleChange('status', Number(value))
+										handleChange('status', value)
 									}
 								>
 									<SelectTrigger
@@ -309,93 +290,7 @@ export const EditInventoryProductForm = ({
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="bundles_count"
-								className="text-sm font-bold text-gray-600"
-							>
-								Bundles count
-							</Label>
-							<Input
-								id="bundles_count"
-								name="bundles_count"
-								type="number"
-								min={0}
-								max={9999999}
-								step={1}
-								required
-								value={
-									FormValue.bundles_count !== undefined
-										? FormValue.bundles_count
-										: selectedInventoryProduct?.bundles_count || ''
-								}
-								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
-								}}
-								onChange={e =>
-									handleChange(
-										'bundles_count',
-										Number(Number(e.target.value).toFixed(0)),
-									)
-								}
-							/>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="bundles_unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Bundles unit
-							</Label>
-							<Input
-								id="bundles_unit"
-								name="bundles_unit"
-								type="text"
-								maxLength={40}
-								required
-								value={
-									FormValue.bundles_unit !== undefined
-										? FormValue.bundles_unit
-										: selectedInventoryProduct?.bundles_unit || ''
-								}
-								onChange={e =>
-									handleChange('bundles_unit', e.target.value)
-								}
-							/>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="quantity_per_bundle"
-								className="text-sm font-bold text-gray-600"
-							>
-								Quantity per bundle
-							</Label>
-							<Input
-								id="quantity_per_bundle"
-								name="quantity_per_bundle"
-								type="number"
-								min={0}
-								max={9999999}
-								step={1}
-								required
-								value={
-									FormValue.quantity_per_bundle !== undefined
-										? FormValue.quantity_per_bundle
-										: selectedInventoryProduct?.quantity_per_bundle ||
-											''
-								}
-								onBlur={e => {
-									e.target.value = Number(e.target.value).toFixed(0);
-								}}
-								onChange={e =>
-									handleChange(
-										'quantity_per_bundle',
-										Number(Number(e.target.value).toFixed(0)),
-									)
-								}
-							/>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
+						<div className="col-span-2 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="stocks_count"
 								className="text-sm font-bold text-gray-600"
@@ -409,11 +304,20 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={9999999}
 								step={1}
-								value={stocksCount || 0}
-								readOnly
+								value={
+									FormValue.stocks_count?.toFixed(0) ??
+									selectedInventoryProduct?.stocks_count ??
+									0
+								}
+								onChange={e => {
+									handleChange(
+										'stocks_count',
+										Number(Number(e.target.value).toFixed(0)),
+									);
+								}}
 							/>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
+						<div className="col-span-2 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="damage_count"
 								className="text-sm font-bold text-gray-600"
@@ -425,7 +329,10 @@ export const EditInventoryProductForm = ({
 								name="damage_count"
 								type="number"
 								min={0}
-								max={stocksCount || 9999999}
+								max={
+									FormValue.stocks_count ??
+									selectedInventoryProduct.stocks_count
+								}
 								step={1}
 								required
 								value={
@@ -444,7 +351,7 @@ export const EditInventoryProductForm = ({
 								}
 							/>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
+						<div className="col-span-2 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="total_count"
 								className="text-sm font-bold text-gray-600"
@@ -459,6 +366,7 @@ export const EditInventoryProductForm = ({
 								max={9999999}
 								step={1}
 								value={totalCount || 0}
+								className={`${totalCount && totalCount < 0 && 'text-red-600'}`}
 								readOnly
 							/>
 						</div>
@@ -476,9 +384,7 @@ export const EditInventoryProductForm = ({
 							<LegacyButton
 								type="submit"
 								fill={'green'}
-								disabled={
-									isSubmitting || Object.keys(FormValue).length <= 2
-								} // Disable button if no changes made
+								disabled={isSubmitting} // Disable button if no changes made
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								{!isSubmitting ? 'Apply changes' : 'Applying...'}

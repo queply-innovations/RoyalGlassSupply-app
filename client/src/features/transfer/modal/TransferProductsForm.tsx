@@ -66,7 +66,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 					e.preventDefault();
 				}}
 			>
-				<div className="flex max-w-2xl flex-col gap-5">
+				<div className="flex max-w-6xl flex-col gap-5">
 					<div className="grid grid-cols-12 gap-3 justify-center">
 						<div className="flex flex-col col-span-3 gap-1">
 							<span className="text-sm font-bold uppercase">
@@ -179,8 +179,10 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								readOnly
 							/>
 						</div>
+					</div>
 
-						<div className="flex flex-col gap-1">
+					<div className="flex flex-row gap-3 justify-center">
+					<div className="flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								QUANTITY PER BUNDLE
 							</span>
@@ -208,9 +210,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								readOnly
 							/>
 						</div>
-					</div>
 
-					<div className="flex flex-row gap-3 justify-center">
 						<div className="flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								TOTAL QUANTITY

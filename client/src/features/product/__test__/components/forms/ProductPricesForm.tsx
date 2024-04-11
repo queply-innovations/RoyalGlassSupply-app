@@ -16,6 +16,13 @@ import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 import currency from 'currency.js';
+import {
+	getMarkupPercentage,
+	getMarkupValue,
+	getCostValue,
+	getPriceValue,
+} from '../../helpers/useProductPriceCalculations';
+import { toast } from 'react-toastify';
 
 interface ProductPricesFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -23,89 +30,68 @@ interface ProductPricesFormProps {
 
 export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	const { auth } = useAuth();
-	// Mutation state and handlers
+	const { selectedProductPrice } = useProductPrices();
 	const {
 		value: FormValue,
-		setValue: setFormValue,
 		handleChange,
 		handleSubmit,
 	} = useProductPricesMutation();
-	// Fetch selected product price/listing
-	const { selectedProductPrice } = useProductPrices();
+
 	// States for form submission and error message
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const handleReset = () => {
-		// Omit the following properties from the selectedProductPrice object
-		const {
-			approved_by,
-			created_by,
-			created_at,
-			warehouse,
-			updated_at,
-			product,
-			id,
-			...limitedListings
-		} = selectedProductPrice;
-		setFormValue(limitedListings);
-		setMarkupPercentage(
-			currency(
-				(selectedProductPrice.markup_price /
-					selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
-				{ precision: 3 },
-			).value,
-		);
+	const [capitalPrice, setCapitalPrice] = useState<number>(
+		selectedProductPrice.capital_price,
+	);
+	const [markupPercent, setMarkupPercent] = useState<number>(
+		getMarkupPercentage(
+			selectedProductPrice.capital_price,
+			selectedProductPrice.markup_price,
+			3,
+		),
+	);
+	const [markupValue, setMarkupValue] = useState<number>(
+		selectedProductPrice.markup_price,
+	);
+
+	const handleCapitalPriceChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		const value = e.target.value;
+		setCapitalPrice(currency(value).value);
+		handleChange('capital_price', currency(value).value);
+		setMarkupValue(getMarkupValue(currency(value).value, markupPercent || 0));
 	};
 
-	// MARKUP PERCENT & PRICE
-	// markupPercentage = (markup_price / capital_price) * 100
-	// markup_price = capital_price * (markupPercentage / 100)
-	const [markupPercentage, setMarkupPercentage] = useState<number>(
-		currency(
-			(selectedProductPrice.markup_price /
-				selectedProductPrice.capital_price || 1) * 100, // Prevent division by zero
-			{ precision: 3 },
-		).value,
-	);
+	const handleMarkupPercentChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		const value = Number(e.target.value);
+		setMarkupPercent(value);
+		setMarkupValue(getMarkupValue(capitalPrice, value));
+	};
+
+	const handleMarkupValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = currency(e.target.value).value;
+		setMarkupValue(value);
+		setMarkupPercent(getMarkupPercentage(capitalPrice, value, 3));
+	};
+
 	useEffect(() => {
-		const capitalPrice =
-			FormValue.capital_price !== undefined
-				? FormValue.capital_price
-				: selectedProductPrice.capital_price || 0;
-		const markup = currency(capitalPrice).multiply(markupPercentage / 100);
+		handleChange('capital_price', capitalPrice);
+		handleChange('markup_price', markupValue);
+		handleChange('cost', getCostValue(capitalPrice, markupValue));
+	}, [capitalPrice, markupPercent, markupValue]);
 
-		handleChange('markup_price', markup.value);
-	}, [FormValue.capital_price, markupPercentage]);
-
-	// COST VALUE CALCULATION
-	// cost = capital_price + markup_price
 	useEffect(() => {
-		const capitalPrice =
-			FormValue.capital_price !== undefined
-				? FormValue.capital_price
-				: selectedProductPrice.capital_price;
-		const markupPrice =
-			FormValue.markup_price !== undefined
-				? FormValue.markup_price
-				: selectedProductPrice.markup_price;
-
-		handleChange('cost', currency(capitalPrice).add(markupPrice).value);
-	}, [FormValue.capital_price, FormValue.markup_price]);
-
-	// PRICE CALCULATION
-	// price = cost - sale_discount
-	useEffect(() => {
-		const cost =
-			FormValue.cost !== undefined
-				? FormValue.cost
-				: selectedProductPrice.cost;
-		const saleDiscount =
-			FormValue.sale_discount !== undefined
-				? FormValue.sale_discount
-				: selectedProductPrice.sale_discount;
-
-		handleChange('price', currency(cost).subtract(saleDiscount).value);
+		handleChange(
+			'price',
+			getPriceValue(
+				FormValue.cost ?? selectedProductPrice.cost,
+				FormValue.sale_discount ?? selectedProductPrice.sale_discount,
+			),
+		);
 	}, [FormValue.cost, FormValue.sale_discount]);
 
 	return (
@@ -114,24 +100,65 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
 						id: selectedProductPrice.id,
 						data: FormValue,
-					});
-					response?.status === 200 // 200 means request success
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to update product listing'));
+					})
+						.then(() => {
+							setIsSubmitting(!isSubmitting);
+							toast.success('Product price edited successfully');
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(!isSubmitting);
+							setError('Failed to add product listing');
+							toast.error('Failed to add product listing');
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-3 gap-y-5">
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-x-4 gap-y-5 font-medium text-gray-700">
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Name</h3>
 							<p className="text-sm">
 								{selectedProductPrice.product.name}
 							</p>
+						</div>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">Brand</h3>
+							<p className="text-sm">
+								{selectedProductPrice.product.brand || (
+									<span className="opacity-60">No brand</span>
+								)}
+							</p>
+						</div>
+						<div className="col-span-6 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">
+								Serial Number
+							</h3>
+							<p className="text-sm">
+								{selectedProductPrice.product.serial_no}
+							</p>
+						</div>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="unit"
+								className="text-sm font-bold text-gray-600"
+							>
+								Unit
+							</Label>
+							<Input
+								id="unit"
+								name="unit"
+								type="text"
+								maxLength={20}
+								required
+								value={FormValue.unit || selectedProductPrice.unit}
+								onChange={e => {
+									handleChange('unit', e.target.value);
+								}}
+							/>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
@@ -145,38 +172,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								{selectedProductPrice.product.color}
 							</p>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center	gap-1">
+						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
 								Warehouse
 							</h3>
 							<p className="text-sm">
-								{selectedProductPrice.warehouse.code}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center	gap-1">
-							<h3 className="text-sm font-bold text-gray-600">Type</h3>
-							<p className="text-sm capitalize">
-								{selectedProductPrice.type}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center	gap-1">
-							<h3 className="text-sm font-bold text-gray-600">Unit</h3>
-							<p className="text-sm">{selectedProductPrice.unit}</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center	gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Stocks quantity
-							</h3>
-							<p className="text-sm">
-								{selectedProductPrice.stocks_quantity}
-							</p>
-						</div>
-						<div className="col-span-3 flex flex-col justify-center	gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Stocks unit
-							</h3>
-							<p className="text-sm">
-								{selectedProductPrice.stocks_unit}
+								{selectedProductPrice.warehouse.name}
 							</p>
 						</div>
 					</div>
@@ -197,25 +198,11 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								min={0}
 								step={0.01}
 								required
-								placeholder={'0.00'}
 								className="pl-7"
-								value={
-									FormValue.capital_price ||
-									selectedProductPrice.capital_price.toFixed(2)
-								}
-								onChange={e => {
-									handleChange(
-										'capital_price',
-										currency(e.target.value).value,
-									);
-								}}
+								value={capitalPrice || ''}
+								onChange={handleCapitalPriceChange}
 								onBlur={e => {
-									FormValue.capital_price !== undefined
-										? (e.target.value = Number(
-												FormValue.capital_price,
-											).toFixed(2))
-										: selectedProductPrice.capital_price.toFixed(2) ||
-											'0.00';
+									e.target.value = Number(capitalPrice).toFixed(2);
 								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -238,15 +225,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								max={1000}
 								step={0.001}
 								required
-								placeholder={'0'}
-								value={markupPercentage.toString()}
-								onChange={e => {
-									setMarkupPercentage(
-										currency(e.target.value, { precision: 3 }).value,
-									);
-								}}
+								value={markupPercent || ''}
+								onChange={handleMarkupPercentChange}
 								onBlur={e => {
-									e.target.value = markupPercentage.toString();
+									e.target.value = currency(markupPercent, {
+										precision: 3,
+									}).value.toString();
 								}}
 							/>
 							<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -266,14 +250,13 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								type="number"
 								min={0}
 								max={1000}
-								readOnly
-								placeholder={'0'}
+								step={0.01}
 								className="pl-7"
-								value={
-									FormValue.markup_price?.toFixed(2) ||
-									selectedProductPrice.markup_price.toFixed(2) ||
-									'0.00'
-								}
+								value={markupValue || ''}
+								onChange={handleMarkupValueChange}
+								onBlur={e => {
+									e.target.value = Number(markupValue).toFixed(2);
+								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
@@ -295,8 +278,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								className="pl-7"
 								readOnly
 								value={
-									FormValue.cost?.toFixed(2) ||
-									selectedProductPrice.cost.toFixed(2) ||
+									getCostValue(capitalPrice, markupValue).toFixed(2) ||
 									'0.00'
 								}
 							/>
@@ -329,12 +311,11 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 										: FormValue.on_sale === 0
 								}
 								required
-								placeholder="0.00"
 								className="pl-7"
 								value={
-									FormValue.sale_discount ||
-									selectedProductPrice.sale_discount?.toFixed(2) ||
-									'0.00'
+									FormValue.sale_discount ??
+									selectedProductPrice.sale_discount?.toFixed(2) ??
+									''
 								}
 								onChange={e => {
 									handleChange(
@@ -533,25 +514,12 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							</p>
 						</div>
 					</div>
-					<div className="flex w-full flex-row justify-between pt-4">
-						<div className="flex flex-row">
+					<div className="col-span-12 flex w-full justify-between whitespace-nowrap pt-4">
+						<div className="ml-auto flex flex-row gap-4">
 							<Button
 								type="reset"
 								fill={'default'}
-								disabled={
-									isSubmitting || Object.keys(FormValue).length === 0
-								}
-								className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-								onClick={handleReset}
-							>
-								Reset
-							</Button>
-						</div>
-						<div className="flex flex-row gap-4 whitespace-nowrap">
-							<Button
-								type="reset"
-								fill={'default'}
-								className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
+								className="flex-1 py-2 text-sm font-bold text-slate-700 hover:text-white"
 								onClick={onClose}
 							>
 								Cancel

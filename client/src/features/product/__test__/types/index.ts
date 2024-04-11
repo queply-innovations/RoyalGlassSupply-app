@@ -20,11 +20,8 @@ export interface ProductPrices {
 	product: Partial<Product>;
 	type: 'retail' | 'wholesale' | string;
 	unit: string;
-	stocks_quantity: number;
-	stocks_unit: string;
 	capital_price: number;
 	markup_price: number;
-	tax_amount: number; // remove when removed from database, its currently NOT NULL
 	cost: number;
 	on_sale: number;
 	sale_discount: number;
