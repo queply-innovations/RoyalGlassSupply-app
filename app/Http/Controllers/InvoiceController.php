@@ -38,7 +38,7 @@ class InvoiceController extends Controller
         $invoice_items = $request->invoice_items;
         $invoice = Invoice::create($request->except(['invoice_items', 'reference_no']));
         $invoice->update([
-            'code' => 'IVC-'.$request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
+            'code' => 'IVC-'.$request->warehouse_id.Carbon::now()->format('Y').$invoice->id,
             'reference_no' => $request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
             'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
         ]);
