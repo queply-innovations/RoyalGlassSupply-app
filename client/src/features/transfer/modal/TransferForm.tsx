@@ -223,7 +223,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 									>
 										<CalendarDays size={18} strokeWidth={1.5} />
 										{transfer.transfer_schedule
-											? transfer.transfer_schedule
+											? transfer.transfer_schedule.split(' ')[0]
 											: 'Choose date...'}
 									</Button2>
 								</PopoverTrigger>
@@ -246,7 +246,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 										}}
 										selected={
 											transfer.transfer_schedule
-												? new Date(transfer.transfer_schedule)
+												? new Date(transfer.transfer_schedule.split(' ')[0])
 												: new Date()
 										}
 									/>

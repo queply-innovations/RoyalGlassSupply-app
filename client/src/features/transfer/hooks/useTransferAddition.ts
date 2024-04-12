@@ -75,21 +75,28 @@ export const useTransferAddition = () => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		setDateDisplay(time);
-		const hourFormat = time.$H < 10 ? '0' + time.$H.toString() : time.$H.toString();
-		const minuteFormat = time.$m < 10 ? '0' + time.$m.toString() : time.$m.toString();
-		const secondFormat = time.$s < 10 ? '0' + time.$s.toString() : time.$s.toString();
-		setTransfer(prev => ({
-			...prev,
-			transfer_schedule: transfer.transfer_schedule + " " + hourFormat + ":" + minuteFormat + ":" + secondFormat
-		}));
+		if (time){
+			setDateDisplay(time);
+			const hourFormat = time.$H < 10 ? '0' + time.$H.toString() : time.$H.toString();
+			const minuteFormat = time.$m < 10 ? '0' + time.$m.toString() : time.$m.toString();
+			const secondFormat = time.$s < 10 ? '0' + time.$s.toString() : time.$s.toString();
+			setTransfer(prev => ({
+				...prev,
+				transfer_schedule: transfer.transfer_schedule + " " + hourFormat + ":" + minuteFormat + ":" + secondFormat
+			}));
+		} else {
+			setDateDisplay(null);
+			setTransfer(prev => ({
+				...prev,
+				transfer_schedule: transfer.transfer_schedule.split(' ')[0]
+			}));
+		}
 	};
 
 	const handleChangeSelect = (
 		key: string,
 		_value: any,
 	) => {
-		console.log(_value);
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
