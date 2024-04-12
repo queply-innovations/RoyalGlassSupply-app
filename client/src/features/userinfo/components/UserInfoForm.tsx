@@ -28,6 +28,7 @@ const UserInfoForm = ({
 		isChanged,
 		isSubmitting,
 		error,
+		setError,
 		success,
 		handleSubmit,
 		handleChange,
@@ -105,6 +106,14 @@ const UserInfoForm = ({
 								type="email"
 								value={user.email || ''}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 								required
 							/>
 						</div>
@@ -118,6 +127,14 @@ const UserInfoForm = ({
 								type="number"
 								value={user.contact_no || ''}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 								required
 							/>
 						</div>
@@ -181,6 +198,14 @@ const UserInfoForm = ({
 								type="string"
 								value={user.username || ''}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 								required
 							/>
 						</div>

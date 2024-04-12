@@ -61,6 +61,7 @@ export const useExpensesAddition = () => {
 		const checker: any = isFormValid();
 		setIsSubmitting(true);
 		if (checker[0]) {
+			// console.log(expensesAdd);
 			await addExpensesMutation(expensesAdd);
 		} else {
 			setError(checker[1]);

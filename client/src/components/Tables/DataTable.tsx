@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
 	return (
 		<>
 			{!hideFilter && openModal && (
-				<div className="flex justify-between p-4">
+				<div className="flex justify-between p-4 bg-white sticky z-10">
 					{hideFilter ? null : (
 						<div className="w-1/2">
 							<Inputbox
@@ -192,7 +192,7 @@ export function DataTable<TData, TValue>({
 				</Table>
 			</div>
 			{hidePagination ? null : (
-				<div className="flex flex-row justify-between space-x-2 py-4">
+				<div className="flex flex-row justify-between space-x-2 py-4 sticky">
 					<div className="p-4 font-semibold">
 						{table.getFilteredSelectedRowModel().rows?.length} of{' '}
 						{table.getFilteredRowModel().rows?.length} row(s) selected.

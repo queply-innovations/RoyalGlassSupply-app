@@ -44,7 +44,7 @@ export const Sidebar = ({}: SidebarProps) => {
 		if (auth.role === 'admin') {
 			openModal();
 		} else if (auth.role?.split('_')[1] === 'CDO') {
-			console.log(auth.role?.split('_'));
+			// console.log(auth.role?.split('_'));
 			setFilter({ approval_status: 'approved', warehouse_id: 1 });
 			setSelectedWarehouse('CDO');
 			setInvoice({
@@ -91,7 +91,7 @@ export const Sidebar = ({}: SidebarProps) => {
 			{/* <Button
 				onClick={() =>
 					setFilter({ approval_status: 'approved', warehouse_id: 2 })
-            }
+			}
 			>
 				2
 			</Button> */}

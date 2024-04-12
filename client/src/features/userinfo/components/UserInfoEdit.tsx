@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Roles, User } from '../types';
 import { useUserInfoMutation } from '../hooks';
 import { useAuth } from '@/context/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import {
 	Select,
 	SelectContent,
@@ -27,12 +27,26 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 		user,
 		isChanged,
 		isSubmitting,
+		password,
+		compPassword,
 		error,
+		setError,
 		success,
 		handleSubmit,
 		handleChange,
 		handleChangeSelect,
 	} = useUserInfoMutation(selectedUser, roles);
+
+	// Pasword show state
+	const [showPass, setShowPass] = useState<boolean>(false);
+	const changeStat = () => {
+		setShowPass(!showPass);
+	};
+
+	const [showPass2, setShowPass2] = useState<boolean>(false);
+	const changeStat2 = () => {
+		setShowPass2(!showPass2);
+	};
 
 	success && setTimeout(() => {
 		onClose();
@@ -96,6 +110,14 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								className="inputbox rounded-md bg-slate-100"
 								value={user.username}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 							/>
 						</div>
 					</div>
@@ -110,6 +132,14 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								className="inputbox rounded-md bg-slate-100"
 								value={user.email}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
@@ -121,6 +151,14 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 								className="inputbox rounded-md bg-slate-100"
 								value={user.contact_no}
 								onChange={handleChange}
+								onKeyDown={(e) => { 
+									if (e.code === 'Space') {
+										e.preventDefault(); 
+										setError("Space not allowed"); 
+									} else {
+										setError(null);
+									}
+								}}
 							/>
 						</div>
 						<div className="flex flex-col col-span-4 gap-3">
@@ -167,33 +205,81 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 									)}
 								</SelectContent>
 							</Select>
-							{/* <select 
-								name="position"
-								className="flex flex-col gap-5 rounded-md bg-slate-100" 
-								defaultValue={user.position.charAt(0).toLowerCase() + user.position.slice(1)} 
-								onChange={handleChange}>
-								{roles ? (
-									roles.map((role: Roles) => {
-										return (
-											<option 
-												key={role.id} 
-												value={role.title}
-												>
-												{role.title.charAt(0).toUpperCase() + 
-												role.title.slice(1)}
-											</option>
-										);
-									})
+						</div>
+					</div>
+
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
+						<div className="flex flex-col col-span-6 gap-3">
+							<label htmlFor="email">Change password (optional)</label>
+							<div className="flex flex-row">
+								<Inputbox
+									type={showPass ? 'text' : 'password'}
+									name="new_password"
+									placeholder="New pasword"
+									className="inputbox rounded-md bg-slate-100"
+									value={password || ''}
+									onChange={handleChange}
+									onKeyDown={(e) => { 
+										if (e.code === 'Space') {
+											e.preventDefault(); 
+											setError("Space not allowed"); 
+										} else {
+											setError(null);
+										}
+									}}
+								/>
+								{showPass ? (
+									<Eye
+										size={26}
+										strokeWidth={1}
+										className="relative flex flex-row mt-2 cursor-pointer"
+										onClick={changeStat}
+									/>
 								) : (
-									<div className="flex h-12 w-full items-center justify-center">
-										<Loader2
-											size={22}
-											strokeWidth={2.5}
-											className="animate-spin text-slate-700/50"
-										/>
-									</div>
+									<EyeOff
+										size={26}
+										strokeWidth={1}
+										className="relative flex flex-row mt-2 cursor-pointer"
+										onClick={changeStat}
+									/>
 								)}
-							</select> */}
+							</div>
+						</div>
+						<div className="flex flex-col col-span-6 gap-3">
+							<label htmlFor="email">Confirm new password</label>
+							<div className="flex flex-row">
+								<Inputbox
+									type={showPass2 ? 'text' : 'password'}
+									name="confirm_password"
+									placeholder="Confirm password"
+									className="inputbox rounded-md bg-slate-100"
+									value={compPassword}
+									onChange={handleChange}
+									onKeyDown={(e) => { 
+										if (e.code === 'Space') {
+											e.preventDefault(); 
+											setError("Space not allowed"); 
+										} else {
+											setError(null);
+										}
+									}}
+								/>
+								{showPass2 ? (
+									<Eye
+										size={26}
+										strokeWidth={1}
+										className="relative flex flex-row mt-2 cursor-pointer"
+										onClick={changeStat2}
+									/>
+								) : (
+									<EyeOff
+										size={26}
+										strokeWidth={1}
+										className="relative flex flex-row mt-2 cursor-pointer"
+										onClick={changeStat2}
+									/>
+								)}
+							</div>
 						</div>
 					</div>
 
@@ -222,14 +308,16 @@ export const UserInfoEdit = ({ onClose }: UserInfoProps) => {
 										Cancel
 									</Button>
 
-									<Button
-										type="submit"
-										fill={isChanged ? 'green' : null}
-										disabled={isChanged ? false : true}
-										onClick={handleSubmit}
-									>
-										{!isSubmitting ? 'Edit User' : 'Submitting'}
-									</Button>
+									{isChanged && password === compPassword && (
+										<Button
+											type="submit"
+											fill={isChanged ? 'green' : null}
+											disabled={isChanged ? false : true}
+											onClick={handleSubmit}
+										>
+											{!isSubmitting ? 'Edit User' : 'Submitting'}
+										</Button>
+									)}
 								</div>
 							</div>
 						</div>

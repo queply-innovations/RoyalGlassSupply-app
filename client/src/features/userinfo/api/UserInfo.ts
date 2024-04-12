@@ -115,22 +115,39 @@ export const editUser = async (data: any) => {
 		)
 		.then (async response2 => {
 			const data2 = {user_id: data.user_id, role_id: data.role_id};
-			return await axios
-			.put(`${API_URLS.USER_ROLES}/${response2.data.data[0].id}`, data2,
-			{
-				headers: {
-					Authorization: `Bearer ${storage.getToken()}`,
-					'Content-Type': 'application/json',
-				},
-			})
-			.then(response => {
-				// console.log(response);
-				return response.data.data;
-			})
-			.catch(error => {
-				console.error('Error putting user changes:', error);
-				throw error;
-			});
+			if (response2) {
+				return await axios
+				.put(`${API_URLS.USER_ROLES}/${response2.data.data[0].id}`, data2,
+				{
+					headers: {
+						Authorization: `Bearer ${storage.getToken()}`,
+						'Content-Type': 'application/json',
+					},
+				})
+				.then(response => {
+					// console.log(response);
+					return response.data.data;
+				})
+				.catch(error => {
+					console.error('Error putting user changes:', error);
+					throw error;
+				});
+			} else {
+				return await axios
+				.post(`${API_URLS.USER_ROLES}`, data2, {
+					headers: {
+						Authorization: `Bearer ${storage.getToken()}`,
+						'Accept': 'application/json',
+					},
+				})
+				.then(async response2 => {
+					return response2.data.data;
+				})
+				.catch(error => {
+					console.error('Error posting user_roles:', error);
+					throw error;
+				});
+			}
 		})
 		.catch(error => {
 			console.error('Error getting user_roles:', error);

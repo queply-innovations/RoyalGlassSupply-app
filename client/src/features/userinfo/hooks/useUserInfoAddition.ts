@@ -117,6 +117,7 @@ export const useUserInfoAddition = () => {
 		isChanged,
 		isSubmitting,
 		error,
+		setError,
 		success,
 		handleSubmit,
 		handleChange,

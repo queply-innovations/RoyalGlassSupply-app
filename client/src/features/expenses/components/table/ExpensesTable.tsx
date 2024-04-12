@@ -219,8 +219,7 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 			<DataTable
 				data={expenses}
 				columns={ExpensesTableHeader}
-				filterWhat={""}
-				hideFilter={true}
+				filterWhat={"notes"}
 				dataType={"Today's Expenses"}
 				openModal={checkerDate ? undefined : handleAddExpenses}
 				isLoading={isFetching} />

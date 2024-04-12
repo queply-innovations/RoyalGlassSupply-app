@@ -1,5 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
 import { Button, Inputbox, Loading, Selectbox } from '@/components';
+import { Button as Button2 } from '@/components/ui/button';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { useTransfer } from '../context/TransferContext';
 import { useTransferAddition } from '../hooks';
@@ -16,11 +17,17 @@ import {
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { useAuth } from '@/context/AuthContext';
 
-import DateTimePicker from 'react-datetime-picker';
-import 'react-datetime-picker/dist/DateTimePicker.css';
-import 'react-calendar/dist/Calendar.css';
-import 'react-clock/dist/Clock.css';
+import { Label } from '@/components/ui/label';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+import { CalendarDays } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
+
+import { TimePicker } from "antd";
 
 interface TransferDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -178,7 +185,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					</div>
 
-					<div className="flex flex-row gap-3 grid-cols-12 justify-center">
+					{/* <div className="flex flex-row gap-3 grid-cols-12 justify-center">
 						<div className="flex flex-col col-span-10 gap-1">
 							<span className="text-sm font-bold uppercase">
 								Transfer Schedule
@@ -194,7 +201,78 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 					</div>
 					<span className="flex flex-col grid-cols-12 text-sm font-bold uppercase text-center">
 						(for PM times, add 12 to the hour)
-					</span>
+					</span> */}
+
+					<div className="flex flex-row grid-cols-12 justify-center gap-3">
+						<div className="flex flex-col col-span-6">
+							<Label
+								htmlFor="date_received"
+								className="text-sm font-bold uppercase"
+							>
+								Schedule date
+							</Label>
+							<Popover>
+								<PopoverTrigger
+									id="date_received"
+									name="date_received"
+									asChild
+								>
+									<Button2
+										variant={'outline'}
+										className="flex w-full flex-row items-center justify-start gap-2 bg-white text-sm font-normal"
+									>
+										<CalendarDays size={18} strokeWidth={1.5} />
+										{transfer.transfer_schedule
+											? transfer.transfer_schedule
+											: 'Choose date...'}
+									</Button2>
+								</PopoverTrigger>
+								<PopoverContent className="w-auto p-0">
+									<Calendar
+										mode="single"
+										initialFocus
+										required
+										onDayClick={value => {
+											const date = new Date(value!);
+											const formattedDate = `${date.getFullYear()}-${(
+												date.getMonth() + 1
+											)
+												.toString()
+												.padStart(2, '0')}-${date
+												.getDate()
+												.toString()
+												.padStart(2, '0')}`;
+											handleChangeSelect('transfer_schedule', formattedDate);
+										}}
+										selected={
+											transfer.transfer_schedule
+												? new Date(transfer.transfer_schedule)
+												: new Date()
+										}
+									/>
+								</PopoverContent>
+							</Popover>
+						</div>
+
+						<div className="flex flex-col col-span-6">
+							<Label
+								htmlFor="date_received"
+								className="text-sm font-bold uppercase"
+							>
+								Schedule time
+							</Label>
+							<TimePicker 
+								use12Hours 
+								format="hh:mm:ss A" 
+								size="large"
+								value={dateDisplay} 
+								onChange={handleChangeDateTime}
+								disabled={transfer.transfer_schedule ? false : true}
+								placeholder={transfer.transfer_schedule ? 'Select time' : 'Select date first'}
+								required
+							/>
+						</div>
+					</div>
 
 					<div className="flex flex-row gap-3 grid-cols-12">
 						<div className="flex flex-col gap-1 col-span-12 w-full">
@@ -235,14 +313,16 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 										Cancel
 									</Button>
 
-									<Button
-										type="submit"
-										fill={isChanged ? 'green' : null}
-										disabled={isChanged ? false : true}
-										onClick={handleSubmit}
-									>
-										{!isSubmitting ? 'Add User' : 'Submitting'}
-									</Button>
+									{isChanged && dateDisplay != null && (
+										<Button
+											type="submit"
+											fill={isChanged ? 'green' : null}
+											disabled={isChanged ? false : true}
+											onClick={handleSubmit}
+										>
+											{!isSubmitting ? 'Add Transfer' : 'Submitting'}
+										</Button>
+									)}
 								</div>
 							</div>
 						</div>

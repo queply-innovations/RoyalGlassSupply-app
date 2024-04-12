@@ -63,6 +63,7 @@ export const Navbar = () => {
 							pendingTransfers={pendingTransfers.length}
 							pendingProdPrices={pendingProductPrices.length}
 							pendingReturns={pendingReturns.length}
+							allIsFetching={allIsFetching}
 						/>
 					</PopoverContent>
 				</Popover>

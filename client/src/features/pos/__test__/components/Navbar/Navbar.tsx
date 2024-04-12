@@ -12,7 +12,7 @@ interface NavbarProps {}
 export const Navbar = ({}: NavbarProps) => {
 	const { auth } = useAuth();
 
-	console.log(auth.role);
+	// console.log(auth.role);
 	return (
 		<>
 			<nav
