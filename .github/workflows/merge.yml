@@ -1,7 +1,11 @@
 name: Check Branch and Latest Commit
 on:
+  workflow_dispatch:
   push:
-    branches: [test/workflow-staging]
+    branches: 
+    - test/workflow-staging
+    - staging-frontend
+    - build/staging-frontend
      
    
 
@@ -11,7 +15,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Check if Branch is Pushed
       run: |
