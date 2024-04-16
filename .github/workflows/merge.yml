@@ -1,9 +1,8 @@
-name: Check Latest Commit Message
+name: Auto Merge staging-frontend to build/staging-frontend
 
 on:
  push:
     branches:
-    - test/*
     - staging-frontend
 
 
@@ -27,3 +26,10 @@ jobs:
       run: |
         echo "Latest commit message on staging-frontend:"
         echo "${{ steps.latest_commit.outputs.commit_message }}"
+
+    - name: Merge Changes
+      run: |
+        git checkout build/staging-frontend
+        git pull origin build/staging-frontend
+        git merge --no-ff --no-edit staging-frontend
+        git push origin build/staging-frontend
