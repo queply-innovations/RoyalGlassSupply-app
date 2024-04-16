@@ -103,6 +103,21 @@
 			opacity: 0.1;
 		}
 	}
+
+	table thead, .sticky {
+		position: sticky;
+		top: 0px;
+		margin: 0 0 0 0;
+	}
+
+	.ant-picker-outlined:hover {
+		border-color: rgb(209 213 219) !important;
+	}
+
+	button.ant-btn.css-dev-only-do-not-override-1kuana8.ant-btn-primary.ant-btn.sm {
+		background-color: #1677ff !important;
+		opacity: 1 !important;
+	}
 }
 
 @layer base {

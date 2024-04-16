@@ -20,7 +20,7 @@ export const useTransferAddition = () => {
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<string | null>(null);
-	const [ dateDisplay, setDateDisplay ] = useState<Date | null>(null);
+	const [ dateDisplay, setDateDisplay ] = useState<any>(null);
 	const [ srcCode, setSrcCode ] = useState<any>();
 	const [ dstCode, setDstCode ] = useState<any>();
 	const [ dateCode, setDateCode ] = useState<any>();
@@ -70,29 +70,32 @@ export const useTransferAddition = () => {
 	};
 
 	const handleChangeDateTime = (
-		key: string,
-		_value: Date,
+		time: any
 	) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		setDateDisplay(_value);
-
-		const monthCodeChange = (_value.getMonth() + 1) < 10 ? '0' + (_value.getMonth() + 1).toString() : (_value.getMonth() + 1);
-		const dateCodeChange = _value.getDate() < 10 ? '0' + _value.getDate().toString() : _value.getDate();
-		setDateCode(_value.getFullYear() + '' + monthCodeChange + '' + dateCodeChange);
-
-		const format = _value.getFullYear() + '-' + (_value.getMonth() + 1) + '-' + _value.getDate() + 
-				' ' + _value.getHours() + ':' + _value.getMinutes() + ':' + _value.getSeconds();
-		setTransfer(prev => ({
-			...prev,
-			transfer_schedule: format,
-		}));
+		if (time){
+			setDateDisplay(time);
+			const hourFormat = time.$H < 10 ? '0' + time.$H.toString() : time.$H.toString();
+			const minuteFormat = time.$m < 10 ? '0' + time.$m.toString() : time.$m.toString();
+			const secondFormat = time.$s < 10 ? '0' + time.$s.toString() : time.$s.toString();
+			setTransfer(prev => ({
+				...prev,
+				transfer_schedule: transfer.transfer_schedule + " " + hourFormat + ":" + minuteFormat + ":" + secondFormat
+			}));
+		} else {
+			setDateDisplay(null);
+			setTransfer(prev => ({
+				...prev,
+				transfer_schedule: transfer.transfer_schedule.split(' ')[0]
+			}));
+		}
 	};
 
 	const handleChangeSelect = (
 		key: string,
-		_value: number,
+		_value: any,
 	) => {
 		setIsChanged(true);
 		setSuccess(null);

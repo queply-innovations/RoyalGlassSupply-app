@@ -25,6 +25,28 @@ export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> =
 		});
 };
 
+export const fetchPendingTransfers = async (): Promise<Transfer[]> => {
+	return await axios
+		.post(
+			`${API_URLS.TRANSFER}/searches-filters-sorts`,
+			{
+				filter: {
+					approval_status: 'pending',
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching pending transfers:', error);
+			throw error;
+		});
+};
+
 export const addTransfer = async (data: TransferAdd) => {
 	try {
 		const response = await axios

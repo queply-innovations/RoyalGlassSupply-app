@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
 	fetchApprovedProductPrices,
+	fetchPendingProductPrices,
 	fetchProductPrices,
 	fetchProductPricesFilters,
 } from '../api/Products';
@@ -37,7 +38,26 @@ export const useProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
+export const usePendingProductPricesQuery = () => {
+	// State of the response data
+	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
+	// Query for fetching product prices and isLoading state
+	const { data: result, isFetching: isLoading } = useQuery({
+		queryKey: ['productPrices'],
+		queryFn: () => fetchPendingProductPrices(),
+		refetchOnWindowFocus: false,
+	});
+
+	// Update states when query results changes [result, isLoading]
+	useEffect(() => {
+		if (!isLoading && result) {
+			setData(result);
+		}
+	}, [result, isLoading]);
+
+	return { data, isLoading };
+};
 export const useProductPricesQueryFilterByApproved = () => {
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 

@@ -9,6 +9,9 @@ import { Roles, User } from '../types';
 export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const queryClient = useQueryClient();
 
+	const [ password, setPassword ] = useState('');
+	const [ compPassword, setCompPassword ] = useState('');
+
 	const [ user, setUser ] = useState({
 		firstname: selectedUser.firstname,
 		lastname: selectedUser.lastname,
@@ -52,27 +55,51 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 	const handleChange = (e: any) => {
 		setIsChanged(true);
 		setSuccess(null);
-		setUser(prev => ({
-			...prev,
-			[e.target.name]: e.target.value,
-		}));
 		if (e.target.name === 'position') {
 			setUser(prev => ({
 				...prev,
+				[e.target.name]: e.target.value,
 				role_id: roles.find((role: Roles) => role.title === e.target.value)?.id,
+			}));
+		} else if (e.target.name === 'new_password') {
+			setPassword(e.target.value);
+		} else if (e.target.name === 'confirm_password') {
+			setCompPassword(e.target.value);
+		} else {
+			setUser(prev => ({
+				...prev,
+				[e.target.name]: e.target.value,
 			}));
 		}
 	};
 
+	useEffect(() => {
+		if (password != compPassword){
+			setError("Passwords don't match");
+		} else {
+			setError(null);
+		}
+	}, [password, compPassword]);
+
 	const handleSubmit = async () => {
-		setIsSubmitting(true);
 		if (user.contact_no?.length > 11 || user.contact_no?.length < 11) {
 			setError('Contact number must be 11 digits');
-			setIsSubmitting(false);
 		} else {
-			return await editUserMutation(user);
+			setIsSubmitting(true);
+			if (password !== '' && compPassword !== ''){
+				setUser(prev => ({
+					...prev,
+					password: compPassword,
+				}));
+			}
 		}
 	};
+
+	useEffect(() => {
+		if (isSubmitting) {
+			editUserMutation(user);
+		}
+	}, [user])
 
 	// Configurations for mutation
 	const mutationConfig = {
@@ -102,7 +129,10 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
 		user,
 		isChanged,
 		isSubmitting,
+		password,
+		compPassword,
 		error,
+		setError,
 		success,
 		handleSubmit,
 		handleChangeSelect,
