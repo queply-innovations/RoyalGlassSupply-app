@@ -19,6 +19,7 @@ jobs:
     - name: Set git environment
       run: |
         export GIT_SSH_COMMAND="git -c protocol.version=2"
+        git config pull.rebase true
 
     - name: Get Latest Commit Message
       id: latest_commit
@@ -33,7 +34,7 @@ jobs:
 
     - name: Merge Changes
       run: |
-        git checkout -b build/staging-frontend origin/build/staging-frontend
+        git checkout -b build/staging-frontend
         git pull origin build/staging-frontend
         git merge --no-ff --no-edit staging-frontend
         git push origin build/staging-frontend
