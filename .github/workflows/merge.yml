@@ -1,13 +1,11 @@
-name: Check Branch and Latest Commit
+name: Check Latest Commit Message
+
 on:
-  push:
-    branches: 
-    - tree/test/workflow-staging
-    - tree/staging-frontend
-    - tree/build/staging-frontend
-     
   workflow_dispatch:
-   
+  push:
+    branches:
+      - test/workflow-staging
+
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
@@ -15,6 +13,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      with:
+        ref: test/workflow-staging
 
     - name: Get Latest Commit Message
       id: latest_commit
