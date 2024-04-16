@@ -25,9 +25,14 @@ jobs:
         echo "Latest commit message on staging-frontend:"
         echo "--->${{ steps.latest_commit.outputs.commit_message }}"
 
-    - name: Fetch and Merge staging-frontend
-      run: |
-        git fetch origin
-        git checkout build/staging-frontend
-        git pull origin staging-frontend
-        git merge --no-ff --no-edit origin/staging-frontend
+    - name: Fetch Origin
+      run: git fetch origin
+
+    - name: Checkout build/staging-frontend
+      run:  git checkout build/staging-frontend
+
+    - name: Pull staging-frontend
+      run: git pull origin staging-frontend
+
+    - name: Merge staging-frontend into build/staging-frontend
+      run: git merge staging-frontend
