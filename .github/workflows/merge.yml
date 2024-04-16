@@ -1,6 +1,6 @@
 name: Check Branch and Latest Commit
 on:
-  workflow_dispatch:
+  workflow_dispatch
   push:
     branches: 
     - test/workflow-staging
