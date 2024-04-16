@@ -16,6 +16,10 @@ jobs:
       with:
         ref: staging-frontend
 
+    - name: Set git environment
+      run: |
+        export GIT_SSH_COMMAND="git -c protocol.version=2"
+
     - name: Get Latest Commit Message
       id: latest_commit
       run: |
