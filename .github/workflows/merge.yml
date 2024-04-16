@@ -19,7 +19,7 @@ jobs:
 
     - name: Check if Branch is Pushed
       run: |
-        if git rev-parse --quiet --verify "test/workflow-staging"; then
+        if git rev-parse --quiet --verify "remotes/origin/test/workflow-staging"; then
           echo "Branch test/workflow-staging has been pushed."
         else
           echo "Branch test/workflow-staging has not been pushed."
@@ -27,5 +27,5 @@ jobs:
 
     - name: Echo Latest Commit Message
       run: |
-        latest_commit_message=$(git log -1 --format=%B "test/workflow-staging")
+        latest_commit_message=$(git log -1 --format=%B "remotes/origin/test/workflow-staging")
         echo "Latest commit message on test/workflow-staging: $latest_commit_message"
