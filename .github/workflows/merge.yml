@@ -1,12 +1,10 @@
 name: Check Latest Commit Message
 
 on:
-  
   push:
     branches:
-    - main
-    - 'test/workflow-staging'
-    - 'staging-frontend'
+    - test/workflow-staging
+    - staging-frontend
 
 jobs:
   check-commit-message:
