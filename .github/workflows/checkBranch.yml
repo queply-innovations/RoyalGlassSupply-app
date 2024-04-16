@@ -1,0 +1,19 @@
+name: Check All Remote branches
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  check-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get Branches
+        run: |
+          git fetch --all
+          git branch -r
