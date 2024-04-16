@@ -8,7 +8,7 @@ export const MainMenuButtons = () => {
 	return (
 		<div className="mx-auto flex w-full flex-row items-center gap-4">
 			<ActionButton
-				title="Product Item"
+				title="Register Product Item"
 				subtitle="Create new unique product..."
 				icon={<Boxes size={20} strokeWidth={1.5} className="h-16 w-16" />}
 				onClick={() => setActiveTab('add_product')}
