@@ -3,8 +3,7 @@ name: Check Latest Commit Message
 on:
   
   push:
-    branches:
-      - test/workflow-staging
+    branches: [ test/workflow-staging ]
 
 jobs:
   check-commit-message:
