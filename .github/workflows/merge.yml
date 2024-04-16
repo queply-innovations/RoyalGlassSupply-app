@@ -1,0 +1,26 @@
+name: Check Branch and Latest Commit
+on:
+  push:
+    branches:
+      - test/workflow-staging
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Check if Branch is Pushed
+      run: |
+        if git rev-parse --quiet --verify "test/workflow-staging"; then
+          echo "Branch test/workflow-staging has been pushed."
+        else
+          echo "Branch test/workflow-staging has not been pushed."
+        fi
+
+    - name: Echo Latest Commit Message
+      run: |
+        latest_commit_message=$(git log -1 --format=%B "test/workflow-staging")
+        echo "Latest commit message on test/workflow-staging: $latest_commit_message"
