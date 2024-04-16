@@ -47,6 +47,7 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 
 	const [filter, setFilter] = useState<object>({
 		approval_status: 'approved',
+		active_status: 'active',
 	});
 	const [invoiceCode, setInvoiceCode] = useState<string>('');
 
