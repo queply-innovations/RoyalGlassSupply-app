@@ -1,6 +1,10 @@
 name: Check Latest Commit Message
 
-on: [push]
+on:   
+ push:
+    branches:
+    - test/*
+    - staging-frontend
  
 
 jobs:
