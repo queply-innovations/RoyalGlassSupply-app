@@ -1,7 +1,9 @@
 name: Check Branch and Latest Commit
 on:
   push:
-    branches: [test/workflow-staging]
+    branches:
+      - test/workflow-staging
+      - staging-frontend
    
 
 jobs:
