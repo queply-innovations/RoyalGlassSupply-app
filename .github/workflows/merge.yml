@@ -1,10 +1,9 @@
 name: Auto Merge staging-frontend to build/staging-frontend
 
 on:
- push:
+  push:
     branches:
-    - staging-frontend
-
+      - staging-frontend
 
 jobs:
   check-commit-message:
@@ -14,27 +13,21 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
       with:
-        ref: staging-frontend
+        ref: test/workflow
 
     - name: Set git environment
       run: |
         export GIT_SSH_COMMAND="git -c protocol.version=2"
         git config pull.rebase true
 
-    - name: Get Latest Commit Message
-      id: latest_commit
-      run: |
-        latest_commit_message=$(git log -1 --format=%B)
-        echo "::set-output name=commit_message::$latest_commit_message"
-
     - name: Display Latest Commit Message
       run: |
         echo "Latest commit message on staging-frontend:"
-        echo "${{ steps.latest_commit.outputs.commit_message }}"
+        echo "--->${{ steps.latest_commit.outputs.commit_message }}"
 
-    - name: Merge Changes
+    - name: Fetch and Merge staging-frontend
       run: |
-        git checkout origin/build/staging-frontend
+        git fetch origin
+        git checkout build/staging-frontend
         git pull origin staging-frontend
-        git merge --no-ff --no-edit staging-frontend
-        git push origin build/staging-frontend
+        git merge --no-ff --no-edit origin/staging-frontend
