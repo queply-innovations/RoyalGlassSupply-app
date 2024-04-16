@@ -8,18 +8,16 @@ on:
         required: true
         default: 'staging-frontend'
 
-
-
 jobs:
   check-branches:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Get Branches
+
+      - name: List Remote Branches
         run: |
           git fetch --all
           git branch -r
