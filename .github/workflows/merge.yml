@@ -8,21 +8,21 @@ on:
      
   workflow_dispatch:
    
-
 jobs:
-  check-branch:
+  check-commit-message:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
 
-    - name: Check if Branch is Pushed
+    - name: Get Latest Commit Message
+      id: latest_commit
       run: |
-        if git rev-parse --quiet --verify "test/workflow-staging"; then
-          echo "Branch test/workflow-staging has been pushed."
-        else
-          echo "Branch test/workflow-staging has not been pushed."
-        fi
+        latest_commit_message=$(git log -1 --format=%B)
+        echo "::set-output name=commit_message::$latest_commit_message"
 
-  
+    - name: Display Latest Commit Message
+      run: |
+        echo "Latest commit message on test/workflow-staging:"
+        echo "${{ steps.latest_commit.outputs.commit_message }}"
