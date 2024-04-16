@@ -33,7 +33,7 @@ jobs:
 
     - name: Merge Changes
       run: |
-        git checkout -b build/staging-frontend
+        git checkout -b build/staging-frontend origin/build/staging-frontend
         git pull origin build/staging-frontend
         git merge --no-ff --no-edit staging-frontend
         git push origin build/staging-frontend
