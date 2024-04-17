@@ -37,20 +37,18 @@ export const InventoryProductsTable = ({
 	};
 
 	return (
-		<div className="w-full rounded-lg border bg-white">
-			<TooltipProvider>
-				<DataTable
-					columns={InventoryProductsCols({
-						handleEditInventoryProduct,
-						handleToggleStatus,
-					})}
-					data={data ? data : []}
-					filterWhat={'product'}
-					dataType={'Items'}
-					openModal={handleAddInventoryProduct}
-					isLoading={isLoading}
-				/>
-			</TooltipProvider>
-		</div>
+		<TooltipProvider>
+			<DataTable
+				columns={InventoryProductsCols({
+					handleEditInventoryProduct,
+					handleToggleStatus,
+				})}
+				data={data ? data : []}
+				filterWhat={'product'}
+				dataType={'Items'}
+				openModal={handleAddInventoryProduct}
+				isLoading={isLoading}
+			/>
+		</TooltipProvider>
 	);
 };
