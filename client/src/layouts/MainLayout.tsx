@@ -33,7 +33,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 			{auth.auth.authenticated ? ( //checks if logged in
 				<div className="flex h-screen w-screen">
 					<Sidebar />
-					<div className="flex max-h-full flex-auto flex-col overflow-hidden p-5">
+					<div className="flex max-h-full flex-auto flex-col p-5">
 						<CommonLayout title={title!}>{children}</CommonLayout>
 						<div className="mt-auto flex flex-shrink-0 flex-grow-0 flex-row items-center justify-end gap-3 pt-4 text-base text-slate-700">
 							<div
