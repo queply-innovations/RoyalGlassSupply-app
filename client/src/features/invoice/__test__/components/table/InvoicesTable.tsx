@@ -230,14 +230,12 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 
 	return (
 		<>
-			<div className="w-full rounded-lg border bg-white">
-				<DataTable
-					columns={columns}
-					data={invoices}
-					filterWhat={'code'}
-					dataType={'Invoices'}
-				/>
-			</div>
+			<DataTable
+				columns={columns}
+				data={invoices}
+				filterWhat={'code'}
+				dataType={'Invoices'}
+			/>
 		</>
 	);
 };

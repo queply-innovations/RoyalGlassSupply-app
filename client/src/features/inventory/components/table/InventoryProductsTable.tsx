@@ -42,7 +42,6 @@ export const InventoryProductsTable = ({
 	};
 
 	return (
-		<div className="w-full rounded-lg border bg-white">
 			<TooltipProvider>
 				<DataTable
 					columns={InventoryProductsCols({
@@ -57,6 +56,5 @@ export const InventoryProductsTable = ({
 					isLoading={isLoading}
 				/>
 			</TooltipProvider>
-		</div>
 	);
 };

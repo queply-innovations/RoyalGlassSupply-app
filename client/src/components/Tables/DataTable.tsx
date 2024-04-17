@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Inputbox, Pagination } from '@/components';
+import { Button, Inputbox, Pagination2 } from '@/components';
 
 import {
 	ColumnDef,
@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({
 	openModal,
 	isLoading,
 	hidePagination,
-	hideFilter
+	hideFilter,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -83,9 +83,9 @@ export function DataTable<TData, TValue>({
 	const placeholderLabel = `Filter ${label.trim()}...`;
 
 	return (
-		<>
+		<div className="flex max-h-full flex-col divide-y">
 			{!hideFilter && openModal && (
-				<div className="flex justify-between p-4 bg-white sticky z-10">
+				<div className="flex flex-none justify-between p-4">
 					{hideFilter ? null : (
 						<div className="w-1/2">
 							<Inputbox
@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
 								fill={'green'}
 								onClick={openModal}
 								disabled={isLoading}
-								className="disabled:cursor-not-allowed disabled:opacity-40 flex flex-row h-8 items-center pl-2 pr-3"
+								className="flex h-8 flex-row items-center pl-2 pr-3 disabled:cursor-not-allowed disabled:opacity-40"
 							>
 								<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
 							</Button>
@@ -122,84 +122,94 @@ export function DataTable<TData, TValue>({
 					)}
 				</div>
 			)}
-			<div className="rounded-md border z-0">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map(headerGroup => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map(header => {
-									return (
-										<TableHead
-											key={header.id}
-											className="py-5 text-xs font-bold uppercase text-black"
-										>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
+			<Table className="flex-1 overflow-auto">
+				<TableHeader className="z-10 bg-slate-50 hover:bg-slate-50">
+					{table.getHeaderGroups().map(headerGroup => (
+						<TableRow key={headerGroup.id}>
+							{headerGroup.headers.map(header => {
+								return (
+									<TableHead
+										key={header.id}
+										className="text-xs font-bold uppercase text-slate-800"
+									>
+										{header.isPlaceholder
+											? null
+											: flexRender(
+													header.column.columnDef.header,
+													header.getContext(),
+												)}
+									</TableHead>
+								);
+							})}
+						</TableRow>
+					))}
+				</TableHeader>
+				<TableBody>
+					{table.getRowModel().rows?.length ? (
+						table.getRowModel().rows.map(row => (
+							<TableRow
+								key={row.id}
+								data-state={row.getIsSelected() && 'selected'}
+								className="text-xs font-medium text-slate-950"
+							>
+								{row.getVisibleCells().map(cell => (
+									<TableCell key={cell.id} className="py-3">
+										{flexRender(
+											cell.column.columnDef.cell,
+											cell.getContext(),
+										)}
+									</TableCell>
+								))}
 							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map(row => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && 'selected'}
-									className="py-2 text-xs font-normal uppercase text-slate-900"
-								>
-									{row.getVisibleCells().map(cell => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : isLoading ? (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 items-center justify-center space-y-0 px-20 text-center"
-								>
-									<div className="flex items-center justify-center text-slate-800/60">
-										<Loader2
-											size={28}
-											strokeWidth={2}
-											className="animate-spin"
-										/>
-									</div>
-								</TableCell>
-							</TableRow>
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
+						))
+					) : isLoading ? (
+						<TableRow className="hover:bg-white">
+							<TableCell
+								colSpan={columns.length}
+								className="h-24 items-center justify-center space-y-0 px-20 text-center"
+							>
+								<div className="flex items-center justify-center text-slate-800/60">
+									<Loader2
+										size={28}
+										strokeWidth={2}
+										className="animate-spin"
+									/>
+								</div>
+							</TableCell>
+						</TableRow>
+					) : (
+						<TableRow>
+							<TableCell
+								colSpan={columns.length}
+								className="h-24 text-center font-medium hover:bg-white"
+							>
+								No results.
+							</TableCell>
+						</TableRow>
+					)}
+				</TableBody>
+			</Table>
 			{hidePagination ? null : (
-				<div className="flex flex-row justify-between space-x-2 py-4 sticky">
-					<div className="p-4 font-semibold">
-						{table.getFilteredSelectedRowModel().rows?.length} of{' '}
-						{table.getFilteredRowModel().rows?.length} row(s) selected.
+				<div className="flex flex-none flex-row items-center justify-between p-4">
+					<div className="text-sm font-semibold">
+						{table.getFilteredSelectedRowModel().rows?.length > 0 ? (
+							<>
+								{table.getFilteredSelectedRowModel().rows?.length} of{' '}
+								{table.getFilteredRowModel().rows?.length} row(s)
+								selected
+							</>
+						) : (
+							<>
+								{table.getFilteredRowModel().rows?.length}{' '}
+								{table.getFilteredRowModel().rows?.length !== 1
+									? 'rows'
+									: 'row'}
+							</>
+						)}
 					</div>
 
 					<div>
-						<Pagination
+						<Pagination2
 							onClickPrev={() => table.previousPage()}
 							onClickNext={() => table.nextPage()}
 							table={table}
@@ -207,6 +217,6 @@ export function DataTable<TData, TValue>({
 					</div>
 				</div>
 			)}
-		</>
+		</div>
 	);
 }

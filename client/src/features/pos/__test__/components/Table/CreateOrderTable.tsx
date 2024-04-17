@@ -33,13 +33,29 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			cell: ({ row }) => {
 				return <div className="flex justify-center">{row.index + 1}</div>;
 			},
-			size: 250,
+			size: 150,
 		},
 		{
 			accessorKey: 'name',
 			header: () => <div className="justify-center">Product Name</div>,
 			cell: ({ row }) => {
-				return <div className="flex ">{row.original.product_id.name}</div>;
+				return (
+					<div className="flex flex-row gap-2">
+						<span className="text-sm font-bold">
+							{row.original.product_id.name}
+						</span>
+						{row.original.product_id.brand ? (
+							<span className="text-sm">
+								({row.original.product_id.brand})
+							</span>
+						) : null}
+						<span className="text-[12px]">
+							{row.original.product_id.size}
+						</span>
+
+						{row.original.product_id.color}
+					</div>
+				);
 			},
 		},
 		{
@@ -80,8 +96,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 								className="w-20 rounded-none text-center drop-shadow-none"
 								type="number"
 								value={row.original.quantity || ''}
-								onChange={e => {
-									//TODO - rerenders after input loses focus
+								onBlur={e => {
 									quantityHandler(
 										productIndex,
 										Number(e.target.value),
@@ -89,6 +104,10 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 											? productInfo.remaining_stocks_count ?? 0
 											: 0,
 									);
+								}}
+								onChange={e => {
+									//TODO - rerenders after input loses focus
+									e.target.value;
 								}}
 								disabled={
 									productInfo?.remaining_stocks_count ? false : true

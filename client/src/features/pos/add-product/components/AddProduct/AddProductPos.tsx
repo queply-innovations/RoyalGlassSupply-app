@@ -16,7 +16,7 @@ export const ProductsTablePos = ({ openModal }: ProductsTableProps) => {
 	};
 
 	return (
-		<div className="rounded-lg border bg-white p-4">
+		<div className="max-h-full w-full flex-1 rounded-lg border border-black/10 bg-white">
 			<DataTable
 				columns={ProductsColsLimited}
 				data={data}

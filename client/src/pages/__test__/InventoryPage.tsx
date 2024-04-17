@@ -35,8 +35,8 @@ export const Inventory = () => {
 		<>
 			<MainLayout title="Inventory">
 				<InventoryProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="ml-auto flex flex-row items-center space-x-4">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
+						<div className="ml-auto flex flex-none flex-row items-center space-x-4">
 							<span className="text-sm font-medium">
 								Filter warehouse:{' '}
 							</span>
@@ -65,7 +65,7 @@ export const Inventory = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
+						<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">
 							<InventoryTable
 								filterWarehouse={
 									// If filterWarehouse is given (greater than 0),
