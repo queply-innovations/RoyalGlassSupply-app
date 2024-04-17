@@ -136,7 +136,7 @@ export const AddInventoryProductForm = ({
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div
 							className={`${
-								isAdmin ? 'col-span-12' : 'col-span-6'
+								isAdmin ? 'col-span-12' : 'col-span-8'
 							} flex flex-col justify-center gap-1`}
 						>
 							<Label
@@ -174,7 +174,7 @@ export const AddInventoryProductForm = ({
 																{selectedProduct?.brand &&
 																	`(${selectedProduct.brand})`}
 															</span>
-															<span className="font-baseline text-xs text-slate-700/50">
+															<span className="font-baseline text-xs">
 																{selectedProduct?.serial_no}
 															</span>
 														</div>
@@ -193,7 +193,7 @@ export const AddInventoryProductForm = ({
 								</PopoverTrigger>
 								<PopoverContent
 									className={`${
-										isAdmin ? 'max-w-[966px]' : 'max-w-[477px]'
+										isAdmin ? 'max-w-[966px]' : 'max-w-[640px]'
 									} w-[calc(100vw-170px)] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
@@ -215,9 +215,11 @@ export const AddInventoryProductForm = ({
 														key={key}
 														className="cursor-pointer justify-between rounded-sm"
 														value={
+															product.id +
+															'_' +
 															product.name +
-															product.serial_no +
-															product.brand
+															'_' +
+															product.serial_no
 														}
 														onSelect={() => {
 															handleChange(
@@ -227,12 +229,12 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<span className="max-w-[50%] truncate">
+														<span className="max-w-[50%] truncate font-semibold">
 															{product.name}{' '}
 															{product.brand &&
 																`(${product.brand})`}
 														</span>
-														<span className="max-w-[49%] truncate text-xs font-semibold text-slate-700/50">
+														<span className="max-w-[49%] truncate text-xs font-medium">
 															{product.serial_no +
 																' • ' +
 																product.size +
@@ -247,7 +249,11 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div
+							className={`${
+								isAdmin ? 'col-span-6' : 'col-span-4'
+							} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"

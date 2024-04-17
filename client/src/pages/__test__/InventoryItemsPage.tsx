@@ -11,6 +11,7 @@ import { InventoryProductsTable } from '@/features/inventory/components/table/In
 import { InventoryProduct } from '@/features/inventory/types';
 import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
+import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -65,12 +66,15 @@ export const InventoryItemsPage = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={modalAction === 'view_details'}
 						title={
 							modalAction === 'add'
 								? 'Add Items'
 								: modalAction === 'edit'
 									? 'Edit Item'
-									: ''
+									: modalAction === 'view_details'
+										? 'Item Details'
+										: ''
 						}
 					>
 						<>
@@ -80,6 +84,7 @@ export const InventoryItemsPage = () => {
 									onClose={closeModal}
 								/>
 							)}
+							{modalAction === 'view_details' && <ViewDetails />}
 							{modalAction === 'edit' && (
 								<EditInventoryProductForm onClose={closeModal} />
 							)}

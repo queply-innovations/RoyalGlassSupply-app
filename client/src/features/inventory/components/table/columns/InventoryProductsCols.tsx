@@ -15,6 +15,7 @@ import {
 	ArrowUpDown,
 	CheckCircle,
 	Clock,
+	List,
 	MoreVertical,
 	Pencil,
 } from 'lucide-react';
@@ -25,37 +26,39 @@ import {
 } from '@/components/ui/tooltip';
 
 interface InventoryProductsColsProps {
+	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 	handleToggleStatus: (inventoryProductID: number, status: number) => void;
 }
 
 export const InventoryProductsCols = ({
+	handleViewDetails,
 	handleEditInventoryProduct,
 	handleToggleStatus,
 }: InventoryProductsColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
-		{
-			id: 'select',
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={e =>
-						table.toggleAllPageRowsSelected(!!e.target.checked)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={e => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-		},
+		// {
+		// 	id: 'select',
+		// 	header: ({ table }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={table.getIsAllPageRowsSelected()}
+		// 			onChange={e =>
+		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
+		// 			}
+		// 			aria-label="Select all"
+		// 		/>
+		// 	),
+		// 	cell: ({ row }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={row.getIsSelected()}
+		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
+		// 			aria-label="Select row"
+		// 			className="justify-center"
+		// 		/>
+		// 	),
+		// },
 		{
 			id: 'product',
 			accessorKey: 'product.name',
@@ -84,9 +87,21 @@ export const InventoryProductsCols = ({
 			},
 		},
 		{
-			accessorKey: 'supplier_id.name',
-			header: () => <div className="justify-center uppercase">Supplier</div>,
+			accessorKey: 'product.brand',
+			header: () => <div className="justify-center uppercase">Brand</div>,
 		},
+		{
+			accessorKey: 'product.size',
+			header: () => <div className="justify-center uppercase">Size</div>,
+		},
+		{
+			accessorKey: 'product.color',
+			header: () => <div className="justify-center uppercase">Color</div>,
+		},
+		// {
+		// 	accessorKey: 'supplier_id.name',
+		// 	header: () => <div className="justify-center uppercase">Supplier</div>,
+		// },
 		{
 			accessorKey: 'capital_price',
 			header: () => (
@@ -106,26 +121,26 @@ export const InventoryProductsCols = ({
 				);
 			},
 		},
-		{
-			accessorKey: 'unit',
-			header: () => <div className="justify-center uppercase">Unit</div>,
-		},
-		{
-			accessorKey: 'stocks_count',
-			header: () => (
-				<div className="justify-center whitespace-nowrap uppercase">
-					Stocks
-				</div>
-			),
-		},
-		{
-			accessorKey: 'damage_count',
-			header: () => (
-				<div className="justify-center whitespace-nowrap uppercase">
-					Damaged
-				</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'unit',
+		// 	header: () => <div className="justify-center uppercase">Unit</div>,
+		// },
+		// {
+		// 	accessorKey: 'stocks_count',
+		// 	header: () => (
+		// 		<div className="justify-center whitespace-nowrap uppercase">
+		// 			Stocks
+		// 		</div>
+		// 	),
+		// },
+		// {
+		// 	accessorKey: 'damage_count',
+		// 	header: () => (
+		// 		<div className="justify-center whitespace-nowrap uppercase">
+		// 			Damaged
+		// 		</div>
+		// 	),
+		// },
 		{
 			accessorKey: 'total_count',
 			header: () => (
@@ -134,20 +149,20 @@ export const InventoryProductsCols = ({
 				</div>
 			),
 		},
-		{
-			accessorKey: 'transferred_stocks_count',
-			header: () => (
-				<div className="justify-center uppercase">Transferred</div>
-			),
-		},
+		// {
+		// 	accessorKey: 'transferred_stocks_count',
+		// 	header: () => (
+		// 		<div className="justify-center uppercase">Transferred</div>
+		// 	),
+		// },
 		{
 			accessorKey: 'sold_count',
 			header: () => <div className="justify-center uppercase">Sold</div>,
 		},
-		{
-			accessorKey: 'miscellaneous_count',
-			header: () => <div className="justify-center uppercase">Misc</div>,
-		},
+		// {
+		// 	accessorKey: 'miscellaneous_count',
+		// 	header: () => <div className="justify-center uppercase">Misc</div>,
+		// },
 		{
 			accessorKey: 'remaining_stocks_count',
 			header: () => (
@@ -197,6 +212,17 @@ export const InventoryProductsCols = ({
 							<DropdownMenuContent className="relative z-50 w-44 bg-white">
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => {
+										handleViewDetails(inventoryItemRow);
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<List size={16} strokeWidth={2.25} />
+									</span>
+									<span>Details</span>
+								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => {
 										handleEditInventoryProduct(inventoryItemRow);

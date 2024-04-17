@@ -23,6 +23,11 @@ export const InventoryProductsTable = ({
 		openModal({} as InventoryProduct, 'add');
 	};
 
+	const handleViewDetails = (inventoryProduct: InventoryProduct) => {
+		setSelectedInventoryProduct(inventoryProduct);
+		openModal(inventoryProduct, 'view_details');
+	};
+
 	const handleEditInventoryProduct = (inventoryProduct: InventoryProduct) => {
 		setSelectedInventoryProduct(inventoryProduct);
 		openModal(inventoryProduct, 'edit');
@@ -37,18 +42,19 @@ export const InventoryProductsTable = ({
 	};
 
 	return (
-		<TooltipProvider>
-			<DataTable
-				columns={InventoryProductsCols({
-					handleEditInventoryProduct,
-					handleToggleStatus,
-				})}
-				data={data ? data : []}
-				filterWhat={'product'}
-				dataType={'Items'}
-				openModal={handleAddInventoryProduct}
-				isLoading={isLoading}
-			/>
-		</TooltipProvider>
+			<TooltipProvider>
+				<DataTable
+					columns={InventoryProductsCols({
+						handleViewDetails,
+						handleEditInventoryProduct,
+						handleToggleStatus,
+					})}
+					data={data ? data : []}
+					filterWhat={'product'}
+					dataType={'Items'}
+					openModal={handleAddInventoryProduct}
+					isLoading={isLoading}
+				/>
+			</TooltipProvider>
 	);
 };

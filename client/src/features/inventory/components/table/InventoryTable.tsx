@@ -61,7 +61,12 @@ export const InventoryTable = ({
 					handleViewDetails,
 					handleEditInventory,
 				})}
-				data={inventoryData}
+				data={inventoryData.sort((a, b) => {
+					// Sort the inventory data by updated_at or created_at
+					let dateA = new Date(a.updated_at ?? a.created_at);
+					let dateB = new Date(b.updated_at ?? b.created_at);
+					return dateB.getTime() - dateA.getTime();
+				})}
 				filterWhat={'code'}
 				dataType={'Inventory'}
 				openModal={handleAddInventory}
