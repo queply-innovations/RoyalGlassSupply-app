@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Button } from '@/components';
+import { toast } from 'react-toastify';
 
 interface AddProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -55,14 +56,20 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
-						action: 'add',
-						data: FormValue,
-					});
-					response?.status === 201 // 201 means resource successfully created
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to submit product'));
+					handleSubmit({ action: 'add', data: FormValue })
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Product added successfully.');
+							onClose();
+						})
+						.catch((err: any) => {
+							setIsSubmitting(false);
+							if (err.response.data.message) {
+								toast.error(err.response.data.message);
+							} else {
+								toast.error('Failed to submit product.');
+							}
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
