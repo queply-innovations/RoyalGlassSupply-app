@@ -194,7 +194,7 @@ export const AddInventoryProductForm = ({
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent
-									className={`min-w-[642px] p-0 text-sm font-medium text-slate-700`}
+									className={`min-w-[842px] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />

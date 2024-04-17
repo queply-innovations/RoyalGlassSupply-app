@@ -157,7 +157,7 @@ export const AddProdPriceProdsTab = ({
 							/>
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-[442px] p-0 text-sm font-medium text-slate-700">
+					<PopoverContent className="w-[554px] p-0 text-sm font-medium text-slate-700">
 						<Command
 							value={
 								selectedProduct
