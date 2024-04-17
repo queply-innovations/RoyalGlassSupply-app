@@ -93,7 +93,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Serial Number{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -120,7 +120,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Name{' '}
 							{column.getIsSorted() === 'asc' ? (
