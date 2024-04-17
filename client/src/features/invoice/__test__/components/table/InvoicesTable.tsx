@@ -45,7 +45,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center uppercase bg-transparent text-slate-700"
 						>
 							Code{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -59,7 +59,15 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 					</>
 				);
 			},
+			cell: ({ row }) => {
+				return (
+					<div className="flex flex-row items-center gap-2">
+						<span className="font-bold">{row.original.code}</span>
+					</div>
+				);
+			},
 		},
+
 		{
 			accessorKey: 'warehouse.code',
 			sortingFn: 'text',
@@ -71,9 +79,9 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center uppercase bg-transparent text-slate-700"
 						>
-							Type{' '}
+							Warehouse{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp size={18} strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
@@ -97,7 +105,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center uppercase bg-transparent text-slate-700"
 						>
 							Type{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -120,12 +128,12 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 
 			header: ({ column }) => {
 				return (
-					<div className="mx-auto flex">
+					<div className="flex mx-auto">
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center uppercase bg-transparent text-slate-700"
 						>
 							Discount Status{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -143,7 +151,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 				const status = row.original.status;
 				return (
 					<>
-						<div className="group relative flex w-fit items-center justify-center">
+						<div className="relative flex items-center justify-center group w-fit">
 							{status === 'approved' ? (
 								<Check
 									size={20}
@@ -163,7 +171,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 									className="text-amber-500"
 								/>
 							)}
-							<span className="absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+							<span className="absolute px-1 mx-auto text-sm text-gray-100 capitalize transition-opacity -translate-x-1/2 bg-gray-800 rounded-md opacity-0 left-1/2 -translate-y-7 group-hover:opacity-100">
 								{status}
 							</span>
 						</div>
@@ -189,32 +197,32 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
 								<MoreVertical size={16} strokeWidth={2.25} />
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="relative z-50 w-44 bg-white">
+							<DropdownMenuContent className="relative z-50 bg-white w-44">
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
 								<DropdownMenuItem
 									onClick={() => {}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200"
 								>
-									<span className="flex w-6 items-center justify-center">
+									<span className="flex items-center justify-center w-6">
 										<ShoppingBasket size={16} strokeWidth={2} />
 									</span>
 									<span>View Invoice Items</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => {}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200"
 								>
-									<span className="flex w-6 items-center justify-center">
+									<span className="flex items-center justify-center w-6">
 										<List size={16} strokeWidth={2.25} />
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() => {}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200"
 								>
-									<span className="flex w-6 items-center justify-center">
+									<span className="flex items-center justify-center w-6">
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span>Edit</span>
@@ -230,7 +238,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 
 	return (
 		<>
-			<div className="w-full rounded-lg border bg-white">
+			<div className="w-full bg-white border rounded-lg">
 				<DataTable
 					columns={columns}
 					data={invoices}
