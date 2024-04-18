@@ -66,12 +66,17 @@ export const formatUTCMMDDYYYY = (date: string) => {
 	const day = utcDate.getDate();
 	let hours = utcDate.getHours();
 	const amOrPm = hours >= 12 ? 'PM' : 'AM';
+	// Convert hours to 12-hour format
+	hours = hours % 12 || 12;
+	// Pad minutes with leading zeros if necessary
+	const minutes = utcDate.getMinutes().toString().padStart(2, '0');
 	const formattedDateTime = `${month} ${
 		day < 10 ? '0' : ''
-	}${day} ${year} at ${hours}:${utcDate.getMinutes()} ${amOrPm}`;
+	}${day}, ${year} at ${hours}:${minutes} ${amOrPm}`;
 
 	return formattedDateTime;
 };
+
 export const formatUTCDateOnly = (date: string) => {
 	const utcDate = new Date(date); // Convert the UTC date string to a JavaScript Date object
 	const year = utcDate.getFullYear(); // Extract individual components of the date
