@@ -36,7 +36,7 @@ class ProductController extends Controller
         $checkProduct = Product::where(DB::raw('LOWER(name)'), Str::lower($request->name))
             ->where(DB::raw('LOWER(brand)'), Str::lower($request->brand))
             ->where(DB::raw('LOWER(size)'), Str::lower($request->size))
-            ->where(DB::raw('LOWER(brand)'), Str::lower($request->brand))
+            ->where(DB::raw('LOWER(color)'), Str::lower($request->color))
             ->exists();
 
         if($checkProduct) {
