@@ -21,7 +21,6 @@ export const Invoice = ({}: InvoiceProps) => {
 		setModalAction(action);
 		console.log('modalAction:', modalAction);
 	};
-	console.log(getDateNow());
 	return (
 		<>
 			<MainLayout title="Transactions">
