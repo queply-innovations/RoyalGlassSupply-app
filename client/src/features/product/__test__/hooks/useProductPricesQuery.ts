@@ -9,8 +9,9 @@ import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
 
 interface ProductPricesFilterProps {
-	approval_status?: string;
-	warehouse_id?: number;
+	approval_status: string;
+	warehouse_id: number;
+	active_status: string;
 }
 
 /**
@@ -80,55 +81,26 @@ export const useProductPricesQueryFilterByApproved = () => {
 };
 
 export const useProductPricesFilter = ({
-	approval_status,
+	approval_status, //TODO Possible to comment out
 	warehouse_id,
+	active_status,
 }: ProductPricesFilterProps) => {
 	const [data, setData] = useState<ProductPrices[]>([]);
-	const {
-		data: result,
-		isLoading,
-		refetch,
-	} = useQuery({
-		queryKey: ['productPricesTEST', approval_status, warehouse_id], // Include approval_status and warehouse_id in the query key
-		queryFn: async () => {
-			let filteredData: ProductPrices[] = [];
-			try {
-				if (approval_status && warehouse_id) {
-					filteredData = await fetchProductPricesFilters(
-						approval_status,
-						warehouse_id,
-					);
-				} else if (approval_status) {
-					filteredData = await fetchProductPricesFilters(approval_status);
-				} else if (warehouse_id) {
-					filteredData = await fetchProductPricesFilters(
-						undefined,
-						warehouse_id,
-					);
-				} else {
-					filteredData = await fetchProductPricesFilters();
-				}
-				return filteredData;
-			} catch (error) {
-				console.error('Error fetching product prices:', error);
-				throw error;
-			}
-		},
+	const { data: result, isLoading } = useQuery({
+		queryKey: ['productPrices', approval_status, active_status, warehouse_id],
+		queryFn: () =>
+			fetchProductPricesFilters(
+				approval_status, //TODO Possible to comment out
+				active_status,
+				warehouse_id,
+			),
 		refetchOnWindowFocus: false,
 	});
-
 	useEffect(() => {
-		if (result) {
+		if (!isLoading && result) {
 			setData(result);
-			refetch();
 		}
-	}, [result, approval_status, warehouse_id]); // Include approval_status and warehouse_id as dependencies
-
-	// useEffect(() => {
-	// 	if (approval_status && warehouse_id) {
-	// 		refetch();
-	// 	}
-	// }, [approval_status, warehouse_id]); // Refetch if approval_status and warehouse_id changes
+	}, [result, isLoading]);
 
 	return { data, isLoading };
 };
