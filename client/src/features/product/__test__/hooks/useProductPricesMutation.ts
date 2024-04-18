@@ -59,9 +59,12 @@ export const useProductPricesMutation = () => {
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
 				predicate: query => {
-					return ['productPrices', 'productPricesTEST'].includes(
-						query.queryKey[0] as string,
-					);
+					return [
+						'productPrices',
+						'pendingProductPrices',
+						'approvedProductPrices',
+						'productPricesTEST',
+					].includes(query.queryKey[0] as string);
 				},
 			});
 
