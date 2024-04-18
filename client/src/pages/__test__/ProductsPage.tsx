@@ -7,6 +7,7 @@ import { Product as IProduct } from '@/features/product/__test__/types';
 import { useModal } from '@/utils/Modal';
 import { AddProductForm } from '@/features/product/__test__/components/forms/AddProdForm';
 import { EditProductForm } from '@/features/product/__test__/components/forms/EditProdForm';
+import { DeleteProduct } from '@/features/product/__test__/components/modal/DeleteProduct';
 
 export const Products = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -31,7 +32,16 @@ export const Products = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
-						title={modalAction === 'add' ? 'Add Product' : 'Edit Product'}
+						closeOnOverlayClick={modalAction === 'delete'}
+						title={
+							modalAction === 'add'
+								? 'Add Product'
+								: modalAction === 'edit'
+									? 'Edit Product'
+									: modalAction === 'delete'
+										? 'Delete Product'
+										: ''
+						}
 					>
 						<>
 							{modalAction === 'add' && (
@@ -39,6 +49,9 @@ export const Products = () => {
 							)}
 							{modalAction === 'edit' && (
 								<EditProductForm onClose={closeModal} />
+							)}
+							{modalAction === 'delete' && (
+								<DeleteProduct onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

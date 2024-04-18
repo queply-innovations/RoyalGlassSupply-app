@@ -22,6 +22,7 @@ import {
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
+	handleDeleteProduct: (product: Product) => void;
 }
 
 /**
@@ -32,6 +33,7 @@ interface ProductsColumnsProps {
  */
 export const ProductsCols = ({
 	handleEditProduct,
+	handleDeleteProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
 		// {
@@ -172,6 +174,15 @@ export const ProductsCols = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span className="font-medium">Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => handleDeleteProduct(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Trash2 size={16} strokeWidth={2.25} />
+									</span>
+									<span className="font-medium">Delete</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
