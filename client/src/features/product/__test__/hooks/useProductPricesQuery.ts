@@ -38,13 +38,14 @@ export const useProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
+
 export const usePendingProductPricesQuery = () => {
 	// State of the response data
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
 	// Query for fetching product prices and isLoading state
 	const { data: result, isFetching: isLoading } = useQuery({
-		queryKey: ['productPrices'],
+		queryKey: ['pendingProductPrices'],
 		queryFn: () => fetchPendingProductPrices(),
 		refetchOnWindowFocus: false,
 	});
@@ -63,7 +64,7 @@ export const useProductPricesQueryFilterByApproved = () => {
 
 	// Query for fetching product prices and isLoading state
 	const { data: result, isFetching: isLoading } = useQuery({
-		queryKey: ['productPrices'],
+		queryKey: ['approvedProductPrices'],
 		queryFn: () => fetchApprovedProductPrices(),
 		refetchOnWindowFocus: false,
 	});
