@@ -77,22 +77,19 @@ export const fetchApprovedProductPrices = async (): Promise<
 };
 
 export const fetchProductPricesFilters = async (
-	approval_status?: string,
+	approval_status?: string, //TODO Possible to comment out
+	active_status?: string,
 	warehouse_id?: number,
 ): Promise<ProductPrices[]> => {
-	const filters: any = {};
-	if (approval_status) {
-		filters['approval_status'] = approval_status;
-	}
-	if (warehouse_id) {
-		filters['warehouse_id'] = warehouse_id;
-	}
-
 	return await axios
 		.post(
 			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
 			{
-				filter: filters,
+				filter: {
+					approval_status: approval_status, //TODO Possible to comment out
+					active_status: active_status,
+					warehouse_id: warehouse_id,
+				},
 			},
 			{
 				headers: API_HEADERS(),

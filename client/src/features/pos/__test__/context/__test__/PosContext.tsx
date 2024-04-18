@@ -11,6 +11,7 @@ import {
 	useEffect,
 	useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface PosContextProps {
 	productListing: ProductPrices[];
@@ -39,16 +40,48 @@ interface PosProviderProps {
 const PosContext = createContext<PosContextProps | undefined>(undefined);
 
 export const PosProvider = ({ children }: PosProviderProps) => {
+	const { auth } = useAuth();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (auth.role === 'admin') {
+			navigate('/pos');
+		} else if (auth.role?.split('_')[1] === 'CDO') {
+			setFilter({
+				approval_status: 'approved', //TODO Possible to comment out
+				active_status: 'active',
+				warehouse_id: 1,
+			});
+			setSelectedWarehouse('CDO');
+			navigate('/pos/add-order');
+
+			// setInvoice({
+			// 	...invoice,
+			// 	warehouse_id: 1,
+			// });
+		} else if (auth.role?.split('_')[1] === 'ILI') {
+			setFilter({
+				approval_status: 'approved', //TODO Possible to comment out
+				active_status: 'active',
+				warehouse_id: 2,
+			});
+			setSelectedWarehouse('Iligan');
+			navigate('/pos/add-order');
+
+			// setInvoice({
+			// 	...invoice,
+			// 	warehouse_id: 2,
+			// });
+		}
+	}, []);
 	const [invoiceItemsQueue, setInvoiceItemsQueue] = useState<InvoiceItems[]>(
 		[],
 	);
 
 	const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
 
-	const [filter, setFilter] = useState<object>({
-		approval_status: 'approved',
-		active_status: 'active',
-	});
+	const [filter, setFilter] = useState<object>({});
+
 	const [invoiceCode, setInvoiceCode] = useState<string>('');
 
 	// const { invoice: invoiceCodeResult } = useInvoiceCodeQuery(invoiceCode);
