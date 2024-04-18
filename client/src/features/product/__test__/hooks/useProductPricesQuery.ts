@@ -88,12 +88,15 @@ export const useProductPricesFilter = ({
 	const [data, setData] = useState<ProductPrices[]>([]);
 	const { data: result, isLoading } = useQuery({
 		queryKey: ['productPrices', approval_status, active_status, warehouse_id],
-		queryFn: () =>
-			fetchProductPricesFilters(
-				approval_status, //TODO Possible to comment out
-				active_status,
-				warehouse_id,
-			),
+		queryFn: () => {
+			if (approval_status && warehouse_id && active_status) {
+				fetchProductPricesFilters(
+					approval_status, //TODO Possible to comment out
+					active_status,
+					warehouse_id,
+				);
+			}
+		},
 		refetchOnWindowFocus: false,
 	});
 	useEffect(() => {
