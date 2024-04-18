@@ -9,13 +9,17 @@ export const PrintForm = ({}: PrintFormProps) => {
 
 	const { selectedCustomer } = useCustomer();
 
+	// console.log(selectedCustomer, invoice);
+
 	return (
 		<>
-			<div id="main" className="flex w-screen flex-row">
-				Invoice number: {invoice.code} <br />
-				Customer name: {selectedCustomer.firstname + ' ' + selectedCustomer.lastname} 
+			<div className="flex w-screen flex-col p-3">
+				<div className="text-xl">
+					Invoice number: {invoice.code} <br />
+					Customer name: {selectedCustomer.firstname + ' ' + selectedCustomer.lastname} 
+				</div>
 				<div className="flex flex-1 flex-col gap-6 p-6">
-					<CreateOrderTable />
+					<CreateOrderTable readOnly={true} />
 				</div>
 			</div>
 		</>

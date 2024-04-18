@@ -51,19 +51,20 @@ function createWindow() {
 	}
 
 	ipcMain.on('print-invoice', () => {
-		const newWindow = new BrowserWindow({
-			fullscreen: true,
-			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
-			webPreferences: {
-				preload: path.join(__dirname, 'preload.js'),
-				// devTools: false, //TODO: Remove on Production
-				plugins: true, 
-				nodeIntegration: false,
-				backgroundThrottling: false,
-				contextIsolation: true,
-			},
-		});
-		const windowWebContents: WebContents = newWindow.webContents
+		// const newWindow = new BrowserWindow({
+		// 	fullscreen: true,
+		// 	icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
+		// 	webPreferences: {
+		// 		preload: path.join(__dirname, 'preload.js'),
+		// 		// devTools: false, //TODO: Remove on Production
+		// 		plugins: true, 
+		// 		nodeIntegration: false,
+		// 		backgroundThrottling: false,
+		// 		contextIsolation: true,
+		// 	},
+		// });
+		// const windowWebContents: WebContents = newWindow.webContents
+		// windowWebContents.openDevTools(); // Devtools on Open //FOR TEST ONLY
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
@@ -72,8 +73,8 @@ function createWindow() {
 			silent: false, //convert to true after final testing
 			margins: {marginType: 'none'},
 		}
-		windowWebContents.loadURL('http://localhost:5173/print-invoice')
-		windowWebContents.print(options, (success, reason) => {  
+		win?.webContents.loadURL('http://localhost:5173/#/pos/print-invoice')
+		win?.webContents.print(options, (success, reason) => {  
 			console.log(success, reason);
 		})
 	})

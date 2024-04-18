@@ -9,9 +9,11 @@ import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
 import { useProductPrices } from '@/features/product/__test__';
 
-interface CreateOrderTableProps {}
+interface CreateOrderTableProps {
+	readOnly?: boolean;
+}
 
-export const CreateOrderTable = ({}: CreateOrderTableProps) => {
+export const CreateOrderTable = ({ readOnly }: CreateOrderTableProps) => {
 	const {
 		invoiceItemsQueue,
 		quantityHandler,
@@ -78,57 +80,61 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
-							<Button
-								className="rounded-sm bg-red-300 hover:bg-red-500 disabled:opacity-100"
-								onClick={() => {
-									quantityHandler(
-										productIndex,
-										row.original.quantity - 1,
-										productInfo?.remaining_stocks_count ?? 0,
-									);
-								}}
-								disabled={row.original.quantity <= 1 ? true : false}
-							>
-								<span>-</span>
-							</Button>
-							<Input
-								id="quantity"
-								className="w-20 rounded-none text-center drop-shadow-none"
-								type="number"
-								value={row.original.quantity || ''}
-								onBlur={e => {
-									quantityHandler(
-										productIndex,
-										Number(e.target.value),
-										productInfo
-											? productInfo.remaining_stocks_count ?? 0
-											: 0,
-									);
-								}}
-								onChange={e => {
-									//TODO - rerenders after input loses focus
-									e.target.value;
-								}}
-								disabled={
-									productInfo?.remaining_stocks_count ? false : true
-								}
-							/>
-							<Button
-								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:bg-slate-200"
-								onClick={() => {
-									quantityHandler(
-										productIndex,
-										row.original.quantity + 1,
-										productInfo?.remaining_stocks_count ?? 0,
-									);
-								}}
-								disabled={
-									row.original.quantity >=
-									(productInfo?.remaining_stocks_count ?? 0)
-								}
-							>
-								<span>+</span>
-							</Button>
+							{readOnly ? ( <> {row.original.quantity || ''} </> ) : (
+								<>
+									<Button
+										className="rounded-sm bg-red-300 hover:bg-red-500 disabled:opacity-100"
+										onClick={() => {
+											quantityHandler(
+												productIndex,
+												row.original.quantity - 1,
+												productInfo?.remaining_stocks_count ?? 0,
+											);
+										}}
+										disabled={row.original.quantity <= 1 ? true : false}
+									>
+										<span>-</span>
+									</Button>
+									<Input
+										id="quantity"
+										className="w-20 rounded-none text-center drop-shadow-none"
+										type="number"
+										value={row.original.quantity || ''}
+										onBlur={e => {
+											quantityHandler(
+												productIndex,
+												Number(e.target.value),
+												productInfo
+													? productInfo.remaining_stocks_count ?? 0
+													: 0,
+											);
+										}}
+										onChange={e => {
+											//TODO - rerenders after input loses focus
+											e.target.value;
+										}}
+										disabled={
+											productInfo?.remaining_stocks_count ? false : true
+										}
+									/>
+									<Button
+										className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:bg-slate-200"
+										onClick={() => {
+											quantityHandler(
+												productIndex,
+												row.original.quantity + 1,
+												productInfo?.remaining_stocks_count ?? 0,
+											);
+										}}
+										disabled={
+											row.original.quantity >=
+											(productInfo?.remaining_stocks_count ?? 0)
+										}
+									>
+										<span>+</span>
+									</Button>
+								</>
+							)}
 						</div>
 					</div>
 				);
@@ -159,19 +165,21 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			cell: ({ row }) => {
 				return (
 					<div key={row.index}>
-						<Input
-							id="item_discount"
-							value={row.original.item_discount}
-							type="number"
-							onChange={e => {
-								//TODO - Fix this part, rerenders when adding input loses out of focus after input
-								handleInvoiceItemsChange(
-									row.index,
-									'item_discount',
-									Number(e.target.value),
-								);
-							}}
-						/>
+						{readOnly ? (<p> {row.original.item_discount} </p>) : (
+							<Input
+								id="item_discount"
+								value={row.original.item_discount}
+								type="number"
+								onChange={e => {
+									//TODO - Fix this part, rerenders when adding input loses out of focus after input
+									handleInvoiceItemsChange(
+										row.index,
+										'item_discount',
+										Number(e.target.value),
+									);
+								}}
+							/>
+						)}
 					</div>
 				);
 			},
@@ -189,6 +197,13 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		},
 		{
 			id: 'actions',
+			enableHiding: true,
+			header:	({ column }) => {
+				const res = column.getIsVisible();
+				if (readOnly && res) {
+					column.toggleVisibility(false);
+				}
+			},
 			cell: ({ row }) => {
 				const invoiceIndex = row.index;
 				return (

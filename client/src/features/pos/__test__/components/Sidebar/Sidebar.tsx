@@ -41,7 +41,7 @@ export const Sidebar = ({}: SidebarProps) => {
 		data['invoice_items'] = invoiceItemsQueue.map((d: any) => {
 			return { ...d, product_id: d.product_id.id };
 		});
-		await addInvoiceMutation(data);
+		await addInvoiceMutation(data).then(() => window.api.send());
 	}
 
 	const { openModal, isOpen, closeModal } = useModal();

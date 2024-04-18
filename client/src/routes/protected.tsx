@@ -135,7 +135,7 @@ const protectedRoutesConfig = [
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },
 	{ path: '/supplier', element: <Supplier /> },
-	{ path: '/print-invoice', element: <PrintForm /> },
+	{ path: '/pos/print-invoice', element: <PrintForm /> },
 ];
 
 export const ProtectedRoutes = () => {
