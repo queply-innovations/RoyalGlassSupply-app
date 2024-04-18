@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
 import { useProductPrices } from '@/features/product/__test__';
+import { useEffect } from 'react';
 
 interface CreateOrderTableProps {}
 
@@ -18,9 +19,20 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		formatCurrency,
 		handleInvoiceItemsChange,
 		handleRemoveInvoiceItem,
+		handleChange,
 	} = useInvoice();
 	const { data: inventoryProducts } = useInventoryProds();
 	const { data: productPrices } = useProductPrices();
+
+	useEffect(() => {
+		handleChange(
+			'subtotal',
+			invoiceItemsQueue.reduce(
+				(acc, currentItem) => acc + currentItem.total_price,
+				0,
+			),
+		);
+	}, [invoiceItemsQueue]);
 
 	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
 		{
