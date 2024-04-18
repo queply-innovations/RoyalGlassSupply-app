@@ -1,6 +1,5 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { useInvoice } from '../../context/InvoiceContext';
-import { InvoicesCols } from './cols/InvoicesCols';
 import { ColumnDef } from '@tanstack/react-table';
 import { Invoices } from '../../types';
 import {
@@ -17,7 +16,6 @@ import {
 	ArrowUp,
 	ArrowUpDown,
 	Ban,
-	Boxes,
 	Check,
 	Clock,
 	List,
@@ -27,12 +25,17 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '@/utils/FormatCurrency';
 
+import { useNavigate } from 'react-router-dom';
+
 interface InvoicesTableProps {
 	openModal: (data: any, action: string) => void;
 }
 
 export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 	const { invoices } = useInvoice();
+
+	const navigate = useNavigate();
+
 	const columns: ColumnDef<Invoices>[] = [
 		{
 			accessorKey: 'code',
@@ -200,10 +203,15 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 							<DropdownMenuContent className="relative z-50 w-44 bg-white">
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
+
 								<DropdownMenuItem
 									onClick={() => {
 										//TODO view invoice items
-										console.log(row.original.id);
+										navigate(`/transaction/items/${row.original.id}`);
+										// fetchInvoiceItemsById(row.original.id);
+										// setInvoiceSelected(row.original);
+										// setOpenDialog(true);
+										// console.log(row.original.id);
 									}}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
@@ -212,6 +220,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 									</span>
 									<span>View Invoice Items</span>
 								</DropdownMenuItem>
+
 								<DropdownMenuItem
 									onClick={() => {}}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
@@ -244,7 +253,11 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 			<div className="w-full rounded-lg border bg-white">
 				<DataTable
 					columns={columns}
-					data={invoices}
+					data={invoices.sort((a, b) => {
+						const dateA = new Date(a.updated_at ?? a.created_at);
+						const dateB = new Date(b.updated_at ?? b.created_at);
+						return dateB.getTime() - dateA.getTime();
+					})}
 					filterWhat={'code'}
 					dataType={'Invoices'}
 				/>
