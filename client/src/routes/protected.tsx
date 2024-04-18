@@ -29,6 +29,12 @@ const { InvoiceItems } = lazyImport(
 	() => import('@/pages/__test__'),
 	'InvoiceItems',
 );
+
+const { SelectWarehousePos } = lazyImport(
+	() => import('@/pages/__test__/pos'),
+	'SelectWarehousePos',
+);
+
 const { PointOfSalePage } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PointOfSalePage',
@@ -118,7 +124,7 @@ const protectedRoutesConfig = [
 	{ path: '/user/role-perms', element: <RolePermissions /> },
 	{ path: '/invoice', element: <Invoice /> },
 	// TODO ! add POS PAGE
-	{ path: '/pos', element: <Navigate to="/pos/add-order" /> },
+	{ path: '/pos', element: <SelectWarehousePos /> },
 	{ path: '/pos/add-order', element: <PointOfSalePage /> },
 	{ path: '/pos/return/:code', element: <PosReturnsPage /> },
 	{ path: '/pos/add-product', element: <AddProductPOSPage /> },
