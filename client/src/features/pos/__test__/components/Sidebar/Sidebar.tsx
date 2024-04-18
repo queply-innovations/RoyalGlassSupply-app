@@ -14,6 +14,7 @@ import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { Warehouse } from 'lucide-react';
 import { Label } from '@radix-ui/react-dropdown-menu';
+import { useNavigate } from 'react-router-dom';
 // import { BrowserWindow, WebContents } from 'electron';
 
 interface SidebarProps {}
@@ -23,10 +24,20 @@ export const Sidebar = ({}: SidebarProps) => {
 
 	const { setFilter, selectedWarehouse, setSelectedWarehouse } = usePos();
 
+	useEffect(() => {
+		if (selectedWarehouse === 'CDO') {
+			setInvoice({ ...invoice, warehouse_id: 1 });
+		} else if (selectedWarehouse === 'Iligan') {
+			setInvoice({ ...invoice, warehouse_id: 2 });
+		}
+	}, [selectedWarehouse]);
+
 	const { invoiceItemsQueue, invoice, setInvoice } = useInvoice();
 	const { value: invoiceForm, addInvoiceMutation } = useInvoiceMutation();
 
 	const { selectedCustomer } = useCustomer();
+
+	const navigate = useNavigate();
 
 	async function handleSubmit() {
 		console.log('Invoice:', invoice);
@@ -40,27 +51,27 @@ export const Sidebar = ({}: SidebarProps) => {
 
 	const { openModal, isOpen, closeModal } = useModal();
 	const successModal = useModal();
-	useEffect(() => {
-		if (auth.role === 'admin') {
-			openModal();
-		} else if (auth.role?.split('_')[1] === 'CDO') {
-			// console.log(auth.role?.split('_'));
-			setFilter({ approval_status: 'approved', warehouse_id: 1 });
-			setSelectedWarehouse('CDO');
-			setInvoice({
-				...invoice,
-				warehouse_id: 1,
-			});
-		} else if (auth.role?.split('_')[1] === 'ILI') {
-			console.log(auth.role?.split('_'));
-			setFilter({ approval_status: 'approved', warehouse_id: 2 });
-			setSelectedWarehouse('Iligan');
-			setInvoice({
-				...invoice,
-				warehouse_id: 2,
-			});
-		}
-	}, [auth.role]);
+	// useEffect(() => {
+	// 	if (auth.role === 'admin') {
+	// 		openModal();
+	// 	} else if (auth.role?.split('_')[1] === 'CDO') {
+	// 		// console.log(auth.role?.split('_'));
+	// 		setFilter({ approval_status: 'approved', warehouse_id: 1 });
+	// 		setSelectedWarehouse('CDO');
+	// 		setInvoice({
+	// 			...invoice,
+	// 			warehouse_id: 1,
+	// 		});
+	// 	} else if (auth.role?.split('_')[1] === 'ILI') {
+	// 		console.log(auth.role?.split('_'));
+	// 		setFilter({ approval_status: 'approved', warehouse_id: 2 });
+	// 		setSelectedWarehouse('Iligan');
+	// 		setInvoice({
+	// 			...invoice,
+	// 			warehouse_id: 2,
+	// 		});
+	// 	}
+	// }, [auth.role]);
 
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[350px] flex-col gap-2 p-4">
@@ -70,7 +81,13 @@ export const Sidebar = ({}: SidebarProps) => {
 						<Label className="text-sm font-medium uppercase text-slate-900">
 							Warehouse: {selectedWarehouse}
 						</Label>
-						<Button onClick={openModal} size={'icon'} className="h-8">
+						<Button
+							onClick={() => {
+								navigate('/pos');
+							}}
+							size={'icon'}
+							className="h-8"
+						>
 							<Warehouse size={18} />
 						</Button>
 					</div>
@@ -105,7 +122,7 @@ export const Sidebar = ({}: SidebarProps) => {
 				onClick={() => {
 					// toast.info('Coming Soon!');
 					// const windowWebContents: WebContents = new BrowserWindow().webContents
-					// windowWebContents.print({}, (success, reason) => {  
+					// windowWebContents.print({}, (success, reason) => {
 					// 	console.log(success, reason)
 					// })
 					// let win = window.open();
@@ -139,7 +156,7 @@ export const Sidebar = ({}: SidebarProps) => {
 					<div>Test</div>
 				</div>
 			</ModalTest>
-			{auth.role === 'admin' ? (
+			{/* {auth.role === 'admin' ? (
 				<>
 					<ModalTest
 						isOpen={isOpen}
@@ -190,8 +207,8 @@ export const Sidebar = ({}: SidebarProps) => {
 							</Button>
 						</div>
 					</ModalTest>
-				</>
-			) : null}
+            </>
+			) : null} */}
 		</div>
 	);
 };
