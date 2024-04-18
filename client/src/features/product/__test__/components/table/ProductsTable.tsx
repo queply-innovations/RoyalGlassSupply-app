@@ -37,7 +37,7 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 						? ProductsCols({ handleEditProduct })
 						: ProductsColsLimited
 				}
-				data={data}
+				data={data.sort((a, b) => b.id - a.id)} // Sort by id, highest first
 				filterWhat={'name'}
 				dataType={'Product'}
 				openModal={handleAddProduct}

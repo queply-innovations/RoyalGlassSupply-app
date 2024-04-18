@@ -6,26 +6,26 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
 export const ProductsColsLimited: ColumnDef<Product>[] = [
-	{
-		id: 'select',
-		header: ({ table }) => (
-			<input
-				type="checkbox"
-				checked={table.getIsAllPageRowsSelected()}
-				onChange={e => table.toggleAllPageRowsSelected(!!e.target.checked)}
-				aria-label="Select all"
-			/>
-		),
-		cell: ({ row }) => (
-			<input
-				type="checkbox"
-				checked={row.getIsSelected()}
-				onChange={e => row.toggleSelected(!!e.target.checked)}
-				aria-label="Select row"
-				className="justify-center"
-			/>
-		),
-	},
+	// {
+	// 	id: 'select',
+	// 	header: ({ table }) => (
+	// 		<input
+	// 			type="checkbox"
+	// 			checked={table.getIsAllPageRowsSelected()}
+	// 			onChange={e => table.toggleAllPageRowsSelected(!!e.target.checked)}
+	// 			aria-label="Select all"
+	// 		/>
+	// 	),
+	// 	cell: ({ row }) => (
+	// 		<input
+	// 			type="checkbox"
+	// 			checked={row.getIsSelected()}
+	// 			onChange={e => row.toggleSelected(!!e.target.checked)}
+	// 			aria-label="Select row"
+	// 			className="justify-center"
+	// 		/>
+	// 	),
+	// },
 	// {
 	// 	accessorKey: 'id',
 	// 	header: () => <div className="justify-center uppercase">Id</div>,

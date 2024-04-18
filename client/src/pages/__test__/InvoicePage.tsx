@@ -26,8 +26,8 @@ export const Invoice = ({}: InvoiceProps) => {
 			<MainLayout title="Transactions">
 				<ProductPricesProvider>
 					<InvoiceProvider>
-						<div className="flex h-full max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-							<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
+						<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
+							<div className="max-h-full w-full flex-1 rounded-md border">
 								<InvoicesTable openModal={modalHandler} />
 							</div>
 						</div>

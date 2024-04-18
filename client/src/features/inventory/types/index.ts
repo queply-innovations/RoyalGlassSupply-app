@@ -18,7 +18,7 @@ export interface Inventory {
 export interface InventoryProduct {
 	id: number;
 	inventory_id: number;
-	product: Pick<Product, 'id' | 'name' | 'size' | 'color'>;
+	product: Omit<Product, 'notes'>;
 	supplier_id: { id: number; name: string };
 	status: number;
 	capital_price: number;

@@ -138,7 +138,11 @@ export const AddInventoryForm = ({
 						</div>
 					</div>
 					<hr className="col-span-12 my-2 h-px w-full border-0 bg-gray-200" />
-					<div className="flex flex-col justify-center gap-1">
+					{/* 
+								Commented code below; this form should only allow adding inventory of type supplier
+								To add inventory of type transfer, refer to `transfer` feature
+					*/}
+					{/* <div className="flex flex-col justify-center gap-1">
 						<Label
 							htmlFor="type"
 							className="text-sm font-bold text-gray-600"
@@ -185,6 +189,13 @@ export const AddInventoryForm = ({
 								/>
 							</TabsContent>
 						</Tabs>
+					</div>
+				</div> */}
+					<div className="flex flex-col justify-center gap-1">
+						<SupplierTab
+							FormValue={FormValue}
+							handleChange={handleChange}
+						/>
 					</div>
 				</div>
 				<div className="flex w-full justify-between whitespace-nowrap pt-6">

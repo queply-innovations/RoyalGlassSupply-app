@@ -20,8 +20,8 @@ export const UserSales = () => {
 		<>
 			<MainLayout title="User Sales">
 				<UserSalesProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
+						<div className="max-h-full w-full flex-1 rounded-md border border-black/10">
 							<UserSalesTable openModal={openUserInfoModal} />
 						</div>
 					</div>

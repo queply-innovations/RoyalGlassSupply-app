@@ -9,7 +9,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import {
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
+	MoreVertical,
+	Pencil,
+	Trash2,
+} from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
@@ -27,28 +34,28 @@ export const ProductsCols = ({
 	handleEditProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
-		{
-			id: 'select',
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={e =>
-						table.toggleAllPageRowsSelected(!!e.target.checked)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={e => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-		},
+		// {
+		// 	id: 'select',
+		// 	header: ({ table }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={table.getIsAllPageRowsSelected()}
+		// 			onChange={e =>
+		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
+		// 			}
+		// 			aria-label="Select all"
+		// 		/>
+		// 	),
+		// 	cell: ({ row }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={row.getIsSelected()}
+		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
+		// 			aria-label="Select row"
+		// 			className="justify-center"
+		// 		/>
+		// 	),
+		// },
 		// {
 		// 	accessorKey: 'id',
 		// 	sortingFn: 'text',
@@ -86,7 +93,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Serial Number{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -113,7 +120,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Name{' '}
 							{column.getIsSorted() === 'asc' ? (

@@ -262,6 +262,7 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 					dataType={'Invoices'}
 				/>
 			</div>
+
 		</>
 	);
 };
