@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron';
+import { app, BrowserWindow, globalShortcut, ipcMain, WebContents, WebContentsPrintOptions } from 'electron';
 import path from 'node:path';
 
 // The built directory structure
@@ -26,6 +26,10 @@ function createWindow() {
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			// devTools: false, //TODO: Remove on Production
+			plugins: true, 
+			nodeIntegration: false,
+			backgroundThrottling: false,
+			contextIsolation: true,
 		},
 	});
 	// win.removeMenu(); // Remove default menu //TODO: Uncomment on Production
@@ -45,6 +49,34 @@ function createWindow() {
 		// win.loadFile('dist/index.html');
 		win.loadFile(path.join(process.env.DIST, 'index.html'));
 	}
+
+	ipcMain.on('print-invoice', () => {
+		const newWindow = new BrowserWindow({
+			fullscreen: true,
+			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
+			webPreferences: {
+				preload: path.join(__dirname, 'preload.js'),
+				// devTools: false, //TODO: Remove on Production
+				plugins: true, 
+				nodeIntegration: false,
+				backgroundThrottling: false,
+				contextIsolation: true,
+			},
+		});
+		const windowWebContents: WebContents = newWindow.webContents
+		const options: WebContentsPrintOptions = {
+			landscape: false,
+			color: false,
+			printBackground: false,
+			pageSize: 'A4',
+			silent: false, //convert to true after final testing
+			margins: {marginType: 'none'},
+		}
+		windowWebContents.loadURL('http://localhost:5173/print-invoice')
+		windowWebContents.print(options, (success, reason) => {  
+			console.log(success, reason);
+		})
+	})
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

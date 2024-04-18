@@ -18,6 +18,12 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 
 interface SidebarProps {}
 
+declare global {
+	interface Window {
+		api: any;
+	}
+}
+
 export const Sidebar = ({}: SidebarProps) => {
 	const { auth } = useAuth();
 
@@ -102,15 +108,7 @@ export const Sidebar = ({}: SidebarProps) => {
 			<Payment />
 
 			<Button
-				onClick={() => {
-					// toast.info('Coming Soon!');
-					// const windowWebContents: WebContents = new BrowserWindow().webContents
-					// windowWebContents.print({}, (success, reason) => {  
-					// 	console.log(success, reason)
-					// })
-					// let win = window.open();
-					window.print();
-				}}
+				onClick={() => window.api.send() }
 			>
 				Print Invoice
 			</Button>
