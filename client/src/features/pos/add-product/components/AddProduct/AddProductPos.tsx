@@ -19,7 +19,7 @@ export const ProductsTablePos = ({ openModal }: ProductsTableProps) => {
 		<div className="max-h-full w-full flex-1 rounded-lg border border-black/10 bg-white">
 			<DataTable
 				columns={ProductsColsLimited}
-				data={data}
+				data={data.sort((a, b) => b.id - a.id)} // Sort by id, highest first
 				filterWhat={'name'}
 				dataType={'Product'}
 				openModal={handleAddProduct}

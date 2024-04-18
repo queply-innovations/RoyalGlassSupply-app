@@ -91,9 +91,7 @@ export const EditInventoryProductForm = ({
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div
-							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-12' : 'col-span-6'} flex flex-col justify-center gap-1`}
-						>
+						<div className="col-span-12 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="product"
 								className="text-sm font-bold text-gray-600"
@@ -108,7 +106,54 @@ export const EditInventoryProductForm = ({
 								value={selectedInventoryProduct?.product.name}
 							/>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_brand"
+								className="text-sm font-bold text-gray-600"
+							>
+								Brand
+							</Label>
+							<Input
+								id="product_brand"
+								name="product_brand"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.brand}
+							/>
+						</div>
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_size"
+								className="text-sm font-bold text-gray-600"
+							>
+								Size
+							</Label>
+							<Input
+								id="product_size"
+								name="product_size"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.size}
+							/>
+						</div>
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_color"
+								className="text-sm font-bold text-gray-600"
+							>
+								Color
+							</Label>
+							<Input
+								id="product_color"
+								name="product_color"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.color}
+							/>
+						</div>
+						<div
+							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-6' : 'col-span-12'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"
