@@ -34,16 +34,6 @@ export const InventoryProductsTable = ({
 		openModal(inventoryProduct, 'edit');
 	};
 
-	// const handleToggleStatus = (inventoryProductID: number, status: number) => {
-	// 	handleSubmit({
-	// 		action: 'update',
-	// 		id: inventoryProductID,
-	// 		data: { status: status, approved_stocks: 5 },
-	// 	}).then(() => {
-	// 		toast.success('Inventory product approved');
-	// 	});
-	// };
-
 	const handleApproveInventoryProduct = (
 		inventoryProduct: InventoryProduct,
 	) => {

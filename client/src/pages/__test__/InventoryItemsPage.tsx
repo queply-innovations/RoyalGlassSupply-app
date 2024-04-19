@@ -6,7 +6,6 @@ import { useModal } from '@/utils/Modal';
 import { useInventoryQueryById } from '@/features/inventory/hooks';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
-import { InventoryProdsProvider } from '@/features/inventory/context/InventoryProdsContext';
 import { InventoryProductsTable } from '@/features/inventory/components/table/InventoryProductsTable';
 import { InventoryProduct } from '@/features/inventory/types';
 import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';

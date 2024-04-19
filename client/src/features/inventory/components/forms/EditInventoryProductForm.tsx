@@ -381,8 +381,10 @@ export const EditInventoryProductForm = ({
 								required
 								value={
 									FormValue.damage_count !== undefined
-										? FormValue.damage_count
-										: selectedInventoryProduct?.damage_count || ''
+										? String(FormValue.damage_count)
+										: String(
+												selectedInventoryProduct?.damage_count,
+											) || ''
 								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);
