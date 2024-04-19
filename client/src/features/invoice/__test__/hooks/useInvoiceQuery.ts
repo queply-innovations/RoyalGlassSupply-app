@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { Invoices } from '../types/index';
+import { InvoiceItemDatabase, Invoices } from '../types/index';
 import { useEffect, useState } from 'react';
 import {
 	fetchInvoiceByCode,
@@ -81,11 +81,19 @@ export const useInvoiceQueryById = (id: number) => {
 };
 
 export const useInvoiceItemQueryById = (id: number) => {
-	const { data, isFetching: isLoading } = useQuery({
+	const [invoiceItems, setInvoiceItems] = useState<InvoiceItemDatabase[]>([]);
+
+	const { data: result, isFetching: isLoading } = useQuery({
 		queryKey: ['invoiceItem'],
 		queryFn: () => fetchInvoiceItemsById(id),
 		refetchOnWindowFocus: false,
 	});
 
-	return { data, isLoading };
+	useEffect(() => {
+		if (!isLoading && result) {
+			setInvoiceItems(result);
+		}
+	}, [result, isLoading]);
+
+	return { invoiceItems, isLoading };
 };
