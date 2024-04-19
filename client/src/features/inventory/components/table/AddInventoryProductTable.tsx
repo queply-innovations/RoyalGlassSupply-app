@@ -81,14 +81,17 @@ export const AddInventoryProductTable = ({
 			data: data.map(item => item?.data),
 		})
 			.then(() => {
-				toast.success('Items added to inventory');
+				toast.success('Items added to inventory.');
 				setIsSubmitting(false);
 				onClose();
 			})
-			.catch(() => {
-				toast.error('Error adding items to inventory');
+			.catch((err: any) => {
 				setError('Error adding items to inventory');
-				setIsSubmitting(false);
+				if (err.response.data.message) {
+					toast.error(err.response.data.message);
+				} else {
+					toast.error('Error adding items to inventory.');
+				}
 			});
 	};
 

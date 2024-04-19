@@ -13,10 +13,9 @@ import {
 } from '@/components/ui/select';
 import { Button as LegacyButton } from '@/components';
 import { useAuth } from '@/context/AuthContext';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SupplierTab } from './tabs/SupplierTab';
-import { TransferTab } from './tabs/TransferTab';
 import { generateInventoryCode } from '../../helpers';
+import { toast } from 'react-toastify';
 
 interface AddInventoryFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -64,14 +63,23 @@ export const AddInventoryForm = ({
 						setError('Please select a date for date received.');
 					} else {
 						setIsSubmitting(!isSubmitting);
-						const response = await handleSubmit({
+						handleSubmit({
 							action: 'add',
 							data: FormValue,
-						});
-						response?.status === 201 // Status 201 means resource successfully created
-							? (setIsSubmitting(!isSubmitting), onClose())
-							: (setIsSubmitting(!isSubmitting),
-								setError('Failed to add inventory'));
+						})
+							.then(() => {
+								setIsSubmitting(false);
+								toast.success('Inventory added successfully.');
+								onClose();
+							})
+							.catch((err: any) => {
+								setIsSubmitting(false);
+								if (err.response.data.message) {
+									toast.error(err.response.data.message);
+								} else {
+									toast.error('Failed to add inventory.');
+								}
+							});
 					}
 				}}
 			>

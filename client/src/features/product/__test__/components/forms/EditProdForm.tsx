@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Button } from '@/components';
 import { useProducts } from '../..';
+import { toast } from 'react-toastify';
 
 interface EditProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -57,15 +58,24 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
-						id: selectedProduct.id,
+						id: selectedProduct!.id,
 						data: FormValue,
-					});
-					response?.status === 200
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to update product'));
+					})
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Product updated successfully.');
+							onClose();
+						})
+						.catch((err: any) => {
+							setIsSubmitting(false);
+							if (err.response.data.message) {
+								toast.error(err.response.data.message);
+							} else {
+								toast.error('Failed to update product.');
+							}
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
@@ -87,7 +97,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								value={
 									FormValue.serial_no !== undefined
 										? FormValue.serial_no
-										: selectedProduct.serial_no || ''
+										: selectedProduct?.serial_no || ''
 								}
 								onChange={e => {
 									handleValidator(
@@ -124,7 +134,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								value={
 									FormValue.name !== undefined
 										? FormValue.name
-										: selectedProduct.name || ''
+										: selectedProduct?.name || ''
 								}
 								onChange={e => {
 									handleValidator(
@@ -159,7 +169,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								value={
 									FormValue.brand !== undefined
 										? FormValue.brand
-										: selectedProduct.brand || ''
+										: selectedProduct?.brand || ''
 								}
 								onChange={e => {
 									handleValidator(
@@ -195,7 +205,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								value={
 									FormValue.size !== undefined
 										? FormValue.size
-										: selectedProduct.size || ''
+										: selectedProduct?.size || ''
 								}
 								onChange={e => {
 									handleValidator(
@@ -230,7 +240,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								value={
 									FormValue.color !== undefined
 										? FormValue.color
-										: selectedProduct.color || ''
+										: selectedProduct?.color || ''
 								}
 								onChange={e => {
 									handleValidator(
@@ -263,7 +273,7 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 								defaultValue={
 									FormValue.notes !== undefined
 										? FormValue.notes
-										: selectedProduct.notes || ''
+										: selectedProduct?.notes || ''
 								}
 								onBlur={e => handleChange('notes', e.target.value)}
 							/>
@@ -283,7 +293,6 @@ export const EditProductForm = ({ onClose }: EditProductFormProps) => {
 							fill={'green'}
 							disabled={
 								isSubmitting ||
-								Object.keys(FormValue).length === 0 ||
 								errorInput !== undefined ||
 								FormValue.name === '' ||
 								FormValue.serial_no === ''

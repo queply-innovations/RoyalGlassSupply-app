@@ -118,13 +118,13 @@ export const AddProdPriceListingsTab = ({
 						.then(() => {
 							setIsSubmitting(!isSubmitting);
 							setSelectedProduct(undefined);
-							toast.success('Product listing added successfully');
+							toast.success('Product listing added successfully.');
 							onClose();
 						})
 						.catch(() => {
 							setIsSubmitting(!isSubmitting);
-							setError('Failed to add product listing');
-							toast.error('Failed to add product listing');
+							setError('Failed to add product listing.');
+							toast.error('Failed to add product listing.');
 						});
 				}}
 			>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
 	Command,
+	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
@@ -159,13 +160,20 @@ export const AddProdPriceProdsTab = ({
 					</PopoverTrigger>
 					<PopoverContent className="w-[554px] p-0 text-sm font-medium text-slate-700">
 						<Command
-							value={
+							defaultValue={
 								selectedProduct
 									? selectedProduct.id +
 										selectedProduct.name +
 										selectedProduct.serial_no
-									: ''
+									: undefined
 							}
+							// value={
+							// 	selectedProduct
+							// 		? selectedProduct.id +
+							// 			selectedProduct.name +
+							// 			selectedProduct.serial_no
+							// 		: undefined
+							// }
 						>
 							<CommandInput placeholder="Product name..." />
 							{isProductsLoading && (
@@ -177,51 +185,61 @@ export const AddProdPriceProdsTab = ({
 									/>
 								</div>
 							)}
-							{/* <CommandEmpty>No match found</CommandEmpty> */}
+							<CommandEmpty>No match found</CommandEmpty>
 							<ScrollArea className="max-h-[200px] overflow-y-scroll">
 								{filteredProducts?.length === 0 && (
-									<div className="flex h-16 w-full items-center justify-center pt-2">
-										No products.&nbsp;
-										<Link to={`/products`} className="underline">
-											Add a product
-										</Link>
-									</div>
+									<CommandGroup>
+										<div className="flex h-16 w-full items-center justify-center pt-2">
+											No products.&nbsp;
+											<Link to={`/products`} className="underline">
+												Add a product
+											</Link>
+										</div>
+									</CommandGroup>
 								)}
 								<CommandGroup>
 									{filteredProducts &&
-										filteredProducts.map(product => {
-											// Filter out products with no remaining stocks
-											// if (!!inventoryProduct.remaining_stocks_count)
-											return (
-												<CommandItem
-													key={
-														product.id +
-														product.name +
-														product.serial_no
-													}
-													className="cursor-pointer justify-between rounded-sm"
-													value={
-														product.id +
-														product.name +
-														product.serial_no
-													}
-													onSelect={() => {
-														setSelectedProduct(product);
-														setProductsListOpen(false);
-													}}
-												>
-													<span>
-														{product.name}
-														{product.brand && (
-															<span> ({product.brand})</span>
-														)}
-													</span>
-													<span className="text-xs font-semibold text-slate-700/50">
-														{product.serial_no}
-													</span>
-												</CommandItem>
-											);
-										})}
+										filteredProducts.map((product, key) => (
+											<CommandItem
+												key={key}
+												className="cursor-pointer justify-between rounded-sm border-b"
+												value={
+													product.id +
+													'_' +
+													product.name +
+													'_' +
+													product.serial_no
+												}
+												onSelect={() => {
+													setSelectedProduct(product);
+													setProductsListOpen(false);
+												}}
+											>
+												<div className="flex w-full flex-row justify-between gap-4">
+													<div className="flex max-w-[50%] flex-col">
+														<span className="max-w-full truncate font-semibold">
+															{product.name}
+														</span>
+														<span className="max-w-full truncate text-xs font-medium">
+															{product.brand}
+															{product.brand &&
+																product.size &&
+																' • '}
+															{product.size}
+															{product.size &&
+																product.color &&
+																' • '}
+															{product.color}
+														</span>
+													</div>
+													<div className="flex max-w-[50%] flex-col text-right">
+														<span className="max-w-full truncate">
+															{product.serial_no}
+														</span>
+													</div>
+												</div>
+											</CommandItem>
+										))}
 								</CommandGroup>
 							</ScrollArea>
 						</Command>

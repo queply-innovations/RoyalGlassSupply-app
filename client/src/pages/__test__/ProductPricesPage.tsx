@@ -39,6 +39,8 @@ export const ProductPrices = () => {
 		openModal();
 	};
 
+	// TODO: Optimize fetching of products; products should be fetched only when add product price is clicked
+
 	return (
 		<>
 			<MainLayout title="Product Listings">

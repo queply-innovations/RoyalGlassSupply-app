@@ -119,6 +119,26 @@ export const fetchInventoryProductByWarehouseId = async (
 		});
 };
 
+export const fetchPendingInventoryProducts = async (): Promise<
+	InventoryProduct[]
+> => {
+	return await axios
+		.post(
+			`${API_URLS.INVENTORY_PRODUCTS}/searches-filters-sorts`,
+			{ status: 0 },
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching pending inventory product:', error);
+			throw error;
+		});
+};
+
 export const addInventory = async (
 	data: Partial<Omit<InventoryDatabase, 'id'>>,
 ) => {

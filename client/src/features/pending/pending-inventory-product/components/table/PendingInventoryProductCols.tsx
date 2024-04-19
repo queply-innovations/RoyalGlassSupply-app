@@ -1,5 +1,3 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { InventoryProduct } from '../../../types';
 import {
 	Button,
 	DropdownMenu,
@@ -9,56 +7,47 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
+import { InventoryProduct, Inventory } from '@/features/inventory/types';
+import { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
 	CheckCircle,
-	Clock,
 	List,
 	MoreVertical,
 	Pencil,
 } from 'lucide-react';
-import {
-	Tooltip,
-	TooltipTrigger,
-	TooltipContent,
-} from '@/components/ui/tooltip';
 
-interface InventoryProductsColsProps {
+interface PendingInventoryProductColsProps {
+	inventories: Inventory[];
 	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 	handleApproveInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 }
 
-export const InventoryProductsCols = ({
+export const PendingInventoryProductCols = ({
+	inventories,
 	handleViewDetails,
 	handleEditInventoryProduct,
 	handleApproveInventoryProduct,
-}: InventoryProductsColsProps) => {
+}: PendingInventoryProductColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
-		// {
-		// 	id: 'select',
-		// 	header: ({ table }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={table.getIsAllPageRowsSelected()}
-		// 			onChange={e =>
-		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
-		// 			}
-		// 			aria-label="Select all"
-		// 		/>
-		// 	),
-		// 	cell: ({ row }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={row.getIsSelected()}
-		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
-		// 			aria-label="Select row"
-		// 			className="justify-center"
-		// 		/>
-		// 	),
-		// },
+		{
+			accessorKey: 'inventory_id',
+			header: () => (
+				<div className="justify-center uppercase">Inventory</div>
+			),
+			cell: ({ row }) => (
+				<div>
+					{inventories
+						? inventories.find(
+								item => item.id === row.original.inventory_id,
+							)?.code
+						: row.original.inventory_id}
+				</div>
+			),
+		},
 		{
 			id: 'product',
 			accessorKey: 'product.name',
@@ -98,10 +87,6 @@ export const InventoryProductsCols = ({
 			accessorKey: 'product.color',
 			header: () => <div className="justify-center uppercase">Color</div>,
 		},
-		// {
-		// 	accessorKey: 'supplier_id.name',
-		// 	header: () => <div className="justify-center uppercase">Supplier</div>,
-		// },
 		{
 			accessorKey: 'capital_price',
 			header: () => (
@@ -121,26 +106,6 @@ export const InventoryProductsCols = ({
 				);
 			},
 		},
-		// {
-		// 	accessorKey: 'unit',
-		// 	header: () => <div className="justify-center uppercase">Unit</div>,
-		// },
-		// {
-		// 	accessorKey: 'stocks_count',
-		// 	header: () => (
-		// 		<div className="justify-center whitespace-nowrap uppercase">
-		// 			Stocks
-		// 		</div>
-		// 	),
-		// },
-		// {
-		// 	accessorKey: 'damage_count',
-		// 	header: () => (
-		// 		<div className="justify-center whitespace-nowrap uppercase">
-		// 			Damaged
-		// 		</div>
-		// 	),
-		// },
 		{
 			accessorKey: 'total_count',
 			header: () => (
@@ -149,54 +114,25 @@ export const InventoryProductsCols = ({
 				</div>
 			),
 		},
-		// {
-		// 	accessorKey: 'transferred_stocks_count',
-		// 	header: () => (
-		// 		<div className="justify-center uppercase">Transferred</div>
-		// 	),
-		// },
 		{
 			accessorKey: 'sold_count',
-			header: () => <div className="justify-center uppercase">Sold</div>,
-		},
-		// {
-		// 	accessorKey: 'miscellaneous_count',
-		// 	header: () => <div className="justify-center uppercase">Misc</div>,
-		// },
-		{
-			accessorKey: 'remaining_stocks_count',
 			header: () => (
-				<div className="justify-center uppercase">Remaining</div>
+				<div className="justify-center whitespace-nowrap uppercase">
+					Sold
+				</div>
 			),
 		},
 		{
-			accessorKey: 'status',
-			header: () => <div className="justify-center uppercase">Status</div>,
+			accessorKey: 'approved_stocks',
+			header: () => (
+				<div className="justify-center whitespace-nowrap uppercase">
+					Approved
+				</div>
+			),
 			cell: ({ row }) => (
-				<Tooltip>
-					<div className="group relative flex w-fit items-center">
-						<TooltipTrigger>
-							{!!row.original.status ? (
-								<CheckCircle
-									size={20}
-									strokeWidth={2}
-									className="text-green-600"
-								/>
-							) : (
-								<Clock
-									size={20}
-									strokeWidth={2}
-									className="text-gray-600"
-								/>
-							)}
-						</TooltipTrigger>
-						<TooltipContent>
-							<p className="text-sm font-medium normal-case">
-								{!!row.original.status ? 'Approved' : 'Pending'}
-							</p>
-						</TooltipContent>
-					</div>
-				</Tooltip>
+				<div>
+					<span>{row.original.approved_stocks ?? 0}</span>
+				</div>
 			),
 		},
 		{
@@ -235,9 +171,9 @@ export const InventoryProductsCols = ({
 									<span>Edit</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem
-									onClick={() =>
-										handleApproveInventoryProduct(inventoryItemRow)
-									}
+									onClick={() => {
+										handleApproveInventoryProduct(inventoryItemRow);
+									}}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
@@ -253,5 +189,6 @@ export const InventoryProductsCols = ({
 			enableGlobalFilter: false,
 		},
 	];
+
 	return columnDefinition;
 };

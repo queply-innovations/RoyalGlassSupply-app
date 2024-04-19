@@ -1,6 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
-import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
-import { useInventoryProductsByInventory } from '../../context';
+import { useInventoryProdsMutation } from '@/features/inventory/hooks';
+import { usePendingInventoryProduct } from '../../context/PendingInventoryProductContext';
 import { Label } from '@/components/ui/label';
 import {
 	Popover,
@@ -29,18 +29,18 @@ import { useSupplierQuery } from '@/features/supplier/__test__/hooks';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
-import { getTotalCount } from '../../helpers';
+import { getTotalCount } from '@/features/inventory/helpers';
 import { toast } from 'react-toastify';
 
-interface EditInventoryProductFormProps {
+interface EditPendingInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
 }
 
-export const EditInventoryProductForm = ({
+export const EditPendingInventoryProductForm = ({
 	onClose,
-}: EditInventoryProductFormProps) => {
+}: EditPendingInventoryProductFormProps) => {
 	const { auth } = useAuth();
-	const { selectedInventoryProduct } = useInventoryProductsByInventory();
+	const { selectedInventoryProduct } = usePendingInventoryProduct();
 	const {
 		value: FormValue,
 		handleChange,
@@ -57,8 +57,10 @@ export const EditInventoryProductForm = ({
 	const [totalCount, setTotalCount] = useState<number | undefined>();
 	useEffect(() => {
 		const totalCountCalc = getTotalCount(
-			FormValue.stocks_count ?? selectedInventoryProduct.stocks_count,
-			FormValue.damage_count ?? selectedInventoryProduct.damage_count,
+			FormValue.stocks_count ??
+				(selectedInventoryProduct?.stocks_count || 0),
+			FormValue.damage_count ??
+				(selectedInventoryProduct?.damage_count || 0),
 		);
 
 		setTotalCount(totalCountCalc);
@@ -74,12 +76,12 @@ export const EditInventoryProductForm = ({
 					e.preventDefault();
 					handleSubmit({
 						action: 'update',
-						id: selectedInventoryProduct.id,
+						id: selectedInventoryProduct!.id,
 						data: FormValue,
 					})
 						.then(() => {
 							setIsSubmitting(false);
-							toast.success('Inventory product updated successfully.');
+							toast.success('Inventory product successfully updated.');
 							onClose();
 						})
 						.catch(() => {
@@ -195,7 +197,7 @@ export const EditInventoryProductForm = ({
 											</>
 										) : (
 											<span>
-												{selectedInventoryProduct.supplier_id.name}
+												{selectedInventoryProduct?.supplier_id.name}
 											</span>
 										)}
 										<ChevronsUpDown
@@ -256,7 +258,7 @@ export const EditInventoryProductForm = ({
 									value={
 										FormValue.status
 											? FormValue.status.toString()
-											: selectedInventoryProduct.status.toString()
+											: selectedInventoryProduct?.status.toString()
 									}
 									required
 									onValueChange={value =>
@@ -375,7 +377,7 @@ export const EditInventoryProductForm = ({
 								min={0}
 								max={
 									FormValue.stocks_count ??
-									selectedInventoryProduct.stocks_count
+									selectedInventoryProduct?.stocks_count
 								}
 								step={1}
 								required
