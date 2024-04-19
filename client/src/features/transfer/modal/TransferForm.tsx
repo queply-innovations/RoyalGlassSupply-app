@@ -269,6 +269,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 								onChange={handleChangeDateTime}
 								disabled={transfer.transfer_schedule ? false : true}
 								placeholder={transfer.transfer_schedule ? 'Select time' : 'Select date first'}
+								popupClassName={'redesign'}
 								required
 							/>
 						</div>

@@ -121,9 +121,14 @@
 		border-color: rgb(209 213 219) !important;
 	}
 
-	button.ant-btn.css-dev-only-do-not-override-1kuana8.ant-btn-primary.ant-btn.sm {
+	.redesign button {
 		background-color: #1677ff !important;
-		opacity: 1 !important;
+		/* opacity: 1 !important; */
+	}
+
+	.redesign button:disabled {
+		background-color: #ffffff !important;
+		/* opacity: 1 !important; */
 	}
 }
 
