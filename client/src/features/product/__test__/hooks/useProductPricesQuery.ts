@@ -81,21 +81,27 @@ export const useProductPricesQueryFilterByApproved = () => {
 };
 
 export const useProductPricesFilter = ({
-	approval_status, //TODO Possible to comment out
+	approval_status,
 	warehouse_id,
 	active_status,
 }: ProductPricesFilterProps) => {
 	const [data, setData] = useState<ProductPrices[]>([]);
-	const { data: result, isLoading } = useQuery({
-		queryKey: ['productPrices', approval_status, active_status, warehouse_id],
+	const {
+		data: result,
+		isLoading,
+		refetch,
+	} = useQuery({
+		queryKey: ['FilteredProductPrices'],
 		queryFn: () => {
 			if (approval_status && warehouse_id && active_status) {
-				fetchProductPricesFilters(
-					approval_status, //TODO Possible to comment out
+				return fetchProductPricesFilters(
+					approval_status,
 					active_status,
 					warehouse_id,
 				);
 			}
+			// Return a placeholder or null if any of the required parameters are missing
+			return null;
 		},
 		refetchOnWindowFocus: false,
 	});
@@ -104,6 +110,11 @@ export const useProductPricesFilter = ({
 			setData(result);
 		}
 	}, [result, isLoading]);
+
+	// Refetch data when any of the filter values change
+	useEffect(() => {
+		refetch();
+	}, [approval_status, warehouse_id, active_status, refetch]);
 
 	return { data, isLoading };
 };
