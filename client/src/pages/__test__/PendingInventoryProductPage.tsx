@@ -6,7 +6,8 @@ import { PendingInventoryProductTable } from '@/features/pending/pending-invento
 import { MainLayout } from '@/layouts/MainLayout';
 import { useModal } from '@/utils/Modal';
 import { ViewDetails } from '@/features/pending/pending-inventory-product/components/modal/ViewDetails';
-import { InventoryProduct } from '@/features/inventory/types';
+import { ApproveInventoryProductPending } from '@/features/pending/pending-inventory-product/components/modal/ApproveInventoryProductPending';
+import { EditPendingInventoryProductForm } from '@/features/pending/pending-inventory-product/components/modal/EditPendingInventoryProduct';
 
 export const PendingInventoryProduct = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -41,7 +42,19 @@ export const PendingInventoryProduct = () => {
 							onClose={closeModal}
 							closeOnOverlayClick={modalAction === 'view_details'}
 						>
-							<>{modalAction === 'view_details' && <ViewDetails />}</>
+							<>
+								{modalAction === 'view_details' && <ViewDetails />}
+								{modalAction === 'edit' && (
+									<EditPendingInventoryProductForm
+										onClose={closeModal}
+									/>
+								)}
+								{modalAction === 'approve' && (
+									<ApproveInventoryProductPending
+										onClose={closeModal}
+									/>
+								)}
+							</>
 						</ModalTest>
 					</InventoryProvider>
 				</PendingInventoryProductProvider>

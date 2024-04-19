@@ -13,18 +13,24 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	CheckCircle,
 	List,
 	MoreVertical,
+	Pencil,
 } from 'lucide-react';
 
 interface PendingInventoryProductColsProps {
 	inventories: Inventory[];
 	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
+	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
+	handleApproveInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 }
 
 export const PendingInventoryProductCols = ({
 	inventories,
 	handleViewDetails,
+	handleEditInventoryProduct,
+	handleApproveInventoryProduct,
 }: PendingInventoryProductColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
@@ -152,6 +158,28 @@ export const PendingInventoryProductCols = ({
 										<List size={16} strokeWidth={2.25} />
 									</span>
 									<span>Details</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => {
+										handleEditInventoryProduct(inventoryItemRow);
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Pencil size={16} strokeWidth={2.25} />
+									</span>
+									<span>Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => {
+										handleApproveInventoryProduct(inventoryItemRow);
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<CheckCircle size={16} strokeWidth={2.25} />
+									</span>
+									<span>Approve stocks</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

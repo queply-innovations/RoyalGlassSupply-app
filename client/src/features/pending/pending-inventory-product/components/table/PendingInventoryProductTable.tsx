@@ -20,12 +20,26 @@ export const PendingInventoryProductTable = ({
 		openModal(inventoryProduct, 'view_details');
 	};
 
+	const handleEditInventoryProduct = (inventoryProduct: InventoryProduct) => {
+		setSelectedInventoryProduct(inventoryProduct);
+		openModal(inventoryProduct, 'edit');
+	};
+
+	const handleApproveInventoryProduct = (
+		inventoryProduct: InventoryProduct,
+	) => {
+		setSelectedInventoryProduct(inventoryProduct);
+		openModal(inventoryProduct, 'approve');
+	};
+
 	return (
 		<>
 			<DataTable
 				columns={PendingInventoryProductCols({
 					inventories,
 					handleViewDetails,
+					handleEditInventoryProduct,
+					handleApproveInventoryProduct,
 				})}
 				data={data.sort((a, b) => b.inventory_id - a.inventory_id)}
 				filterWhat={'product'}
