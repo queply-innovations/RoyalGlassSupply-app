@@ -46,12 +46,12 @@ export const ApproveInventoryProductPending = ({
 			data: FormValue,
 		})
 			.then(() => {
-				toast.success('Inventory product approved');
+				toast.success('Inventory product successfully approved.');
 				setIsSubmitting(false);
 				onClose();
 			})
 			.catch(() => {
-				toast.error('Failed to approve inventory product');
+				toast.error('Failed to approve inventory product.');
 				setIsSubmitting(false);
 			});
 	};

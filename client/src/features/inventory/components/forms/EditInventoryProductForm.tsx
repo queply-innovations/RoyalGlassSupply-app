@@ -79,12 +79,12 @@ export const EditInventoryProductForm = ({
 					})
 						.then(() => {
 							setIsSubmitting(false);
-							toast.success('Inventory product updated');
+							toast.success('Inventory product updated successfully.');
 							onClose();
 						})
 						.catch(() => {
 							setIsSubmitting(false);
-							toast.error('Failed to update inventory product');
+							toast.error('Failed to update inventory product.');
 						});
 				}}
 			>

@@ -81,12 +81,12 @@ export const EditPendingInventoryProductForm = ({
 					})
 						.then(() => {
 							setIsSubmitting(false);
-							toast.success('Inventory product updated');
+							toast.success('Inventory product successfully updated.');
 							onClose();
 						})
 						.catch(() => {
 							setIsSubmitting(false);
-							toast.error('Failed to update inventory product');
+							toast.error('Failed to update inventory product.');
 						});
 				}}
 			>
