@@ -29,7 +29,7 @@ export const Sidebar = ({}: SidebarProps) => {
 
 	const { setFilter, selectedWarehouse, setSelectedWarehouse } = usePos();
 
-	const { invoiceItemsQueue, invoice, setInvoice } = useInvoice();
+	const { invoiceItemsQueue, invoice, setInvoice, fullData, setFullData } = useInvoice();
 	const { value: invoiceForm, addInvoiceMutation } = useInvoiceMutation();
 
 	const { selectedCustomer } = useCustomer();
@@ -41,8 +41,18 @@ export const Sidebar = ({}: SidebarProps) => {
 		data['invoice_items'] = invoiceItemsQueue.map((d: any) => {
 			return { ...d, product_id: d.product_id.id };
 		});
-		await addInvoiceMutation(data).then(() => window.api.send());
+		// await addInvoiceMutation(data).then(() => window.api.send());
+		await addInvoiceMutation(data).then((res) => {
+			setFullData(res.data);
+		});
 	}
+
+	useEffect(() => {
+		if (fullData) {
+			console.log(fullData);
+			window.api.send({fullData: fullData, invoiceItems: invoiceItemsQueue});
+		}
+	}, [fullData]);
 
 	const { openModal, isOpen, closeModal } = useModal();
 	const successModal = useModal();

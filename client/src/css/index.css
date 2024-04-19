@@ -46,6 +46,13 @@
 		@apply box-border;
 	}
 
+	@media print {
+		body {
+			overflow: visible !important;
+			/* page-break-before: always; */
+		}
+	}
+
 	.pagination {
 		display: inline-block;
 	}

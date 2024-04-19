@@ -41,6 +41,9 @@ interface InvoiceContextProps {
 	handleRemoveInvoiceItem: (TIndex: number) => void;
 	selectedInvoiceCode: any | undefined;
 	setSelectedInvoiceCode: React.Dispatch<any>;
+
+	fullData: any | undefined;
+	setFullData: React.Dispatch<any>;
 }
 
 interface InvoiceProviderProps {
@@ -54,6 +57,8 @@ const InvoiceContext = createContext<InvoiceContextProps | undefined>(
 export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 	const { auth } = useAuth();
 	const { invoices } = useInvoiceQuery();
+
+	const [ fullData, setFullData ] = useState<any>();
 
 	const [invoiceItemsQueue, setInvoiceItemsQueue] = useState<
 		InvoiceItemDatabase[]
@@ -246,6 +251,9 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 		setInvoice,
 		selectedInvoiceCode,
 		setSelectedInvoiceCode,
+
+		fullData,
+		setFullData,
 	};
 	useEffect(() => {
 		setInvoice({
