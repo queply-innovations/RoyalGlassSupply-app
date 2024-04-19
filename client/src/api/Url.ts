@@ -1,6 +1,7 @@
 import storage from '@/utils/storage';
 
-export const API_BASE_URL = 'https://staging.royalglasssupply.com/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL;
+// export const API_BASE_URL = import.meta.env.VITE_API_URL_BUILD; //TODO Dont comment when building
 
 export const API_URLS = {
 	PRODUCTS: `${API_BASE_URL}/products`,
