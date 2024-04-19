@@ -22,3 +22,4 @@ export * from './PosReturnPage';
 export * from './CustomersPage';
 export * from './PendingReturnPage';
 export * from './PendingProductPricePage';
+export * from './PendingInventoryProductPage';
