@@ -46,7 +46,16 @@ export function DatePickerWithRange({
 					<Calendar
 						initialFocus
 						mode="range"
-						defaultMonth={dateRange?.from}
+						// Default to the show previous month if there's a `to` date
+						defaultMonth={
+							dateRange?.to
+								? new Date(
+										dateRange.to.getFullYear(),
+										dateRange.to.getMonth() - 1,
+										1,
+									)
+								: new Date()
+						}
 						selected={dateRange}
 						onSelect={setDateRange}
 						classNames={{
