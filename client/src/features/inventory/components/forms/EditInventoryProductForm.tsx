@@ -1,6 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
-import { useInventoryProds } from '../../context/InventoryProdsContext';
+import { useInventoryProductsByInventory } from '../../context';
 import { Label } from '@/components/ui/label';
 import {
 	Popover,
@@ -30,6 +30,7 @@ import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
 import { getTotalCount } from '../../helpers';
+import { toast } from 'react-toastify';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -39,7 +40,7 @@ export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
 	const { auth } = useAuth();
-	const { selectedInventoryProduct } = useInventoryProds();
+	const { selectedInventoryProduct } = useInventoryProductsByInventory();
 	const {
 		value: FormValue,
 		handleChange,
@@ -71,22 +72,20 @@ export const EditInventoryProductForm = ({
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
 						id: selectedInventoryProduct.id,
 						data: FormValue,
-					});
-					if (
-						typeof response === 'object' &&
-						'status' in response &&
-						response.status === 200
-					) {
-						setIsSubmitting(!isSubmitting);
-						onClose();
-					} else {
-						setIsSubmitting(!isSubmitting);
-						setError('Failed to update item');
-					}
+					})
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Inventory product updated');
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(false);
+							toast.error('Failed to update inventory product');
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">

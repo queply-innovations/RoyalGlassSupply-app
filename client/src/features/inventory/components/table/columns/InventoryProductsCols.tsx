@@ -28,13 +28,13 @@ import {
 interface InventoryProductsColsProps {
 	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
-	handleToggleStatus: (inventoryProductID: number, status: number) => void;
+	handleApproveInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 }
 
 export const InventoryProductsCols = ({
 	handleViewDetails,
 	handleEditInventoryProduct,
-	handleToggleStatus,
+	handleApproveInventoryProduct,
 }: InventoryProductsColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		// {
@@ -236,26 +236,14 @@ export const InventoryProductsCols = ({
 								</DropdownMenuItem>
 								<DropdownMenuItem
 									onClick={() =>
-										handleToggleStatus(
-											inventoryItemRow.id,
-											+!inventoryItemRow.status,
-											// converts current status to 0 or 1
-										)
+										handleApproveInventoryProduct(inventoryItemRow)
 									}
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
-										{!!inventoryItemRow.status ? (
-											<Clock size={16} strokeWidth={2.25} />
-										) : (
-											<CheckCircle size={16} strokeWidth={2.25} />
-										)}
+										<CheckCircle size={16} strokeWidth={2.25} />
 									</span>
-									<span>
-										{!!inventoryItemRow.status
-											? 'Set pending'
-											: 'Set approved'}
-									</span>
+									<span>Approve stocks</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

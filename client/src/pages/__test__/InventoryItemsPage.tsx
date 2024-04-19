@@ -12,6 +12,8 @@ import { InventoryProduct } from '@/features/inventory/types';
 import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
+import { ApproveInventoryProduct } from '@/features/inventory/components/modal/inventory-products/ApproveInventoryProduct';
+import { InventoryProductsByInventoryProvider } from '@/features/inventory/context';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -39,7 +41,9 @@ export const InventoryItemsPage = () => {
 	return (
 		<>
 			<MainLayout title={`Inventory items`}>
-				<InventoryProdsProvider>
+				<InventoryProductsByInventoryProvider
+					inventoryId={Number(inventoryId)}
+				>
 					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
 						<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
 							<Button
@@ -58,7 +62,7 @@ export const InventoryItemsPage = () => {
 						</div>
 						<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">
 							<InventoryProductsTable
-								id={Number(inventoryId)}
+								// id={Number(inventoryId)}
 								openModal={modalHandler}
 							/>
 						</div>
@@ -74,7 +78,9 @@ export const InventoryItemsPage = () => {
 									? 'Edit Item'
 									: modalAction === 'view_details'
 										? 'Item Details'
-										: ''
+										: modalAction === 'approve'
+											? 'Approve Item'
+											: ''
 						}
 					>
 						<>
@@ -88,9 +94,12 @@ export const InventoryItemsPage = () => {
 							{modalAction === 'edit' && (
 								<EditInventoryProductForm onClose={closeModal} />
 							)}
+							{modalAction === 'approve' && (
+								<ApproveInventoryProduct onClose={closeModal} />
+							)}
 						</>
 					</ModalTest>
-				</InventoryProdsProvider>
+				</InventoryProductsByInventoryProvider>
 			</MainLayout>
 		</>
 	);
