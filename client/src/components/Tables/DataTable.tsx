@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className="flex max-h-full flex-col divide-y">
-			{!hideFilter && openModal && (
+			{!hideFilter && (
 				<div className="flex flex-none justify-between p-4">
 					{hideFilter ? null : (
 						<div className="w-1/2">
