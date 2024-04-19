@@ -9,12 +9,14 @@ import { Expenses, ExpensesRaw } from '@/features/expenses/types';
 import { ExpensesAdd } from '@/features/expenses/components/modal/ExpensesAdd';
 
 export const ExpensesPage = () => {
-
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
 
-	const modalHandler = (expenses: ExpensesRaw[] | Expenses, action: string) => {
+	const modalHandler = (
+		expenses: ExpensesRaw[] | Expenses,
+		action: string,
+	) => {
 		setModalAction(action);
 		openModal();
 	};
@@ -23,8 +25,8 @@ export const ExpensesPage = () => {
 		<>
 			<MainLayout title="Expenses">
 				<ExpensesProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
+						<div className="max-h-full w-full flex-1 rounded-md border border-black/10">
 							<ExpensesTable openModal={modalHandler} />
 						</div>
 					</div>
@@ -32,7 +34,9 @@ export const ExpensesPage = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
-						title={modalAction === 'add' ? 'Add Expenses' : 'Edit Expenses'}
+						title={
+							modalAction === 'add' ? 'Add Expenses' : 'Edit Expenses'
+						}
 					>
 						<>
 							{modalAction === 'edit' && (

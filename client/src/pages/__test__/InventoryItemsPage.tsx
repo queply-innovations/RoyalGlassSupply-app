@@ -11,6 +11,7 @@ import { InventoryProductsTable } from '@/features/inventory/components/table/In
 import { InventoryProduct } from '@/features/inventory/types';
 import { AddInventoryProducts } from '@/features/inventory/components/modal/AddInventoryProduct';
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
+import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -39,7 +40,7 @@ export const InventoryItemsPage = () => {
 		<>
 			<MainLayout title={`Inventory items`}>
 				<InventoryProdsProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
 						<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
 							<Button
 								onClick={() => handleNavigateBack()}
@@ -55,7 +56,7 @@ export const InventoryItemsPage = () => {
 								</span>
 							</div>
 						</div>
-						<div className="h-full w-full overflow-x-hidden rounded-lg">
+						<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">
 							<InventoryProductsTable
 								id={Number(inventoryId)}
 								openModal={modalHandler}
@@ -65,12 +66,15 @@ export const InventoryItemsPage = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
+						closeOnOverlayClick={modalAction === 'view_details'}
 						title={
 							modalAction === 'add'
 								? 'Add Items'
 								: modalAction === 'edit'
 									? 'Edit Item'
-									: ''
+									: modalAction === 'view_details'
+										? 'Item Details'
+										: ''
 						}
 					>
 						<>
@@ -80,6 +84,7 @@ export const InventoryItemsPage = () => {
 									onClose={closeModal}
 								/>
 							)}
+							{modalAction === 'view_details' && <ViewDetails />}
 							{modalAction === 'edit' && (
 								<EditInventoryProductForm onClose={closeModal} />
 							)}

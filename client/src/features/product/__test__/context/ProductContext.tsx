@@ -1,6 +1,13 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import {
+	ReactNode,
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
 import { Product } from '../types';
 import { useProductQuery } from '../hooks';
+import { isProductDeletable } from '../api/Products';
 
 interface ProductContextProps {
 	data: Product[];
@@ -9,6 +16,8 @@ interface ProductContextProps {
 	setSelectedProduct: React.Dispatch<
 		React.SetStateAction<Product | undefined>
 	>;
+	isDeletable: boolean | undefined;
+	setIsDeletable: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 interface ProductProviderProps {
 	children: ReactNode;
@@ -24,11 +33,32 @@ export const ProductsProvider = ({ children }: ProductProviderProps) => {
 	>();
 	// Destructured response data and loading state from useProductQuery hook
 	const { data, isLoading } = useProductQuery();
+	// Check if the selected product is deletable
+	const [isDeletable, setIsDeletable] = useState<boolean | undefined>(
+		undefined,
+	);
+	useEffect(() => {
+		setIsDeletable(undefined);
+		if (selectedProduct) {
+			isProductDeletable(selectedProduct.id)
+				.then(res => {
+					setIsDeletable(res);
+				})
+				.catch(() => {
+					setIsDeletable(false);
+				});
+		} else {
+			setIsDeletable(false);
+		}
+	}, [selectedProduct]);
+
 	const value = {
 		data,
 		isLoading,
 		selectedProduct,
 		setSelectedProduct,
+		isDeletable,
+		setIsDeletable,
 	};
 
 	return (

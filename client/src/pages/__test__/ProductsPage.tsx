@@ -7,6 +7,7 @@ import { Product as IProduct } from '@/features/product/__test__/types';
 import { useModal } from '@/utils/Modal';
 import { AddProductForm } from '@/features/product/__test__/components/forms/AddProdForm';
 import { EditProductForm } from '@/features/product/__test__/components/forms/EditProdForm';
+import { DeleteProduct } from '@/features/product/__test__/components/modal/DeleteProduct';
 
 export const Products = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -22,8 +23,8 @@ export const Products = () => {
 		<>
 			<MainLayout title="Products">
 				<ProductsProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
-						<div className="h-full w-full overflow-x-hidden rounded-lg border border-black/10">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
+						<div className="max-h-full w-full flex-1 rounded-md border border-black/10">
 							<ProductsTable openModal={modalHandler} />
 						</div>
 					</div>
@@ -31,7 +32,16 @@ export const Products = () => {
 					<ModalTest
 						isOpen={isOpen}
 						onClose={closeModal}
-						title={modalAction === 'add' ? 'Add Product' : 'Edit Product'}
+						closeOnOverlayClick={modalAction === 'delete'}
+						title={
+							modalAction === 'add'
+								? 'Add Product'
+								: modalAction === 'edit'
+									? 'Edit Product'
+									: modalAction === 'delete'
+										? 'Delete Product'
+										: ''
+						}
 					>
 						<>
 							{modalAction === 'add' && (
@@ -39,6 +49,9 @@ export const Products = () => {
 							)}
 							{modalAction === 'edit' && (
 								<EditProductForm onClose={closeModal} />
+							)}
+							{modalAction === 'delete' && (
+								<DeleteProduct onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

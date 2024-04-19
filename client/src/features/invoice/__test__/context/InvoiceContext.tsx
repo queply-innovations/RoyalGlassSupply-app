@@ -151,9 +151,23 @@ export const InvoiceProvider = ({ children }: InvoiceProviderProps) => {
 					return item;
 				}),
 			);
+			handleChange(
+				'total_amount_due',
+				invoiceItemsQueue.reduce(
+					(acc, currentItem) => acc + currentItem.total_price,
+					0,
+				),
+			);
 		} else if (newQuantity === 0) {
 			setInvoiceItemsQueue(prev =>
 				prev.filter((_, index) => index !== productId),
+			);
+			handleChange(
+				'total_amount_due',
+				invoiceItemsQueue.reduce(
+					(acc, currentItem) => acc + currentItem.total_price,
+					0,
+				),
 			);
 		}
 	};

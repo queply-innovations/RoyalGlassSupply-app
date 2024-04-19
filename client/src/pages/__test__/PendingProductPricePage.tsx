@@ -33,7 +33,7 @@ export const PendingProductPrice = () => {
 		<>
 			<MainLayout title="Pending Listing">
 				<PendingProductPriceProvider>
-					<div className="flex max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
 						<div className="ml-auto flex flex-row items-center space-x-4">
 							<span className="text-sm font-medium">
 								Filter warehouse:{' '}
@@ -63,7 +63,7 @@ export const PendingProductPrice = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						<div className="w-full overflow-x-hidden rounded-lg border border-black/10">
+						<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">
 							<PendingProductPriceTable
 								openModal={modalHandler}
 								isModalOpen={isOpen}

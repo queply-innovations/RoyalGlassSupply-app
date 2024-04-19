@@ -136,7 +136,7 @@ export const AddInventoryProductForm = ({
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div
 							className={`${
-								isAdmin ? 'col-span-12' : 'col-span-6'
+								isAdmin ? 'col-span-12' : 'col-span-8'
 							} flex flex-col justify-center gap-1`}
 						>
 							<Label
@@ -168,15 +168,27 @@ export const AddInventoryProductForm = ({
 															prod.id === FormValue.product_id,
 													);
 													return (
-														<div className="flex w-full items-baseline gap-4 capitalize">
-															<span className="max-w-full truncate">
-																{selectedProduct?.name}{' '}
-																{selectedProduct?.brand &&
-																	`(${selectedProduct.brand})`}
+														<div className="flex w-full flex-row items-baseline gap-4">
+															<span className="max-w-[50%] truncate">
+																{selectedProduct?.name}
 															</span>
-															<span className="font-baseline text-xs text-slate-700/50">
-																{selectedProduct?.serial_no}
-															</span>
+															<div className="flex max-w-[50%] gap-4 truncate text-xs font-semibold">
+																{selectedProduct?.brand && (
+																	<span>
+																		{`Brand: ${selectedProduct?.brand}`}
+																	</span>
+																)}
+																{selectedProduct?.size && (
+																	<span>
+																		{`Size: ${selectedProduct?.size}`}
+																	</span>
+																)}
+																{selectedProduct?.color && (
+																	<span>
+																		{`Color: ${selectedProduct?.color}`}
+																	</span>
+																)}
+															</div>
 														</div>
 													);
 												})()}
@@ -193,7 +205,7 @@ export const AddInventoryProductForm = ({
 								</PopoverTrigger>
 								<PopoverContent
 									className={`${
-										isAdmin ? 'max-w-[966px]' : 'max-w-[477px]'
+										isAdmin ? 'max-w-[966px]' : 'max-w-[640px]'
 									} w-[calc(100vw-170px)] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
@@ -213,11 +225,13 @@ export const AddInventoryProductForm = ({
 												{products.map((product, key) => (
 													<CommandItem
 														key={key}
-														className="cursor-pointer justify-between rounded-sm"
+														className="cursor-pointer justify-between rounded-sm border-b"
 														value={
+															product.id +
+															'_' +
 															product.name +
-															product.serial_no +
-															product.brand
+															'_' +
+															product.serial_no
 														}
 														onSelect={() => {
 															handleChange(
@@ -227,18 +241,29 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<span className="max-w-[50%] truncate">
-															{product.name}{' '}
-															{product.brand &&
-																`(${product.brand})`}
-														</span>
-														<span className="max-w-[49%] truncate text-xs font-semibold text-slate-700/50">
-															{product.serial_no +
-																' • ' +
-																product.size +
-																' • ' +
-																product.color}
-														</span>
+														<div className="flex w-full flex-row justify-between gap-4">
+															<div className="flex max-w-[50%] flex-col">
+																<span className="max-w-full truncate font-semibold">
+																	{product.name}
+																</span>
+																<span className="max-w-full truncate text-xs font-medium">
+																	{product.brand}
+																	{product.brand &&
+																		product.size &&
+																		' • '}
+																	{product.size}
+																	{product.size &&
+																		product.color &&
+																		' • '}
+																	{product.color}
+																</span>
+															</div>
+															<div className="flex max-w-[50%] flex-col text-right">
+																<span className="max-w-full truncate">
+																	{product.serial_no}
+																</span>
+															</div>
+														</div>
 													</CommandItem>
 												))}
 											</CommandGroup>
@@ -247,7 +272,11 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div
+							className={`${
+								isAdmin ? 'col-span-6' : 'col-span-4'
+							} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"

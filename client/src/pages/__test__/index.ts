@@ -3,6 +3,7 @@ import { fromJSON } from 'postcss';
 export * from './LoginPage';
 export * from './WarehousePage';
 export * from './InvoicePage';
+export * from './InvoiceItemsPage';
 export * from './UserInfoPage';
 export * from './SupplierPage';
 export * from './ProductsPage';

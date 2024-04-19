@@ -26,7 +26,7 @@ export const AddProductPrice = ({ onClose }: AddProductPriceProps) => {
 		<>
 			<Tabs
 				defaultValue="product"
-				className="min-w-[42rem] max-w-2xl space-y-4"
+				className="min-w-[840px] max-w-2xl space-y-4"
 				value={openedTab}
 				onValueChange={value => setOpenedTab(value)}
 			>

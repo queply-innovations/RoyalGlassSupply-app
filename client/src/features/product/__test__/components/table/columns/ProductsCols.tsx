@@ -9,12 +9,20 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import {
+	ArrowDown,
+	ArrowUp,
+	ArrowUpDown,
+	MoreVertical,
+	Pencil,
+	Trash2,
+} from 'lucide-react';
 
 // TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
+	handleDeleteProduct: (product: Product) => void;
 }
 
 /**
@@ -25,30 +33,31 @@ interface ProductsColumnsProps {
  */
 export const ProductsCols = ({
 	handleEditProduct,
+	handleDeleteProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
 	const columnDefinition: ColumnDef<Product>[] = [
-		{
-			id: 'select',
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={e =>
-						table.toggleAllPageRowsSelected(!!e.target.checked)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={e => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-		},
+		// {
+		// 	id: 'select',
+		// 	header: ({ table }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={table.getIsAllPageRowsSelected()}
+		// 			onChange={e =>
+		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
+		// 			}
+		// 			aria-label="Select all"
+		// 		/>
+		// 	),
+		// 	cell: ({ row }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={row.getIsSelected()}
+		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
+		// 			aria-label="Select row"
+		// 			className="justify-center"
+		// 		/>
+		// 	),
+		// },
 		// {
 		// 	accessorKey: 'id',
 		// 	sortingFn: 'text',
@@ -86,7 +95,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Serial Number{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -113,7 +122,7 @@ export const ProductsCols = ({
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
+							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
 						>
 							Name{' '}
 							{column.getIsSorted() === 'asc' ? (
@@ -165,6 +174,15 @@ export const ProductsCols = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span className="font-medium">Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => handleDeleteProduct(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Trash2 size={16} strokeWidth={2.25} />
+									</span>
+									<span className="font-medium">Delete</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

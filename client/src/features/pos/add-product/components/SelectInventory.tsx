@@ -34,6 +34,12 @@ export const SelectInventory = () => {
 			? inventory.warehouse.code.includes(auth?.role?.split('_')[1] ?? '')
 			: inventories,
 	);
+	const sortedInventories = filteredInventories.sort((a, b) => {
+		return (
+			new Date(b.updated_at ?? b.created_at).getTime() -
+			new Date(a.updated_at ?? a.created_at).getTime()
+		);
+	});
 
 	const [inventoriesListOpen, setInventoriesListOpen] = useState(false);
 
@@ -93,8 +99,8 @@ export const SelectInventory = () => {
 						<CommandEmpty>No results found</CommandEmpty>
 						<ScrollArea className="max-h-[200px] overflow-y-scroll">
 							<CommandGroup>
-								{filteredInventories &&
-									filteredInventories.map(inventory => (
+								{sortedInventories &&
+									sortedInventories.map(inventory => (
 										<CommandItem
 											key={inventory.id}
 											className="cursor-pointer justify-between rounded-sm"
@@ -105,7 +111,7 @@ export const SelectInventory = () => {
 											}}
 										>
 											<span>{inventory.code}</span>
-											<span className="text-xs font-semibold text-slate-700/50">
+											<span className="text-xs font-semibold text-slate-600">
 												{inventory.type +
 													' • ' +
 													inventory.date_received}

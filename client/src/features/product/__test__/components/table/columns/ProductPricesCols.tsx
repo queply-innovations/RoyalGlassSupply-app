@@ -52,28 +52,28 @@ export const ProductPricesColumns = ({
 	handleToggleActiveStatus,
 }: ProductPricesColumnsProps): ColumnDef<ProductPrices>[] => {
 	const columnDefinition: ColumnDef<ProductPrices>[] = [
-		{
-			id: 'select',
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={e =>
-						table.toggleAllPageRowsSelected(!!e.target.checked)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={e => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-		},
+		// {
+		// 	id: 'select',
+		// 	header: ({ table }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={table.getIsAllPageRowsSelected()}
+		// 			onChange={e =>
+		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
+		// 			}
+		// 			aria-label="Select all"
+		// 		/>
+		// 	),
+		// 	cell: ({ row }) => (
+		// 		<input
+		// 			type="checkbox"
+		// 			checked={row.getIsSelected()}
+		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
+		// 			aria-label="Select row"
+		// 			className="justify-center"
+		// 		/>
+		// 	),
+		// },
 		{
 			id: 'name',
 			accessorKey: 'product.name',

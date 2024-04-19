@@ -23,21 +23,23 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 		openModal(product, 'edit');
 	};
 
-	// Modal handler to remove product
-	// const handleRemoveProduct = (product: Product) => {
-	// 	setSelectedProduct(product);
-	// 	openModal(product, 'remove');
-	// };
+	const handleDeleteProduct = (product: Product) => {
+		setSelectedProduct(product);
+		openModal(product, 'delete');
+	};
 
 	return (
 		<>
 			<DataTable
 				columns={
 					auth?.role === 'super_admin' || auth?.role === 'admin'
-						? ProductsCols({ handleEditProduct })
+						? ProductsCols({
+								handleEditProduct,
+								handleDeleteProduct,
+							})
 						: ProductsColsLimited
 				}
-				data={data}
+				data={data.sort((a, b) => b.id - a.id)} // Sort by id, highest first
 				filterWhat={'name'}
 				dataType={'Product'}
 				openModal={handleAddProduct}
