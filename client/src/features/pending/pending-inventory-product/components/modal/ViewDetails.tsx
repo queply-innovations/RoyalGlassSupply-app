@@ -1,7 +1,7 @@
-import { useInventoryProductsByInventory } from '@/features/inventory/context';
+import { usePendingInventoryProduct } from '../../context/PendingInventoryProductContext';
 
 export const ViewDetails = () => {
-	const { selectedInventoryProduct } = useInventoryProductsByInventory();
+	const { selectedInventoryProduct } = usePendingInventoryProduct();
 
 	return (
 		<>
@@ -10,13 +10,13 @@ export const ViewDetails = () => {
 					<div className="col-span-6 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Name</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.product.name}
+							{selectedInventoryProduct?.product.name}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Brand</h3>
 						<p className="text-sm capitalize">
-							{selectedInventoryProduct.product.brand || (
+							{selectedInventoryProduct?.product.brand || (
 								<span className="opacity-60">No brand</span>
 							)}
 						</p>
@@ -24,29 +24,29 @@ export const ViewDetails = () => {
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Serial No</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.product.serial_no}
+							{selectedInventoryProduct?.product.serial_no}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Size</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.product.size}
+							{selectedInventoryProduct?.product.size}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Color</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.product.color}
+							{selectedInventoryProduct?.product.color}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Unit</h3>
-						<p className="text-sm">{selectedInventoryProduct.unit}</p>
+						<p className="text-sm">{selectedInventoryProduct?.unit}</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Supplier</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.supplier_id.name}
+							{selectedInventoryProduct?.supplier_id.name}
 						</p>
 					</div>
 				</div>
@@ -60,25 +60,25 @@ export const ViewDetails = () => {
 							{Intl.NumberFormat('en-US', {
 								style: 'currency',
 								currency: 'PHP',
-							}).format(selectedInventoryProduct.capital_price)}
+							}).format(selectedInventoryProduct?.capital_price ?? 0)}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Stocks</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.stocks_count}
+							{selectedInventoryProduct?.stocks_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Damaged</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.damage_count}
+							{selectedInventoryProduct?.damage_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Total</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.total_count}
+							{selectedInventoryProduct?.total_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -86,13 +86,13 @@ export const ViewDetails = () => {
 							Transferred
 						</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.transferred_stocks_count}
+							{selectedInventoryProduct?.transferred_stocks_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Sold</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.sold_count}
+							{selectedInventoryProduct?.sold_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -100,7 +100,7 @@ export const ViewDetails = () => {
 							Miscellaneous
 						</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.miscellaneous_count}
+							{selectedInventoryProduct?.miscellaneous_count}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -108,7 +108,7 @@ export const ViewDetails = () => {
 							Remaining Stocks
 						</h3>
 						<p className="text-sm">
-							{selectedInventoryProduct.remaining_stocks_count}
+							{selectedInventoryProduct?.remaining_stocks_count}
 						</p>
 					</div>
 				</div>

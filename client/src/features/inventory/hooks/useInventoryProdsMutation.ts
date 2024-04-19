@@ -51,7 +51,13 @@ export const useInventoryProdsMutation = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ['inventoryProductById'],
+				predicate: query => {
+					return [
+						'inventory',
+						'inventoryProducts',
+						'inventoryProductById',
+					].includes(query.queryKey[0] as string);
+				},
 			});
 		},
 		onError: (error: any) => {

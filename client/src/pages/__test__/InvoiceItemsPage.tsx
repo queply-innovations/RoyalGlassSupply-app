@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { InvoiceItemsTable } from '@/features/invoice/__test__/components/table/InvoiceItemsTable';
 import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
 import {
 	useInvoiceItemQueryById,
@@ -21,8 +22,9 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 		Number(invoiceId),
 	);
 
-	const { data: invoiceItems, isLoading: isItemsLoading } =
-		useInvoiceItemQueryById(Number(invoiceId));
+	const { invoiceItems, isLoading: isItemsLoading } = useInvoiceItemQueryById(
+		Number(invoiceId),
+	);
 
 	const handleNavigateBack = () => {
 		navigate(-1);
@@ -90,8 +92,24 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 											: 'Loading...'}
 									</span>
 								</div>
+								<div className="flex flex-row gap-2">
+									<h2 className="font-bold">Warehouse:</h2>
+									<span>
+										{!isInvoiceLoading
+											? invoice?.warehouse.code
+											: 'Loading...'}
+									</span>
+								</div>
 							</div>
 						</div>
+					</div>
+					{/* //TODO Table here */}
+					<div>
+						{!isItemsLoading && (
+							<>
+								<InvoiceItemsTable items={invoiceItems} />
+							</>
+						)}
 					</div>
 				</div>
 			</MainLayout>

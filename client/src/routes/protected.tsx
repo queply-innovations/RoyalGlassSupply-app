@@ -47,9 +47,9 @@ const { AddProductPOSPage } = lazyImport(
 	() => import('@/pages/__test__/pos'),
 	'AddProductPOSPage',
 );
-const { PendingInventory } = lazyImport(
-	() => import('@/pages'),
-	'PendingInventory',
+const { PendingInventoryProduct } = lazyImport(
+	() => import('@/pages/__test__/'),
+	'PendingInventoryProduct',
 );
 // const { PendingReturn } = lazyImport(() => import('@/pages'), 'PendingReturn');
 const { PendingReturn } = lazyImport(
@@ -129,7 +129,7 @@ const protectedRoutesConfig = [
 	{ path: '/pos/return/:code', element: <PosReturnsPage /> },
 	{ path: '/pos/add-product', element: <AddProductPOSPage /> },
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
-	{ path: '/pending/inventory', element: <PendingInventory /> },
+	{ path: '/pending/inventory', element: <PendingInventoryProduct /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
 	{ path: '/pending/product-listing', element: <PendingProductPrice /> },

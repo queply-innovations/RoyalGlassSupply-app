@@ -30,6 +30,7 @@ export interface InventoryProduct {
 	sold_count?: number;
 	miscellaneous_count?: number;
 	remaining_stocks_count?: number;
+	approved_stocks: number;
 }
 
 export interface InventoryDatabase
