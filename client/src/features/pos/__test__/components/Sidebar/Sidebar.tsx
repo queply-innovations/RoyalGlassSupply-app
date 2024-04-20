@@ -19,11 +19,18 @@ import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {}
 
+declare global {
+	interface Window {
+		api: any;
+	}
+}
+
 export const Sidebar = ({}: SidebarProps) => {
 	const { auth } = useAuth();
 
 	const { setFilter, selectedWarehouse, setSelectedWarehouse } = usePos();
 
+	const { invoiceItemsQueue, invoice, setInvoice, fullData, setFullData } = useInvoice();
 	useEffect(() => {
 		if (selectedWarehouse === 'CDO') {
 			setInvoice({ ...invoice, warehouse_id: 1 });
@@ -32,7 +39,6 @@ export const Sidebar = ({}: SidebarProps) => {
 		}
 	}, [selectedWarehouse]);
 
-	const { invoiceItemsQueue, invoice, setInvoice } = useInvoice();
 	const { value: invoiceForm, addInvoiceMutation } = useInvoiceMutation();
 
 	const { selectedCustomer } = useCustomer();
@@ -46,8 +52,18 @@ export const Sidebar = ({}: SidebarProps) => {
 		data['invoice_items'] = invoiceItemsQueue.map((d: any) => {
 			return { ...d, product_id: d.product_id.id };
 		});
-		await addInvoiceMutation(data);
+		// await addInvoiceMutation(data).then(() => window.api.send());
+		await addInvoiceMutation(data).then((res) => {
+			setFullData(res.data);
+		});
 	}
+
+	useEffect(() => {
+		if (fullData) {
+			console.log(fullData);
+			window.api.send({fullData: fullData, invoiceItems: invoiceItemsQueue});
+		}
+	}, [fullData]);
 
 	const { openModal, isOpen, closeModal } = useModal();
 	const successModal = useModal();

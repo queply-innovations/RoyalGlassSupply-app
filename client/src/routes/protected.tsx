@@ -95,6 +95,7 @@ const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 const { Transfer } = lazyImport(() => import('@/pages/__test__'), 'Transfer');
 const { Customers } = lazyImport(() => import('@/pages/__test__'), 'Customers');
+const { PrintForm } = lazyImport(() => import('@/features/pos/__test__/components/Form/PrintForm'), 'PrintForm');
 
 // const App = () => {
 // 	return (
@@ -149,6 +150,7 @@ const protectedRoutesConfig = [
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },
 	{ path: '/supplier', element: <Supplier /> },
+	{ path: '/pos/print-invoice', element: <PrintForm /> },
 ];
 
 export const ProtectedRoutes = () => {
