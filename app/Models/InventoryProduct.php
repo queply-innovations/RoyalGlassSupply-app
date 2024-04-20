@@ -20,6 +20,7 @@ class InventoryProduct extends Model
         'bundles_unit',
         'quantity_per_bundle',
         'stocks_count',
+        'approved_stocks',
         'damage_count',
         'total_count',
         'unit',

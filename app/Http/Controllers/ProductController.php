@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -31,6 +33,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $checkProduct = Product::where(DB::raw('LOWER(name)'), Str::lower($request->name))
+            ->where(DB::raw('LOWER(brand)'), Str::lower($request->brand))
+            ->where(DB::raw('LOWER(size)'), Str::lower($request->size))
+            ->where(DB::raw('LOWER(color)'), Str::lower($request->color))
+            ->exists();
+
+        if($checkProduct) {
+            return response()->json(['message' => 'Product already exists.'], 422);
+        }
+        
         $product = Product::create($request->all());
 
         return new ProductResource($product);
