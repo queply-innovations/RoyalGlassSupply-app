@@ -17,7 +17,7 @@ export const ProductsChart = ({}: ProductsChartProps) => {
 				series={chartSeries}
 				options={chartOptions}
 				type="donut"
-				height={200}
+				height="100%"
 				width="100%"
 			/>
 		</>

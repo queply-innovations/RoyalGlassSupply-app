@@ -1,7 +1,7 @@
-import { useInventoryProds } from '@/features/inventory/context';
+import { useInventoryProductsByInventory } from '@/features/inventory/context';
 
 export const ViewDetails = () => {
-	const { selectedInventoryProduct } = useInventoryProds();
+	const { selectedInventoryProduct } = useInventoryProductsByInventory();
 
 	return (
 		<>

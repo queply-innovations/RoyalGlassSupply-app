@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addProduct, patchProduct } from '../api/Products';
+import { addProduct, patchProduct, deleteProduct } from '../api/Products';
 import { Product } from '../types';
 import { useState } from 'react';
 
@@ -36,6 +36,11 @@ export const useProductMutation = () => {
 		}
 	};
 
+	const handleDeleteProduct = async (id: number) => {
+		console.log('Deleting product with id: ', id);
+		return await deleteProductMutation(id);
+	};
+
 	// Configurations for mutation
 	const mutationConfig = {
 		onSuccess: async () => {
@@ -58,7 +63,18 @@ export const useProductMutation = () => {
 		...mutationConfig,
 	});
 
-	// TODO: Create an add, edit, and remove mutation functions
+	const { mutateAsync: deleteProductMutation } = useMutation({
+		mutationKey: ['deleteProduct'],
+		mutationFn: deleteProduct,
+		...mutationConfig,
+	});
 
-	return { value, setValue, handleChange, handleSubmit, addProductMutation };
+	return {
+		value,
+		setValue,
+		handleChange,
+		handleSubmit,
+		handleDeleteProduct,
+		addProductMutation,
+	};
 };

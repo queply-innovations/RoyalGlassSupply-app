@@ -1,6 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
-import { useInventoryProds } from '../../context/InventoryProdsContext';
+import { useInventoryProductsByInventory } from '../../context';
 import { Label } from '@/components/ui/label';
 import {
 	Popover,
@@ -30,6 +30,7 @@ import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
 import { getTotalCount } from '../../helpers';
+import { toast } from 'react-toastify';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -39,7 +40,7 @@ export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
 	const { auth } = useAuth();
-	const { selectedInventoryProduct } = useInventoryProds();
+	const { selectedInventoryProduct } = useInventoryProductsByInventory();
 	const {
 		value: FormValue,
 		handleChange,
@@ -71,29 +72,25 @@ export const EditInventoryProductForm = ({
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
 						id: selectedInventoryProduct.id,
 						data: FormValue,
-					});
-					if (
-						typeof response === 'object' &&
-						'status' in response &&
-						response.status === 200
-					) {
-						setIsSubmitting(!isSubmitting);
-						onClose();
-					} else {
-						setIsSubmitting(!isSubmitting);
-						setError('Failed to update item');
-					}
+					})
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Inventory product updated successfully.');
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(false);
+							toast.error('Failed to update inventory product.');
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div
-							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-12' : 'col-span-6'} flex flex-col justify-center gap-1`}
-						>
+						<div className="col-span-12 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="product"
 								className="text-sm font-bold text-gray-600"
@@ -108,7 +105,54 @@ export const EditInventoryProductForm = ({
 								value={selectedInventoryProduct?.product.name}
 							/>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_brand"
+								className="text-sm font-bold text-gray-600"
+							>
+								Brand
+							</Label>
+							<Input
+								id="product_brand"
+								name="product_brand"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.brand}
+							/>
+						</div>
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_size"
+								className="text-sm font-bold text-gray-600"
+							>
+								Size
+							</Label>
+							<Input
+								id="product_size"
+								name="product_size"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.size}
+							/>
+						</div>
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<Label
+								htmlFor="product_color"
+								className="text-sm font-bold text-gray-600"
+							>
+								Color
+							</Label>
+							<Input
+								id="product_color"
+								name="product_color"
+								type="text"
+								readOnly
+								value={selectedInventoryProduct?.product.color}
+							/>
+						</div>
+						<div
+							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-6' : 'col-span-12'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"
@@ -337,8 +381,10 @@ export const EditInventoryProductForm = ({
 								required
 								value={
 									FormValue.damage_count !== undefined
-										? FormValue.damage_count
-										: selectedInventoryProduct?.damage_count || ''
+										? String(FormValue.damage_count)
+										: String(
+												selectedInventoryProduct?.damage_count,
+											) || ''
 								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);

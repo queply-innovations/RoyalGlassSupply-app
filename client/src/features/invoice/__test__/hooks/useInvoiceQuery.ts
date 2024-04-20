@@ -1,8 +1,10 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { Invoices } from '../types/index';
+import { InvoiceItemDatabase, Invoices } from '../types/index';
 import { useEffect, useState } from 'react';
 import {
 	fetchInvoiceByCode,
+	fetchInvoiceById,
+	fetchInvoiceItemsById,
 	// fetchInvoiceDiscounts,
 	// fetchInvoiceItems,
 	// fetchInvoiceTaxes,
@@ -66,4 +68,32 @@ export const useInvoiceCodeQuery = (code: string) => {
 	}, [result, isLoading]);
 
 	return { invoice, isLoading };
+};
+
+export const useInvoiceQueryById = (id: number) => {
+	const { data, isFetching: isLoading } = useQuery({
+		queryKey: ['invoice'],
+		queryFn: () => fetchInvoiceById(id),
+		refetchOnWindowFocus: false,
+	});
+
+	return { data, isLoading };
+};
+
+export const useInvoiceItemQueryById = (id: number) => {
+	const [invoiceItems, setInvoiceItems] = useState<InvoiceItemDatabase[]>([]);
+
+	const { data: result, isFetching: isLoading } = useQuery({
+		queryKey: ['invoiceItem'],
+		queryFn: () => fetchInvoiceItemsById(id),
+		refetchOnWindowFocus: false,
+	});
+
+	useEffect(() => {
+		if (!isLoading && result) {
+			setInvoiceItems(result);
+		}
+	}, [result, isLoading]);
+
+	return { invoiceItems, isLoading };
 };

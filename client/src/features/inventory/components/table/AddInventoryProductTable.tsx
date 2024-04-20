@@ -37,7 +37,10 @@ import { toast } from 'react-toastify';
 
 const tableCols = [
 	'',
-	'Product name',
+	'Name',
+	'Brand',
+	'Size',
+	'Color',
 	'Supplier',
 	'Status',
 	'Capital price',
@@ -78,14 +81,17 @@ export const AddInventoryProductTable = ({
 			data: data.map(item => item?.data),
 		})
 			.then(() => {
-				toast.success('Items added to inventory');
+				toast.success('Items added to inventory.');
 				setIsSubmitting(false);
 				onClose();
 			})
-			.catch(() => {
-				toast.error('Error adding items to inventory');
+			.catch((err: any) => {
 				setError('Error adding items to inventory');
-				setIsSubmitting(false);
+				if (err.response.data.message) {
+					toast.error(err.response.data.message);
+				} else {
+					toast.error('Error adding items to inventory.');
+				}
 			});
 	};
 
@@ -127,7 +133,7 @@ export const AddInventoryProductTable = ({
 										return (
 											<TableHead
 												key={colName + '_head'}
-												className="whitespace-nowrap px-5 py-3 text-center text-xs font-bold uppercase"
+												className="whitespace-nowrap px-5 py-3 text-xs font-bold uppercase"
 											>
 												{colName}
 											</TableHead>
@@ -211,6 +217,42 @@ export const AddInventoryProductTable = ({
 																	row.data.product_id,
 															)?.name
 														: row?.data.product_id}
+												</TableCell>
+												<TableCell
+													className="max-w-[200px] truncate px-5 py-3"
+													key={row?.id + 'product_brand'}
+												>
+													{row?.data.product_id
+														? products.find(
+																product =>
+																	product.id ===
+																	row.data.product_id,
+															)?.brand
+														: 'No brand'}
+												</TableCell>
+												<TableCell
+													className="max-w-[200px] truncate px-5 py-3"
+													key={row?.id + 'product_size'}
+												>
+													{row?.data.product_id
+														? products.find(
+																product =>
+																	product.id ===
+																	row.data.product_id,
+															)?.size
+														: 'No data'}
+												</TableCell>
+												<TableCell
+													className="max-w-[200px] truncate px-5 py-3"
+													key={row?.id + 'product_color'}
+												>
+													{row?.data.product_id
+														? products.find(
+																product =>
+																	product.id ===
+																	row.data.product_id,
+															)?.color
+														: 'No data'}
 												</TableCell>
 												<TableCell
 													className="max-w-[200px] truncate px-5 py-3"

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
 import { useProductPrices } from '@/features/product/__test__';
+import { useEffect } from 'react';
 
 interface CreateOrderTableProps {}
 
@@ -18,9 +19,20 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		formatCurrency,
 		handleInvoiceItemsChange,
 		handleRemoveInvoiceItem,
+		handleChange,
 	} = useInvoice();
 	const { data: inventoryProducts } = useInventoryProds();
 	const { data: productPrices } = useProductPrices();
+
+	useEffect(() => {
+		handleChange(
+			'subtotal',
+			invoiceItemsQueue.reduce(
+				(acc, currentItem) => acc + currentItem.total_price,
+				0,
+			),
+		);
+	}, [invoiceItemsQueue]);
 
 	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
 		{
@@ -33,34 +45,42 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			cell: ({ row }) => {
 				return <div className="flex justify-center">{row.index + 1}</div>;
 			},
-			size: 150,
+			size: 100,
 		},
 		{
 			accessorKey: 'name',
-			header: () => <div className="justify-center">Product Name</div>,
+			header: () => <div className="justify-center">Product</div>,
 			cell: ({ row }) => {
 				return (
-					<div className="flex flex-row gap-2">
-						<span className="text-sm font-bold">
-							{row.original.product_id.name}
-						</span>
-						{row.original.product_id.brand ? (
-							<span className="text-sm">
-								({row.original.product_id.brand})
+					<div className="flex flex-col">
+						<div className="flex flex-row gap-2">
+							<span className="text-sm font-bold">
+								{row.original.product_id.name}
 							</span>
-						) : null}
-						<span className="text-[12px]">
-							{row.original.product_id.size}
-						</span>
 
-						{row.original.product_id.color}
+							<span className="font-medium">
+								{row.original.product_id.size}
+							</span>
+						</div>
+						<div className="flex flex-row items-center gap-1">
+							{row.original.product_id.brand ? (
+								<span className="">
+									{row.original.product_id.brand}
+								</span>
+							) : (
+								<span className="font-light">(No Brand)</span>
+							)}
+							<span className="">• {row.original.product_id.color}</span>
+						</div>
 					</div>
 				);
 			},
+			size: 350,
 		},
 		{
 			accessorKey: 'quantity',
 			header: () => <div className="flex justify-center">Quantity</div>,
+			size: 150,
 			cell: ({ row }) => {
 				const productIndex = row.index;
 				const productInfo = inventoryProducts.find(
@@ -74,7 +94,6 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 				// 	'Product Name:',
 				// 	row.original.product_id.name,
 				// );
-
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
@@ -153,29 +172,30 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 				);
 			},
 		},
-		{
-			accessorKey: 'item_discount',
-			header: () => <div className="justify-center">Item Discount</div>,
-			cell: ({ row }) => {
-				return (
-					<div key={row.index}>
-						<Input
-							id="item_discount"
-							value={row.original.item_discount}
-							type="number"
-							onChange={e => {
-								//TODO - Fix this part, rerenders when adding input loses out of focus after input
-								handleInvoiceItemsChange(
-									row.index,
-									'item_discount',
-									Number(e.target.value),
-								);
-							}}
-						/>
-					</div>
-				);
-			},
-		},
+		//TODO - Comment out this part, not needed for now
+		// {
+		// 	accessorKey: 'item_discount',
+		// 	header: () => <div className="justify-center">Item Discount</div>,
+		// 	cell: ({ row }) => {
+		// 		return (
+		// 			<div key={row.index}>
+		// 				<Input
+		// 					id="item_discount"
+		// 					value={row.original.item_discount}
+		// 					type="number"
+		// 					onChange={e => {
+		// 						//TODO - Fix this part, rerenders when adding input loses out of focus after input
+		// 						handleInvoiceItemsChange(
+		// 							row.index,
+		// 							'item_discount',
+		// 							Number(e.target.value),
+		// 						);
+		// 					}}
+		// 				/>
+		// 			</div>
+		// 		);
+		// 	},
+		// },
 		{
 			id: 'total_price',
 			accessorKey: 'total_price',
@@ -189,6 +209,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		},
 		{
 			id: 'actions',
+			size: 100,
 			cell: ({ row }) => {
 				const invoiceIndex = row.index;
 				return (

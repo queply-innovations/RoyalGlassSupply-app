@@ -67,7 +67,7 @@ export const AddProductForm = ({ onClose }: AddProductFormProps) => {
 							if (err.response.data.message) {
 								toast.error(err.response.data.message);
 							} else {
-								toast.error('Failed to submit product.');
+								toast.error('Failed to add product.');
 							}
 						});
 				}}

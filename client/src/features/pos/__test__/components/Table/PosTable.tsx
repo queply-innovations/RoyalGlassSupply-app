@@ -54,9 +54,8 @@ export function PosTable<TData, TValue>({
 								return (
 									<TableHead
 										key={header.id}
-										style={{
-											width: header.index === 0 ? 250 : 500,
-										}}
+										style={{ width: `${header.getSize()}px` }}
+										className={`{}`}
 									>
 										{header.isPlaceholder
 											? null

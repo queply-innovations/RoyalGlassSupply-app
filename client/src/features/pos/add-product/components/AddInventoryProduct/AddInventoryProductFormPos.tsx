@@ -168,15 +168,27 @@ export const AddInventoryProductForm = ({
 															prod.id === FormValue.product_id,
 													);
 													return (
-														<div className="flex w-full items-baseline gap-4 capitalize">
-															<span className="max-w-full truncate">
-																{selectedProduct?.name}{' '}
-																{selectedProduct?.brand &&
-																	`(${selectedProduct.brand})`}
+														<div className="flex w-full flex-row items-baseline gap-4">
+															<span className="max-w-[50%] truncate">
+																{selectedProduct?.name}
 															</span>
-															<span className="font-baseline text-xs">
-																{selectedProduct?.serial_no}
-															</span>
+															<div className="flex max-w-[50%] gap-4 truncate text-xs font-semibold">
+																{selectedProduct?.brand && (
+																	<span>
+																		{`Brand: ${selectedProduct?.brand}`}
+																	</span>
+																)}
+																{selectedProduct?.size && (
+																	<span>
+																		{`Size: ${selectedProduct?.size}`}
+																	</span>
+																)}
+																{selectedProduct?.color && (
+																	<span>
+																		{`Color: ${selectedProduct?.color}`}
+																	</span>
+																)}
+															</div>
 														</div>
 													);
 												})()}
@@ -213,7 +225,7 @@ export const AddInventoryProductForm = ({
 												{products.map((product, key) => (
 													<CommandItem
 														key={key}
-														className="cursor-pointer justify-between rounded-sm"
+														className="cursor-pointer justify-between rounded-sm border-b"
 														value={
 															product.id +
 															'_' +
@@ -229,18 +241,29 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<span className="max-w-[50%] truncate font-semibold">
-															{product.name}{' '}
-															{product.brand &&
-																`(${product.brand})`}
-														</span>
-														<span className="max-w-[49%] truncate text-xs font-medium">
-															{product.serial_no +
-																' • ' +
-																product.size +
-																' • ' +
-																product.color}
-														</span>
+														<div className="flex w-full flex-row justify-between gap-4">
+															<div className="flex max-w-[50%] flex-col">
+																<span className="max-w-full truncate font-semibold">
+																	{product.name}
+																</span>
+																<span className="max-w-full truncate text-xs font-medium">
+																	{product.brand}
+																	{product.brand &&
+																		product.size &&
+																		' • '}
+																	{product.size}
+																	{product.size &&
+																		product.color &&
+																		' • '}
+																	{product.color}
+																</span>
+															</div>
+															<div className="flex max-w-[50%] flex-col text-right">
+																<span className="max-w-full truncate">
+																	{product.serial_no}
+																</span>
+															</div>
+														</div>
 													</CommandItem>
 												))}
 											</CommandGroup>

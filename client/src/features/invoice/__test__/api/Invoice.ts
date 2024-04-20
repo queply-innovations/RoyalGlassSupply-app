@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { InvoiceProps, Invoices } from '../types';
+import { InvoiceItems, InvoiceProps, Invoices } from '../types';
 
 export const fetchInvoices = async (): Promise<Invoices[]> => {
 	return await axios
@@ -26,6 +26,27 @@ export const fetchInvoiceById = async (id: number): Promise<Invoices> => {
 		})
 		.catch((error: Error) => {
 			console.error('Error fetching invoice by code:', error);
+			throw error;
+		});
+};
+export const fetchInvoiceItemsById = async (
+	id: number,
+): Promise<InvoiceItems[]> => {
+	return await axios
+		.post(
+			`${API_URLS.INVOICE_ITEMS}/searches-filters-sorts`,
+			{
+				invoice_id: id,
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching invoice items by id:', error);
 			throw error;
 		});
 };

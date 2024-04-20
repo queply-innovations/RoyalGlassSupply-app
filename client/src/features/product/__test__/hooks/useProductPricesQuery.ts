@@ -9,8 +9,9 @@ import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
 
 interface ProductPricesFilterProps {
-	approval_status?: string;
-	warehouse_id?: number;
+	approval_status: string;
+	warehouse_id: number;
+	active_status: string;
 }
 
 /**
@@ -38,13 +39,14 @@ export const useProductPricesQuery = () => {
 
 	return { data, isLoading };
 };
+
 export const usePendingProductPricesQuery = () => {
 	// State of the response data
 	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
 	// Query for fetching product prices and isLoading state
 	const { data: result, isFetching: isLoading } = useQuery({
-		queryKey: ['productPrices'],
+		queryKey: ['pendingProductPrices'],
 		queryFn: () => fetchPendingProductPrices(),
 		refetchOnWindowFocus: false,
 	});
@@ -63,7 +65,7 @@ export const useProductPricesQueryFilterByApproved = () => {
 
 	// Query for fetching product prices and isLoading state
 	const { data: result, isFetching: isLoading } = useQuery({
-		queryKey: ['productPrices'],
+		queryKey: ['approvedProductPrices'],
 		queryFn: () => fetchApprovedProductPrices(),
 		refetchOnWindowFocus: false,
 	});
@@ -81,6 +83,7 @@ export const useProductPricesQueryFilterByApproved = () => {
 export const useProductPricesFilter = ({
 	approval_status,
 	warehouse_id,
+	active_status,
 }: ProductPricesFilterProps) => {
 	const [data, setData] = useState<ProductPrices[]>([]);
 	const {
@@ -88,46 +91,30 @@ export const useProductPricesFilter = ({
 		isLoading,
 		refetch,
 	} = useQuery({
-		queryKey: ['productPricesTEST', approval_status, warehouse_id], // Include approval_status and warehouse_id in the query key
-		queryFn: async () => {
-			let filteredData: ProductPrices[] = [];
-			try {
-				if (approval_status && warehouse_id) {
-					filteredData = await fetchProductPricesFilters(
-						approval_status,
-						warehouse_id,
-					);
-				} else if (approval_status) {
-					filteredData = await fetchProductPricesFilters(approval_status);
-				} else if (warehouse_id) {
-					filteredData = await fetchProductPricesFilters(
-						undefined,
-						warehouse_id,
-					);
-				} else {
-					filteredData = await fetchProductPricesFilters();
-				}
-				return filteredData;
-			} catch (error) {
-				console.error('Error fetching product prices:', error);
-				throw error;
+		queryKey: ['FilteredProductPrices'],
+		queryFn: () => {
+			if (approval_status && warehouse_id && active_status) {
+				return fetchProductPricesFilters(
+					approval_status,
+					active_status,
+					warehouse_id,
+				);
 			}
+			// Return a placeholder or null if any of the required parameters are missing
+			return null;
 		},
 		refetchOnWindowFocus: false,
 	});
-
 	useEffect(() => {
-		if (result) {
+		if (!isLoading && result) {
 			setData(result);
-			refetch();
 		}
-	}, [result, approval_status, warehouse_id]); // Include approval_status and warehouse_id as dependencies
+	}, [result, isLoading]);
 
-	// useEffect(() => {
-	// 	if (approval_status && warehouse_id) {
-	// 		refetch();
-	// 	}
-	// }, [approval_status, warehouse_id]); // Refetch if approval_status and warehouse_id changes
+	// Refetch data when any of the filter values change
+	useEffect(() => {
+		refetch();
+	}, [approval_status, warehouse_id, active_status, refetch]);
 
 	return { data, isLoading };
 };

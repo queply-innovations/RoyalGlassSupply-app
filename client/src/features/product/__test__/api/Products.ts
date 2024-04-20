@@ -30,9 +30,7 @@ export const fetchProductPrices = async (): Promise<ProductPrices[]> => {
 		});
 };
 
-export const fetchPendingProductPrices = async (): Promise<
-	ProductPrices[]
-> => {
+export const fetchPendingProductPrices = async (): Promise<ProductPrices[]> => {
 	return await axios
 		.post(
 			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
@@ -79,22 +77,19 @@ export const fetchApprovedProductPrices = async (): Promise<
 };
 
 export const fetchProductPricesFilters = async (
-	approval_status?: string,
+	approval_status?: string, //TODO Possible to comment out
+	active_status?: string,
 	warehouse_id?: number,
 ): Promise<ProductPrices[]> => {
-	const filters: any = {};
-	if (approval_status) {
-		filters['approval_status'] = approval_status;
-	}
-	if (warehouse_id) {
-		filters['warehouse_id'] = warehouse_id;
-	}
-
 	return await axios
 		.post(
 			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
 			{
-				filter: filters,
+				filter: {
+					approval_status: approval_status, //TODO Possible to comment out
+					active_status: active_status,
+					warehouse_id: warehouse_id,
+				},
 			},
 			{
 				headers: API_HEADERS(),
@@ -144,6 +139,46 @@ export const addProduct = async (data: Omit<Partial<Product>, 'id'>) => {
 		})
 		.catch(error => {
 			console.error('Error adding product:', error);
+			throw error;
+		});
+};
+
+export const isProductDeletable = async (id: number) => {
+	return await axios
+		.all([
+			axios.post(
+				`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts`,
+				{
+					filter: {
+						product_id: id,
+					},
+				},
+				{
+					headers: API_HEADERS(),
+				},
+			),
+			axios.post(
+				`${API_URLS.INVENTORY_PRODUCTS}/searches-filters-sorts`,
+				{
+					filter: {
+						product_id: id,
+					},
+				},
+				{
+					headers: API_HEADERS(),
+				},
+			),
+		])
+		.then(
+			axios.spread((productPrices, inventoryProducts) => {
+				return (
+					productPrices.data.data.length === 0 &&
+					inventoryProducts.data.data.length === 0
+				);
+			}),
+		)
+		.catch(error => {
+			console.error('Error checking if product is deletable:', error);
 			throw error;
 		});
 };
@@ -239,5 +274,19 @@ export const patchProductListing = async ({
 				: error.request
 					? { status: 500, data: error.request }
 					: { status: 500, data: error.message };
+		});
+};
+
+export const deleteProduct = async (id: number) => {
+	return await axios
+		.delete(`${API_URLS.PRODUCTS}/${id}`, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return { status: response.status, data: response.data };
+		})
+		.catch(error => {
+			console.error('Error deleting product:', error);
+			throw error;
 		});
 };

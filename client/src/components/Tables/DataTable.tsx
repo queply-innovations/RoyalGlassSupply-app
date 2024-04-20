@@ -32,6 +32,7 @@ interface DataTableProps<TData, TValue> {
 	isLoading?: boolean;
 	hidePagination?: boolean;
 	hideFilter?: boolean;
+	autoResetPageIndex?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +44,7 @@ export function DataTable<TData, TValue>({
 	isLoading,
 	hidePagination,
 	hideFilter,
+	autoResetPageIndex = false,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -69,6 +71,7 @@ export function DataTable<TData, TValue>({
 			sorting,
 			columnFilters,
 		},
+		autoResetPageIndex: autoResetPageIndex,
 	});
 
 	const label =
@@ -84,7 +87,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className="flex max-h-full flex-col divide-y">
-			{!hideFilter && openModal && (
+			{!hideFilter && (
 				<div className="flex flex-none justify-between p-4">
 					{hideFilter ? null : (
 						<div className="w-1/2">

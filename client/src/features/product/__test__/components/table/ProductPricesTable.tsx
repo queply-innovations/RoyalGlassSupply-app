@@ -50,10 +50,26 @@ export const ProductPricesTable = ({
 					})}
 					data={
 						filterWarehouse
-							? data.filter(
-									item => item.warehouse.id === filterWarehouse,
-								)
-							: data
+							? data
+									.filter(
+										item => item.warehouse.id === filterWarehouse,
+									)
+									.sort((a, b) => {
+										let dateA = new Date(
+											a.updated_at ?? a.created_at,
+										);
+										let dateB = new Date(
+											b.updated_at ?? b.created_at,
+										);
+
+										return dateB.getTime() - dateA.getTime();
+									})
+							: data.sort((a, b) => {
+									let dateA = new Date(a.updated_at ?? a.created_at);
+									let dateB = new Date(b.updated_at ?? b.created_at);
+
+									return dateB.getTime() - dateA.getTime();
+								})
 					}
 					filterWhat={'name'}
 					dataType={'Listing'}
