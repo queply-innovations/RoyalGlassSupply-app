@@ -118,12 +118,6 @@ export const Sidebar = ({}: SidebarProps) => {
 			<Payment />
 
 			<Button
-				onClick={() => window.api.send() }
-			>
-				Print Invoice
-			</Button>
-
-			<Button
 				onClick={() => {
 					// addInvoiceMutation(invoice);
 					handleSubmit();
