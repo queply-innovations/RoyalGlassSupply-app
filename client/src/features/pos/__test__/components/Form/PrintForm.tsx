@@ -46,26 +46,28 @@ export const PrintForm = ({}: PrintFormProps) => {
 	return (
 		<>
 			{fullData && itemsQueue && dateInvoice && (
-				<div className="flex w-screen flex-col p-3">
-					<div className="text-base">
-						Date:&nbsp;
-							<span className="font-bold"> 
-								{dateInvoice.toLocaleDateString([], { 
-								year: 'numeric', 
-								month: 'long', 
-								day: 'numeric' })} 
-							</span>
-						<br />
-						Invoice number:&nbsp;
-							<span className="font-bold"> {fullData.code} </span>
-						<br />
-						Customer name:&nbsp;
-							<span className="font-bold">
-								{fullData.customer.firstname + ' ' + fullData.customer.lastname}
-							</span>
-					</div>
-					<div className="flex flex-1 flex-col gap-6 p-6">
-						<InvoiceTable queue={itemsQueue} />
+				<div className="flex h-full w-screen flex-col p-3">
+					<div className="overflow-x-hidden">
+						<div className="text-base">
+							Date:&nbsp;
+								<span className="font-bold"> 
+									{dateInvoice.toLocaleDateString([], { 
+									year: 'numeric', 
+									month: 'long', 
+									day: 'numeric' })} 
+								</span>
+							<br />
+							Invoice number:&nbsp;
+								<span className="font-bold"> {fullData.code} </span>
+							<br />
+							Customer name:&nbsp;
+								<span className="font-bold">
+									{fullData.customer.firstname + ' ' + fullData.customer.lastname}
+								</span>
+						</div>
+						<div className="flex flex-1 flex-col gap-6 p-6">
+							<InvoiceTable queue={itemsQueue} />
+						</div>
 					</div>
 				</div>
 			)}

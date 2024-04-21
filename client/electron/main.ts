@@ -56,26 +56,21 @@ function createWindow() {
 			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js'),
-				// devTools: false, //TODO: Remove on Production
 				plugins: true, 
 				nodeIntegration: false,
 				backgroundThrottling: false,
 				contextIsolation: true,
 			},
 		});
-		const windowWebContents: WebContents = newWindow.webContents
-		windowWebContents.openDevTools(); // Devtools on Open //FOR TEST ONLY
-		// console.log(data);
+		const windowWebContents: WebContents = newWindow.webContents;
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
 			printBackground: false,
 			pageSize: 'A4',
-			silent: false, //convert to true after final testing
+			silent: false, //TODO: convert to true after final testing
 			margins: {marginType: 'none'},
-			// copies: 2,
-		}
-		// let wholeData;
+		};
 		ipcMain.handle('send-data', () => { return data; });
 		windowWebContents.loadURL('http://localhost:5173/#/pos/print-invoice').then(() => {
 			setTimeout(() => {
@@ -85,44 +80,8 @@ function createWindow() {
 						windowWebContents.close();
 					}
 				})
-			
 			}, 3000);
 		});
-		// setTimeout(() => {
-			// win?.loadURL('http://localhost:5173/#/pos/print-invoice').then(() => {
-				// win?.webContents.print(options, (success, reason) => { 
-				// 	console.log(success, reason);
-				// 	// win?.webContents.close();
-				// 	// win?.webContents.goBack();
-				// 	// win?.webContents.goBack();
-				// 	if (success) {
-				// 		win?.webContents.goBack();
-				// 	}
-				// 	// win?.loadURL('http://localhost:5173/#/pos/add-order');
-				// })
-				// win?.loadURL('http://localhost:5173/#/pos/add-order');
-			// }).catch(console.log);
-		// 	win?.loadURL('http://localhost:5173/#/pos/print-invoice').then(() => {
-		// 		win?.webContents.print(options, (success, reason) => { 
-		// 			console.log(success, reason);
-		// 			win?.close();
-		// 			win?.loadURL('http://localhost:5173/#/pos/add-order');
-		// 		})
-		// 	});
-		// }, 4000);
-		// app.on('activate', () => {
-		
-		// win?.loadURL('http://localhost:5173/#/pos/add-order');
-		// })
-		// win?.once('ready-to-show', () => {
-		// 	console.log('test');
-		// 	win?.webContents.print(options, (success, reason) => { 
-		// 		console.log(success, reason);
-		// 		win?.loadURL('http://localhost:5173/#/pos');
-		// 	})
-		// });
-		// win?.webContents.send("print-invoice", data);
-		
 	})
 }
 
