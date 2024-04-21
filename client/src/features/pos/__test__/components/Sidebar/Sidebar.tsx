@@ -65,7 +65,7 @@ export const Sidebar = ({}: SidebarProps) => {
 		}
 	}, [fullData]);
 
-	const { openModal, isOpen, closeModal } = useModal();
+	// const { openModal, isOpen, closeModal } = useModal();
 	const successModal = useModal();
 	// useEffect(() => {
 	// 	if (auth.role === 'admin') {
@@ -134,7 +134,7 @@ export const Sidebar = ({}: SidebarProps) => {
 			<TotalItems />
 			<Payment />
 
-			<Button
+			{/* <Button
 				onClick={() => {
 					// toast.info('Coming Soon!');
 					// const windowWebContents: WebContents = new BrowserWindow().webContents
@@ -146,7 +146,7 @@ export const Sidebar = ({}: SidebarProps) => {
 				}}
 			>
 				Print Invoice
-			</Button>
+			</Button> */}
 
 			<Button
 				onClick={() => {
