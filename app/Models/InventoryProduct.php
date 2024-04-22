@@ -24,7 +24,8 @@ class InventoryProduct extends Model
         'damage_count',
         'total_count',
         'unit',
-        'status'
+        'status',
+        'product_price_id'
     ];
 
     public $timestamps = false;
@@ -57,5 +58,9 @@ class InventoryProduct extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function productPrice() {
+        return $this->hasOne(ProductPrice::class, 'id', 'product_price_id');
     }
 }

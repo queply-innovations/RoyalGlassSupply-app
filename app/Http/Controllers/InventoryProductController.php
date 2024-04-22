@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
+use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class InventoryProductController extends Controller
 {
@@ -32,8 +34,17 @@ class InventoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        $inventoryProduct = InventoryProduct::create($request->all());
-        return new InventoryProductResource($inventoryProduct);
+        try {
+            DB::beginTransaction();
+
+            $inventoryProduct = $this->createInventoryProduct($request);
+
+            DB::commit();
+            return new InventoryProductResource($inventoryProduct);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
     /**
@@ -153,5 +164,39 @@ class InventoryProductController extends Controller
         }
 
         return new InventoryProductCollection($query->get());
+    }
+
+    private function createInventoryProduct($request) {
+        $inventoryProduct = InventoryProduct::create($request->all());
+
+        $capitalPrice = $inventoryProduct->capital_price;
+        $markupPrice = $capitalPrice * 0.10;
+        $cost = $capitalPrice + $markupPrice;
+
+        $productPriceData = [
+            'product_id' => $inventoryProduct->product_id,
+            'type' => ' ',
+            'unit' => $inventoryProduct->unit,
+            'stocks_quantity' => $inventoryProduct->stocks_count,
+            'capital_price' => $capitalPrice,
+            'markup_price' => $markupPrice,
+            'tax_amount' => 0,
+            'cost' => $cost,
+            'on_sale' => 0,
+            'sale_discount' => 0,
+            'price' => $cost,
+            'warehouse_id' => $inventoryProduct->inventory->warehouse_id,
+            'created_by' => auth()->user()->id,
+            'approval_status' => $request->status ? 'approved' : 'pending',
+            'active_status' => $request->status ? 'active' : 'disabled'
+        ];
+
+        $productPrice = ProductPrice::create($productPriceData);
+
+        $inventoryProduct->update([
+            'product_price_id' => $productPrice->id
+        ]);
+
+        return $inventoryProduct;
     }
 }
