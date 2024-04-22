@@ -6,3 +6,4 @@ export * from './DeliveryCharge';
 export * from './TotalAmountDue';
 export * from './PaidAmount';
 export * from './ChangeAmount';
+export * from './PaymentType';
