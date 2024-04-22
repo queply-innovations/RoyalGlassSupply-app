@@ -15,6 +15,16 @@ import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { Warehouse } from 'lucide-react';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { useNavigate } from 'react-router-dom';
+import {
+	Items,
+	Subtotal,
+	Discount,
+	Tax,
+	DeliveryCharge,
+	TotalAmountDue,
+	PaidAmount,
+	ChangeAmount,
+} from './Info';
 // import { BrowserWindow, WebContents } from 'electron';
 
 interface SidebarProps {}
@@ -74,37 +84,96 @@ export const Sidebar = ({}: SidebarProps) => {
 	// }, [auth.role]);
 
 	return (
-		<div className="bg-pos-primary-background flex w-full max-w-[350px] flex-col gap-2 p-4">
-			{auth.role === 'admin' ? (
-				<>
-					<div className="flex flex-row items-center justify-between rounded-md bg-white p-1 px-3">
-						<Label className="text-sm font-medium uppercase text-slate-900">
-							Warehouse: {selectedWarehouse}
-						</Label>
-						<Button
-							onClick={() => {
-								navigate('/pos');
-							}}
-							size={'icon'}
-							className="h-8"
-						>
-							<Warehouse size={18} />
-						</Button>
-					</div>
-				</>
-			) : (
-				<>
-					<div className="flex flex-row items-center justify-between rounded-md bg-white p-2">
-						<Label className="flex flex-row items-center gap-2 text-sm font-medium uppercase text-slate-900">
-							<Warehouse size={18} />
-							{selectedWarehouse + ' BRANCH'}
-						</Label>
-						<Label className="text-sm font-medium uppercase text-slate-900">
-							{auth.user.firstname + ' ' + auth.user.lastname}
-						</Label>
-					</div>
-				</>
-			)}
+		<div className="bg-pos-primary-background flex w-full max-w-[375px] flex-col gap-2 p-5">
+			<div className="flex h-full flex-col rounded-md bg-white p-2 px-4">
+				<div>
+					{auth.role === 'admin' ? (
+						<>
+							<div className="flex flex-row items-center justify-between px-2 py-4 ">
+								<Label className="flex flex-col font-bold text-slate-700">
+									Warehouse{' '}
+									<span className="font-medium text-slate-800">
+										{selectedWarehouse === 'CDO'
+											? 'Cagayan De Oro'
+											: 'Iligan'}
+									</span>
+								</Label>
+								<Button
+									onClick={() => {
+										navigate('/pos');
+									}}
+									size={'icon'}
+								>
+									<Warehouse size={18} />
+								</Button>
+							</div>
+						</>
+					) : (
+						<>
+							<div className="flex flex-row justify-between bg-white p-2">
+								<div className="flex flex-col">
+									<Label className="flex flex-row items-center gap-2 font-bold uppercase text-slate-800">
+										{selectedWarehouse + ' BRANCH'}
+									</Label>
+									<Label className="font-medium capitalize text-slate-900">
+										{auth.user.firstname + ' ' + auth.user.lastname}
+									</Label>
+								</div>
+								<Button className="hover:cursor-default" size={'icon'}>
+									<Warehouse size={18} />
+								</Button>
+							</div>
+						</>
+					)}
+				</div>
+				<SearchCustomer />
+				<CustomerInfo />
+
+				<div className="flex flex-col gap-4 p-4 px-2">
+					<Items />
+					<Subtotal />
+					<Discount />
+					<Tax />
+					<DeliveryCharge />
+					<TotalAmountDue />
+					<ChangeAmount />
+				</div>
+			</div>
+
+			{/* <div className="flex flex-col gap-2">
+				{auth.role === 'admin' ? (
+					<>
+						<div className="flex flex-row items-center justify-between p-1 px-3 bg-white rounded-md">
+							<Label className="text-sm font-medium uppercase text-slate-900">
+								Warehouse: {selectedWarehouse}
+							</Label>
+							<Button
+								onClick={() => {
+									navigate('/pos');
+								}}
+								size={'icon'}
+								className="h-8"
+							>
+								<Warehouse size={18} />
+							</Button>
+						</div>
+					</>
+				) : (
+					<>
+						<div className="flex flex-row items-center justify-between p-2 bg-white rounded-md">
+							<Label className="flex flex-row items-center gap-2 text-sm font-medium uppercase text-slate-900">
+								<Warehouse size={18} />
+								{selectedWarehouse + ' BRANCH'}
+							</Label>
+							<Label className="text-sm font-medium uppercase text-slate-900">
+								{auth.user.firstname + ' ' + auth.user.lastname}
+							</Label>
+						</div>
+					</>
+				)}
+				<CustomerInfo />
+			</div> */}
+
 			{/* <Button
 				onClick={() =>
 					setFilter({ approval_status: 'approved', warehouse_id: 2 })
@@ -113,40 +182,43 @@ export const Sidebar = ({}: SidebarProps) => {
 				2
 			</Button> */}
 
-			<SearchCustomer />
-			<CustomerInfo />
-			<TotalItems />
-			<Payment />
+			{/* <TotalItems /> */}
 
-			<Button
-				onClick={() => {
-					// toast.info('Coming Soon!');
-					// const windowWebContents: WebContents = new BrowserWindow().webContents
-					// windowWebContents.print({}, (success, reason) => {
-					// 	console.log(success, reason)
-					// })
-					// let win = window.open();
-					window.print();
-				}}
-			>
-				Print Invoice
-			</Button>
+			{/* <div className="flex flex-col justify-between h-full">
+				<Payment />
+				<div className="flex flex-col gap-2">
+					<Button
+						onClick={() => {
+							// toast.info('Coming Soon!');
+							// const windowWebContents: WebContents = new BrowserWindow().webContents
+							// windowWebContents.print({}, (success, reason) => {
+							// 	console.log(success, reason)
+							// })
+							// let win = window.open();
+							window.print();
+						}}
+					>
+						Print Invoice
+					</Button>
 
-			<Button
-				onClick={() => {
-					// addInvoiceMutation(invoice);
-					handleSubmit();
-				}}
-				disabled={
-					Object.keys(selectedCustomer).length === 0 ||
-					invoiceItemsQueue.length === 0 ||
-					invoice.paid_amount === 0 ||
-					invoice.payment_method === ''
-				}
-			>
-				Submit
-			</Button>
-			<ModalTest
+					<Button
+						onClick={() => {
+							// addInvoiceMutation(invoice);
+							handleSubmit();
+						}}
+						disabled={
+							Object.keys(selectedCustomer).length === 0 ||
+							invoiceItemsQueue.length === 0 ||
+							invoice.paid_amount === 0 ||
+							invoice.payment_method === ''
+						}
+					>
+						Submit
+					</Button>
+				</div>
+			</div> */}
+
+			{/* <ModalTest
 				title={''}
 				isOpen={successModal.isOpen}
 				onClose={successModal.closeModal}
@@ -155,7 +227,7 @@ export const Sidebar = ({}: SidebarProps) => {
 				<div>
 					<div>Test</div>
 				</div>
-			</ModalTest>
+			</ModalTest> */}
 			{/* {auth.role === 'admin' ? (
 				<>
 					<ModalTest
