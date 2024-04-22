@@ -2,6 +2,7 @@ import { Label } from '@/components/ui/label';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { PaidAmount } from './PaidAmount';
+import { PaymentType } from './PaymentType';
 
 export const ChangeAmount = () => {
 	const { invoiceItemsQueue, invoice } = useInvoice();
@@ -18,7 +19,8 @@ export const ChangeAmount = () => {
 	}
 	return (
 		<>
-			<div className="flex w-full flex-col justify-between gap-2 border-t border-dashed py-2">
+			<div className="flex flex-col justify-between w-full gap-2 py-2 border-t border-dashed">
+				<PaymentType />
 				<PaidAmount />
 
 				<div className="flex flex-row justify-between">
