@@ -9,11 +9,10 @@ import { Payment } from './Payment';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { Warehouse } from 'lucide-react';
-import { Label } from '@radix-ui/react-dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 import {
 	Items,
@@ -25,27 +24,39 @@ import {
 	PaidAmount,
 	ChangeAmount,
 } from './Info';
+import { PaymentType } from './Payment/PaymentType';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { AddDiscountDialog, AddPaidAmount, PaymentTypeDialog } from './Dialog';
+import { Label } from '@/components/ui/label';
 // import { BrowserWindow, WebContents } from 'electron';
 
 interface SidebarProps {}
 
 export const Sidebar = ({}: SidebarProps) => {
+	const { handleChange } = useInvoice();
 	const { auth } = useAuth();
 
-	const { setFilter, selectedWarehouse, setSelectedWarehouse } = usePos();
+	const {
+		setFilter,
+		selectedWarehouse,
+		setSelectedWarehouse,
+		openDialog,
+		setOpenDialog,
+	} = usePos();
 
-	useEffect(() => {
-		if (selectedWarehouse === 'CDO') {
-			setInvoice({ ...invoice, warehouse_id: 1 });
-		} else if (selectedWarehouse === 'Iligan') {
-			setInvoice({ ...invoice, warehouse_id: 2 });
-		}
-	}, [selectedWarehouse]);
+	// useEffect(() => {
+	// 	if (selectedWarehouse === 'CDO') {
+	// 		setInvoice({ ...invoice, warehouse_id: 1 });
+	// 	} else if (selectedWarehouse === 'Iligan') {
+	// 		setInvoice({ ...invoice, warehouse_id: 2 });
+	// 	}
+	// 	handleChange('');
+	// }, [selectedWarehouse]);
 
 	const { invoiceItemsQueue, invoice, setInvoice } = useInvoice();
 	const { value: invoiceForm, addInvoiceMutation } = useInvoiceMutation();
 
-	const { selectedCustomer } = useCustomer();
+	// const { selectedCustomer } = useCustomer();
 
 	const navigate = useNavigate();
 
@@ -59,8 +70,8 @@ export const Sidebar = ({}: SidebarProps) => {
 		await addInvoiceMutation(data);
 	}
 
-	const { openModal, isOpen, closeModal } = useModal();
-	const successModal = useModal();
+	// const { openModal, isOpen, closeModal } = useModal();
+	// const successModal = useModal();
 	// useEffect(() => {
 	// 	if (auth.role === 'admin') {
 	// 		openModal();
@@ -82,10 +93,10 @@ export const Sidebar = ({}: SidebarProps) => {
 	// 		});
 	// 	}
 	// }, [auth.role]);
-
+	const [dialogType, setDialogType] = useState<string>('');
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[375px] flex-col gap-2 p-5">
-			<div className="flex h-full flex-col rounded-md bg-white p-2 px-4">
+			<div className="flex flex-col h-full p-2 px-4 bg-white rounded-md">
 				<div>
 					{auth.role === 'admin' ? (
 						<>
@@ -110,7 +121,7 @@ export const Sidebar = ({}: SidebarProps) => {
 						</>
 					) : (
 						<>
-							<div className="flex flex-row justify-between bg-white p-2">
+							<div className="flex flex-row justify-between p-2 bg-white">
 								<div className="flex flex-col">
 									<Label className="flex flex-row items-center gap-2 font-bold uppercase text-slate-800">
 										{selectedWarehouse + ' BRANCH'}
@@ -129,16 +140,73 @@ export const Sidebar = ({}: SidebarProps) => {
 				<SearchCustomer />
 				<CustomerInfo />
 
-				<div className="flex flex-col gap-4 p-4 px-2">
-					<Items />
-					<Subtotal />
-					<Discount />
-					<Tax />
-					<DeliveryCharge />
-					<TotalAmountDue />
-					<ChangeAmount />
+				<div className="flex flex-col justify-between h-full p-4 px-2">
+					<div className="flex flex-col gap-4">
+						{/* <PaymentType /> */}
+						<Items />
+						<Subtotal />
+						<Discount />
+						<Tax />
+						<DeliveryCharge />
+						<TotalAmountDue />
+						<ChangeAmount />
+					</div>
+					<div className="flex flex-col gap-2">
+						<div className="grid grid-cols-2 gap-2">
+							<Button
+								onClick={() => {
+									setOpenDialog(true);
+									setDialogType('discount');
+								}}
+							>
+								Add Discount
+							</Button>
+							<Button
+								variant={'outline'}
+								className="hover:cursor-not-allowed hover:bg-white"
+								onClick={() => {
+									setOpenDialog(true);
+									setDialogType('delivery_charge');
+								}}
+							>
+								Delivery Charge
+							</Button>
+						</div>
+						<Button
+							onClick={() => {
+								setOpenDialog(true);
+								setDialogType('payment_type');
+							}}
+						>
+							Select Payment Type
+						</Button>
+						<Button
+							onClick={() => {
+								setOpenDialog(true);
+								setDialogType('paid_amount');
+							}}
+						>
+							Add Paid Amount
+						</Button>
+						<Button
+							variant={'outline'}
+							className="w-full"
+							onClick={() => {
+								handleSubmit();
+							}}
+						>
+							Submit
+						</Button>
+					</div>
 				</div>
 			</div>
+			{dialogType === 'payment_type' && <PaymentTypeDialog />}
+			{dialogType === 'discount' && <AddDiscountDialog />}
+			{dialogType === 'paid_amount' && <AddPaidAmount />}
+			{/* {dialogType === '' && <PaymentTypeDialog />}
+			{dialogType === 'payment' && <PaymentTypeDialog />}
+			{dialogType === 'payment' && <PaymentTypeDialog />}
+			{dialogType === 'payment' && <PaymentTypeDialog />} */}
 
 			{/* <div className="flex flex-col gap-2">
 				{auth.role === 'admin' ? (

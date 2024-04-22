@@ -6,9 +6,9 @@ export const PaidAmount = () => {
 	const { invoice } = useInvoice();
 	return (
 		<>
-			<div className="flex w-full flex-row justify-between">
-				<Label className="text-medium font-medium text-slate-700">
-					Payment
+			<div className="flex flex-row justify-between w-full">
+				<Label className="font-medium text-medium text-slate-700">
+					Paid Amount
 				</Label>
 				<Label className="font-bold text-slate-700">
 					{invoice.paid_amount

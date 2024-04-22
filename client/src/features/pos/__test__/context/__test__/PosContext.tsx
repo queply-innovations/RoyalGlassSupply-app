@@ -31,6 +31,8 @@ interface PosContextProps {
 
 	// invoiceCodeResult: Invoices;
 	setInvoiceCode: (code: string) => void;
+	openDialog: boolean;
+	setOpenDialog: (open: boolean) => void;
 }
 
 interface PosProviderProps {
@@ -42,6 +44,8 @@ const PosContext = createContext<PosContextProps | undefined>(undefined);
 export const PosProvider = ({ children }: PosProviderProps) => {
 	const { auth } = useAuth();
 	const navigate = useNavigate();
+
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (auth.role === 'admin') {
@@ -132,6 +136,8 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		setSelectedWarehouse,
 		// invoiceCodeResult,
 		setInvoiceCode,
+		openDialog,
+		setOpenDialog,
 	};
 	return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
 };
