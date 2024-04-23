@@ -1,5 +1,5 @@
 import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
-import { ReportCard, TopProductsCard } from '@/features/reports/components';
+import { ReportCard, CustomersCard } from '@/features/reports/components';
 import { MainLayout } from '@/layouts/MainLayout';
 import { DatePickerWithRange } from '@/features/reports/components/DatePickerWithRange';
 import { ReportsProvider } from '@/features/reports';
@@ -50,7 +50,7 @@ export const Reports = () => {
 										</ReportCard>
 									</div>
 								</div>
-								<TopProductsCard />
+								<CustomersCard />
 								<GrossAndNetProfitCard />
 							</div>
 						</div>
