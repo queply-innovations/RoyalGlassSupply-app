@@ -114,7 +114,7 @@ export const AddInventoryProducts = ({
 					${
 						activeTab === 'form'
 							? auth.role === 'admin' || auth.role === 'super_admin'
-								? 'h-[415px] min-h-[415px]'
+								? 'h-[340px] min-h-[340px]'
 								: 'h-[260px] min-h-[260px]'
 							: 'h-[65vh] min-h-[415px]'
 					}`}

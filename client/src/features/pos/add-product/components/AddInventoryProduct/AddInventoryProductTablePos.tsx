@@ -38,12 +38,12 @@ const tableCols = [
 	'Size',
 	'Color',
 	'Supplier',
-	'Status',
 	'Capital price',
 	'Unit',
 	'Stocks',
 	'Damaged',
 	'Total',
+	'Approved',
 ];
 
 interface AddInventoryProductTableProps {
@@ -276,24 +276,6 @@ export const AddInventoryProductTable = ({
 														)?.name
 													: row?.data.supplier_id}
 											</TableCell>
-											<TableCell
-												className="px-5 py-3"
-												key={row?.id + 'status'}
-											>
-												{!!row?.data.status ? (
-													<CheckCircle
-														size={20}
-														strokeWidth={2}
-														className="text-green-600"
-													/>
-												) : (
-													<Clock
-														size={20}
-														strokeWidth={2}
-														className="text-gray-600"
-													/>
-												)}
-											</TableCell>
 											{auth?.role?.includes('admin') && (
 												<TableCell
 													className="px-5 py-3"
@@ -328,6 +310,12 @@ export const AddInventoryProductTable = ({
 												key={row?.id + 'total_count'}
 											>
 												{row?.data.total_count}
+											</TableCell>
+											<TableCell
+												className="px-5 py-3"
+												key={row?.id + 'approved_stocks'}
+											>
+												{row?.data.approved_stocks}
 											</TableCell>
 										</TableRow>
 									);
