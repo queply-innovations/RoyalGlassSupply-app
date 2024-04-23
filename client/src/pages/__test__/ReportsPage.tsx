@@ -1,11 +1,10 @@
-import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
 import { ReportCard, CustomersCard } from '@/features/reports/components';
 import { MainLayout } from '@/layouts/MainLayout';
 import { DatePickerWithRange } from '@/features/reports/components/DatePickerWithRange';
 import { ReportsProvider } from '@/features/reports';
 import { SalesRevenue } from '@/features/reports/components/SalesRevenue';
 import { ResetToDefaultButton } from '@/features/reports/components/ResetToDefaultButton';
-import { GrossAndNetProfitCard } from '@/features/reports/components/charts/GrossAndNetProfit';
+import { SalesRevenueHistory } from '@/features/reports/components/charts/SalesRevenueHistory';
 
 export const Reports = () => {
 	const dateFilters = ['Monthly', 'Quarterly', 'Yearly'];
@@ -63,7 +62,7 @@ export const Reports = () => {
 									</div>
 								</div>
 								<CustomersCard />
-								<GrossAndNetProfitCard />
+								<SalesRevenueHistory />
 							</div>
 						</div>
 					</div>

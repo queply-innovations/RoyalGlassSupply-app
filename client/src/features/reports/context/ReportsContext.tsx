@@ -2,8 +2,12 @@ import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useSalesRevenueQuery } from '../hooks/useSalesRevenueQuery';
 import { useDebounce } from '@uidotdev/usehooks';
-import { usePreviousInvoicesQuery } from '../hooks/usePreviousInvoicesQuery';
+import {
+	useInvoicesFromLastTwelveMonthsQuery,
+	usePreviousInvoicesQuery,
+} from '../hooks/usePreviousInvoicesQuery';
 import { currentDate } from '../utils/dateUtils';
+import { revenueTwelveMonths } from '../utils/revenueTwelveMonths';
 
 interface ReportsContextProps {
 	dateRange: DateRange | undefined;
@@ -13,6 +17,8 @@ interface ReportsContextProps {
 	returningCustomers: number[];
 	newCustomers: number[];
 	isPreviousInvoicesFetching: boolean;
+	lastTwelveMonths: string[];
+	salesRevenueLastTwelveMonths: number[];
 }
 
 interface ReportsProviderProps {
@@ -68,6 +74,17 @@ export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 		return { returningCustomers, newCustomers };
 	}, [currentInvoices, previousInvoices]);
 
+	// Fetch invoices data for the last twelve months
+	// Calculates sales revenue for each month, returns arrays for line graph
+	const { data: invoicesFromLastTwelveMonths } =
+		useInvoicesFromLastTwelveMonthsQuery();
+	const { lastTwelveMonths, salesRevenueLastTwelveMonths } = useMemo<{
+		lastTwelveMonths: string[];
+		salesRevenueLastTwelveMonths: number[];
+	}>(() => {
+		return revenueTwelveMonths(invoicesFromLastTwelveMonths ?? []);
+	}, [invoicesFromLastTwelveMonths]);
+
 	const value = {
 		dateRange,
 		setDateRange,
@@ -76,6 +93,8 @@ export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 		returningCustomers,
 		newCustomers,
 		isPreviousInvoicesFetching,
+		lastTwelveMonths,
+		salesRevenueLastTwelveMonths,
 	};
 
 	return (
