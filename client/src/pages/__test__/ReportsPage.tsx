@@ -22,9 +22,13 @@ export const Reports = () => {
 									<ResetToDefaultButton />
 								</div>
 								<div className="flex flex-1 flex-col gap-4">
-									<div className="flex flex-row gap-4">
+									<div className="flex flex-row gap-2 rounded-lg border p-2 shadow-sm">
 										<SalesRevenue />
-										<ReportCard title="Expected Profit">
+										<ReportCard
+											title="Expected Profit"
+											bgClassName="bg-blue-50"
+											textColorClassName="text-blue-800"
+										>
 											<p className="text-2xl font-bold tracking-tight">
 												{Intl.NumberFormat('en-US', {
 													style: 'currency',
@@ -32,7 +36,11 @@ export const Reports = () => {
 												}).format(4508)}
 											</p>
 										</ReportCard>
-										<ReportCard title="Collectibles">
+										<ReportCard
+											title="Collectibles"
+											bgClassName="bg-orange-50"
+											textColorClassName="text-orange-800"
+										>
 											<p className="text-2xl font-bold tracking-tight">
 												{Intl.NumberFormat('en-US', {
 													style: 'currency',
@@ -40,7 +48,11 @@ export const Reports = () => {
 												}).format(7129)}
 											</p>
 										</ReportCard>
-										<ReportCard title="Capital">
+										<ReportCard
+											title="Capital"
+											bgClassName="bg-stone-50"
+											textColorClassName="text-stone-800"
+										>
 											<p className="text-2xl font-bold tracking-tight">
 												{Intl.NumberFormat('en-US', {
 													style: 'currency',

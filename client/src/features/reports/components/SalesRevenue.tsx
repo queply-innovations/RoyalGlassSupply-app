@@ -8,10 +8,12 @@ export const SalesRevenue = () => {
 		<>
 			<ReportCard
 				title="Sales Revenue"
-				tooltip="Shows the current revenue generated from selling goods within the date range."
+				tooltip="Revenue generated from selling goods within the date range."
+				bgClassName="bg-green-50"
+				textColorClassName="text-green-800"
 			>
 				{isSalesRevenueFetching ? (
-					<div className="h-7 w-full  animate-pulse rounded-md bg-slate-600/20"></div>
+					<div className="h-7 w-full animate-pulse rounded-md bg-black/10"></div>
 				) : (
 					<p className="text-2xl font-bold tracking-tight">
 						{Intl.NumberFormat('en-US', {

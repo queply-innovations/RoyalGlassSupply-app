@@ -20,6 +20,8 @@ interface ReportCardProps {
 	description?: string;
 	tooltip?: string;
 	footer?: React.ReactNode;
+	bgClassName?: string;
+	textColorClassName?: string;
 }
 
 export const ReportCard = ({
@@ -28,28 +30,32 @@ export const ReportCard = ({
 	description,
 	tooltip,
 	footer,
+	bgClassName,
+	textColorClassName,
 }: ReportCardProps) => {
 	return (
 		<>
 			<TooltipProvider>
-				<Card className="w-full max-w-[460px]">
+				<Card
+					className={`w-full max-w-[460px] ${bgClassName ? bgClassName : 'bg-white'} ${textColorClassName ? textColorClassName : 'text-slate-800'} rounded-md border-0 shadow-none`}
+				>
 					<CardHeader>
 						<CardTitle
-							className={`text-base font-semibold tracking-normal text-slate-800 ${!description && 'mb-5'}`}
+							className={`text-sm font-semibold tracking-normal ${!description && 'mb-5'}`}
 						>
-							<span className="flex flex-row items-center gap-1">
+							<span className="flex flex-row items-center justify-between gap-1">
 								{title}{' '}
 								{tooltip && (
 									<Tooltip>
 										<TooltipTrigger>
 											<HelpCircle
 												size={18}
-												strokeWidth={2.5}
-												className="text-gray-700/50"
+												strokeWidth={2}
+												className={`${textColorClassName ? textColorClassName : 'text-slate-800'} opacity-70`}
 											/>
 										</TooltipTrigger>
 
-										<TooltipContent className="max-w-[40ch]">
+										<TooltipContent className="max-w-[40ch] font-medium">
 											{tooltip}
 										</TooltipContent>
 									</Tooltip>
@@ -57,12 +63,14 @@ export const ReportCard = ({
 							</span>
 						</CardTitle>
 						{description && (
-							<CardDescription className="text-sm font-medium text-slate-600">
+							<CardDescription
+								className={`text-sm font-medium opacity-70 ${textColorClassName ? textColorClassName : 'text-slate-800'}`}
+							>
 								{description}
 							</CardDescription>
 						)}
 					</CardHeader>
-					<CardContent className="text-slate-800">{children}</CardContent>
+					<CardContent>{children}</CardContent>
 					{footer && <CardFooter>{footer}</CardFooter>}
 				</Card>
 			</TooltipProvider>
