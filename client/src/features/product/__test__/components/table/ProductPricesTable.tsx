@@ -17,10 +17,6 @@ export const ProductPricesTable = ({
 }: ProductsPricesTableProps) => {
 	const { data, isLoading, setSelectedProductPrice } = useProductPrices();
 
-	const handleAddProdPrice = () => {
-		openModal({} as Product, 'add');
-	};
-
 	// Modal handler to expand product pricing/listing details
 	const handleProdPriceDetails = (productPrice: ProductPrices) => {
 		setSelectedProductPrice(productPrice);
@@ -33,12 +29,6 @@ export const ProductPricesTable = ({
 		openModal(productPrice, 'edit');
 	};
 
-	// Modal handler to remove product pricing/listing
-	const handleToggleActiveStatus = (productPrice: ProductPrices) => {
-		setSelectedProductPrice(productPrice);
-		openModal(productPrice, 'toggle_active_stat');
-	};
-
 	return (
 		<>
 			<TooltipProvider>
@@ -46,7 +36,6 @@ export const ProductPricesTable = ({
 					columns={ProductPricesColumns({
 						handleProdPriceDetails,
 						handleEditProdPrice,
-						handleToggleActiveStatus,
 					})}
 					data={
 						filterWarehouse
@@ -73,7 +62,6 @@ export const ProductPricesTable = ({
 					}
 					filterWhat={'name'}
 					dataType={'Listing'}
-					openModal={handleAddProdPrice}
 					isLoading={isLoading}
 				/>
 			</TooltipProvider>

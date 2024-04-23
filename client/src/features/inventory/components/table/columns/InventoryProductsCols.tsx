@@ -37,28 +37,6 @@ export const InventoryProductsCols = ({
 	handleApproveInventoryProduct,
 }: InventoryProductsColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
-		// {
-		// 	id: 'select',
-		// 	header: ({ table }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={table.getIsAllPageRowsSelected()}
-		// 			onChange={e =>
-		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
-		// 			}
-		// 			aria-label="Select all"
-		// 		/>
-		// 	),
-		// 	cell: ({ row }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={row.getIsSelected()}
-		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
-		// 			aria-label="Select row"
-		// 			className="justify-center"
-		// 		/>
-		// 	),
-		// },
 		{
 			id: 'product',
 			accessorKey: 'product.name',
@@ -98,10 +76,6 @@ export const InventoryProductsCols = ({
 			accessorKey: 'product.color',
 			header: () => <div className="justify-center uppercase">Color</div>,
 		},
-		// {
-		// 	accessorKey: 'supplier_id.name',
-		// 	header: () => <div className="justify-center uppercase">Supplier</div>,
-		// },
 		{
 			accessorKey: 'capital_price',
 			header: () => (
@@ -121,53 +95,54 @@ export const InventoryProductsCols = ({
 				);
 			},
 		},
-		// {
-		// 	accessorKey: 'unit',
-		// 	header: () => <div className="justify-center uppercase">Unit</div>,
-		// },
-		// {
-		// 	accessorKey: 'stocks_count',
-		// 	header: () => (
-		// 		<div className="justify-center whitespace-nowrap uppercase">
-		// 			Stocks
-		// 		</div>
-		// 	),
-		// },
-		// {
-		// 	accessorKey: 'damage_count',
-		// 	header: () => (
-		// 		<div className="justify-center whitespace-nowrap uppercase">
-		// 			Damaged
-		// 		</div>
-		// 	),
-		// },
 		{
-			accessorKey: 'total_count',
+			accessorKey: 'stocks_count',
 			header: () => (
 				<div className="justify-center whitespace-nowrap uppercase">
-					Total
+					Stocks
 				</div>
 			),
 		},
-		// {
-		// 	accessorKey: 'transferred_stocks_count',
-		// 	header: () => (
-		// 		<div className="justify-center uppercase">Transferred</div>
-		// 	),
-		// },
+		{
+			accessorKey: 'approved_stocks',
+			header: () => (
+				<div className="justify-center whitespace-nowrap uppercase">
+					Approved
+				</div>
+			),
+		},
 		{
 			accessorKey: 'sold_count',
 			header: () => <div className="justify-center uppercase">Sold</div>,
 		},
-		// {
-		// 	accessorKey: 'miscellaneous_count',
-		// 	header: () => <div className="justify-center uppercase">Misc</div>,
-		// },
 		{
 			accessorKey: 'remaining_stocks_count',
 			header: () => (
 				<div className="justify-center uppercase">Remaining</div>
 			),
+			cell: ({ row }) => {
+				const remainingStocks = row.original.remaining_stocks_count ?? 0;
+				const stocksCountLow = row.original.stocks_count * 0.2;
+				const stocksCountHalf = row.original.stocks_count * 0.5;
+				return (
+					<Tooltip>
+						<TooltipTrigger>
+							<span
+								className={`${stocksCountLow >= remainingStocks ? 'font-bold text-red-700' : stocksCountHalf >= remainingStocks ? 'font-semibold text-amber-700' : ''}`}
+							>
+								{remainingStocks}
+							</span>
+						</TooltipTrigger>
+						<TooltipContent>
+							{stocksCountLow >= remainingStocks
+								? 'Remaining stocks are low!'
+								: stocksCountHalf >= remainingStocks
+									? 'Remaining stocks are below 50%'
+									: 'Remaining stocks are above 50%'}
+						</TooltipContent>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			accessorKey: 'status',

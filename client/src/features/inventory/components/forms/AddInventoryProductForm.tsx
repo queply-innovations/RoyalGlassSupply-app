@@ -75,12 +75,10 @@ export const AddInventoryProductForm = ({
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
 		handleChange('unit', 'pcs'); // Default unit is pcs
-		auth.role?.includes('admin') && handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
 			(handleChange('product_id', selectedProduct.data.product_id),
-			handleChange('status', selectedProduct.data.status),
 			handleChange('supplier_id', selectedProduct.data.supplier_id),
 			handleChange('capital_price', selectedProduct.data.capital_price),
 			handleChange('unit', selectedProduct.data.unit),
@@ -140,7 +138,7 @@ export const AddInventoryProductForm = ({
 			>
 				<div className="flex w-full flex-col gap-3">
 					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-12 flex flex-col justify-center gap-1">
+						<div className="col-span-8 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="product_id"
 								className="text-sm font-bold text-gray-600"
@@ -206,7 +204,7 @@ export const AddInventoryProductForm = ({
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent
-									className={`min-w-[842px] p-0 text-sm font-medium text-slate-700`}
+									className={`min-w-[656px] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />
@@ -291,7 +289,7 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						<div className="col-span-6 flex flex-col justify-center gap-1">
+						<div className="col-span-4 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"
@@ -400,39 +398,10 @@ export const AddInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						{(auth.role === 'admin' || auth.role === 'super_admin') && (
-							<div className="col-span-6 flex flex-col justify-center gap-1">
-								<Label
-									htmlFor="status"
-									className="text-sm font-bold text-gray-600"
-								>
-									Status
-								</Label>
-								<Select
-									value={FormValue.status?.toString()}
-									required
-									onValueChange={value =>
-										handleChange('status', Number(value))
-									}
-								>
-									<SelectTrigger
-										name="status"
-										id="status"
-										className="w-full px-4 text-sm font-bold text-slate-700"
-									>
-										<SelectValue placeholder="Select status..." />
-									</SelectTrigger>
-									<SelectContent className="text-sm font-medium">
-										<SelectItem value="1">Approved</SelectItem>
-										<SelectItem value="0">Pending</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
-					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">
-						<div className="relative col-span-3 flex flex-col justify-center gap-1">
+					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
+						<div className="relative col-span-6 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="capital_price"
 								className="text-sm font-bold text-gray-600"
@@ -468,7 +437,7 @@ export const AddInventoryProductForm = ({
 								₱
 							</span>
 						</div>
-						<div className="col-span-3 flex flex-col justify-center gap-1">
+						<div className="col-span-6 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="unit"
 								className="text-sm font-bold text-gray-600"
@@ -485,7 +454,9 @@ export const AddInventoryProductForm = ({
 								onChange={e => handleChange('unit', e.target.value)}
 							/>
 						</div>
-						<div className="col-span-2 flex flex-col justify-center gap-1">
+						<div
+							className={`${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="stocks_count"
 								className="text-sm font-bold text-gray-600"
@@ -509,7 +480,9 @@ export const AddInventoryProductForm = ({
 								}}
 							/>
 						</div>
-						<div className="col-span-2 flex flex-col justify-center gap-1">
+						<div
+							className={`${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="damage_count"
 								className="text-sm font-bold text-gray-600"
@@ -533,7 +506,9 @@ export const AddInventoryProductForm = ({
 								}
 							/>
 						</div>
-						<div className="col-span-2 flex flex-col justify-center gap-1">
+						<div
+							className={`${auth.role?.includes('admin') ? 'col-span-3' : 'col-span-4'} flex flex-col justify-center gap-1`}
+						>
 							<Label
 								htmlFor="total_count"
 								className="text-sm font-bold text-gray-600"
@@ -552,6 +527,38 @@ export const AddInventoryProductForm = ({
 								className={`${totalCount && totalCount < 0 && 'text-red-600'}`}
 							/>
 						</div>
+						{auth.role?.includes('admin') && (
+							<div className="col-span-3 flex flex-col justify-center gap-1">
+								<Label
+									htmlFor="total_count"
+									className="text-sm font-bold text-gray-600"
+								>
+									Approve stocks
+								</Label>
+								<Input
+									id="total_count"
+									name="total_count"
+									type="number"
+									min={0}
+									max={FormValue.stocks_count ?? 0}
+									step={1}
+									value={
+										FormValue.approved_stocks !== undefined
+											? String(FormValue.approved_stocks)
+											: ''
+									}
+									onChange={e =>
+										handleChange('approved_stocks', e.target.value)
+									}
+									onBlur={e => {
+										handleChange(
+											'approved_stocks',
+											Number(e.target.value),
+										);
+									}}
+								/>
+							</div>
+						)}
 					</div>
 					<div className="flex w-full justify-between whitespace-nowrap pt-6">
 						<div className="ml-auto flex flex-row gap-4">
