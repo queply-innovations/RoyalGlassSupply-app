@@ -20,6 +20,7 @@ class InventoryProductResource extends JsonResource
         $remaining_stocks = $this->stocks_count - ($transferred_stocks_count + $sold_count + $miscellaneous_count);
         $product = new ProductResource($this->product);
         $productPrices = new ProductPriceCollection($this->product->productPrices);
+        $unapprovedStocks = $this->stocks_count - $this->approved_stocks;
 
         return [
             'id' => $this->id,
@@ -29,6 +30,7 @@ class InventoryProductResource extends JsonResource
             'capital_price' => round($this->capital_price, 2),
             'stocks_count' => $this->stocks_count,
             'approved_stocks' => $this->approved_stocks,
+            'remaining_unapproved_stocks' => $unapprovedStocks,
             'damage_count' => $this->damage_count,
             'total_count' => $this->total_count,
             'unit' => $this->unit,
@@ -36,7 +38,8 @@ class InventoryProductResource extends JsonResource
             'sold_count' => $sold_count,
             'miscellaneous_count' => $miscellaneous_count,
             'remaining_stocks_count' => $remaining_stocks,
-            'status' => $this->approved_stocks > 0 ? $this->status : 0
+            'status' => $this->approved_stocks > 0 ? $this->status : 0,
+            'inventory' => new InventoryResource($this->inventory)
         ];
     }
 }

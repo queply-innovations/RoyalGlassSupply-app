@@ -68,9 +68,18 @@ class InventoryProductController extends Controller
      */
     public function update(Request $request, InventoryProduct $inventoryProduct)
     {
-        $update = $this->updateInventoryProduct($request, $inventoryProduct);
+        try {
+            DB::beginTransaction();
 
-        return new InventoryProductResource($update);
+            $update = $this->updateInventoryProduct($request, $inventoryProduct);
+            
+            DB::commit();
+
+            return new InventoryProductResource($update);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -202,21 +211,35 @@ class InventoryProductController extends Controller
 
     private function updateInventoryProduct($request, $inventoryProduct) {
 
-        $oldCapitalPrice = $inventoryProduct->capital_price;
-        $markupPercent = $inventoryProduct->productPrice->markup_price / $oldCapitalPrice;
+        if($request->has('capital_price')) {
+            $oldCapitalPrice = $inventoryProduct->capital_price;
+            $markupPercent = $inventoryProduct->productPrice->markup_price / $oldCapitalPrice;
+    
+            $inventoryProduct->update($request->all());
+    
+            $markupPrice = $inventoryProduct->capital_price * $markupPercent;
+            $cost = $inventoryProduct->capital_price + $markupPrice;
+            $price = $cost - $inventoryProduct->productPrice->sale_discount;
+    
+            $inventoryProduct->productPrice->update([
+                'capital_price' => $inventoryProduct->capital_price,
+                'markup_price' => $markupPrice,
+                'cost' => $cost,
+                'price' => $price
+            ]);
+        } else if($request->has('approved_stocks') && $request->input('approved_stocks') > 0) {
+            $approvedStockCount =  $inventoryProduct->approved_stocks + $request->approved_stocks;
 
-        $inventoryProduct->update($request->all());
+            if($approvedStockCount > $inventoryProduct->stocks_count) {
+                throw new \Exception('Approved stocks cannot be higher than remaining unapproved stocks count');
+            }
 
-        $markupPrice = $inventoryProduct->capital_price * $markupPercent;
-        $cost = $inventoryProduct->capital_price + $markupPrice;
-        $price = $cost - $inventoryProduct->productPrice->sale_discount;
-
-        $inventoryProduct->productPrice->update([
-            'capital_price' => $inventoryProduct->capital_price,
-            'markup_price' => $markupPrice,
-            'cost' => $cost,
-            'price' => $price
-        ]);
+            $inventoryProduct->update([
+                'approved_stocks' => $approvedStockCount
+            ]);
+        } else {
+            $inventoryProduct->update($request->all());
+        }
 
         return $inventoryProduct;
     }
