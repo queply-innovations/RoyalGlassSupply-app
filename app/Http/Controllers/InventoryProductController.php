@@ -68,9 +68,9 @@ class InventoryProductController extends Controller
      */
     public function update(Request $request, InventoryProduct $inventoryProduct)
     {
-        $inventoryProduct->update($request->all());
+        $update = $this->updateInventoryProduct($request, $inventoryProduct);
 
-        return new InventoryProductResource($inventoryProduct);
+        return new InventoryProductResource($update);
     }
 
     /**
@@ -195,6 +195,27 @@ class InventoryProductController extends Controller
 
         $inventoryProduct->update([
             'product_price_id' => $productPrice->id
+        ]);
+
+        return $inventoryProduct;
+    }
+
+    private function updateInventoryProduct($request, $inventoryProduct) {
+
+        $oldCapitalPrice = $inventoryProduct->capital_price;
+        $markupPercent = $inventoryProduct->productPrice->markup_price / $oldCapitalPrice;
+
+        $inventoryProduct->update($request->all());
+
+        $markupPrice = $inventoryProduct->capital_price * $markupPercent;
+        $cost = $inventoryProduct->capital_price + $markupPrice;
+        $price = $cost - $inventoryProduct->productPrice->sale_discount;
+
+        $inventoryProduct->productPrice->update([
+            'capital_price' => $inventoryProduct->capital_price,
+            'markup_price' => $markupPrice,
+            'cost' => $cost,
+            'price' => $price
         ]);
 
         return $inventoryProduct;

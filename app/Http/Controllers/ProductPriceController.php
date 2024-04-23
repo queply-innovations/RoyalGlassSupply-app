@@ -57,7 +57,7 @@ class ProductPriceController extends Controller
      */
     public function update(Request $request, ProductPrice $productPrice)
     {
-        $productPrice->update($request->all());
+        $productPrice->update($request->except(['capital_price']));
 
         return new ProductPriceResource($productPrice);
     }
