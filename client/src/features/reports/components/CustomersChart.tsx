@@ -56,7 +56,7 @@ export const CustomersChart = () => {
 	};
 	return (
 		<>
-			{!(isPreviousInvoicesFetching || isSalesRevenueFetching) && (
+			{!(isPreviousInvoicesFetching || isSalesRevenueFetching) ? (
 				<Chart
 					series={chartSeries}
 					options={chartOptions}
@@ -64,6 +64,11 @@ export const CustomersChart = () => {
 					height="100%"
 					width="100%"
 				/>
+			) : (
+				<div className="flex h-72 w-full animate-pulse justify-center p-4">
+					<div className="mx-auto h-full w-72 rounded-2xl bg-slate-200"></div>
+					<div className="h-20 w-44 rounded-2xl bg-slate-200"></div>
+				</div>
 			)}
 		</>
 	);
