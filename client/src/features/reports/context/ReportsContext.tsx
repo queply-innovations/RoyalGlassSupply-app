@@ -1,13 +1,9 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useSalesRevenueQuery } from '../hooks/useSalesRevenueQuery';
 import { useDebounce } from '@uidotdev/usehooks';
-import { useCustomerReportQuery } from '../hooks/useCustomerReportQuery';
-import {
-	currentDate,
-	firstDayOfCurrentMonth,
-	lastDayOfPreviousMonth,
-} from '../utils/dateUtils';
+import { usePreviousInvoicesQuery } from '../hooks/usePreviousInvoicesQuery';
+import { currentDate } from '../utils/dateUtils';
 
 interface ReportsContextProps {
 	dateRange: DateRange | undefined;
@@ -16,7 +12,7 @@ interface ReportsContextProps {
 	isSalesRevenueFetching: boolean;
 	returningCustomers: number[];
 	newCustomers: number[];
-	isCustomersFetching: boolean;
+	isPreviousInvoicesFetching: boolean;
 }
 
 interface ReportsProviderProps {
@@ -26,23 +22,6 @@ interface ReportsProviderProps {
 const ReportsContext = createContext<ReportsContextProps | undefined>(
 	undefined,
 );
-
-export const useCustomerReportData = (
-	dateRangePrev: DateRange,
-	dateRangeCurrent: DateRange,
-): {
-	returningCustomers: number[];
-	newCustomers: number[];
-	isFetching: boolean;
-} => {
-	const { returningCustomers, newCustomers, isFetching } =
-		useCustomerReportQuery(
-			{ from: dateRangePrev.from, to: dateRangePrev.to },
-			{ from: dateRangeCurrent.from, to: dateRangeCurrent.to },
-		);
-
-	return { returningCustomers, newCustomers, isFetching };
-};
 
 export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 	// State handler for global date range
@@ -55,17 +34,39 @@ export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 	const [dateRangeQuery] = useDebounce([dateRange], 2500);
 
 	// Fetch sales revenue data based on date range
-	const { revenue, isFetching: isSalesRevenueFetching } =
-		useSalesRevenueQuery(dateRangeQuery);
-	// Fetch customer report data based on date range
 	const {
-		returningCustomers,
-		newCustomers,
-		isFetching: isCustomersFetching,
-	} = useCustomerReportData(
-		{ from: new Date('2024-01-01'), to: lastDayOfPreviousMonth },
-		{ from: firstDayOfCurrentMonth, to: currentDate },
-	);
+		revenue,
+		isFetching: isSalesRevenueFetching,
+		data: currentInvoices,
+	} = useSalesRevenueQuery(dateRangeQuery);
+	// Fetch previous invoices data based on date range
+	// Used for comparison of returning and new customers
+	const { data: previousInvoices, isFetching: isPreviousInvoicesFetching } =
+		usePreviousInvoicesQuery(dateRangeQuery?.from);
+
+	// Calculate returning and new customers based on invoices data
+	const { returningCustomers, newCustomers } = useMemo<{
+		returningCustomers: number[];
+		newCustomers: number[];
+	}>(() => {
+		const previousCustomers = previousInvoices?.map(
+			invoice => invoice.customer.id,
+		);
+		const currentCustomers = currentInvoices?.map(
+			invoice => invoice.customer.id,
+		);
+		const uniquePreviousCustomers = [...new Set(previousCustomers)];
+		const uniqueCurrentCustomers = [...new Set(currentCustomers)];
+
+		const returningCustomers = uniqueCurrentCustomers.filter(customerId =>
+			uniquePreviousCustomers.includes(customerId),
+		);
+		const newCustomers = uniqueCurrentCustomers.filter(
+			customerId => !uniquePreviousCustomers.includes(customerId),
+		);
+
+		return { returningCustomers, newCustomers };
+	}, [currentInvoices, previousInvoices]);
 
 	const value = {
 		dateRange,
@@ -74,7 +75,7 @@ export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 		isSalesRevenueFetching,
 		returningCustomers,
 		newCustomers,
-		isCustomersFetching,
+		isPreviousInvoicesFetching,
 	};
 
 	return (

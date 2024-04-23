@@ -2,8 +2,12 @@ import Chart from 'react-apexcharts';
 import { useReportsContext } from '../context/ReportsContext';
 
 export const CustomersChart = () => {
-	const { newCustomers, returningCustomers, isCustomersFetching } =
-		useReportsContext();
+	const {
+		newCustomers,
+		returningCustomers,
+		isPreviousInvoicesFetching,
+		isSalesRevenueFetching,
+	} = useReportsContext();
 	const chartSeries = [newCustomers.length, returningCustomers.length];
 	const chartOptions = {
 		series: [newCustomers.length, returningCustomers.length],
@@ -52,7 +56,7 @@ export const CustomersChart = () => {
 	};
 	return (
 		<>
-			{!isCustomersFetching && (
+			{!(isPreviousInvoicesFetching || isSalesRevenueFetching) && (
 				<Chart
 					series={chartSeries}
 					options={chartOptions}

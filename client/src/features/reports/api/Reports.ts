@@ -33,3 +33,35 @@ export const fetchInvoicesDateRange = async (
 			throw error;
 		});
 };
+
+export const fetchPreviousInvoices = async (
+	dateTo: Date,
+): Promise<Invoices[]> => {
+	return await axios
+		.post(
+			`${API_URLS.INVOICE}/searches-filters-sorts`,
+			{
+				date_range: {
+					created_at: {
+						from: new Date('2024-01-01').toISOString().split('T')[0],
+						to: dateTo.toISOString().split('T')[0],
+					},
+					updated_at: {
+						from: new Date('2024-01-01').toISOString().split('T')[0],
+						to: dateTo.toISOString().split('T')[0],
+					},
+				},
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			console.log(response.data.data);
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching invoices:', error);
+			throw error;
+		});
+};
