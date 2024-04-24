@@ -7,13 +7,39 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Http\Resources\ReportCollection;
 use App\Http\Resources\ReportResource;
+use App\Models\Customer;
+use App\Models\OperationExpense;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
 class ReportController extends Controller
 {
+    public function dashboard(Request $request) {
+        $request->validate([
+            'date_from' => 'required|date',
+            'date_to' => 'required|date'
+        ]);
+
+        $salesData = $this->getSalesReport($request);
+        $customerData = $this->getCustomerReport($request);
+
+        $data = [
+            'date_from' => $request->date_from,
+            'date_to' => $request->date_to,
+            'total_sales' => $salesData['total_sales'],
+            'total_capital' => $salesData['total_capital'],
+            'total_expenses' => $salesData['total_expenses'],
+            'total_profit' => $salesData['total_profit'],
+            'new_customers' => $customerData['new_customers'],
+            'returning_customers' => $customerData['returning_customers']
+        ];
+
+        return $this->sendResponse($data, 'Reports retrieved successfully.');
+    }
+
     public function sales(Request $request)
     {
         //filters include warehouse, type (daily, weekly, monthly, custom)
@@ -194,5 +220,77 @@ class ReportController extends Controller
         }
 
         return new ReportCollection($result);
+    }
+
+    private function getSalesReport($request) {
+        $invoices = Invoice::with(['invoiceItems.inventoryProduct'])
+            ->where('type', 'payment')
+            ->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])
+            ->when($request->has('warehouse'), function($query) use($request) {
+                return $query->where('warehouse_id', $request->warehouse);
+            })
+            ->get();
+
+        $expenses = OperationExpense::whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])->sum('amount');
+
+        $invoiceData = [];
+
+        foreach($invoices as $invoice) {
+            $capitalPrices = collect($invoice->invoiceItems)->map(function($item) {
+                return $item->inventoryProduct->capital_price * $item->quantity;
+            });
+
+            $invoiceData[] = [
+                'total_sales' => $invoice->total_amount_due,
+                'total_capital_price' => array_sum($capitalPrices->toArray())
+            ];
+        }
+
+        $sales = array_sum(array_column($invoiceData, 'total_sales'));
+        $capital = array_sum(array_column($invoiceData, 'total_capital_price'));
+        $profit = $sales - ( $capital + $expenses );
+
+        return [
+            'total_sales' => $sales,
+            'total_capital' => $capital,
+            'total_expenses' => $expenses,
+            'total_profit' => $profit
+        ];
+    }
+
+    private function getCustomerReport($request) {
+        $dateFrom = Carbon::parse($request->date_from)->format('Y-m-d');
+        $dateTo = Carbon::parse($request->date_to)->format('Y-m-d');
+        $customers = Customer::with('invoices')
+            ->whereHas('invoices')
+            ->get();
+
+        $newCustomer = 0;
+        $returningCustomer = 0;
+
+        foreach($customers as $customer) {
+            $firstInvoice = $customer->invoices[0];
+            $lastInvoice = $customer->invoices[count($customer->invoices) - 1];
+
+            $firstCustomerPurchasedData = Carbon::parse($firstInvoice['created_at'])->format('Y-m-d');
+            $lastCustomerPurchasedData = Carbon::parse($lastInvoice['created_at'])->format('Y-m-d');
+
+            if($dateFrom <= $firstCustomerPurchasedData && $dateTo >= $lastCustomerPurchasedData) {
+                $newCustomer++;
+            } else if($dateFrom <= $lastCustomerPurchasedData && $dateTo >= $lastCustomerPurchasedData) {
+                $returningCustomer++;
+            } else {}
+        }
+
+        return [
+            'new_customers' => $newCustomer,
+            'returning_customers' => $returningCustomer
+        ];
     }
 }
