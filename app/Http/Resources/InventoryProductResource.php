@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class InventoryProductResource extends JsonResource
             'id' => $this->id,
             'inventory_id' => $this->inventory_id,
             'product' => $product,
+            'product_price' => $this->productPrice,
             'supplier_id' => new SupplierResource($this->supplier),
             'capital_price' => round($this->capital_price, 2),
             'stocks_count' => $this->stocks_count,
@@ -38,8 +40,8 @@ class InventoryProductResource extends JsonResource
             'sold_count' => $sold_count,
             'miscellaneous_count' => 0,
             'remaining_stocks_count' => $remaining_stocks > 0 ? $remaining_stocks : 0,
-            'status' => $this->approved_stocks > 0 ? $this->status : 0,
-            'inventory' => new InventoryResource($this->inventory),
+            'status' => $remaining_stocks > 0 ? $this->status : 0,
+            'inventory' => new InventoryResource($this->inventory)
         ];
     }
 }

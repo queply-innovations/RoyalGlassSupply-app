@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -34,6 +35,11 @@ class Product extends Model
     public function productPrices(): HasMany
     {
         return $this->hasMany(ProductPrice::class);
+    }
+
+    public function productPrice(): HasOne
+    {
+        return $this->hasOne(ProductPrice::class, );
     }
 
     public function invoiceItems(): HasMany
