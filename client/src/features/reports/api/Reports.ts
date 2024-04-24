@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
 import { Invoices } from '@/features/invoice/__test__/types';
+import { Reports } from '../types';
 
 export const fetchInvoicesDateRange = async (
 	dateFrom: Date,
@@ -103,5 +104,29 @@ export const fetchInvoicesLastTwelveMonths = async (): Promise<Invoices[]> => {
 		.catch(error => {
 			console.error('Error fetching invoices:', error);
 			throw error;
+		});
+};
+
+export const fetchReports = async (
+	dateFrom: Date,
+	dateTo: Date,
+): Promise<Reports> => {
+	return await axios
+		.post(
+			`${API_URLS.REPORTS}`,
+			{
+				date_from: dateFrom.toISOString().split('T')[0],
+				date_to: dateTo.toISOString().split('T')[0],
+			},
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching reports:', error);
+			return error;
 		});
 };
