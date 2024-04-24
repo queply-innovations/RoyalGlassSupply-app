@@ -165,10 +165,10 @@ export const AddInventoryProductForm = ({
 													);
 													return (
 														<div className="flex w-full flex-row items-baseline gap-4">
-															<span className="max-w-[50%] truncate">
+															<span>
 																{selectedProduct?.name}
 															</span>
-															<div className="flex max-w-[50%] gap-4 truncate text-xs font-semibold">
+															<div className="flex gap-4 truncate text-xs font-semibold">
 																{selectedProduct?.brand && (
 																	<span>
 																		{`Brand: ${selectedProduct?.brand}`}
@@ -237,29 +237,7 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<div className="flex w-full flex-row justify-between gap-4">
-															<div className="flex max-w-[50%] flex-col">
-																<span className="max-w-full truncate font-semibold">
-																	{product.name}
-																</span>
-																<span className="max-w-full truncate text-xs font-medium">
-																	{product.brand}
-																	{product.brand &&
-																		product.size &&
-																		' • '}
-																	{product.size}
-																	{product.size &&
-																		product.color &&
-																		' • '}
-																	{product.color}
-																</span>
-															</div>
-															<div className="flex max-w-[50%] flex-col text-right">
-																<span className="max-w-full truncate">
-																	{product.serial_no}
-																</span>
-															</div>
-														</div>
+														{`${product.name} • ${product.brand} • ${product.size} • ${product.color}`}
 													</CommandItem>
 												))}
 											</CommandGroup>

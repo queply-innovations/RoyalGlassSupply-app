@@ -33,6 +33,7 @@ import { InventoryProductsQueueProps } from '../modal/AddInventoryProduct';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { getTotalCount } from '../../helpers';
+import { ProductPricesTable } from '@/features/product/__test__/components';
 
 interface AddInventoryProductFormProps {
 	setInventoryProductsQueue: React.Dispatch<
@@ -169,10 +170,10 @@ export const AddInventoryProductForm = ({
 													);
 													return (
 														<div className="flex w-full flex-row items-baseline gap-4">
-															<span className="max-w-[50%] truncate">
+															<span>
 																{selectedProduct?.name}
 															</span>
-															<div className="flex max-w-[50%] gap-4 truncate text-xs font-semibold">
+															<div className="flex gap-4 truncate text-xs font-semibold">
 																{selectedProduct?.brand && (
 																	<span>
 																		{`Brand: ${selectedProduct?.brand}`}
@@ -204,7 +205,7 @@ export const AddInventoryProductForm = ({
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent
-									className={`min-w-[656px] p-0 text-sm font-medium text-slate-700`}
+									className={`min-w-[756px] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
 										<CommandInput placeholder="Product name or serial number..." />
@@ -258,29 +259,7 @@ export const AddInventoryProductForm = ({
 															setProductsListOpen(false);
 														}}
 													>
-														<div className="flex w-full flex-row justify-between gap-4">
-															<div className="flex max-w-[50%] flex-col">
-																<span className="max-w-full truncate font-semibold">
-																	{product.name}
-																</span>
-																<span className="max-w-full truncate text-xs font-medium">
-																	{product.brand}
-																	{product.brand &&
-																		product.size &&
-																		' • '}
-																	{product.size}
-																	{product.size &&
-																		product.color &&
-																		' • '}
-																	{product.color}
-																</span>
-															</div>
-															<div className="flex max-w-[50%] flex-col text-right">
-																<span className="max-w-full truncate">
-																	{product.serial_no}
-																</span>
-															</div>
-														</div>
+														{`${product.name} • ${product.brand} • ${product.size} • ${product.color}`}
 													</CommandItem>
 												))}
 											</CommandGroup>
