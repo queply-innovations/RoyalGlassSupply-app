@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class ReportController extends Controller
 {
@@ -38,6 +39,16 @@ class ReportController extends Controller
         ];
 
         return $this->sendResponse($data, 'Reports retrieved successfully.');
+    }
+
+    public function analytics(Request $request) {
+        $request->validate([
+            'year' => 'required|integer|digits:4'
+        ]);
+
+        $analyticsData = $this->getAnalyticsReport($request);
+
+        return $this->sendResponse($analyticsData, 'Analytics Report retrieved successfully.');
     }
 
     public function sales(Request $request)
@@ -292,5 +303,44 @@ class ReportController extends Controller
             'new_customers' => $newCustomer,
             'returning_customers' => $returningCustomer
         ];
+    }
+
+    private function getAnalyticsReport($request) {
+        $startOfYear = $request->year.'-01-01';
+        $endOfYear = $request->year.'-12-31';
+
+        $data = [];
+
+        $startMonth = Carbon::parse($startOfYear)->format('Y-m-d');
+        $endMonth = Carbon::parse($endOfYear)->format('Y-m-d');
+        $monthRange = CarbonPeriod::create($startMonth, '1 month', $endMonth);
+
+        foreach ($monthRange as $month) {
+            $salesRequest = new Request();
+            $salesRequest->merge([
+                'date_from' => Carbon::parse($month)->startOfMonth(),
+                'date_to' => Carbon::parse($month)->endOfMonth()
+            ]);
+
+            if($request->has('warehouse')) {
+                $salesRequest->merge([
+                    'warehouse' => $request->warehouse
+                ]);
+            } 
+
+            $salesReport = $this->getSalesReport($salesRequest);
+
+            $data[] = [
+                'Month' => Carbon::parse($month)->format('F'),
+                'date_from' =>  Carbon::parse($month)->startOfMonth()->format('Y-m-d'),
+                'date_to' => Carbon::parse($month)->endOfMonth()->format('Y-m-d'),
+                'gross_income' => $salesReport['total_sales'],
+                'capital' => $salesReport['total_capital'],
+                'expenses' => $salesReport['total_expenses'],
+                'net_profit' => $salesReport['total_profit']
+            ];
+        }
+
+        return $data;
     }
 }
