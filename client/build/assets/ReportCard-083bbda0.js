@@ -1,0 +1,11 @@
+import{Q as n,j as e,aD as d,bJ as o,bK as x,bL as m,ax as h,ay as p,aA as j,bM as y,bN as u,b$ as b}from"./index-b37f3cdf.js";import{G as g}from"./timeUtils-3867b2bc.js";/**
+ * @license lucide-react v0.338.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const M=n("Ban",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"m4.9 4.9 14.2 14.2",key:"1m5liu"}]]);/**
+ * @license lucide-react v0.338.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const f=n("HelpCircle",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3",key:"1u773s"}],["path",{d:"M12 17h.01",key:"p32p05"}]]);function T(c){return g({tag:"svg",attr:{viewBox:"0 0 512 512"},child:[{tag:"path",attr:{d:"M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"}}]})(c)}const $=({title:c,children:i,description:s,tooltip:t,footer:r,bgClassName:l,textColorClassName:a})=>e.jsx(e.Fragment,{children:e.jsx(d,{children:e.jsxs(o,{className:`w-full max-w-[460px] ${l||"bg-white"} ${a||"text-slate-800"} rounded-md border-0 shadow-none`,children:[e.jsxs(x,{children:[e.jsx(m,{className:`text-sm font-semibold tracking-normal ${!s&&"mb-5"}`,children:e.jsxs("span",{className:"flex flex-row items-center justify-between gap-1",children:[c," ",t&&e.jsxs(h,{children:[e.jsx(p,{children:e.jsx(f,{size:18,strokeWidth:2,className:`${a||"text-slate-800"} opacity-70`})}),e.jsx(j,{className:"max-w-[40ch] font-medium",children:t})]})]})}),s&&e.jsx(y,{className:`text-sm font-medium opacity-70 ${a||"text-slate-800"}`,children:s})]}),e.jsx(u,{children:i}),r&&e.jsx(b,{children:r})]})})});export{M as B,T as F,$ as R};
