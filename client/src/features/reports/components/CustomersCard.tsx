@@ -12,8 +12,8 @@ export const CustomersCard = () => {
 		<>
 			<Card className="flex min-h-[24rem] flex-col gap-4">
 				<CardHeader className="flex flex-none flex-row items-center justify-between gap-4 pb-2">
-					<CardTitle className="font-bold">Customers</CardTitle>
-					<CardDescription className="font-semibold">
+					<CardTitle className="text-base font-bold">Customers</CardTitle>
+					<CardDescription className="text-sm font-medium">
 						Shows new and returning customers for the selected date range
 					</CardDescription>
 				</CardHeader>

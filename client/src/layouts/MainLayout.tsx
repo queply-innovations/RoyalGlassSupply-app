@@ -35,7 +35,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 					<Sidebar />
 					<div className="flex max-h-full flex-auto flex-col p-5">
 						<CommonLayout title={title!}>{children}</CommonLayout>
-						<div className="mt-auto flex flex-shrink-0 flex-grow-0 flex-row items-center justify-end gap-3 pt-4 text-base text-slate-700">
+						<div className="mt-auto flex flex-shrink-0 flex-grow-0 flex-row items-center justify-end gap-3 pt-4 text-sm font-medium text-slate-700">
 							<div
 								className={`h-3 w-3 rounded-full ${online ? 'bg-green-500' : 'bg-gray-500'}`}
 							>

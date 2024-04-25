@@ -12,7 +12,7 @@ import {
 	TooltipTrigger,
 	TooltipContent,
 } from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 interface ReportCardProps {
 	title: string;
@@ -39,7 +39,7 @@ export const ReportCard = ({
 				<Card
 					className={`w-full max-w-[460px] ${bgClassName ? bgClassName : 'bg-white'} ${textColorClassName ? textColorClassName : 'text-slate-800'} rounded-md border-0 shadow-none`}
 				>
-					<CardHeader>
+					<CardHeader className="px-5 pt-4">
 						<CardTitle
 							className={`text-sm font-semibold tracking-normal ${!description && 'mb-5'}`}
 						>
@@ -48,10 +48,10 @@ export const ReportCard = ({
 								{tooltip && (
 									<Tooltip>
 										<TooltipTrigger>
-											<HelpCircle
+											<Info
 												size={18}
 												strokeWidth={2}
-												className={`${textColorClassName ? textColorClassName : 'text-slate-800'} opacity-70`}
+												className={`${textColorClassName ? textColorClassName : 'text-slate-800'} opacity-60`}
 											/>
 										</TooltipTrigger>
 
@@ -70,7 +70,7 @@ export const ReportCard = ({
 							</CardDescription>
 						)}
 					</CardHeader>
-					<CardContent>{children}</CardContent>
+					<CardContent className="px-5 pb-4">{children}</CardContent>
 					{footer && <CardFooter>{footer}</CardFooter>}
 				</Card>
 			</TooltipProvider>

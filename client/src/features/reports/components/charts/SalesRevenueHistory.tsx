@@ -8,8 +8,12 @@ import {
 } from '@/components/ui/card';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import Chart from 'react-apexcharts';
+import { useReportsContext } from '../../context/ReportsContext';
 
-export const GrossAndNetProfitCard = () => {
+export const SalesRevenueHistory = () => {
+	const { lastTwelveMonths, salesRevenueLastTwelveMonths } =
+		useReportsContext();
+
 	const ref: RefObject<HTMLDivElement> = useRef(null);
 
 	const [chartWidth, setChartWidth] = useState<number>(500);
@@ -44,7 +48,9 @@ export const GrossAndNetProfitCard = () => {
 		<>
 			<Card className="flex min-h-[28rem] w-full flex-col gap-4" ref={ref}>
 				<CardHeader className="flex flex-none flex-row items-center justify-between gap-4 pb-2">
-					<CardTitle className="font-bold">Gross & Net Profit</CardTitle>
+					<CardTitle className="font-bold">
+						Sales Revenue History
+					</CardTitle>
 					<CardDescription className="!mt-1 font-bold uppercase"></CardDescription>
 				</CardHeader>
 				<CardContent className="w-full flex-1 overflow-hidden">
@@ -54,43 +60,52 @@ export const GrossAndNetProfitCard = () => {
 						width={'100%'}
 						series={[
 							{
-								name: 'GROSS INCOME',
-								data: [
-									234, 45, 67, 987, 345, 123, 500, 346, 234, 123, 564,
-									341,
-								],
-							},
-							{
-								name: 'NET PROFIT',
-								data: [
-									432, 54, 76, 789, 543, 321, 231, 642, 432, 321, 465,
-									143,
-								],
-							},
-							{
-								name: 'TOTAL CAPITAL',
-								data: [
-									925, 860, 487, 199, 726, 482, 70, 838, 328, 98, 74,
-									706,
-								],
+								name: 'Sales Revenue',
+								data: salesRevenueLastTwelveMonths,
 							},
 						]}
 						options={{
+							markers: { size: 5 },
+							stroke: { width: 4 },
+							colors: ['#16a34a'],
 							xaxis: {
-								categories: [
-									'Jan',
-									'Feb',
-									'Mar',
-									'Apr',
-									'May',
-									'Jun',
-									'Jul',
-									'Aug',
-									'Sep',
-									'Oct',
-									'Nov',
-									'Dec',
-								],
+								tooltip: {
+									enabled: false,
+								},
+								categories: lastTwelveMonths.map(dateString =>
+									Intl.DateTimeFormat('en-US', {
+										year: 'numeric',
+										month: 'short',
+									}).format(new Date(dateString)),
+								),
+								labels: {
+									style: {
+										fontFamily: 'Inter',
+										fontSize: '12px',
+										fontWeight: 600,
+									},
+								},
+							},
+							yaxis: {
+								labels: {
+									style: {
+										fontFamily: 'Inter',
+										fontSize: '12px',
+										fontWeight: 600,
+									},
+									formatter: value => {
+										return Intl.NumberFormat('en-US', {
+											style: 'currency',
+											currency: 'PHP',
+										}).format(value);
+									},
+								},
+							},
+							tooltip: {
+								style: {
+									fontFamily: 'Inter',
+									fontSize: '14px',
+								},
 							},
 							legend: {
 								position: 'top',

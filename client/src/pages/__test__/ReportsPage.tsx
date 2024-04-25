@@ -1,14 +1,19 @@
-import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
-import { ReportCard, CustomersCard } from '@/features/reports/components';
+import {
+	SalesCard,
+	ProfitCard,
+	CollectiblesCard,
+	ExpensesCard,
+	CapitalCard,
+	CustomersCard,
+} from '@/features/reports/components';
 import { MainLayout } from '@/layouts/MainLayout';
 import { DatePickerWithRange } from '@/features/reports/components/DatePickerWithRange';
 import { ReportsProvider } from '@/features/reports';
-import { SalesRevenue } from '@/features/reports/components/SalesRevenue';
 import { ResetToDefaultButton } from '@/features/reports/components/ResetToDefaultButton';
-import { GrossAndNetProfitCard } from '@/features/reports/components/charts/GrossAndNetProfit';
+import { SalesRevenueHistory } from '@/features/reports/components/charts/SalesRevenueHistory';
 
 export const Reports = () => {
-	const dateFilters = ['Monthly', 'Quarterly', 'Yearly'];
+	// const dateFilters = ['Monthly', 'Quarterly', 'Yearly'];
 
 	return (
 		<>
@@ -23,47 +28,15 @@ export const Reports = () => {
 								</div>
 								<div className="flex flex-1 flex-col gap-4">
 									<div className="flex flex-row gap-2 rounded-lg border p-2 shadow-sm">
-										<SalesRevenue />
-										<ReportCard
-											title="Expected Profit"
-											bgClassName="bg-blue-50"
-											textColorClassName="text-blue-800"
-										>
-											<p className="text-2xl font-bold tracking-tight">
-												{Intl.NumberFormat('en-US', {
-													style: 'currency',
-													currency: 'PHP',
-												}).format(4508)}
-											</p>
-										</ReportCard>
-										<ReportCard
-											title="Collectibles"
-											bgClassName="bg-orange-50"
-											textColorClassName="text-orange-800"
-										>
-											<p className="text-2xl font-bold tracking-tight">
-												{Intl.NumberFormat('en-US', {
-													style: 'currency',
-													currency: 'PHP',
-												}).format(7129)}
-											</p>
-										</ReportCard>
-										<ReportCard
-											title="Capital"
-											bgClassName="bg-stone-50"
-											textColorClassName="text-stone-800"
-										>
-											<p className="text-2xl font-bold tracking-tight">
-												{Intl.NumberFormat('en-US', {
-													style: 'currency',
-													currency: 'PHP',
-												}).format(11028)}
-											</p>
-										</ReportCard>
+										<SalesCard />
+										<ProfitCard />
+										<CapitalCard />
+										<ExpensesCard />
+										<CollectiblesCard />
 									</div>
 								</div>
 								<CustomersCard />
-								<GrossAndNetProfitCard />
+								{/* <SalesRevenueHistory /> */}
 							</div>
 						</div>
 					</div>
