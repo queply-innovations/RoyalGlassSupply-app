@@ -47,9 +47,7 @@ export const GrossAndNetProfit: FC<GrossAndNetProfitProps> = ({
 	return (
 		<>
 			<div className={cn(GraphVariants({ variant, className }))} ref={ref}>
-				<h2 className="gross-and-netprofit-title text-base font-bold uppercase text-black">
-					Gross And Net Profit
-				</h2>
+				<h2 className="w-full font-bold text-slate-800">Reports history</h2>
 				<Chart
 					type="line"
 					height={height - 50}

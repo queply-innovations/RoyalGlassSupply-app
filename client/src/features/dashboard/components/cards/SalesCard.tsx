@@ -1,14 +1,14 @@
-import { useReportsContext } from '../context/ReportsContext';
-import { ReportCard } from './ReportCard';
+import { useDashboardReportsContext } from '../../context/DashboardReportsContext';
+import { ReportCard } from '@/features/reports/components';
 
 export const SalesCard = () => {
-	const { reports, isReportsFetching } = useReportsContext();
+	const { reports, isReportsFetching } = useDashboardReportsContext();
 
 	return (
 		<>
 			<ReportCard
 				title="Sales"
-				tooltip="Calculated by adding up the total amount due in paid transactions."
+				tooltip="Calculated by adding up the total amount due in paid transactions within the current month."
 				bgClassName="bg-green-50"
 				textColorClassName="text-green-800"
 			>
