@@ -52,27 +52,6 @@ export const ExpensesTable: FC<ExpensesTableProps> = ({ openModal }: ExpensesTab
 	
 	const ExpensesTableHeader: ColumnDef<ExpensesRaw>[] = [
 		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-
-		{
 			accessorKey: 'date_of_operation',
 			sortingFn: "datetime",
 			enableSorting: true,

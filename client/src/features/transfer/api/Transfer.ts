@@ -113,6 +113,23 @@ export const addTransferProduct = async (data: TransferProduct): Promise<Transfe
 		});
 };
 
+export const editTransferProduct = async (data: TransferProduct): Promise<TransferProduct[]> => {
+	return await axios
+		.put(`${API_URLS.TRANSFER_PRODUCTS}/${data.id}`, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error editing transfer product:', error);
+			throw error;
+		});
+};
+
 export const addInventory = async (
 	data: any,
 ) => {

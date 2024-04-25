@@ -23,42 +23,12 @@ export const SupplierTable = ({ openModal }: SupplierTableProps) => {
 		openModal({} as Supplier, 'add');
 	};
 
-	// const handleEditSupplier = (supplier: Supplier) => {
-	// 	console.log('Edit Supplier Clicked:', supplier);
-	// 	openModal(supplier, 'edit');
-	// };
-
-	// const handleRemoveSupplier = (supplier: Supplier) => {
-	// 	console.log('Remove Supplier Clicked:', supplier);
-	// 	openModal(supplier, 'remove');
-	// };
-
 	const handleEditSupplier = (supplier: Supplier) => {
 		setSelectedSupplier(supplier);
 		openModal(supplier, 'edit');
 	};
 
 	const SupplierTableHeader: ColumnDef<Supplier>[] = [
-		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 
 		{
 			accessorKey: 'name',

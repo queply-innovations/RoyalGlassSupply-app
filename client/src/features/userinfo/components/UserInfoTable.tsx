@@ -37,27 +37,6 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 	
 	const UserInfoTableHeader: ColumnDef<User>[] = [
 		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-
-		{
 			accessorKey: 'lastname',
 			sortingFn: "text",
 			enableSorting: true,

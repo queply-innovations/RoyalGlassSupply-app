@@ -76,27 +76,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-
-		{
 			accessorKey: 'code',
 			sortingFn: "alphanumeric",
 			enableSorting: true,
@@ -116,7 +95,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.code ? row.original.code : 'N/A'}</div>
+				<div>{row.original.code ? row.original.code : 'N/A'}</div>
 			),
 		},
 

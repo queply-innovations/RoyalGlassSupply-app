@@ -15,9 +15,6 @@ declare global {
 }
 
 export const PrintForm = ({}: PrintFormProps) => {
-	// const { fullData } = useInvoice();
-
-	// const dateInvoice = new Date(fullData.updated_at);
 	const [wholeData, setWholeData] = useState<any>();
 	const [fullData, setFullData] = useState<any>();
 	const [dateInvoice, setDateInvoice] = useState<any>();
@@ -29,13 +26,10 @@ export const PrintForm = ({}: PrintFormProps) => {
 		}
 		fetchData();
 	}, []);
-	// const wholeData = await window.api.receive();
 
 	useEffect(() => {
-		// console.log(wholeData);
 		if (wholeData) {
 			setFullData(wholeData.fullData);
-			// console.log(fullData);
 			setDateInvoice(new Date(wholeData.fullData.updated_at));
 			setItemsQueue(wholeData.invoiceItems);
 		}
