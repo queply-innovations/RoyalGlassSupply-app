@@ -21,6 +21,7 @@ interface PosContextProps {
    >;
 
    sellableItems: ProductPrices[];
+   fetchingProducts: boolean;
 
    customerCart: InvoiceItems[];
    setCustomerCart: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
@@ -58,26 +59,28 @@ export const PosProvider = ({ children }: PosProviderProps) => {
          navigate('/pos');
       } else if (auth.role?.split('_')[1] === 'CDO') {
          setSearchFilterItems({
-            approval_status: 'approved',
+            // approval_status: 'approved', //TODO Possible to comment out
             warehouse_id: 1,
          });
          navigate('/pos/add-order');
       } else if (auth.role?.split('_')[1] === 'ILI') {
          setSearchFilterItems({
-            approval_status: 'approved',
+            // approval_status: 'approved', //TODO Possible to comment out
             warehouse_id: 2,
          });
          navigate('/pos/add-order');
       }
    }, [auth.role]);
 
-   const { data: sellableItems } = useProductPricesFilter(searchFilterItems);
+   const { data: sellableItems, isLoading: fetchingProducts } =
+      useProductPricesFilter(searchFilterItems);
 
    const value = {
       searchFilterItems,
       setSearchFilterItems,
 
       sellableItems,
+      fetchingProducts,
 
       customerCart,
       setCustomerCart,
