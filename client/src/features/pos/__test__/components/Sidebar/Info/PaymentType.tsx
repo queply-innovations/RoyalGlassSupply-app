@@ -1,43 +1,43 @@
 import { Label } from '@/components/ui/label';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
+import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const PaymentType = () => {
-	const { invoice } = useInvoice();
-	return (
-		<>
-			<div className="flex flex-row justify-between w-full">
-				<Label className="font-medium text-medium text-slate-700">
-					Payment Type
-				</Label>
-				<Label className="font-bold capitalize text-slate-700">
-					{invoice.type?.replace('_', ' ')}
-				</Label>
-			</div>
-			{invoice.type !== 'exit' && (
-				<>
-					<div className="flex flex-row justify-between w-full">
-						<Label className="font-medium text-medium text-slate-700">
-							Payment Method
-						</Label>
-						<Label className="font-bold capitalize text-slate-700">
-							{invoice.payment_method?.replace('_', ' ')}
-						</Label>
-					</div>
-					{invoice.payment_method !== 'cash' &&
-						invoice.payment_method !== '' && (
-							<>
-								<div className="flex flex-row justify-between w-full">
-									<Label className="font-medium text-medium text-slate-700">
-										Reference Number
-									</Label>
-									<Label className="font-bold capitalize text-slate-700">
-										{invoice.reference_no}
-									</Label>
-								</div>
-							</>
-						)}
-				</>
-			)}
-		</>
-	);
+   const { currentInvoicePos } = useInvoicePos();
+   return (
+      <>
+         <div className="flex w-full flex-row justify-between">
+            <Label className="text-medium font-medium text-slate-700">
+               Payment Type
+            </Label>
+            <Label className="font-bold capitalize text-slate-700">
+               {currentInvoicePos.type?.replace('_', ' ')}
+            </Label>
+         </div>
+         {currentInvoicePos.type !== 'exit' && (
+            <>
+               <div className="flex w-full flex-row justify-between">
+                  <Label className="text-medium font-medium text-slate-700">
+                     Payment Method
+                  </Label>
+                  <Label className="font-bold capitalize text-slate-700">
+                     {currentInvoicePos.payment_method?.replace('_', ' ')}
+                  </Label>
+               </div>
+               {currentInvoicePos.payment_method !== 'cash' &&
+                  currentInvoicePos.payment_method !== '' && (
+                     <>
+                        <div className="flex w-full flex-row justify-between">
+                           <Label className="text-medium font-medium text-slate-700">
+                              Reference Number
+                           </Label>
+                           <Label className="font-bold capitalize text-slate-700">
+                              {currentInvoicePos.reference_no}
+                           </Label>
+                        </div>
+                     </>
+                  )}
+            </>
+         )}
+      </>
+   );
 };
