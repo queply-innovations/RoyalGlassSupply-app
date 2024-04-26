@@ -1,29 +1,20 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Chart from 'react-apexcharts';
-import { useReportAnalytics } from '../../context/ReportAnalyticsContext';
-import { YearPicker } from './YearPicker';
+import { useDashboardReportsContext } from '../context/DashboardReportsContext';
 
-export const SalesRevenueHistory = () => {
-	const { reportAnalytics, isReportAnalyticsFetching } = useReportAnalytics();
+export const ReportsAnalytics = () => {
+	const { reportAnalytics, isReportAnalyticsFetching } =
+		useDashboardReportsContext();
 
 	return (
 		<>
-			<Card className="flex min-h-[28rem] w-full flex-col gap-4">
+			<Card className="flex min-h-[28rem] w-[50%] flex-col gap-4">
 				<CardHeader className="flex flex-none flex-row items-center justify-between gap-4 pb-2">
 					<CardTitle className="flex w-full flex-row justify-between text-base font-bold">
 						Reports Analytics
 					</CardTitle>
-					<CardDescription className="!mt-1 font-bold uppercase">
-						<YearPicker />
-					</CardDescription>
 				</CardHeader>
-				<CardContent className="mx-auto w-[99%] flex-1 overflow-hidden">
+				<CardContent className="w-full flex-1 overflow-hidden">
 					{isReportAnalyticsFetching ? (
 						<div className="h-[350px] w-full animate-pulse rounded-2xl bg-slate-200/50"></div>
 					) : (
@@ -71,7 +62,7 @@ export const SalesRevenueHistory = () => {
 									},
 									categories:
 										reportAnalytics?.map(
-											report => report.Month ?? '',
+											report => report.Month.substring(0, 3) ?? '',
 										) ?? [],
 									labels: {
 										style: {

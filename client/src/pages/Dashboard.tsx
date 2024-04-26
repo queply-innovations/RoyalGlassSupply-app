@@ -1,15 +1,9 @@
-import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
-import { InfoCard } from '@/components/InfoCard';
 import InventoryTable from '@/components/Tables/Inventory/inventory';
 import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
-import LayoutWrapper from '@/layouts/Layout';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { Button, Navbar } from '@/components';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { formatCurrency } from '@/utils/FormatCurrency';
 import { DashboardReportsProvider } from '@/features/dashboard';
-import { SalesRevenueDashboard } from '@/features/dashboard/components/SalesRevenueDashboard';
 import {
 	SalesCard,
 	ProfitCard,
@@ -18,6 +12,7 @@ import {
 	CollectiblesCard,
 } from '@/features/dashboard/components/cards';
 import { MainLayout } from '@/layouts/MainLayout';
+import { ReportsAnalytics } from '@/features/dashboard/components';
 
 // interface DashboardProps {
 // 	state: Array<unknown>;
@@ -26,7 +21,6 @@ import { MainLayout } from '@/layouts/MainLayout';
 export const Dashboard = () => {
 	const { auth } = useAuth();
 
-	const navigate = useNavigate();
 	// Redirect to POS if user role includes 'encoder' or 'sales'
 	if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
 		return <Navigate to="/pos" />;
@@ -48,7 +42,7 @@ export const Dashboard = () => {
 								</div>
 								<div className="row-container flex flex-1 flex-col gap-4">
 									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
-										<GrossAndNetProfit className="h-full min-h-[440px] max-w-[50%] shadow-sm" />
+										<ReportsAnalytics />
 										<TransferStatus />
 									</div>
 									<div className="row-container flex h-[480px] flex-row justify-between gap-4">

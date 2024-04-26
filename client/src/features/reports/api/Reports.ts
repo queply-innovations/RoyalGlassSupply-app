@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
 import { Invoices } from '@/features/invoice/__test__/types';
-import { Reports } from '../types';
+import { ReportAnalytics, Reports } from '../types';
 
 export const fetchInvoicesDateRange = async (
 	dateFrom: Date,
@@ -128,5 +128,27 @@ export const fetchReports = async (
 		.catch(error => {
 			console.error('Error fetching reports:', error);
 			return error;
+		});
+};
+
+export const fetchReportAnalytics = async (
+	year: number,
+	warehouseId?: number,
+): Promise<ReportAnalytics[]> => {
+	return await axios
+		.post(
+			`${API_URLS.REPORTS}/analytics`,
+			{
+				year: year,
+				warehouse: warehouseId ? warehouseId : '',
+			},
+			{ headers: API_HEADERS() },
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching report analytics:', error);
+			throw error;
 		});
 };
