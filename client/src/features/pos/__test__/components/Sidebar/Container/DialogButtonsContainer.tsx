@@ -4,20 +4,26 @@ import { usePos } from '../../../context/__test__/PosContext';
 import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useEffect } from 'react';
+import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 interface DialogButtonsContainerProps {}
 
 export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
    const { setDialogOptions } = usePos();
-
-   const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
+   const {
+      currentInvoicePos,
+      currentInvoiceItemsQueue,
+      fullData,
+      setFullData,
+   } = useInvoicePos();
+   // const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
    const { addInvoiceMutation } = useInvoiceMutation();
 
    async function handleSubmit() {
-      console.log('Invoice:', invoice);
-      console.log('InvoiceItems:', invoiceItemsQueue);
-      const data: any = invoice;
-      data['invoice_items'] = invoiceItemsQueue.map((d: any) => {
+      console.log('Invoice:', currentInvoicePos);
+      console.log('InvoiceItems:', currentInvoiceItemsQueue);
+      const data: any = currentInvoicePos;
+      data['invoice_items'] = currentInvoiceItemsQueue.map((d: any) => {
          return { ...d, product_id: d.product_id.id };
       });
       // await addInvoiceMutation(data).then(() => window.api.send());
@@ -32,7 +38,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
          console.log(fullData);
          window.api.send({
             fullData: fullData,
-            invoiceItems: invoiceItemsQueue,
+            invoiceItems: currentInvoiceItemsQueue,
          });
       }
    }, [fullData]);
