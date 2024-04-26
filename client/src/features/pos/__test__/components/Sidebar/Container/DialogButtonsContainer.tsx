@@ -8,7 +8,7 @@ import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 interface DialogButtonsContainerProps {}
 
 export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
-   const { setDialogOptions } = usePos();
+   const { setDialogOptions, dialogOptions } = usePos();
    const {
       currentInvoicePos,
       currentInvoiceItemsQueue,
@@ -45,13 +45,8 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
    return (
       <>
          <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-2 gap-2">
-               <Button
-                  onClick={() => {
-                     setDialogOptions({ open: true, title: 'discount' });
-                  }}>
-                  Add Discount
-               </Button>
+            {/* <div className="grid grid-cols-2 gap-2">
+               //TODO Add delivery charge
                <Button
                   variant={'outline'}
                   className="hover:cursor-not-allowed hover:bg-white"
@@ -60,19 +55,29 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
                         open: true,
                         title: 'delivery_charge',
                      });
+                     console.log('Options:', dialogOptions);
                   }}>
                   Delivery Charge
                </Button>
-            </div>
+            </div> */}
+            <Button
+               onClick={() => {
+                  setDialogOptions({ open: true, title: 'discount' });
+               }}>
+               Add Discount
+            </Button>
+
             <Button
                onClick={() => {
                   setDialogOptions({ open: true, title: 'payment_type' });
+                  console.log('Options:', dialogOptions);
                }}>
                Select Payment Type
             </Button>
             <Button
                onClick={() => {
                   setDialogOptions({ open: true, title: 'paid_amount' });
+                  console.log('Options:', dialogOptions);
                }}>
                Add Paid Amount
             </Button>

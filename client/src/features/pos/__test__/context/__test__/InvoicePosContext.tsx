@@ -44,6 +44,7 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       total_amount_due: 0,
       change_amount: 0,
       subtotal: 0,
+      type: 'payment',
       payment_method: '',
       reference_no: '',
       paid_amount: 0,

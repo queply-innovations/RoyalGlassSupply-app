@@ -1,6 +1,8 @@
 import { Navbar } from '@/features/pos/__test__/components/Navbar/Navbar';
-import { SidebarContainer } from '@/features/pos/__test__/components/Sidebar/Container';
-import { Sidebar } from '@/features/pos/__test__/components/Sidebar/Sidebar';
+import {
+   SidebarContainer,
+   DialogContainer,
+} from '@/features/pos/__test__/components/Sidebar/Container';
 
 interface PointOfSalePageProps {}
 
@@ -16,6 +18,7 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
                </div>
                {/* <Sidebar /> */}
                <SidebarContainer />
+               <DialogContainer />
             </div>
          </div>
       </>
