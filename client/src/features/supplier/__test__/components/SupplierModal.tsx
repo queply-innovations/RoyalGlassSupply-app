@@ -64,18 +64,8 @@ export const SupplierModal = ({ onClose, isUpdate }: SupplierModalProps) => {
 
 				<div className="flex flex-col mt-4 gap-5">
 					<div className="flex flex-row justify-center gap-1">
-						<div className="mt-3 grid w-full grid-flow-row grid-cols-8 gap-4 text-center">
-							<div className="flex flex-col col-span-2 gap-3">
-								<Button
-									type="submit"
-									fill={isChanged ? 'green' : null}
-									disabled={isChanged ? false : true}
-									onClick={() => handleSubmit(isUpdate)}
-								>
-									{!isSubmitting ? (isUpdate ? 'Edit Supplier' : 'Add Supplier') : 'Submitting'}
-								</Button>
-							</div>
-							<div className="flex flex-col col-span-4 items-start">
+						<div className="mt-3 grid w-full grid-flow-row grid-cols-10 gap-4 text-center">
+							<div className="flex flex-col col-span-5 items-start">
 								{success && (
 									<div className="font-bold text-green-700">{success}</div>
 								)}
@@ -87,14 +77,26 @@ export const SupplierModal = ({ onClose, isUpdate }: SupplierModalProps) => {
 										<Loading width={30} height={30} /> 
 									</div>}
 							</div>
-							<div className="flex flex-col col-span-2 gap-3 items-end">
-								<Button
-									type="reset"
-									fill={'red'}
-									onClick={onClose}
-								>
-									Cancel
-								</Button>
+							<div className="flex flex-col col-span-5 gap-3 items-end">
+								<div className="flex flex-row">
+									<Button
+										type="reset"
+										fill={'default'}
+										className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
+										onClick={onClose}
+									>
+										Cancel
+									</Button>
+
+									<Button
+										type="submit"
+										fill={isChanged ? 'green' : 'default'}
+										disabled={isChanged ? false : true}
+										onClick={() => handleSubmit(isUpdate)}
+									>
+										{!isSubmitting ? (isUpdate ? 'Edit Supplier' : 'Add Supplier') : 'Submitting'}
+									</Button>
+								</div>
 							</div>
 						</div>
 					</div>
