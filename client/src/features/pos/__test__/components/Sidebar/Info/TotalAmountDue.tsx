@@ -9,14 +9,8 @@ export const TotalAmountDue = () => {
       currentInvoicePos,
       handleInvoicePosChange,
    } = useInvoicePos();
-   const totalAmountDue =
-      currentInvoiceItemsQueue.reduce(
-         (acc, item) => acc + item.total_price,
-         0,
-      ) - (currentInvoicePos.total_discount ?? 0);
-   useEffect(() => {
-      handleInvoicePosChange('total_amount_due', totalAmountDue);
-   }, [totalAmountDue]);
+   const totalAmountDue = currentInvoicePos.total_amount_due;
+
    return (
       <>
          <div className="flex w-full flex-col justify-between gap-2 border-t border-dashed py-2">
