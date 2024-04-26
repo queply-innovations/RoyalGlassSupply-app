@@ -151,7 +151,8 @@ export const InventoryProductsCols = ({
 				<Tooltip>
 					<div className="group relative flex w-fit items-center">
 						<TooltipTrigger>
-							{!!row.original.status ? (
+							{/* {!!row.original.status ? ( */}
+							{row.original.approved_stocks > 0 ? (
 								<CheckCircle
 									size={20}
 									strokeWidth={2}
@@ -167,7 +168,10 @@ export const InventoryProductsCols = ({
 						</TooltipTrigger>
 						<TooltipContent>
 							<p className="text-sm font-medium normal-case">
-								{!!row.original.status ? 'Approved' : 'Pending'}
+								{row.original.approved_stocks > 0
+									? 'Approved'
+									: 'Pending'}
+								{/* {!!row.original.status ? 'Approved' : 'Pending'} */}
 							</p>
 						</TooltipContent>
 					</div>

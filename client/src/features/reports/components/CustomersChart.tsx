@@ -13,7 +13,7 @@ export const CustomersChart = () => {
 		colors: ['#3b82f6', '#1e3a8a'],
 		legend: {
 			show: true,
-			fontFamily: 'Inter',
+			fontFamily: 'sans-serif',
 			fontSize: '14px',
 			fontWeight: 500,
 			itemMargin: {

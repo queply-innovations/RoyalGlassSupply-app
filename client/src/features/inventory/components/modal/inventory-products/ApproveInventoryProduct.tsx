@@ -5,7 +5,7 @@ import { useInventoryProductsByInventory } from '@/features/inventory/context';
 import { useInventoryProdsMutation } from '@/features/inventory/hooks';
 import { UseModalProps } from '@/utils/Modal';
 import { MoveRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 interface ApproveInventoryProductProps {
