@@ -2,6 +2,7 @@ import { SearchCustomer } from '@/features/customer/__test__/components/SearchCu
 import { SidebarWarehouseContainer } from './SidebarWarehouseContainer';
 import { CustomerInfoContainer } from './CustomerInfoContainer';
 import { DialogButtonsContainer } from './DialogButtonsContainer';
+import { PaymentInfoContainer } from './PaymentInfoContainer';
 
 export const SidebarContainer = () => {
    return (
@@ -11,6 +12,7 @@ export const SidebarContainer = () => {
                <SidebarWarehouseContainer />
                <SearchCustomer />
                <CustomerInfoContainer />
+               <PaymentInfoContainer />
                <DialogButtonsContainer />
             </div>
          </div>
