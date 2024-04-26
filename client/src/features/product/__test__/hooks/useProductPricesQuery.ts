@@ -8,12 +8,6 @@ import {
 import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
 
-interface ProductPricesFilterProps {
-	approval_status: string;
-	warehouse_id: number;
-	active_status: string;
-}
-
 /**
  * Custom hook for fetching and managing product prices.
  *
@@ -80,10 +74,14 @@ export const useProductPricesQueryFilterByApproved = () => {
 	return { data, isLoading };
 };
 
+export interface ProductPricesFilterProps {
+	approval_status?: string;
+	warehouse_id?: number;
+}
+
 export const useProductPricesFilter = ({
 	approval_status,
 	warehouse_id,
-	active_status,
 }: ProductPricesFilterProps) => {
 	const [data, setData] = useState<ProductPrices[]>([]);
 	const {
@@ -93,12 +91,8 @@ export const useProductPricesFilter = ({
 	} = useQuery({
 		queryKey: ['FilteredProductPrices'],
 		queryFn: () => {
-			if (approval_status && warehouse_id && active_status) {
-				return fetchProductPricesFilters(
-					approval_status,
-					active_status,
-					warehouse_id,
-				);
+			if (approval_status && warehouse_id) {
+				return fetchProductPricesFilters(approval_status, warehouse_id);
 			}
 			// Return a placeholder or null if any of the required parameters are missing
 			return null;
@@ -114,7 +108,7 @@ export const useProductPricesFilter = ({
 	// Refetch data when any of the filter values change
 	useEffect(() => {
 		refetch();
-	}, [approval_status, warehouse_id, active_status, refetch]);
+	}, [approval_status, warehouse_id, refetch]);
 
 	return { data, isLoading };
 };

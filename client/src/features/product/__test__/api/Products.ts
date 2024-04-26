@@ -78,7 +78,6 @@ export const fetchApprovedProductPrices = async (): Promise<
 
 export const fetchProductPricesFilters = async (
 	approval_status?: string, //TODO Possible to comment out
-	active_status?: string,
 	warehouse_id?: number,
 ): Promise<ProductPrices[]> => {
 	return await axios
@@ -87,7 +86,6 @@ export const fetchProductPricesFilters = async (
 			{
 				filter: {
 					approval_status: approval_status, //TODO Possible to comment out
-					active_status: active_status,
 					warehouse_id: warehouse_id,
 				},
 			},
