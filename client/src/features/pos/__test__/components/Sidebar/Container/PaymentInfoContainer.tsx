@@ -20,7 +20,7 @@ export const PaymentInfoContainer = () => {
                <Tax />
                <DeliveryCharge />
                <TotalAmountDue />
-               {/* <ChangeAmount /> */}
+               <ChangeAmount />
             </div>
          </div>
       </>
