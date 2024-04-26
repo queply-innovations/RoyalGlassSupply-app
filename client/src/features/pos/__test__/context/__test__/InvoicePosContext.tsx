@@ -6,12 +6,25 @@ import {
 import { ReactNode, createContext, useContext, useState } from 'react';
 
 interface InvoicePosContextProps {
+   currentInvoicePos: Partial<Invoices>;
+   setCurrentInvoicePos: React.Dispatch<Partial<Invoices>>;
+
+   currentInvoiceItemsQueue: InvoiceItemDatabase[];
+   setCurrentInvoiceItemsQueue: React.Dispatch<InvoiceItemDatabase[]>;
+
    handleInvoicePosChange: (
       key: string,
       value: Invoices[keyof Invoices],
    ) => void;
-   handleInvoiceItemQuantiy: (tableIndex: number, maxQuantity: number, newQuantity: number) => void;
+   handleInvoiceItemQuantiy: (
+      tableIndex: number,
+      maxQuantity: number,
+      newQuantity: number,
+   ) => void;
    removeInvoiceItem: (tableIndex: number) => void;
+
+   fullData: any;
+   setFullData: React.Dispatch<any>;
 }
 
 const InvoicePosContext = createContext<InvoicePosContextProps | undefined>(
@@ -54,30 +67,35 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       }));
    }
 
-   function handleInvoiceItemQuantiy(tableIndex: number, maxQuantity: number, newQuantity: number) {
+   function handleInvoiceItemQuantiy(
+      tableIndex: number,
+      maxQuantity: number,
+      newQuantity: number,
+   ) {
       if (newQuantity > 0 && newQuantity <= maxQuantity) {
-         setCurrentInvoiceItemsQueue(items => items.map((item, index) => {
-            if (index === tableIndex) {
-               return {
-                  ...item,
-                  quantity: newQuantity,
-                  total_price:
-                     Number(
-                        Number(item.product_price * newQuantity).toFixed(
-                           2,
-                        ),
-                     ) - item.item_discount,
-               };
-            }
-            return item;
-         }));
+         setCurrentInvoiceItemsQueue(items =>
+            items.map((item, index) => {
+               if (index === tableIndex) {
+                  return {
+                     ...item,
+                     quantity: newQuantity,
+                     total_price:
+                        Number(
+                           Number(item.product_price * newQuantity).toFixed(2),
+                        ) - item.item_discount,
+                  };
+               }
+               return item;
+            }),
+         );
          handleInvoicePosChange(
             'total_amount_due',
             currentInvoiceItemsQueue.reduce(
                (acc, item) => acc + item.total_price,
                0,
             ),
-         )
+         );
+      }
    }
 
    function removeInvoiceItem(tableIndex: number) {
@@ -90,8 +108,18 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
    const [fullData, setFullData] = useState<any>();
 
    const value = {
+      currentInvoicePos,
+      setCurrentInvoicePos,
+
+      currentInvoiceItemsQueue,
+      setCurrentInvoiceItemsQueue,
+
+      handleInvoiceItemQuantiy,
       handleInvoicePosChange,
       removeInvoiceItem,
+
+      fullData,
+      setFullData,
    };
    return (
       <>
