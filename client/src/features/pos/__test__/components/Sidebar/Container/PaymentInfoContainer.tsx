@@ -6,6 +6,7 @@ import {
    Tax,
    TotalAmountDue,
    ChangeAmount,
+   PaymentType,
 } from '../Info';
 
 export const PaymentInfoContainer = () => {
@@ -13,7 +14,7 @@ export const PaymentInfoContainer = () => {
       <>
          <div className="flex h-full flex-col justify-between p-4 px-2">
             <div className="flex flex-col gap-4">
-               {/* <PaymentType /> */}
+               <PaymentType />
                <Items />
                <Subtotal />
                <Discount />
