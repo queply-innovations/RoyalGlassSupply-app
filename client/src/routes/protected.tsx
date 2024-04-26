@@ -11,6 +11,7 @@ import { CustomerProvider } from '@/features/customer/__test__/context/CustomerC
 import { InventoryProdsProvider } from '@/features/inventory/context';
 import { ProductPricesProvider } from '@/features/product/__test__';
 import { JSX } from 'react/jsx-runtime';
+import { InvoicePosProvider } from '@/features/pos/__test__/context/__test__/InvoicePosContext';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { ExpensesPage } = lazyImport(
@@ -185,11 +186,11 @@ const wrapWithProviders = (
 ) => {
    if (path.startsWith('/pos')) {
       return (
-         <InvoiceProvider>
+         <InvoicePosProvider>
             <CustomerProvider>
                <PosProvider>{element}</PosProvider>
             </CustomerProvider>
-         </InvoiceProvider>
+         </InvoicePosProvider>
       );
    } else {
       return element;
