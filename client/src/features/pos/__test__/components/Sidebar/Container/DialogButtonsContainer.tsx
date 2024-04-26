@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { usePos } from '../../../context/__test__/PosContext';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useEffect } from 'react';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
