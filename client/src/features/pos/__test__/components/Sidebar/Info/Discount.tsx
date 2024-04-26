@@ -1,22 +1,22 @@
 import { Label } from '@/components/ui/label';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
+import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const Discount = () => {
-	const { invoiceItemsQueue, invoice, handleChange } = useInvoice();
+   const { currentInvoicePos } = useInvoicePos();
 
-	return (
-		<>
-			<div className="flex w-full flex-row justify-between">
-				<Label className="text-medium font-medium text-slate-700">
-					Discount
-				</Label>
-				<Label className="font-bold text-slate-700">
-					{invoice.total_discount
-						? formatCurrency(invoice.total_discount)
-						: '₱0.00'}
-				</Label>
-			</div>
-		</>
-	);
+   return (
+      <>
+         <div className="flex w-full flex-row justify-between">
+            <Label className="text-medium font-medium text-slate-700">
+               Discount
+            </Label>
+            <Label className="font-bold text-slate-700">
+               {currentInvoicePos.total_discount
+                  ? formatCurrency(currentInvoicePos.total_discount)
+                  : '₱0.00'}
+            </Label>
+         </div>
+      </>
+   );
 };
