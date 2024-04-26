@@ -42,12 +42,12 @@ const tableCols = [
 	'Size',
 	'Color',
 	'Supplier',
-	'Status',
 	'Capital price',
 	'Unit',
 	'Stocks',
 	'Damaged',
 	'Total',
+	'Approved',
 ];
 
 interface AddInventoryProductTableProps {
@@ -81,14 +81,17 @@ export const AddInventoryProductTable = ({
 			data: data.map(item => item?.data),
 		})
 			.then(() => {
-				toast.success('Items added to inventory');
+				toast.success('Items added to inventory.');
 				setIsSubmitting(false);
 				onClose();
 			})
-			.catch(() => {
-				toast.error('Error adding items to inventory');
+			.catch((err: any) => {
 				setError('Error adding items to inventory');
-				setIsSubmitting(false);
+				if (err.response.data.message) {
+					toast.error(err.response.data.message);
+				} else {
+					toast.error('Error adding items to inventory.');
+				}
 			});
 	};
 
@@ -265,35 +268,6 @@ export const AddInventoryProductTable = ({
 												</TableCell>
 												<TableCell
 													className="px-5 py-3"
-													key={row?.id + 'status'}
-												>
-													<Tooltip>
-														<TooltipTrigger>
-															{!!row?.data.status ? (
-																<CheckCircle
-																	size={20}
-																	strokeWidth={2}
-																	className="text-green-600"
-																/>
-															) : (
-																<Clock
-																	size={20}
-																	strokeWidth={2}
-																	className="text-gray-600"
-																/>
-															)}
-														</TooltipTrigger>
-														<TooltipContent>
-															<p className="text-sm font-medium normal-case">
-																{!!row.data.status
-																	? 'Approved'
-																	: 'Pending'}
-															</p>
-														</TooltipContent>
-													</Tooltip>
-												</TableCell>
-												<TableCell
-													className="px-5 py-3"
 													key={row?.id + 'capital_price'}
 												>
 													{Intl.NumberFormat('en-US', {
@@ -324,6 +298,12 @@ export const AddInventoryProductTable = ({
 													key={row?.id + 'total_count'}
 												>
 													{row?.data.total_count}
+												</TableCell>
+												<TableCell
+													className="px-5 py-3"
+													key={row?.id + 'approved_stocks'}
+												>
+													{row?.data.approved_stocks}
 												</TableCell>
 											</TableRow>
 										);

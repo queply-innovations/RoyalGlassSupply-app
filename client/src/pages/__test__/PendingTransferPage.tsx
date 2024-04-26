@@ -10,6 +10,7 @@ import PendingTransferTable from '@/features/pending/pending-transfer/components
 import { PendingTransferDetails } from '@/features/pending/pending-transfer/modal/PendingTransferDetails';
 import { PendingTransferEdit } from '@/features/pending/pending-transfer/modal/PendingTransferEdit';
 import { TransferProvider } from '@/features/transfer/context/TransferContext';
+import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
 
 export const PendingTransfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -37,7 +38,9 @@ export const PendingTransfer = () => {
 						title={
 							modalAction === 'details'
 								? 'Transfer Details'
-								: 'Edit Transfer'
+								: modalAction === 'edit'
+									? 'Edit Transfer'
+									: 'Transfer Products'
 						}
 						isOpen={isOpen}
 						onClose={closeModal}
@@ -49,6 +52,9 @@ export const PendingTransfer = () => {
 							)}
 							{modalAction === 'edit' && (
 								<PendingTransferEdit onClose={closeModal} />
+							)}
+							{modalAction === 'products' && (
+								<TransferProducts onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

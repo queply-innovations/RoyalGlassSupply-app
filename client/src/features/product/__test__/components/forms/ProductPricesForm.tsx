@@ -41,9 +41,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const [capitalPrice, setCapitalPrice] = useState<number>(
-		selectedProductPrice.capital_price,
-	);
 	const [markupPercent, setMarkupPercent] = useState<number>(
 		getMarkupPercentage(
 			selectedProductPrice.capital_price,
@@ -55,34 +52,29 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		selectedProductPrice.markup_price,
 	);
 
-	const handleCapitalPriceChange = (
-		e: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		const value = e.target.value;
-		setCapitalPrice(currency(value).value);
-		handleChange('capital_price', currency(value).value);
-		setMarkupValue(getMarkupValue(currency(value).value, markupPercent || 0));
-	};
-
 	const handleMarkupPercentChange = (
 		e: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		const value = Number(e.target.value);
 		setMarkupPercent(value);
-		setMarkupValue(getMarkupValue(capitalPrice, value));
+		setMarkupValue(getMarkupValue(selectedProductPrice.capital_price, value));
 	};
 
 	const handleMarkupValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = currency(e.target.value).value;
 		setMarkupValue(value);
-		setMarkupPercent(getMarkupPercentage(capitalPrice, value, 3));
+		setMarkupPercent(
+			getMarkupPercentage(selectedProductPrice.capital_price, value, 3),
+		);
 	};
 
 	useEffect(() => {
-		handleChange('capital_price', capitalPrice);
 		handleChange('markup_price', markupValue);
-		handleChange('cost', getCostValue(capitalPrice, markupValue));
-	}, [capitalPrice, markupPercent, markupValue]);
+		handleChange(
+			'cost',
+			getCostValue(selectedProductPrice.capital_price, markupValue),
+		);
+	}, [markupPercent, markupValue]);
 
 	useEffect(() => {
 		handleChange(
@@ -142,23 +134,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="unit"
-								className="text-sm font-bold text-gray-600"
-							>
-								Unit
-							</Label>
-							<Input
-								id="unit"
-								name="unit"
-								type="text"
-								maxLength={20}
-								required
-								value={FormValue.unit || selectedProductPrice.unit}
-								onChange={e => {
-									handleChange('unit', e.target.value);
-								}}
-							/>
+							<h3 className="text-sm font-bold text-gray-600">Unit</h3>
+							<p className="text-sm">
+								{selectedProductPrice.inventory_product.unit}
+							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
@@ -174,10 +153,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
-								Warehouse
+								Inventory
 							</h3>
 							<p className="text-sm">
-								{selectedProductPrice.warehouse.name}
+								{selectedProductPrice.inventory_product.inventory.code}
 							</p>
 						</div>
 					</div>
@@ -194,16 +173,11 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								id="capital_price"
 								name="capital_price"
 								type="number"
-								inputMode="numeric"
-								min={0}
-								step={0.01}
-								required
+								disabled
 								className="pl-7"
-								value={capitalPrice || ''}
-								onChange={handleCapitalPriceChange}
-								onBlur={e => {
-									e.target.value = Number(capitalPrice).toFixed(2);
-								}}
+								value={
+									currency(selectedProductPrice.capital_price).value
+								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
 								₱
@@ -278,8 +252,10 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								className="pl-7"
 								readOnly
 								value={
-									getCostValue(capitalPrice, markupValue).toFixed(2) ||
-									'0.00'
+									getCostValue(
+										selectedProductPrice.capital_price,
+										markupValue,
+									).toFixed(2) || '0.00'
 								}
 							/>
 							<span className="absolute bottom-0 left-0 pb-[0.65rem] pl-3 text-sm font-semibold text-gray-500">
@@ -393,30 +369,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-4 flex flex-row items-center justify-start	gap-3">
-							<Switch
-								id="active_status"
-								name="active_status"
-								checked={
-									FormValue.active_status
-										? FormValue.active_status === 'active'
-										: selectedProductPrice.active_status === 'active'
-								}
-								className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
-								onCheckedChange={checked => {
-									handleChange(
-										'active_status',
-										checked ? 'active' : 'inactive',
-									);
-								}}
-							/>
-							<Label
-								htmlFor="active_status"
-								className="text-sm font-bold text-gray-600"
-							>
-								Active
-							</Label>
-						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">
 								Created by
@@ -433,76 +385,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 							</h3>
 							<p className="text-sm">
 								{formatUTCDate(selectedProductPrice.created_at)}
-							</p>
-						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="approval_status"
-								className="text-sm font-bold text-gray-600"
-							>
-								Approval status
-							</Label>
-							<Select
-								onValueChange={value => {
-									handleChange('approval_status', value);
-									value === 'approved'
-										? handleChange('approved_by', auth.user.id) // if changed to 'approved', update 'approved_by'
-										: handleChange('approved_by', ''); // if changed to 'pending' or 'rejected', remove 'approved_by'
-								}}
-								value={
-									FormValue.approval_status ||
-									selectedProductPrice.approval_status ||
-									''
-								}
-								required
-							>
-								<SelectTrigger
-									name="approval_status"
-									className="flex flex-row items-center gap-3 bg-white text-sm capitalize"
-								>
-									<SelectValue
-										placeholder={
-											FormValue.approval_status ||
-											selectedProductPrice.approval_status ||
-											'Select status...'
-										}
-									/>
-								</SelectTrigger>
-								<SelectContent className="bg-white">
-									<SelectItem
-										key="pending"
-										className="rounded-md"
-										value="pending"
-									>
-										Pending
-									</SelectItem>
-									<SelectItem
-										key="approved"
-										className="rounded-md"
-										value="approved"
-									>
-										Approved
-									</SelectItem>
-									<SelectItem
-										key="rejected"
-										className="rounded-md"
-										value="rejected"
-									>
-										Rejected
-									</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<h3 className="text-sm font-bold text-gray-600">
-								Approved by
-							</h3>
-							<p className="text-sm">
-								{selectedProductPrice.approved_by
-									? selectedProductPrice.approved_by.firstname +
-										' ' +
-										selectedProductPrice.approved_by.lastname
-									: 'N/A'}
 							</p>
 						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">

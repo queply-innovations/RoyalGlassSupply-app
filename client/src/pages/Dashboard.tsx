@@ -8,6 +8,16 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Button, Navbar } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
+import { DashboardReportsProvider } from '@/features/dashboard';
+import { SalesRevenueDashboard } from '@/features/dashboard/components/SalesRevenueDashboard';
+import {
+	SalesCard,
+	ProfitCard,
+	CapitalCard,
+	ExpensesCard,
+	CollectiblesCard,
+} from '@/features/dashboard/components/cards';
+import { MainLayout } from '@/layouts/MainLayout';
 
 // interface DashboardProps {
 // 	state: Array<unknown>;
@@ -23,64 +33,34 @@ export const Dashboard = () => {
 	}
 
 	return (
-		<LayoutWrapper>
-			<div className="flex h-screen flex-col gap-y-4">
-				<div className="flex flex-row justify-between ">
-					<h1 className="page-title text-primary-dark-gray self-center text-3xl font-bold">
-						Dashboard
-					</h1>
-					<Navbar />
-				</div>
-
-				{auth.role === 'admin' && (
+		<MainLayout title="Dashboard">
+			<DashboardReportsProvider>
+				{auth.role?.includes('admin') && (
 					<>
-						<div className="infobox-container flex flex-row justify-between gap-5">
-							<InfoCard background={'gradient'}>
-								<span className="text-sm font-bold uppercase text-white">
-									Gross Income
-								</span>
-								<span className="text-2xl font-bold text-white">
-									{formatCurrency(999)}
-								</span>
-							</InfoCard>
-							<InfoCard background={'white'}>
-								<span className="text-sm font-bold uppercase text-slate-800">
-									Total Capital
-								</span>
-								<span className="text-2xl font-bold text-slate-800">
-									{formatCurrency(999)}
-								</span>
-							</InfoCard>
-							<InfoCard background={'white'}>
-								<span className="text-sm font-bold uppercase text-slate-800">
-									Total Expenses
-								</span>
-								<span className="text-2xl font-bold text-slate-800">
-									{formatCurrency(999)}
-								</span>
-							</InfoCard>
-							<InfoCard background={'default'}>
-								<span className="text-sm font-bold uppercase text-white">
-									Net Profit
-								</span>
-								<span className="text-2xl font-bold text-white">
-									{formatCurrency(999)}
-								</span>
-							</InfoCard>
-						</div>
-						<div className="row-container flex h-full flex-col gap-6 ">
-							<div className="row-container flex flex-row justify-between gap-8">
-								<GrossAndNetProfit className="min-h-[440px] max-w-[70%]" />
-								<TransferStatus />
-							</div>
-							<div className="row-container flex h-full flex-row justify-between gap-8">
-								<InventoryTable />
-								<TopSellingProducts />
+						<div className="flex h-full w-full flex-1 flex-col gap-5 rounded-xl">
+							<div className="flex h-full max-h-full w-full max-w-full flex-col gap-4 overflow-auto">
+								<div className="flex flex-none flex-row gap-2 rounded-lg border bg-white p-2 shadow-sm">
+									<SalesCard />
+									<ProfitCard />
+									<CapitalCard />
+									<ExpensesCard />
+									<CollectiblesCard />
+								</div>
+								<div className="row-container flex flex-1 flex-col gap-4">
+									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
+										<GrossAndNetProfit className="h-full min-h-[440px] max-w-[50%] shadow-sm" />
+										<TransferStatus />
+									</div>
+									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
+										<InventoryTable />
+										<TopSellingProducts />
+									</div>
+								</div>
 							</div>
 						</div>
 					</>
 				)}
-			</div>
-		</LayoutWrapper>
+			</DashboardReportsProvider>
+		</MainLayout>
 	);
 };

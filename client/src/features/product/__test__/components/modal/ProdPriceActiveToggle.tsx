@@ -42,17 +42,21 @@ export const ProdPriceActiveToggle = ({
 				?
 			</h2>
 			<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-				<div className="col-span-6 flex flex-col justify-center gap-1">
+				<div className="col-span-3 flex flex-col justify-center gap-1">
 					<h3 className="text-sm font-bold text-gray-600">Name</h3>
 					<p className="text-sm">{selectedProductPrice.product.name}</p>
 				</div>
 				<div className="col-span-3 flex flex-col justify-center gap-1">
-					<h3 className="text-sm font-bold text-gray-600">Product ID</h3>
-					<p className="text-sm">{selectedProductPrice.product.id}</p>
+					<h3 className="text-sm font-bold text-gray-600">Brand</h3>
+					<p className="text-sm">
+						{selectedProductPrice.product.brand || 'No brand'}
+					</p>
 				</div>
-				<div className="col-span-3 flex flex-col justify-center gap-1">
-					<h3 className="text-sm font-bold text-gray-600">Listing ID</h3>
-					<p className="text-sm">{selectedProductPrice.id}</p>
+				<div className="col-span-6 flex flex-col justify-center gap-1">
+					<h3 className="text-sm font-bold text-gray-600">Serial No.</h3>
+					<p className="text-sm">
+						{selectedProductPrice.product.serial_no}
+					</p>
 				</div>
 				<div className="col-span-3 flex flex-col justify-center gap-1">
 					<h3 className="text-sm font-bold text-gray-600">Size</h3>
@@ -63,28 +67,34 @@ export const ProdPriceActiveToggle = ({
 					<p className="text-sm">{selectedProductPrice.product.color}</p>
 				</div>
 				<div className="col-span-3 flex flex-col justify-center	gap-1">
-					<h3 className="text-sm font-bold text-gray-600">Warehouse</h3>
-					<p className="text-sm">{selectedProductPrice.warehouse.code}</p>
-				</div>
-				<div className="col-span-3 flex flex-col justify-center	gap-1">
-					<h3 className="text-sm font-bold text-gray-600">Type</h3>
-					<p className="text-sm capitalize">{selectedProductPrice.type}</p>
-				</div>
-				<div className="col-span-3 flex flex-col justify-center	gap-1">
 					<h3 className="text-sm font-bold text-gray-600">Unit</h3>
 					<p className="text-sm">{selectedProductPrice.unit}</p>
 				</div>
 				<div className="col-span-3 flex flex-col justify-center	gap-1">
+					<h3 className="text-sm font-bold text-gray-600">Warehouse</h3>
+					<p className="text-sm">{selectedProductPrice.warehouse.code}</p>
+				</div>
+				<div className="col-span-4 flex flex-col justify-center	gap-1">
 					<h3 className="text-sm font-bold text-gray-600">
-						Stocks quantity
+						Capital Price
 					</h3>
-					<p className="text-sm">{selectedProductPrice.stocks_quantity}</p>
+					<p className="text-sm">
+						{new Intl.NumberFormat('en-US', {
+							style: 'currency',
+							currency: 'PHP',
+						}).format(selectedProductPrice.price)}
+					</p>
 				</div>
-				<div className="col-span-3 flex flex-col justify-center	gap-1">
-					<h3 className="text-sm font-bold text-gray-600">Stocks unit</h3>
-					<p className="text-sm">{selectedProductPrice.stocks_unit}</p>
+				<div className="col-span-4 flex flex-col justify-center	gap-1">
+					<h3 className="text-sm font-bold text-gray-600">Markup Price</h3>
+					<p className="text-sm">
+						{new Intl.NumberFormat('en-US', {
+							style: 'currency',
+							currency: 'PHP',
+						}).format(selectedProductPrice.markup_price)}
+					</p>
 				</div>
-				<div className="col-span-3 flex flex-col justify-center	gap-1">
+				<div className="col-span-4 flex flex-col justify-center	gap-1">
 					<h3 className="text-sm font-bold text-gray-600">Price</h3>
 					<p className="text-sm">
 						{new Intl.NumberFormat('en-US', {

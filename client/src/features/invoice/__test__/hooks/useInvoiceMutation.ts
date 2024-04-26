@@ -35,7 +35,7 @@ export const useInvoiceMutation = () => {
 			await queryClient.invalidateQueries({ queryKey: ['invoices'] });
 			// Reset form data
 			setValue({} as Invoices);
-			toast.success('Submitted successfully!');
+			toast.success('Submitted successfully!', { autoClose: 3000 });
 		},
 		onError: (error: Error) => {
 			console.error('Invoices Data failed', error.message);

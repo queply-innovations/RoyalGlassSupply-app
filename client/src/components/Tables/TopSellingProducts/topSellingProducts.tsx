@@ -2,8 +2,10 @@ import React, { FC } from 'react';
 
 export const TopSellingProducts: FC = () => {
 	return (
-		<div className="flex w-[30%] flex-col items-center gap-y-5 rounded-md border-black/10 bg-white p-4 ">
-			<h2 className="uppercase text-black">Top Selling Products</h2>
+		<div className="flex w-[50%] flex-col items-center gap-y-5 rounded-md border-black/10 bg-white p-4 ">
+			<h2 className="w-full font-bold text-slate-800">
+				Top selling products
+			</h2>
 			<div className="h-full w-full rounded-md border border-solid">
 				<table className="w-full rounded-md">
 					<tbody>

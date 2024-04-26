@@ -34,7 +34,7 @@ export const ProdPriceDetails = () => {
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
 						<h3 className="text-sm font-bold">Unit</h3>
 						<p className="text-sm text-gray-800">
-							{selectedProductPrice.unit}
+							{selectedProductPrice.inventory_product.unit}
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -50,9 +50,9 @@ export const ProdPriceDetails = () => {
 						</p>
 					</div>
 					<div className="col-span-3 flex flex-col justify-center	gap-1">
-						<h3 className="text-sm font-bold">Warehouse</h3>
+						<h3 className="text-sm font-bold">Inventory</h3>
 						<p className="text-sm text-gray-800">
-							{selectedProductPrice.warehouse.name}
+							{selectedProductPrice.inventory_product.inventory.code}
 						</p>
 					</div>
 				</div>
@@ -140,7 +140,7 @@ export const ProdPriceDetails = () => {
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 				<div className="grid w-full grid-flow-row grid-cols-12 gap-x-6 gap-y-4">
-					<div className="col-span-4 flex flex-col justify-center gap-1">
+					{/* <div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Active status</h3>
 						<span className="flex flex-row items-center gap-2">
 							{selectedProductPrice.active_status === 'active' ? (
@@ -160,7 +160,7 @@ export const ProdPriceDetails = () => {
 								{selectedProductPrice.active_status}
 							</p>
 						</span>
-					</div>
+					</div> */}
 					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Created by</h3>
 						<p className="text-sm text-gray-800">
@@ -175,13 +175,13 @@ export const ProdPriceDetails = () => {
 							{formatUTCDate(selectedProductPrice.created_at)}
 						</p>
 					</div>
-					<div className="col-span-4 flex flex-col justify-center gap-1">
+					{/* <div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Approval status</h3>
 						<p className="text-sm capitalize">
 							{selectedProductPrice.approval_status}
 						</p>
-					</div>
-					<div className="col-span-4 flex flex-col justify-center gap-1">
+					</div> */}
+					{/* <div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Approved by</h3>
 						<p className="text-sm text-gray-800">
 							{selectedProductPrice.approved_by
@@ -190,7 +190,7 @@ export const ProdPriceDetails = () => {
 									selectedProductPrice.approved_by.firstname
 								: 'N/A'}
 						</p>
-					</div>
+					</div> */}
 					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold">Updated at</h3>
 						<p className="text-sm text-gray-800">

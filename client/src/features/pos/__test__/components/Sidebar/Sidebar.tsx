@@ -32,6 +32,12 @@ import { Label } from '@/components/ui/label';
 
 interface SidebarProps {}
 
+declare global {
+	interface Window {
+		api: any;
+	}
+}
+
 export const Sidebar = ({}: SidebarProps) => {
 	const { handleChange } = useInvoice();
 	const { auth } = useAuth();
@@ -53,7 +59,6 @@ export const Sidebar = ({}: SidebarProps) => {
 	// 	handleChange('');
 	// }, [selectedWarehouse]);
 
-	const { invoiceItemsQueue, invoice, setInvoice } = useInvoice();
 	const { value: invoiceForm, addInvoiceMutation } = useInvoiceMutation();
 
 	// const { selectedCustomer } = useCustomer();
@@ -67,11 +72,24 @@ export const Sidebar = ({}: SidebarProps) => {
 		data['invoice_items'] = invoiceItemsQueue.map((d: any) => {
 			return { ...d, product_id: d.product_id.id };
 		});
-		await addInvoiceMutation(data);
+		// await addInvoiceMutation(data).then(() => window.api.send());
+		await addInvoiceMutation(data).then(res => {
+			setFullData(res.data);
+		});
 	}
 
+	useEffect(() => {
+		if (fullData) {
+			console.log(fullData);
+			window.api.send({
+				fullData: fullData,
+				invoiceItems: invoiceItemsQueue,
+			});
+		}
+	}, [fullData]);
+
 	// const { openModal, isOpen, closeModal } = useModal();
-	// const successModal = useModal();
+	const successModal = useModal();
 	// useEffect(() => {
 	// 	if (auth.role === 'admin') {
 	// 		openModal();
@@ -96,7 +114,7 @@ export const Sidebar = ({}: SidebarProps) => {
 	const [dialogType, setDialogType] = useState<string>('');
 	return (
 		<div className="bg-pos-primary-background flex w-full max-w-[375px] flex-col gap-2 p-5">
-			<div className="flex flex-col h-full p-2 px-4 bg-white rounded-md">
+			<div className="flex h-full flex-col rounded-md bg-white p-2 px-4">
 				<div>
 					{auth.role === 'admin' ? (
 						<>
@@ -121,7 +139,7 @@ export const Sidebar = ({}: SidebarProps) => {
 						</>
 					) : (
 						<>
-							<div className="flex flex-row justify-between p-2 bg-white">
+							<div className="flex flex-row justify-between bg-white p-2">
 								<div className="flex flex-col">
 									<Label className="flex flex-row items-center gap-2 font-bold uppercase text-slate-800">
 										{selectedWarehouse + ' BRANCH'}
@@ -140,7 +158,7 @@ export const Sidebar = ({}: SidebarProps) => {
 				<SearchCustomer />
 				<CustomerInfo />
 
-				<div className="flex flex-col justify-between h-full p-4 px-2">
+				<div className="flex h-full flex-col justify-between p-4 px-2">
 					<div className="flex flex-col gap-4">
 						{/* <PaymentType /> */}
 						<Items />

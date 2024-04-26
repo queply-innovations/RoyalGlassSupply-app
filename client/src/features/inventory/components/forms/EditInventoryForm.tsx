@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { generateInventoryCode } from '../../helpers';
+import { toast } from 'react-toastify';
 
 interface EditInventoryFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -82,15 +83,24 @@ export const EditInventoryForm = ({
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
 						id: selectedInventory.id,
 						data: FormValue,
-					});
-					response?.status === 200 // 200 means success
-						? (setIsSubmitting(!isSubmitting), onClose())
-						: (setIsSubmitting(!isSubmitting),
-							setError('Failed to update inventory item'));
+					})
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Inventory updated successfully.');
+							onClose();
+						})
+						.catch((err: any) => {
+							setIsSubmitting(false);
+							if (err.response.data.message) {
+								toast.error(err.response.data.message);
+							} else {
+								toast.error('Failed to update inventory.');
+							}
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">

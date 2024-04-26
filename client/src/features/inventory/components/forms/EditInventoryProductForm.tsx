@@ -1,6 +1,6 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useInventoryProdsMutation } from '../../hooks/useInventoryProdsMutation';
-import { useInventoryProds } from '../../context/InventoryProdsContext';
+import { useInventoryProductsByInventory } from '../../context';
 import { Label } from '@/components/ui/label';
 import {
 	Popover,
@@ -30,6 +30,7 @@ import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/context/AuthContext';
 import { getTotalCount } from '../../helpers';
+import { toast } from 'react-toastify';
 
 interface EditInventoryProductFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -39,7 +40,7 @@ export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
 	const { auth } = useAuth();
-	const { selectedInventoryProduct } = useInventoryProds();
+	const { selectedInventoryProduct } = useInventoryProductsByInventory();
 	const {
 		value: FormValue,
 		handleChange,
@@ -71,89 +72,59 @@ export const EditInventoryProductForm = ({
 				onSubmit={async e => {
 					setIsSubmitting(!isSubmitting);
 					e.preventDefault();
-					const response = await handleSubmit({
+					handleSubmit({
 						action: 'update',
 						id: selectedInventoryProduct.id,
 						data: FormValue,
-					});
-					if (
-						typeof response === 'object' &&
-						'status' in response &&
-						response.status === 200
-					) {
-						setIsSubmitting(!isSubmitting);
-						onClose();
-					} else {
-						setIsSubmitting(!isSubmitting);
-						setError('Failed to update item');
-					}
+					})
+						.then(() => {
+							setIsSubmitting(false);
+							toast.success('Inventory product updated successfully.');
+							onClose();
+						})
+						.catch(() => {
+							setIsSubmitting(false);
+							toast.error('Failed to update inventory product.');
+						});
 				}}
 			>
 				<div className="flex max-w-2xl flex-col gap-3">
-					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-						<div className="col-span-12 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="product"
-								className="text-sm font-bold text-gray-600"
-							>
-								Product
-							</Label>
-							<Input
-								id="product"
-								name="product"
-								type="text"
-								readOnly
-								value={selectedInventoryProduct?.product.name}
-							/>
+					<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-5">
+						<div className="col-span-4 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">Name</h3>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.name}
+							</p>
 						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="product_brand"
-								className="text-sm font-bold text-gray-600"
-							>
-								Brand
-							</Label>
-							<Input
-								id="product_brand"
-								name="product_brand"
-								type="text"
-								readOnly
-								value={selectedInventoryProduct?.product.brand}
-							/>
+							<h3 className="text-sm font-bold text-gray-600">
+								Serial No
+							</h3>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.serial_no}
+							</p>
 						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="product_size"
-								className="text-sm font-bold text-gray-600"
-							>
-								Size
-							</Label>
-							<Input
-								id="product_size"
-								name="product_size"
-								type="text"
-								readOnly
-								value={selectedInventoryProduct?.product.size}
-							/>
+							<h3 className="text-sm font-bold text-gray-600">Brand</h3>
+							<p className="text-sm capitalize">
+								{selectedInventoryProduct.product.brand || (
+									<span className="opacity-60">No brand</span>
+								)}
+							</p>
 						</div>
-						<div className="col-span-4 flex flex-col justify-center gap-1">
-							<Label
-								htmlFor="product_color"
-								className="text-sm font-bold text-gray-600"
-							>
-								Color
-							</Label>
-							<Input
-								id="product_color"
-								name="product_color"
-								type="text"
-								readOnly
-								value={selectedInventoryProduct?.product.color}
-							/>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">Size</h3>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.size}
+							</p>
 						</div>
-						<div
-							className={`${auth.role === 'admin' || auth.role === 'super_admin' ? 'col-span-6' : 'col-span-12'} flex flex-col justify-center gap-1`}
-						>
+						<div className="col-span-3 flex flex-col justify-center gap-1">
+							<h3 className="text-sm font-bold text-gray-600">Color</h3>
+							<p className="text-sm">
+								{selectedInventoryProduct.product.color}
+							</p>
+						</div>
+						<div className="col-span-6 flex flex-col justify-center gap-1">
 							<Label
 								htmlFor="supplier_id"
 								className="text-sm font-bold text-gray-600"
@@ -245,39 +216,6 @@ export const EditInventoryProductForm = ({
 								</PopoverContent>
 							</Popover>
 						</div>
-						{(auth.role === 'admin' || auth.role === 'super_admin') && (
-							<div className="col-span-6 flex flex-col justify-center gap-1">
-								<Label
-									htmlFor="status"
-									className="text-sm font-bold text-gray-600"
-								>
-									Status
-								</Label>
-								<Select
-									value={
-										FormValue.status
-											? FormValue.status.toString()
-											: selectedInventoryProduct.status.toString()
-									}
-									required
-									onValueChange={value =>
-										handleChange('status', value)
-									}
-								>
-									<SelectTrigger
-										name="status"
-										id="status"
-										className="w-full px-4 text-sm font-bold text-slate-700"
-									>
-										<SelectValue placeholder="Select status..." />
-									</SelectTrigger>
-									<SelectContent className="text-sm font-medium">
-										<SelectItem value="1">Approved</SelectItem>
-										<SelectItem value="0">Pending</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-						)}
 					</div>
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-6 gap-3">
@@ -382,8 +320,10 @@ export const EditInventoryProductForm = ({
 								required
 								value={
 									FormValue.damage_count !== undefined
-										? FormValue.damage_count
-										: selectedInventoryProduct?.damage_count || ''
+										? String(FormValue.damage_count)
+										: String(
+												selectedInventoryProduct?.damage_count,
+											) || ''
 								}
 								onBlur={e => {
 									e.target.value = Number(e.target.value).toFixed(0);
