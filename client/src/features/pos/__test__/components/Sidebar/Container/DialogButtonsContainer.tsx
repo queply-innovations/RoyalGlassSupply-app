@@ -9,38 +9,38 @@ interface DialogButtonsContainerProps {}
 
 export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	const { setDialogOptions, dialogOptions } = usePos();
-	const {
-		currentInvoicePos,
-		currentInvoiceItemsQueue,
-		fullData,
-		setFullData,
-	} = useInvoicePos();
+	// const {
+	// 	currentInvoicePos,
+	// 	currentInvoiceItemsQueue,
+	// 	fullData,
+	// 	setFullData,
+	// } = useInvoicePos();
 	// const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
 	const { addInvoiceMutation } = useInvoiceMutation();
 
-	async function handleSubmit() {
-		console.log('Invoice:', currentInvoicePos);
-		console.log('InvoiceItems:', currentInvoiceItemsQueue);
-		const data: any = currentInvoicePos;
-		data['invoice_items'] = currentInvoiceItemsQueue.map((d: any) => {
-			return { ...d, product_id: d.product_id.id };
-		});
-		// await addInvoiceMutation(data).then(() => window.api.send());
-		await addInvoiceMutation(data).then(res => {
-			setFullData(res.data);
-		});
-	}
+	// async function handleSubmit() {
+	// 	console.log('Invoice:', currentInvoicePos);
+	// 	console.log('InvoiceItems:', currentInvoiceItemsQueue);
+	// 	const data: any = currentInvoicePos;
+	// 	data['invoice_items'] = currentInvoiceItemsQueue.map((d: any) => {
+	// 		return { ...d, product_id: d.product_id.id };
+	// 	});
+	// 	// await addInvoiceMutation(data).then(() => window.api.send());
+	// 	await addInvoiceMutation(data).then(res => {
+	// 		setFullData(res.data);
+	// 	});
+	// }
 
 	// TODO: Check this print function
-	useEffect(() => {
-		if (fullData) {
-			console.log(fullData);
-			window.api.send({
-				fullData: fullData,
-				invoiceItems: currentInvoiceItemsQueue,
-			});
-		}
-	}, [fullData]);
+	// useEffect(() => {
+	// 	if (fullData) {
+	// 		console.log(fullData);
+	// 		window.api.send({
+	// 			fullData: fullData,
+	// 			invoiceItems: currentInvoiceItemsQueue,
+	// 		});
+	// 	}
+	// }, [fullData]);
 
 	return (
 		<>

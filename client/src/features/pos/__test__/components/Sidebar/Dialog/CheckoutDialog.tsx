@@ -59,15 +59,19 @@ export const CheckoutDialog = () => {
    }
 
    // TODO: Check this print function
-   useEffect(() => {
-      if (fullData) {
-         console.log(fullData);
-         window.api.send({
-            fullData: fullData,
-            invoiceItems: currentInvoiceItemsQueue,
-         });
-      }
-   }, [fullData]);
+   // useEffect(() => {
+   //    if (fullData) {
+   //       console.log(fullData);
+         
+   //    }
+   // }, [fullData]);
+
+   function sendData() {
+      window.api.send({
+         fullData: fullData,
+         invoiceItems: currentInvoiceItemsQueue,
+      });
+   }
 
    return (
       <Dialog
@@ -117,6 +121,7 @@ export const CheckoutDialog = () => {
                         onClick={e => {
                            e.preventDefault();
                            setTransactionStatus('confirming');
+                           sendData();
                         }}>
                         Print invoice
                      </Button>

@@ -49,8 +49,9 @@ function createWindow() {
 		// win.loadFile('dist/index.html');
 		win.loadFile(path.join(process.env.DIST, 'index.html'));
 	}
-
+	
 	ipcMain.on('print-invoice', (event, data) => {
+		ipcMain.handle('send-data', () => { return data; });
 		const newWindow = new BrowserWindow({
 			fullscreen: true,
 			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
@@ -71,7 +72,6 @@ function createWindow() {
 			silent: false, //TODO: convert to true after final testing
 			margins: {marginType: 'none'},
 		};
-		ipcMain.handle('send-data', () => { return data; });
 		windowWebContents.loadURL('http://localhost:5173/#/pos/print-invoice').then(() => {
 			setTimeout(() => {
 				windowWebContents.print(options, (success, reason) => { 
@@ -82,6 +82,16 @@ function createWindow() {
 				})
 			}, 3000);
 		});
+		// windowWebContents.loadFile('src/features/pos/__test__/components/Form/PrintForm.tsx').then(() => {
+		// 	setTimeout(() => {
+		// 		windowWebContents.print(options, (success, reason) => { 
+		// 			console.log(success, reason);
+		// 			if (success) {
+		// 				windowWebContents.close();
+		// 			}
+		// 		})
+		// 	}, 3000);
+		// });
 	})
 }
 

@@ -141,6 +141,7 @@ const protectedRoutesConfig = [
    { path: '/pos/add-product', element: <AddProductPOSPage /> },
    { path: '/pos/add-invoice', element: <PointOfSalePage /> },
    { path: '/pos/return-items', element: <ReturnItemsPosPage /> },
+   { path: '/pos/print-invoice', element: <PrintForm /> },
 
    { path: '/pending/inventory', element: <PendingInventoryProduct /> },
    { path: '/pending/return', element: <PendingReturn /> },
@@ -162,7 +163,6 @@ const protectedRoutesConfig = [
    { path: '/products', element: <Products /> },
    { path: '/products/listings', element: <ProductPrices /> },
    { path: '/supplier', element: <Supplier /> },
-   { path: '/pos/print-invoice', element: <PrintForm /> },
 ];
 
 export const ProtectedRoutes = () => {
