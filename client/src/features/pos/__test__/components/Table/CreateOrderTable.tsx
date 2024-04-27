@@ -27,8 +27,10 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
    const {
       currentInvoiceItemsQueue,
       handleInvoicePosChange,
-      handleInvoiceItemQuantiy,
+      handleInvoiceItemQuantity,
       removeInvoiceItem,
+      invoiceItemsDatabase,
+      setInvoiceItemsDatabase,
    } = useInvoicePos();
    // const { data: inventoryProducts } = useInventoryProds();
    // const { data: productPrices } = useProductPrices();
@@ -102,50 +104,61 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
             // 	row.original.product_id.name,
             // );
             const availableStocks =
-               row.original.approved_stocks - row.original.sold_count ?? 0;
+               row.original.inventory_product.approved_stocks -
+                  row.original.inventory_product.sold_count || 0;
             return (
                <div className="flex justify-center ">
                   <div className="flex flex-row border drop-shadow-sm">
                      <Button
                         className="rounded-sm bg-red-300 hover:bg-red-500 disabled:opacity-100"
                         onClick={() => {
-                           handleInvoiceItemQuantiy(
+                           handleInvoiceItemQuantity(
                               productIndex,
-                              row.original.quantity - 1,
                               availableStocks,
+                              invoiceItemsDatabase[row.index].quantity - 1,
                            );
                         }}
-                        disabled={row.original.quantity <= 1 ? true : false}>
+                        disabled={
+                           invoiceItemsDatabase[row.index].quantity === 1
+                        }>
                         <span>-</span>
                      </Button>
                      <Input
                         id="quantity"
                         className="w-20 rounded-none text-center drop-shadow-none"
                         type="number"
-                        value={row.original.quantity || ''}
-                        onBlur={e => {
-                           handleInvoiceItemQuantiy(
+                        // defaultValue={invoiceItemsDatabase[row.index].quantity}
+                        value={invoiceItemsDatabase[row.index].quantity || ''}
+                        // onBlur={e => {
+                        //    handleInvoiceItemQuantiy(
+                        //       productIndex,
+                        //       Number(e.target.value),
+                        //       availableStocks,
+                        //    );
+                        // }}
+                        onChange={e => {
+                           console.log(e.target.value);
+                           handleInvoiceItemQuantity(
                               productIndex,
-                              Number(e.target.value),
                               availableStocks,
+                              Number(e.target.value),
                            );
                         }}
-                        onChange={e => {
-                           //TODO - rerenders after input loses focus
-                           e.target.value;
-                        }}
-                        disabled={availableStocks ? false : true}
+                        // disabled={availableStocks ? false : true}
                      />
                      <Button
                         className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:bg-slate-200"
                         onClick={() => {
-                           handleInvoiceItemQuantiy(
+                           handleInvoiceItemQuantity(
                               productIndex,
-                              row.original.quantity + 1,
                               availableStocks,
+                              invoiceItemsDatabase[row.index].quantity + 1,
                            );
                         }}
-                        disabled={row.original.quantity >= availableStocks}>
+                        disabled={
+                           invoiceItemsDatabase[row.index].quantity >=
+                           availableStocks
+                        }>
                         <span>+</span>
                      </Button>
                   </div>
@@ -159,7 +172,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
          cell: ({ row }) => {
             return (
                <div className="flex flex-row gap-2">
-                  <span>{formatCurrency(row.original.product_price)}</span>
+                  <span>{formatCurrency(row.original.price)}</span>
                   {row.original.on_sale ? (
                      <span className="text-sm font-light">
                         ({formatCurrency(row.original.sale_discount ?? 0)})
@@ -197,15 +210,20 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
          id: 'total_price',
          accessorKey: 'total_price',
          header: () => <div className="justify-center">Subtotal</div>,
-         cell: ({ row }) => (
-            <div className="">
-               <span>
-                  {formatCurrency(
-                     row.original.total_price * row.original.quantity,
-                  )}
-               </span>
-            </div>
-         ),
+         cell: ({ row }) => {
+            return (
+               <div className="">
+                  <span>
+                     {formatCurrency(
+                        invoiceItemsDatabase[row.index].quantity *
+                           row.original.price,
+                     )}
+                     {/* {formatCurrency(row.original.price * row.original.quantity)} */}
+                  </span>
+               </div>
+            );
+         },
+
          size: 250,
       },
       {
