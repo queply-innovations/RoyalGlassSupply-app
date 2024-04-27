@@ -4,6 +4,7 @@ import { usePos } from '../../../context/__test__/PosContext';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useEffect } from 'react';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
+import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
 
 interface DialogButtonsContainerProps {}
 
@@ -17,6 +18,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	// } = useInvoicePos();
 	// const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
 	const { addInvoiceMutation } = useInvoiceMutation();
+	const { selectedCustomer } = useCustomer();
 
 	// async function handleSubmit() {
 	// 	console.log('Invoice:', currentInvoicePos);
@@ -91,6 +93,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						setDialogOptions({ open: true, title: 'checkout' });
 						//   handleSubmit();
 					}}
+					disabled={Object.keys(selectedCustomer).length === 0}
 				>
 					Checkout
 				</Button>
