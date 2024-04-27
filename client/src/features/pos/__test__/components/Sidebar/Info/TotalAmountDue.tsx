@@ -1,14 +1,9 @@
 import { Label } from '@/components/ui/label';
 import { formatCurrency } from '@/utils/FormatCurrency';
-import { useEffect } from 'react';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const TotalAmountDue = () => {
-   const {
-      currentInvoiceItemsQueue,
-      currentInvoicePos,
-      handleInvoicePosChange,
-   } = useInvoicePos();
+   const { currentInvoicePos } = useInvoicePos();
    const totalAmountDue = currentInvoicePos.total_amount_due;
 
    return (

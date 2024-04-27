@@ -3,7 +3,7 @@ import { formatCurrency } from '@/utils/FormatCurrency';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const Subtotal = () => {
-   const { currentInvoicePos } = useInvoicePos();
+   const { invoiceItemsDatabase } = useInvoicePos();
 
    return (
       <>
@@ -12,9 +12,12 @@ export const Subtotal = () => {
                Subtotal
             </Label>
             <Label className="font-bold text-slate-700">
-               {currentInvoicePos.subtotal
-                  ? formatCurrency(currentInvoicePos.subtotal)
-                  : '₱0.00'}
+               {formatCurrency(
+                  invoiceItemsDatabase.reduce(
+                     (acc, item) => acc + (item.total_price ?? 0),
+                     0,
+                  ),
+               )}
             </Label>
          </div>
       </>

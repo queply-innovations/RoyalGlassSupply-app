@@ -5,14 +5,14 @@ import { PaymentType } from './PaymentType';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const ChangeAmount = () => {
-   const { currentInvoiceItemsQueue, currentInvoicePos } = useInvoicePos();
+   const { invoiceItemsDatabase, currentInvoicePos } = useInvoicePos();
    function getChange() {
       if (currentInvoicePos.paid_amount === 0) {
          return 0;
       } else {
          return (
             (currentInvoicePos.paid_amount ?? 0) -
-            currentInvoiceItemsQueue.reduce(
+            invoiceItemsDatabase.reduce(
                (acc, item) => acc + item.total_price,
                0,
             ) +
