@@ -1,5 +1,9 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { InvoiceItemDatabase, Invoices } from '../types/index';
+import {
+	InvoiceItemDatabase,
+	Invoices,
+	ReturnInvoiceDatabase,
+} from '../types/index';
 import { useEffect, useState } from 'react';
 import {
 	fetchInvoiceByCode,
@@ -54,7 +58,7 @@ export const useInvoiceQuery = () => {
 };
 
 export const useInvoiceCodeQuery = (code: string) => {
-	const [invoice, setInvoice] = useState<Invoices | null>(null);
+	const [invoice, setInvoice] = useState<ReturnInvoiceDatabase | null>(null);
 
 	const { data: result, isFetching: isLoading } = useQuery({
 		queryKey: ['ivc-code'],

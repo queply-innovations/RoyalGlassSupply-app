@@ -1,145 +1,105 @@
 import { useAuth } from '@/context/AuthContext';
-import { useInvoiceCodeQuery } from '@/features/invoice/__test__/hooks/useInvoiceQuery';
-import { InvoiceItems, Invoices } from '@/features/invoice/__test__/types';
-import { useProductPricesFilter } from '@/features/product/__test__/hooks';
-import { ProductPrices } from '@/features/product/__test__/types';
-
+import { InvoiceItems } from '@/features/invoice/__test__/types';
 import {
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
+   ProductPricesFilterProps,
+   useProductPricesFilter,
+} from '@/features/product/__test__/hooks';
+import { ProductPrices } from '@/features/product/__test__/types';
+import {
+   ReactNode,
+   createContext,
+   useContext,
+   useEffect,
+   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInvoicePos } from './InvoicePosContext';
 
 interface PosContextProps {
-	productListing: ProductPrices[];
-	isLoading: boolean;
+   searchFilterItems: ProductPricesFilterProps;
+   setSearchFilterItems: React.Dispatch<
+      React.SetStateAction<ProductPricesFilterProps>
+   >;
 
-	invoiceItemsQueue: InvoiceItems[];
-	setInvoiceItemsQueue: (invoiceItems: InvoiceItems[]) => void;
-	setFilter: (filter: object) => void;
-	quantityHandler: (
-		productId: number,
-		newQuantity: number,
-		maxQuantity: number,
-	) => void;
+   sellableItems: ProductPrices[];
+   fetchingProducts: boolean;
 
-	selectedWarehouse: string;
-	setSelectedWarehouse: (warehouse: string) => void;
+   customerCart: InvoiceItems[];
+   setCustomerCart: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
 
-	// invoiceCodeResult: Invoices;
-	setInvoiceCode: (code: string) => void;
+   dialogOptions: DialogOptions;
+   setDialogOptions: React.Dispatch<React.SetStateAction<DialogOptions>>;
 }
 
 interface PosProviderProps {
-	children: ReactNode;
+   children: ReactNode;
+}
+
+interface DialogOptions {
+   open: boolean;
+   title: string;
 }
 
 const PosContext = createContext<PosContextProps | undefined>(undefined);
 
 export const PosProvider = ({ children }: PosProviderProps) => {
-	const { auth } = useAuth();
-	const navigate = useNavigate();
+   const { auth } = useAuth();
+   const navigate = useNavigate();
 
-	useEffect(() => {
-		if (auth.role === 'admin') {
-			navigate('/pos');
-		} else if (auth.role?.split('_')[1] === 'CDO') {
-			setFilter({
-				approval_status: 'approved', //TODO Possible to comment out
-				active_status: 'active',
-				warehouse_id: 1,
-			});
-			setSelectedWarehouse('CDO');
-			navigate('/pos/add-order');
+   const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
 
-			// setInvoice({
-			// 	...invoice,
-			// 	warehouse_id: 1,
-			// });
-		} else if (auth.role?.split('_')[1] === 'ILI') {
-			setFilter({
-				approval_status: 'approved', //TODO Possible to comment out
-				active_status: 'active',
-				warehouse_id: 2,
-			});
-			setSelectedWarehouse('Iligan');
-			navigate('/pos/add-order');
+   const [searchFilterItems, setSearchFilterItems] =
+      useState<ProductPricesFilterProps>({});
 
-			// setInvoice({
-			// 	...invoice,
-			// 	warehouse_id: 2,
-			// });
-		}
-	}, []);
-	const [invoiceItemsQueue, setInvoiceItemsQueue] = useState<InvoiceItems[]>(
-		[],
-	);
+   const [customerCart, setCustomerCart] = useState<InvoiceItems[]>([]);
 
-	const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
+   const [dialogOptions, setDialogOptions] = useState<DialogOptions>(
+      {} as DialogOptions,
+   );
 
-	const [filter, setFilter] = useState<object>({});
+   useEffect(() => {
+      if (auth.role === 'admin') {
+         navigate('/pos');
+      } else if (auth.role?.split('_')[1] === 'CDO') {
+         setSearchFilterItems({
+            // approval_status: 'approved', //TODO Possible to comment out
+            warehouse_id: 1,
+         });
+         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 1 });
+         navigate('/pos/add-order');
+      } else if (auth.role?.split('_')[1] === 'ILI') {
+         setSearchFilterItems({
+            // approval_status: 'approved', //TODO Possible to comment out
+            warehouse_id: 2,
+         });
+         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 2 });
+         navigate('/pos/add-order');
+      }
+   }, [auth.role]);
 
-	const [invoiceCode, setInvoiceCode] = useState<string>('');
+   const { data: sellableItems, isLoading: fetchingProducts } =
+      useProductPricesFilter(searchFilterItems);
 
-	// const { invoice: invoiceCodeResult } = useInvoiceCodeQuery(invoiceCode);
-	const { data: productListing, isLoading } = useProductPricesFilter(filter);
+   const value = {
+      searchFilterItems,
+      setSearchFilterItems,
 
-	const quantityHandler = (
-		productId: number,
-		newQuantity: number,
-		maxQuantity: number,
-	) => {
-		if (newQuantity > 0 && newQuantity <= maxQuantity) {
-			setInvoiceItemsQueue(prev =>
-				prev.map((item, index) => {
-					if (index === productId) {
-						// Ensure that `price` property exists and is a number
-						if (typeof item.product_price === 'number') {
-							return {
-								...item,
-								quantity: newQuantity,
-								subtotal: item.product_price * newQuantity,
-							};
-						}
-					}
-					return item;
-				}),
-			);
-		} else if (newQuantity === 0) {
-			setInvoiceItemsQueue(prev =>
-				prev.filter((_, index) => index !== productId),
-			);
-		}
-	};
+      sellableItems,
+      fetchingProducts,
 
-	// useEffect(() => {
-	// 	auth.role === 'admin'
-	// 		? setFilter({ warehouse_id: 1 })
-	// 		: setFilter({ warehouse_id: 2 });
-	// }, []);
+      customerCart,
+      setCustomerCart,
 
-	const value = {
-		productListing,
-		isLoading,
-		setFilter,
-		invoiceItemsQueue,
-		setInvoiceItemsQueue,
-		quantityHandler,
-		selectedWarehouse,
-		setSelectedWarehouse,
-		// invoiceCodeResult,
-		setInvoiceCode,
-	};
-	return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
+      dialogOptions,
+      setDialogOptions,
+   };
+   return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
 };
 
 export const usePos = () => {
-	const context = useContext(PosContext);
-	if (context === undefined) {
-		throw new Error('usePos must be used within a PosProvider');
-	}
-	return context;
+   const context = useContext(PosContext);
+   if (context === undefined) {
+      throw new Error('usePos must be used within a PosProvider');
+   }
+   return context;
 };
