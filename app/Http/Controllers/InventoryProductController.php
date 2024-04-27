@@ -196,8 +196,8 @@ class InventoryProductController extends Controller
             'price' => $cost,
             'warehouse_id' => $inventoryProduct->inventory->warehouse_id,
             'created_by' => auth()->user()->id,
-            'approval_status' => $request->status ? 'approved' : 'pending',
-            'active_status' => $request->status ? 'active' : 'disabled'
+            'approval_status' => 'approved',
+            'active_status' => 'active'
         ];
 
         $productPrice = ProductPrice::create($productPriceData);
@@ -225,7 +225,9 @@ class InventoryProductController extends Controller
                 'capital_price' => $inventoryProduct->capital_price,
                 'markup_price' => $markupPrice,
                 'cost' => $cost,
-                'price' => $price
+                'price' => $price,
+                'approval_status' => 'approved',
+                'active_status' => 'active'
             ]);
         } else if($request->has('approved_stocks') && $request->input('approved_stocks') > 0) {
             $approvedStockCount =  $inventoryProduct->approved_stocks + $request->approved_stocks;
