@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/features/pos/__test__/components/Navbar/Navbar';
+import { useInvoicePos } from '@/features/pos/__test__/context/__test__/InvoicePosContext';
 import { usePos } from '@/features/pos/__test__/context/__test__/PosContext';
 import { ActionButton } from '@/features/pos/add-product/components';
 import { ChevronLeft, Warehouse } from 'lucide-react';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const SelectWarehousePos = () => {
    const { setSearchFilterItems } = usePos();
+   const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
    const navigate = useNavigate();
 
    return (
@@ -44,6 +46,10 @@ export const SelectWarehousePos = () => {
                               // approval_status: 'approved', //TODO Possible to comment out
                               warehouse_id: 1,
                            });
+                           setCurrentInvoicePos({
+                              ...currentInvoicePos,
+                              warehouse_id: 1,
+                           });
                            navigate('/pos/add-order');
                         }}
                      />
@@ -60,6 +66,10 @@ export const SelectWarehousePos = () => {
                         onClick={() => {
                            setSearchFilterItems({
                               // approval_status: 'approved', //TODO Possible to comment out
+                              warehouse_id: 2,
+                           });
+                           setCurrentInvoicePos({
+                              ...currentInvoicePos,
                               warehouse_id: 2,
                            });
                            navigate('/pos/add-order');

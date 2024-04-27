@@ -13,6 +13,7 @@ import {
    useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useInvoicePos } from './InvoicePosContext';
 
 interface PosContextProps {
    searchFilterItems: ProductPricesFilterProps;
@@ -45,6 +46,8 @@ export const PosProvider = ({ children }: PosProviderProps) => {
    const { auth } = useAuth();
    const navigate = useNavigate();
 
+   const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
+
    const [searchFilterItems, setSearchFilterItems] =
       useState<ProductPricesFilterProps>({});
 
@@ -62,12 +65,14 @@ export const PosProvider = ({ children }: PosProviderProps) => {
             // approval_status: 'approved', //TODO Possible to comment out
             warehouse_id: 1,
          });
+         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 1 });
          navigate('/pos/add-order');
       } else if (auth.role?.split('_')[1] === 'ILI') {
          setSearchFilterItems({
             // approval_status: 'approved', //TODO Possible to comment out
             warehouse_id: 2,
          });
+         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 2 });
          navigate('/pos/add-order');
       }
    }, [auth.role]);
