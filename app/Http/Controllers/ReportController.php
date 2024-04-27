@@ -322,7 +322,7 @@ class ReportController extends Controller
                 'date_to' => Carbon::parse($month)->endOfMonth()
             ]);
 
-            if($request->has('warehouse')) {
+            if($request->has('warehouse') && $request->warehouse) {
                 $salesRequest->merge([
                     'warehouse' => $request->warehouse
                 ]);
