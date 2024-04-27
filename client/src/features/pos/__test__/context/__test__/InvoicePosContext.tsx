@@ -4,6 +4,7 @@ import {
    InvoiceItems,
    Invoices,
 } from '@/features/invoice/__test__/types';
+import { ProductPrices } from '@/features/product/__test__/types';
 import {
    ReactNode,
    createContext,
@@ -17,8 +18,11 @@ interface InvoicePosContextProps {
    currentInvoicePos: Partial<Invoices>;
    setCurrentInvoicePos: React.Dispatch<Partial<Invoices>>;
 
-   currentInvoiceItemsQueue: InvoiceItemDatabase[];
-   setCurrentInvoiceItemsQueue: (invoiceItems: InvoiceItemDatabase[]) => void;
+   currentInvoiceItemsQueue: ProductPrices[];
+   setCurrentInvoiceItemsQueue: (invoiceItems: ProductPrices[]) => void;
+
+   invoiceItemsDatabase: InvoiceItemDatabase[];
+   setInvoiceItemsDatabase: React.Dispatch<InvoiceItemDatabase[]>;
 
    addInvoiceItems: (
       tableIndex: number,
@@ -29,7 +33,7 @@ interface InvoicePosContextProps {
       key: string,
       value: Invoices[keyof Invoices],
    ) => void;
-   handleInvoiceItemQuantiy: (
+   handleInvoiceItemQuantity: (
       tableIndex: number,
       maxQuantity: number,
       newQuantity: number,
@@ -58,7 +62,7 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       change_amount: 0,
       subtotal: 0,
       type: 'payment',
-      payment_method: '',
+      payment_method: 'cash',
       reference_no: '',
       paid_amount: 0,
       total_discount: 0,
@@ -69,13 +73,16 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       Partial<InvoiceItems>[]
    >([]);
 
+   const [invoiceItemsDatabase, setInvoiceItemsDatabase] = useState<
+      InvoiceItemDatabase[]
+   >([]);
+
    const invoiceSubtotal = useMemo(() => {
-      return currentInvoiceItemsQueue.reduce(
-         (acc, currentItem) =>
-            acc + (currentItem.total_price ?? 0) * (currentItem.quantity ?? 0),
+      return invoiceItemsDatabase.reduce(
+         (acc, currentItem) => acc + (currentItem.total_price ?? 0),
          0,
       );
-   }, [currentInvoiceItemsQueue]);
+   }, [invoiceItemsDatabase]);
 
    useEffect(() => {
       setCurrentInvoicePos(prev => ({
@@ -152,14 +159,37 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       }));
    }
 
-   function handleInvoiceItemQuantiy(
+   function handleInvoiceItemQuantity(
       tableIndex: number,
       maxQuantity: number,
       newQuantity: number,
    ) {
+      // setCurrentInvoiceItemsQueue(items =>
+      //    items.map((item, index) => {
+      //       if (index === tableIndex) {
+      //          return {
+      //             ...item,
+      //             quantity: newQuantity,
+      //             total_price:
+      //                Number(
+      //                   Number(item.product_price * newQuantity).toFixed(2),
+      //                ) - item.item_discount,
+      //          };
+      //       }
+      //       return item;
+      //    }),
+      // );
+      // handleInvoicePosChange(
+      //    'total_amount_due',
+      //    currentInvoiceItemsQueue.reduce(
+      //       (acc, item) => acc + (item.total_price ?? 0),
+      //       0,
+      //    ),
+      // );
+
       if (newQuantity > 0 && newQuantity <= maxQuantity) {
-         setCurrentInvoiceItemsQueue(items =>
-            items.map((item, index) => {
+         setInvoiceItemsDatabase(prev =>
+            prev.map((item, index) => {
                if (index === tableIndex) {
                   return {
                      ...item,
@@ -175,7 +205,7 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
          );
          handleInvoicePosChange(
             'total_amount_due',
-            currentInvoiceItemsQueue.reduce(
+            invoiceItemsDatabase.reduce(
                (acc, item) => acc + (item.total_price ?? 0),
                0,
             ),
@@ -199,8 +229,11 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
       currentInvoiceItemsQueue,
       setCurrentInvoiceItemsQueue,
 
+      invoiceItemsDatabase,
+      setInvoiceItemsDatabase,
+
       addInvoiceItems,
-      handleInvoiceItemQuantiy,
+      handleInvoiceItemQuantity,
       handleInvoicePosChange,
       removeInvoiceItem,
 
