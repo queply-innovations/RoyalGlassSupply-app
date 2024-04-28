@@ -15,5 +15,7 @@ const styles = StyleSheet.create({
 export const InvoiceThankYouMsg = () => (
 	<View style={styles.titleContainer}>
 		<Text style={styles.reportTitle}>Thank you for your business</Text>
+
+		<Text style={styles.reportTitle}>{new Date().getUTCSeconds()}</Text>
 	</View>
 );

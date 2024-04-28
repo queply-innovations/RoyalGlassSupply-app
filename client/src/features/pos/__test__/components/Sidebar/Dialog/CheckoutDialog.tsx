@@ -111,6 +111,10 @@ export const CheckoutDialog = () => {
 						className={`${transactionStatus !== 'confirming' && 'hidden'} flex-1`}
 						type="reset"
 						onClick={() => {
+							const iframe = document.getElementById('print-iframe');
+							if (iframe) {
+								iframe.remove();
+							}
 							setDialogOptions({ open: false, title: '' });
 						}}
 					>

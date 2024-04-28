@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
 });
 
 export const InvoiceDocument = () => {
-	const { fullData } = useInvoicePos();
+	// const { fullData } = useInvoicePos();
 
-	console.log(fullData);
+	// console.log(fullData);
 
 	return (
 		<Document>
