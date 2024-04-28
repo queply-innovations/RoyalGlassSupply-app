@@ -31,6 +31,8 @@ class InvoiceResource extends JsonResource
             'total_amount_due' => $this->total_amount_due,
             'paid_amount' => $this->paid_amount,
             'change_amount' => $this->change_amount,
+            'balance_amount' => $this->balance_amount,
+            'is_paid' => $this->is_paid,
             'or_no' => $this->or_no,
             'status' => $this->status,
             'created_at' => $this->created_at,

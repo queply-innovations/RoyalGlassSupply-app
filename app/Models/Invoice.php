@@ -26,6 +26,8 @@ class Invoice extends Model
         'total_amount_due',
         'paid_amount',
         'change_amount',
+        'balance_amount',
+        'is_paid',
         'or_no',
         'status'
     ];

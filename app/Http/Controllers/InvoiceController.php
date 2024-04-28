@@ -39,7 +39,7 @@ class InvoiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $invoice = $this->storeInventoryProducts($request);
+            $invoice = $this->storeInvoice($request);
             
             DB::commit();
             return new InvoiceResource($invoice);
@@ -141,7 +141,7 @@ class InvoiceController extends Controller
         return new InvoiceResource($query);
     }
 
-    public function storeInventoryProducts($request) {
+    public function storeInvoice($request) {
         $invoice_items = $request->invoice_items;
         $invoice = Invoice::create($request->except(['invoice_items', 'reference_no']));
         $invoice->update([
@@ -149,6 +149,14 @@ class InvoiceController extends Controller
             'reference_no' => $request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
             'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
         ]);
+
+        if($invoice->payment_method == 'purchase_order') {
+            $balance = $invoice->total_amount_due - $invoice->paid_amount;
+            $invoice->update([
+                'balance_amount' => $balance > 0 ? $balance : 0,
+                'is_paid' => $balance <= 0 
+            ]);
+        }
 
         foreach($invoice_items as $invoice_item){
             $inventoryProduct =  InventoryProduct::where('product_id', $invoice_item["product_id"])
