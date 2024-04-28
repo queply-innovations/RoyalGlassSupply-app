@@ -70,7 +70,6 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 				);
 			},
 		},
-
 		{
 			accessorKey: 'warehouse.code',
 			sortingFn: 'text',
@@ -124,44 +123,18 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 			},
 		},
 		{
-			accessorKey: 'status',
-			sortingFn: 'text',
-			enableSorting: true,
-			enableResizing: true,
-
-			header: ({ column }) => {
-				return (
-					<div className="mx-auto flex">
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Discount Status{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
+			accessorKey: 'is_paid',
+			header: ({}) => {
+				return <span>Balance Amount</span>;
 			},
 			cell: ({ row }) => {
-				const status = row.original.status;
+				const status = row.original.is_paid;
 				return (
 					<>
 						<div className="group relative flex w-fit items-center justify-center">
-							{status === 'approved' ? (
-								<Check
-									size={20}
-									strokeWidth={2}
-									className="text-green-600"
-								/>
-							) : status === 'rejected' ? (
+							{status === 1 ? (
+								<span>——</span>
+							) : status === 0 ? (
 								<Ban
 									size={20}
 									strokeWidth={2}
@@ -174,9 +147,6 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 									className="text-amber-500"
 								/>
 							)}
-							<span className="absolute left-1/2 mx-auto -translate-x-1/2 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm capitalize text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
-								{status}
-							</span>
 						</div>
 					</>
 				);
@@ -262,7 +232,6 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 					dataType={'Invoices'}
 				/>
 			</div>
-
 		</>
 	);
 };
