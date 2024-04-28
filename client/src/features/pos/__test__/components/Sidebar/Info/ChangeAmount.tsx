@@ -20,6 +20,7 @@ export const ChangeAmount = () => {
          );
       }
    }
+
    return (
       <>
          <div className="flex w-full flex-col justify-between gap-2 border-t border-dashed py-2">
@@ -27,10 +28,18 @@ export const ChangeAmount = () => {
             <PaidAmount />
 
             <div className="flex flex-row justify-between">
-               <Label className="text-xl font-bold text-gray-700">Change</Label>
-               <Label className="text-xl font-bold text-black">
+               {getChange() < 0 ? (
+                  <span className="text-xl font-bold text-gray-700">
+                     Balance Amount
+                  </span>
+               ) : (
+                  <span className="text-xl font-bold text-gray-700">
+                     Change
+                  </span>
+               )}
+               <span className="text-xl font-bold text-black">
                   {formatCurrency(Number(getChange()))}
-               </Label>
+               </span>
             </div>
          </div>
       </>
