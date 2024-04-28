@@ -28,12 +28,9 @@ class ReportController extends Controller
         $customerData = $this->getCustomerReport($request);
 
         $data = [
+            ...$salesData,
             'date_from' => $request->date_from,
             'date_to' => $request->date_to,
-            'total_sales' => $salesData['total_sales'],
-            'total_capital' => $salesData['total_capital'],
-            'total_expenses' => $salesData['total_expenses'],
-            'total_profit' => $salesData['total_profit'],
             'new_customers' => $customerData['new_customers'],
             'returning_customers' => $customerData['returning_customers']
         ];
@@ -236,14 +233,29 @@ class ReportController extends Controller
     private function getSalesReport($request) {
         $invoices = Invoice::with(['invoiceItems.inventoryProduct'])
             ->where('type', 'payment')
+            ->where('is_paid', true)
+            ->where('balance_amount', '<=', 0)
             ->whereBetween('created_at', [
                 Carbon::parse($request->date_from)->startOfDay(),
                 Carbon::parse($request->date_to)->endOfDay()
             ])
-            ->when($request->has('warehouse'), function($query) use($request) {
+            ->when($request->has('warehouse') && $request->warehouse, function($query) use($request) {
                 return $query->where('warehouse_id', $request->warehouse);
             })
             ->get();
+
+        $purchasOrders = Invoice::where('type', 'payment')
+            ->where('payment_method', 'purchase_order')
+            ->where('is_paid', false)
+            ->where('balance_amount', '>', 0)
+            ->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])
+            ->when($request->has('warehouse') && $request->warehouse, function($query) use($request) {
+                return $query->where('warehouse_id', $request->warehouse);
+            })
+            ->sum('balance_amount');
 
         $expenses = OperationExpense::whereBetween('created_at', [
                 Carbon::parse($request->date_from)->startOfDay(),
@@ -271,7 +283,8 @@ class ReportController extends Controller
             'total_sales' => $sales,
             'total_capital' => $capital,
             'total_expenses' => $expenses,
-            'total_profit' => $profit
+            'total_profit' => $profit,
+            'total_collectibles' => $purchasOrders
         ];
     }
 
@@ -337,7 +350,8 @@ class ReportController extends Controller
                 'gross_income' => $salesReport['total_sales'],
                 'capital' => $salesReport['total_capital'],
                 'expenses' => $salesReport['total_expenses'],
-                'net_profit' => $salesReport['total_profit']
+                'net_profit' => $salesReport['total_profit'],
+                'collectibles' => $salesReport['total_collectibles']
             ];
         }
 
