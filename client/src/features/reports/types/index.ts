@@ -18,4 +18,5 @@ export interface ReportAnalytics {
    capital: number;
    expenses: number;
    net_profit: number;
+   collectibles: number;
 }
