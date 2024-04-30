@@ -222,18 +222,16 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
 
    return (
       <>
-         <div className="w-full rounded-lg border bg-white">
-            <DataTable
-               columns={columns}
-               data={invoices.sort((a, b) => {
-                  const dateA = new Date(a.updated_at ?? a.created_at);
-                  const dateB = new Date(b.updated_at ?? b.created_at);
-                  return dateB.getTime() - dateA.getTime();
-               })}
-               filterWhat={'code'}
-               dataType={'Invoices'}
-            />
-         </div>
+         <DataTable
+            columns={columns}
+            data={invoices.sort((a, b) => {
+               const dateA = new Date(a.updated_at ?? a.created_at);
+               const dateB = new Date(b.updated_at ?? b.created_at);
+               return dateB.getTime() - dateA.getTime();
+            })}
+            filterWhat={'code'}
+            dataType={'Invoices'}
+         />
       </>
    );
 };
