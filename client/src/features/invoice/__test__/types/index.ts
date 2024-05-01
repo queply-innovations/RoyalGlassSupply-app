@@ -76,10 +76,14 @@ export interface ReturnInvoice {
 	issued_by: number;
 	refundable_amount: number;
 	refund_status: string;
-	return_items: {
-		invoice_item_id: number;
-		quantity: number;
-		unit: string;
-		price: number;
-	}[];
+	return_items: ReturnInvoiceItems[];
+}
+
+export interface ReturnInvoiceItems {
+	return_transaction_id?: number;
+	invoice_item_id: number;
+	quantity: number;
+	unit: string;
+	price: number;
+	reason: string;
 }

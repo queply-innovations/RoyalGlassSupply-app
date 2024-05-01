@@ -27,6 +27,7 @@ export const API_URLS = {
 	CUSTOMERS: `${API_BASE_URL}/customers`,
 	EXPENSES: `${API_BASE_URL}/operation_expenses`,
 	RETURN_TRANSACTIONS: `${API_BASE_URL}/return-transactions`,
+	RETURN_TRANSACTIONS_ITEMS: `${API_BASE_URL}/return-transaction-items`,
 	REPORTS: `${API_BASE_URL}/reports`,
 };
 

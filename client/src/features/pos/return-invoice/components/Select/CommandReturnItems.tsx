@@ -1,7 +1,8 @@
 import { CommandItem } from '@/components/ui/command';
-import { useReturnInvoiceItemsPos } from '../../context';
+// import { useReturnInvoiceItemsPos } from '../../context';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
+import { ReturnInvoiceItems } from '@/features/invoice/__test__/types';
 
 interface CommandReturnItemsProps {
 	isOpen: (open: boolean) => void;
@@ -39,16 +40,12 @@ export const CommandReturnItems = ({ isOpen }: CommandReturnItemsProps) => {
 								quantity: 1, // Default quantity to return
 								unit: item.unit,
 								price: item.product_price,
+								reason: 'return',
 							},
 						];
 						setReturnInvoice(prev => ({
 							...prev,
-							return_items: updatedItems as {
-								invoice_item_id: number;
-								quantity: number;
-								unit: string;
-								price: number;
-							}[],
+							return_items: updatedItems as ReturnInvoiceItems[],
 						}));
 						isOpen(false);
 					}}

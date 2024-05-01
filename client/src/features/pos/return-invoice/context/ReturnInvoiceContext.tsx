@@ -3,8 +3,11 @@ import {
 	InvoiceItems,
 	Invoices,
 	ReturnInvoice,
+	ReturnInvoiceItems,
 } from '@/features/invoice/__test__/types';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { submitReturnInvoice, submitReturnInvoiceItems } from '../api/Returns';
+import { useAuth } from '@/context/AuthContext';
 
 interface ReturnInvoiceContextProps {
 	returnInvoice: ReturnInvoice;
@@ -21,6 +24,9 @@ interface ReturnInvoiceContextProps {
 	selectedItems: InvoiceItems[];
 	setSelectedItems: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
 	updateQuantity: (id: number, newQuantity: number) => void;
+	handleSubmit: () => Promise<string>;
+	isSubmitting: boolean;
+	setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ReturnInvoiceProviderProps {
@@ -54,6 +60,7 @@ export const ReturnInvoiceProvider = ({
 	const [returnableItems, setReturnableItems] = useState<InvoiceItems[]>([]);
 	const [selectedItems, setSelectedItems] = useState<InvoiceItems[]>([]);
 
+	const { auth } = useAuth();
 	const searchInvoice = async (code: string) => {
 		// Reset all previous states
 		setReturnInvoice({} as ReturnInvoice);
@@ -64,8 +71,9 @@ export const ReturnInvoiceProvider = ({
 		return await fetchInvoiceByCode(code)
 			.then(data => {
 				setReturnInvoice({
-					// code: data.code,
+					code: `RET-${data.code}`,
 					invoice_id: data.id,
+					issued_by: auth?.user.id || 0,
 					refundable_amount: 0,
 					refund_status: 'done',
 				} as ReturnInvoice);
@@ -111,6 +119,43 @@ export const ReturnInvoiceProvider = ({
 		}
 	}, [returnInvoice.return_items]);
 
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const handleSubmit = async () => {
+		// Submit the return invoice
+		setIsSubmitting(true);
+		return await submitReturnInvoice(returnInvoice)
+			.then(res => {
+				// Submit the return invoice items
+				// Iterate through the return items and submit each item
+				return Promise.all(
+					returnInvoice.return_items?.map(async item => {
+						await submitReturnInvoiceItems({
+							...item,
+							return_transaction_id: res.id,
+						} as ReturnInvoiceItems);
+					}),
+				)
+					.then(() => {
+						// If all items are successfully returned, return a success message
+						// Reset all states
+						setReturnInvoice({} as ReturnInvoice);
+						setSelectedInvoice(undefined);
+						setReturnableItems([]);
+						setSelectedItems([]);
+						setIsSubmitting(false);
+						return 'Items successfully returned.';
+					})
+					.catch(() => {
+						setIsSubmitting(false);
+						throw 'Failed to return items. Please try again.';
+					});
+			})
+			.catch(() => {
+				setIsSubmitting(false);
+				throw 'Failed to return items. Please try again.';
+			});
+	};
+
 	// useEffect(() => {
 	// 	if (invoiceCode) {
 	// 		// Fetch the invoice items based on the invoice code
@@ -143,6 +188,9 @@ export const ReturnInvoiceProvider = ({
 		selectedItems,
 		setSelectedItems,
 		updateQuantity,
+		handleSubmit,
+		isSubmitting,
+		setIsSubmitting,
 	};
 
 	return (

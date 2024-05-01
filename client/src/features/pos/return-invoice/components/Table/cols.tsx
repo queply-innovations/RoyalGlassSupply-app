@@ -11,7 +11,7 @@ export const ReturnCols = () => {
 };
 
 export const ReturnTableColumns = () => {
-	const { returnInvoice, updateQuantity } = useReturnInvoice();
+	const { returnInvoice, updateQuantity, isSubmitting } = useReturnInvoice();
 
 	const cols: ColumnDef<InvoiceItems>[] = [
 		{
@@ -53,7 +53,7 @@ export const ReturnTableColumns = () => {
 							disabled={
 								(returnInvoice.return_items.find(
 									item => item.invoice_item_id === row.original.id,
-								)?.quantity ?? 1) === 1
+								)?.quantity ?? 1) === 1 || isSubmitting
 							}
 						>
 							<span>-</span>
@@ -83,9 +83,9 @@ export const ReturnTableColumns = () => {
 							}}
 							disabled={
 								row.original.quantity ===
-								(returnInvoice.return_items.find(
-									item => item.invoice_item_id === row.original.id,
-								)?.quantity ?? 1)
+									(returnInvoice.return_items.find(
+										item => item.invoice_item_id === row.original.id,
+									)?.quantity ?? 1) || isSubmitting
 							}
 						>
 							<span>+</span>
