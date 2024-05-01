@@ -1,9 +1,10 @@
 import { formatUTCMMDDYYYY } from '@/utils/timeUtils';
 import { useReturnInvoiceItemsPos } from '../../context/ReturnInvoiceItems';
 import { formatCurrency } from '@/utils/FormatCurrency';
+import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
 
 export const ReturnInvoiceInfo = () => {
-	const { returnInvoiceItems } = useReturnInvoiceItemsPos();
+	const { selectedInvoice } = useReturnInvoice();
 	return (
 		<>
 			<div className="flex flex-row gap-4">
@@ -11,14 +12,14 @@ export const ReturnInvoiceInfo = () => {
 					<div>
 						<span className="font-bold">Customer: </span>
 						<span className="font-medium capitalize">
-							{returnInvoiceItems.customer.firstname}{' '}
-							{returnInvoiceItems.customer.lastname}
+							{selectedInvoice?.customer.firstname}{' '}
+							{selectedInvoice?.customer.lastname}
 						</span>
 					</div>
 					<div>
 						<span className="font-bold">Created at: </span>
 						<span className="font-medium capitalize">
-							{formatUTCMMDDYYYY(returnInvoiceItems.created_at)}
+							{formatUTCMMDDYYYY(selectedInvoice?.created_at ?? '')}
 						</span>
 					</div>
 				</div>
@@ -26,13 +27,13 @@ export const ReturnInvoiceInfo = () => {
 					<div>
 						<span className="font-bold">Paid Amount: </span>
 						<span className="font-medium capitalize">
-							{formatCurrency(returnInvoiceItems.paid_amount)}
+							{formatCurrency(selectedInvoice?.paid_amount ?? 0)}
 						</span>
 					</div>
 					<div>
 						<span className="font-bold">Total Amount: </span>
 						<span className="font-medium capitalize">
-							{formatCurrency(returnInvoiceItems.total_amount_due)}
+							{formatCurrency(selectedInvoice?.total_amount_due ?? 0)}
 						</span>
 					</div>
 				</div>
@@ -40,7 +41,7 @@ export const ReturnInvoiceInfo = () => {
 					<div>
 						<span className="font-bold">Total Items: </span>
 						<span className="font-medium capitalize">
-							{returnInvoiceItems.invoice_items.length}
+							{selectedInvoice?.invoice_items.length}
 						</span>
 					</div>
 				</div>

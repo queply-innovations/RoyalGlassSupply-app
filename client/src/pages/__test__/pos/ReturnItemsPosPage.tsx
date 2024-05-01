@@ -7,13 +7,16 @@ import { Navbar } from '@/features/pos/__test__/components/Navbar/Navbar';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ReturnInvoiceItemsPosProvider } from '@/features/pos/return-invoice/context/ReturnInvoiceItems';
+import { ReturnInvoiceProvider } from '@/features/pos/return-invoice/context/ReturnInvoiceContext';
+import { ReturnCalculations } from '@/features/pos/return-invoice/components/Info/ReturnCalculations';
 
 export const ReturnItemsPosPage = () => {
 	const navigate = useNavigate();
 
 	return (
 		<>
-			<ReturnInvoiceItemsPosProvider>
+			{/* <ReturnInvoiceItemsPosProvider> */}
+			<ReturnInvoiceProvider>
 				<div className="flex h-screen w-screen flex-row">
 					<Navbar />
 					<div className="flex max-h-full w-full flex-col gap-4 overflow-y-auto p-6 pt-12 text-slate-700">
@@ -37,9 +40,11 @@ export const ReturnItemsPosPage = () => {
 							</div>
 						</div>
 						<ReturnTable />
+						<ReturnCalculations />
 					</div>
 				</div>
-			</ReturnInvoiceItemsPosProvider>
+				{/* </ReturnInvoiceItemsPosProvider> */}
+			</ReturnInvoiceProvider>
 		</>
 	);
 };

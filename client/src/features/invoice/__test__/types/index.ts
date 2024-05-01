@@ -69,3 +69,17 @@ export interface InvoiceProps {
 	invoiceTaxes: InvoiceTaxes[];
 	invoiceDiscount: InvoiceDiscount[];
 }
+
+export interface ReturnInvoice {
+	code: string;
+	invoice_id: number;
+	issued_by: number;
+	refundable_amount: number;
+	refund_status: string;
+	return_items: {
+		invoice_item_id: number;
+		quantity: number;
+		unit: string;
+		price: number;
+	}[];
+}

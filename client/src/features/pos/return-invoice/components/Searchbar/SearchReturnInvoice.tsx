@@ -2,19 +2,40 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { Search } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useReturnInvoiceItemsPos } from '../../context/ReturnInvoiceItems';
 import { ReturnInvoiceInfo } from '../Info/ReturnInvoiceInfo';
 import { ReturnItems } from '../Select/ReturnItems';
+import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
+import { fetchInvoiceByCode } from '@/features/invoice/__test__/api';
+import { toast } from 'react-toastify';
 
 export const SearchReturnInvoice = () => {
 	const [invoiceCodeValue, setInvoiceCodeValue] = useState<string>('IVC01-');
-	const { setInvoiceCode, toastMessage, returnInvoiceItems } =
-		useReturnInvoiceItemsPos();
+	// const {
+	// 	setInvoiceCode,
+	// 	toastMessage,
+	// 	returnInvoiceItems,
+	// 	setSelectedReturnItems,
+	// } = useReturnInvoiceItemsPos();
+
+	// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault();
+	// 	setSelectedReturnItems([]);
+	// 	setInvoiceCode(invoiceCodeValue);
+	// };
+
+	const { searchInvoice, returnableItems } = useReturnInvoice();
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setInvoiceCode(invoiceCodeValue);
+		searchInvoice(invoiceCodeValue)
+			.then(res => {
+				toast.success(res);
+			})
+			.catch(err => {
+				toast.error(err);
+			});
 	};
 
 	return (
@@ -34,7 +55,7 @@ export const SearchReturnInvoice = () => {
 						Search Invoice Code
 					</Button>
 				</div>
-				{Object.keys(returnInvoiceItems).length > 0 && (
+				{returnableItems.length > 0 && (
 					<>
 						<div className="flex w-full flex-row items-center justify-between">
 							<ReturnInvoiceInfo />
@@ -43,11 +64,11 @@ export const SearchReturnInvoice = () => {
 						<ReturnItems />
 					</>
 				)}
-				{toastMessage && (
+				{/* {toastMessage && (
 					<div className="p-2">
 						<span>{toastMessage}</span>
 					</div>
-				)}
+				)} */}
 			</form>
 		</>
 	);

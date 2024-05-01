@@ -1,27 +1,27 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { useReturnInvoiceItemsPos } from '../../context/ReturnInvoiceItems';
 import { ReturnTableColumns } from './cols';
+import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
 interface ReturnTableProps {}
 
 export const ReturnTable = ({}: ReturnTableProps) => {
-  const { returnInvoiceItems, selectedReturnItems } =
-    useReturnInvoiceItemsPos();
-  //SelectedReturnItems
+	const { selectedItems, returnInvoice } = useReturnInvoice();
+	//SelectedReturnItems
 
-  return (
-    <>
-      {Object.keys(returnInvoiceItems).length > 0 && (
-        <div>
-          <DataTable
-            columns={ReturnTableColumns}
-            data={selectedReturnItems}
-            filterWhat="id"
-            hideFilter
-            hidePagination={returnInvoiceItems.invoice_items.length < 10}
-            dataType="returnItems"
-          />
-        </div>
-      )}
-    </>
-  );
+	return (
+		<>
+			{selectedItems.length > 0 && (
+				<div>
+					<DataTable
+						columns={ReturnTableColumns()}
+						data={selectedItems}
+						filterWhat="id"
+						hideFilter
+						hidePagination={selectedItems.length < 10}
+						dataType="returnItems"
+					/>
+				</div>
+			)}
+		</>
+	);
 };
