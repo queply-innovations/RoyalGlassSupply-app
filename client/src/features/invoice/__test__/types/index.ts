@@ -35,7 +35,7 @@ export interface InvoiceItems {
    item_discount: number;
    discount_approval_status: string | null;
    approved_by: number | null;
-   total_price: number;
+   price: number;
    source_inventory: number;
 }
 

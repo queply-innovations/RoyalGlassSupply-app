@@ -185,13 +185,23 @@ const wrapWithProviders = (
    element: JSX.Element | null | undefined,
 ) => {
    if (path.startsWith('/pos')) {
-      return (
-         <InvoicePosProvider>
-            <CustomerProvider>
-               <PosProvider>{element}</PosProvider>
-            </CustomerProvider>
-         </InvoicePosProvider>
-      );
+      if (path.endsWith('/print-invoice')) {
+         return (
+            <InvoicePosProvider>
+               <CustomerProvider>
+                  {element}
+               </CustomerProvider>
+            </InvoicePosProvider>
+         );
+      } else {
+         return (
+            <InvoicePosProvider>
+               <CustomerProvider>
+                  <PosProvider>{element}</PosProvider>
+               </CustomerProvider>
+            </InvoicePosProvider>
+         );
+      }
    } else {
       return element;
    }

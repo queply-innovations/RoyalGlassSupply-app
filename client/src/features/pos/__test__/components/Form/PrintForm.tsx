@@ -23,6 +23,7 @@ export const PrintForm = ({}: PrintFormProps) => {
 	// const [fullData, setFullData] = useState<any>();
 	const [dateInvoice, setDateInvoice] = useState<any>();
 	const [itemsQueue, setItemsQueue] = useState<any>();
+	const [itemsDatabase, setItemsDatabase] = useState<any>();
 
 	console.log(window.api.receive());
 
@@ -41,6 +42,7 @@ export const PrintForm = ({}: PrintFormProps) => {
 			// console.log(fullData);
 			setDateInvoice(new Date(wholeData.fullData.updated_at));
 			setItemsQueue(wholeData.invoiceItems);
+			setItemsDatabase(wholeData.invoiceItemsDatabase);
 		}
 	}, [wholeData]);
 
@@ -70,7 +72,7 @@ export const PrintForm = ({}: PrintFormProps) => {
 							</span>
 						</div>
 						<div className="flex flex-1 flex-col gap-6 p-6">
-							<InvoiceTable queue={itemsQueue} />
+							<InvoiceTable queue={itemsQueue} itemsDatabase={itemsDatabase} />
 						</div>
 					</div>
 				</div>
