@@ -5,6 +5,8 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld('api', {
   send: (data: any) => ipcRenderer.send('print-invoice', data),
   receive: () => ipcRenderer.invoke('send-data'),
+  transferSend: (data: any) => ipcRenderer.send('print-transfer', data),
+  transferRec: () => ipcRenderer.invoke('send-transfer'),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

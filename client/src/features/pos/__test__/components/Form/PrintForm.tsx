@@ -33,13 +33,10 @@ export const PrintForm = ({}: PrintFormProps) => {
 		}
 		fetchData();
 	}, []);
-	// const wholeData = await window.api.receive();
 
 	useEffect(() => {
-		// console.log(wholeData);
 		if (wholeData) {
 			setFullData(wholeData.fullData);
-			// console.log(fullData);
 			setDateInvoice(new Date(wholeData.fullData.updated_at));
 			setItemsQueue(wholeData.invoiceItems);
 			setItemsDatabase(wholeData.invoiceItemsDatabase);

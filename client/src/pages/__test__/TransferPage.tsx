@@ -59,6 +59,10 @@ export const Transfer = () => {
 							{modalAction === 'products' && (
 								<TransferProducts onClose={closeModal} />
 							)}
+							{/* {modalAction === 'print' && (
+								// <TransferProductsPrint />
+								<></>
+							)} */}
 						</>
 					</ModalTest>
 				</TransferProvider>

@@ -82,16 +82,41 @@ function createWindow() {
 				})
 			}, 3000);
 		});
-		// windowWebContents.loadFile('src/features/pos/__test__/components/Form/PrintForm.tsx').then(() => {
-		// 	setTimeout(() => {
-		// 		windowWebContents.print(options, (success, reason) => { 
-		// 			console.log(success, reason);
-		// 			if (success) {
-		// 				windowWebContents.close();
-		// 			}
-		// 		})
-		// 	}, 3000);
-		// });
+	})
+
+	ipcMain.on('print-transfer', (event, data) => {
+		ipcMain.handle('send-transfer', () => { return data; });
+		const newWindow = new BrowserWindow({
+			fullscreen: true,
+			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
+			webPreferences: {
+				preload: path.join(__dirname, 'preload.js'),
+				plugins: true, 
+				nodeIntegration: false,
+				backgroundThrottling: false,
+				contextIsolation: true,
+			},
+		});
+		const windowWebContents: WebContents = newWindow.webContents;
+		windowWebContents.openDevTools();
+		const options: WebContentsPrintOptions = {
+			landscape: false,
+			color: false,
+			printBackground: false,
+			pageSize: 'A4',
+			silent: false, //TODO: convert to true after final testing
+			margins: {marginType: 'none'},
+		};
+		windowWebContents.loadURL('http://localhost:5173/#/print-transfer').then(() => {
+			setTimeout(() => {
+				windowWebContents.print(options, (success, reason) => { 
+					console.log(success, reason);
+					if (success) {
+						windowWebContents.close();
+					}
+				})
+			}, 3000);
+		});
 	})
 }
 
