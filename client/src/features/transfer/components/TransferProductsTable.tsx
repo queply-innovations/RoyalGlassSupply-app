@@ -40,7 +40,9 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 		selectedTransfer, 
 		setSelectedTransfer, 
 		selectedProduct, 
-		setSelectedProduct 
+		setSelectedProduct,
+		addProd,
+		setAddProd 
 	} = useTransfer();
 	const { auth } = useAuth();
 
@@ -48,12 +50,16 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 
 	const handleEditProduct = (product: TransferProductFull) => {
 		setSelectedProduct(product);
+		setAddProd(false);
 		openModal(product, 'edit');
 	};
 
 	const handleAddProduct = () => {
+		setAddProd(true);
 		openModal({} as TransferProductFull, 'add');
 	};
+
+	// console.log(addProd);
 	
 	const TransferProductTableHeader: ColumnDef<TransferProductFull>[] = [
 		{
@@ -106,26 +112,10 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 		},
 
 		{
-			accessorKey: 'bundles_count',
-			header:	() => <div className="text-center">BUNDLES COUNT</div>,
+			accessorKey: 'total_quantity',
+			header:	() => <div className="text-center">TOTAL QUANTITY</div>,
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.bundles_count}</div>
-			),
-		},
-
-		{
-			accessorKey: 'bundles_unit',
-			header:	() => <div className="text-center">BUNDLES UNIT</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.bundles_unit}</div>
-			),
-		},
-
-		{
-			accessorKey: 'quantity_per_bundle',
-			header:	() => <div className="text-center">QUANTITY PER BUNDLE</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.quantity_per_bundle}</div>
+				<div className="text-center">{row.original.total_quantity}</div>
 			),
 		},
 
@@ -134,14 +124,6 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 			header:	() => <div className="text-center">UNIT</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.unit}</div>
-			),
-		},
-
-		{
-			accessorKey: 'total_quantity',
-			header:	() => <div className="text-center">TOTAL QUANTITY</div>,
-			cell: ({ row }) => (
-				<div className="text-center">{row.original.total_quantity} {row.original.unit}</div>
 			),
 		},
 
@@ -157,7 +139,7 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 							<Button 
 								fill={'yellow'} 
 								textColor={'black'}
-								// onClick={() => handleEditUser(userinfoRow)}
+								onClick={() => handleEditProduct(productRow)}
 							>
 								Edit Product
 							</Button>

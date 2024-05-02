@@ -11,6 +11,8 @@ interface TransferContextProps {
 	setSelectedTransfer: (transfer: Transfer) => void;
 	selectedProduct: TransferProductFull;
 	setSelectedProduct: (product: TransferProductFull) => void;
+	addProd: boolean;
+	setAddProd: (addProd: boolean) => void;
 }
 
 export const TransferContext = createContext<TransferContextProps | undefined>(
@@ -30,6 +32,8 @@ export const TransferProvider = ({ children }: TransferProviderProps) => {
 
 	const { transfers, transferProducts, isFetching, progress } = useTransferQuery();
 
+	const [ addProd, setAddProd ] = useState<boolean>(true);
+
 	const value = { 
 		transfers,
 		transferProducts, 
@@ -38,7 +42,9 @@ export const TransferProvider = ({ children }: TransferProviderProps) => {
 		selectedTransfer, 
 		setSelectedTransfer,
 		selectedProduct,
-		setSelectedProduct
+		setSelectedProduct,
+		addProd,
+		setAddProd,
 	};
 
 	return (

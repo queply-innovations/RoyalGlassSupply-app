@@ -57,51 +57,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-
-		// {
-		// 	accessorKey: 'id',
-		// 	sortingFn: "basic",
-		// 	enableSorting: true,
-		// 	header:	({ column }) => {
-		// 		return (
-		// 			<div>
-		// 				<Button
-		// 					onClick={() =>
-		// 						column.toggleSorting(column.getIsSorted() === 'asc')
-		// 					}
-		// 					className="flex flex-row bg-transparent text-black items-center"
-		// 				>
-		// 					TRANSFER ID {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-		// 								column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
-		// 				</Button>
-		// 			</div>
-		// 		);
-		// 	},
-		// 	cell: ({ row }) => (
-		// 		<div className="text-center">{row.original.id}</div>
-		// 	),
-		// },
-
-		{
 			accessorKey: 'code',
 			sortingFn: "alphanumeric",
 			enableSorting: true,

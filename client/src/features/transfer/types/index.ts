@@ -72,9 +72,6 @@ export interface TransferProductFull {
 		size: string;
 	};
 	capital_price: number;
-	bundles_count: number;
-	bundles_unit: string;
-	quantity_per_bundle: number;
 	total_quantity: number;
 	unit: string;
 	source_inventory: number;
@@ -85,9 +82,6 @@ export interface TransferProduct {
 	transfer_id: number;
 	product_id: number;
 	capital_price: number;
-	bundles_count: number;
-	bundles_unit: string;
-	quantity_per_bundle: number;
 	total_quantity: number;
 	unit: string;
 	source_inventory: number;

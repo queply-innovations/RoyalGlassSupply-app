@@ -1,14 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { PosTable } from './PosTable';
-import { TablePlacholder } from './EmptyPlaceholder';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { InvoiceItemDatabase } from '@/features/invoice/__test__/types';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useInventoryProds } from '@/features/inventory/context';
-import { Trash2Icon } from 'lucide-react';
-import { useProductPrices } from '@/features/product/__test__';
-import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useProductPricesQuery } from '@/features/product/__test__/hooks';
 
 interface InvoiceTableProps {
@@ -18,7 +10,6 @@ interface InvoiceTableProps {
 export const InvoiceTable = ({
 	queue
 }: InvoiceTableProps) => {
-	// const { invoiceItemsQueue, formatCurrency, fullData } = useInvoice();
 	const { data: productPrices, isLoading } = useProductPricesQuery();
 	function formatCurrency(value: number) {
 		return new Intl.NumberFormat('en-US', {
@@ -97,15 +88,11 @@ export const InvoiceTable = ({
 	];
 	return (
 		<>
-			{/* {invoiceItemsQueue.length === 0 ? (
-				<TablePlacholder />
-			) : ( */}
-				<PosTable
-					data={queue}
-					columns={InvoiceTableHeader}
-					invoice={true}
-				/>
-			{/* )} */}
+			<PosTable
+				data={queue}
+				columns={InvoiceTableHeader}
+				invoice={true}
+			/>
 		</>
 	);
 };
