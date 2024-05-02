@@ -7,8 +7,8 @@ interface ReportAnayticsContextProps {
 	isReportAnalyticsFetching: boolean;
 	year: number;
 	setYear: React.Dispatch<React.SetStateAction<number>>;
-	warehouseId: number | undefined;
-	setWarehouseId: React.Dispatch<React.SetStateAction<number | undefined>>;
+	warehouseId: number;
+	setWarehouseId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface ReportAnayticsProviderProps {
@@ -23,7 +23,7 @@ export const ReportAnalyticsProvider = ({
 	children,
 }: ReportAnayticsProviderProps) => {
 	const [year, setYear] = useState<number>(new Date().getFullYear());
-	const [warehouseId, setWarehouseId] = useState<number | undefined>();
+	const [warehouseId, setWarehouseId] = useState<number>(0);
 
 	const { data: reportAnalytics, isFetching: isReportAnalyticsFetching } =
 		useReportAnalyticsQuery(year, warehouseId);

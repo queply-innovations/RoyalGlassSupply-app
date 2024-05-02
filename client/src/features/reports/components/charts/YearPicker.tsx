@@ -28,7 +28,7 @@ export const YearPicker = () => {
 					setYear(Number(value));
 				}}
 			>
-				<SelectTrigger className="w-32">
+				<SelectTrigger className="w-32 flex-none">
 					<SelectValue placeholder="Choose year...">
 						<span className="text-slate-600">{year}</span>
 					</SelectValue>

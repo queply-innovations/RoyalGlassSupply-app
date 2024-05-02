@@ -133,14 +133,14 @@ export const fetchReports = async (
 
 export const fetchReportAnalytics = async (
 	year: number,
-	warehouseId?: number,
+	warehouseId: number,
 ): Promise<ReportAnalytics[]> => {
 	return await axios
 		.post(
 			`${API_URLS.REPORTS}/analytics`,
 			{
 				year: year,
-				warehouse: warehouseId ? warehouseId : '',
+				warehouse: warehouseId !== 0 ? warehouseId : '',
 			},
 			{ headers: API_HEADERS() },
 		)
