@@ -1,11 +1,15 @@
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 import { DateRange } from 'react-day-picker';
-import { useSalesRevenueQuery } from '@/features/reports/hooks/useSalesRevenueQuery';
+import { useReportsQuery } from '@/features/reports/hooks/useReportsQuery';
+import { ReportAnalytics, Reports } from '@/features/reports/types';
+import { useReportAnalyticsQuery } from '@/features/reports/hooks/useReportAnalyticsQuery';
 
 interface DashboardReportsContextProps {
 	monthRange: DateRange;
-	revenue: number | undefined;
-	isFetching: boolean;
+	reports: Reports | undefined;
+	isReportsFetching: boolean;
+	reportAnalytics: ReportAnalytics[] | undefined;
+	isReportAnalyticsFetching: boolean;
 }
 
 interface DashboardReportsProviderProps {
@@ -27,13 +31,21 @@ export const DashboardReportsProvider = ({
 		};
 	}, []);
 
-	// Fetch sales revenue data based on date range
-	const { revenue, isFetching } = useSalesRevenueQuery(monthRange);
+	// Fetch reports data based on date range
+	// const { revenue, isFetching } = useSalesRevenueQuery(monthRange);
+	const { data: reports, isFetching: isReportsFetching } =
+		useReportsQuery(monthRange);
+
+	// Fetch reports analytics data for the current year
+	const { data: reportAnalytics, isFetching: isReportAnalyticsFetching } =
+		useReportAnalyticsQuery(new Date().getFullYear());
 
 	const value = {
 		monthRange,
-		revenue,
-		isFetching,
+		reports,
+		isReportsFetching,
+		reportAnalytics,
+		isReportAnalyticsFetching,
 	};
 
 	return (

@@ -1,13 +1,15 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { useSalesRevenueQuery } from '../hooks/useSalesRevenueQuery';
 import { useDebounce } from '@uidotdev/usehooks';
+import { currentDate } from '../utils/dateUtils';
+import { useReportsQuery } from '../hooks/useReportsQuery';
+import { Reports } from '../types';
 
 interface ReportsContextProps {
 	dateRange: DateRange | undefined;
 	setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
-	revenue: number | undefined;
-	isFetching: boolean;
+	reports: Reports | undefined;
+	isReportsFetching: boolean;
 }
 
 interface ReportsProviderProps {
@@ -22,20 +24,21 @@ export const ReportsProvider = ({ children }: ReportsProviderProps) => {
 	// State handler for global date range
 	const [dateRange, setDateRange] = useState<DateRange | undefined>({
 		from: new Date(new Date().setDate(new Date().getDate() - 90)),
-		to: new Date(),
+		to: currentDate,
 	});
 
 	// Debounce date range, avoids instant re-fetching before 2500 milliseconds
 	const [dateRangeQuery] = useDebounce([dateRange], 2500);
 
-	// Fetch sales revenue data based on date range
-	const { revenue, isFetching } = useSalesRevenueQuery(dateRangeQuery);
+	// Fetch reports data based on date range
+	const { data: reports, isFetching: isReportsFetching } =
+		useReportsQuery(dateRangeQuery);
 
 	const value = {
 		dateRange,
 		setDateRange,
-		revenue,
-		isFetching,
+		reports,
+		isReportsFetching,
 	};
 
 	return (

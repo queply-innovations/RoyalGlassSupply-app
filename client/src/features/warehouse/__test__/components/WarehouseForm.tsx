@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Button, Inputbox } from '@/components';
+import { useEffect, useState } from 'react';
+import { Button, Inputbox, Loading } from '@/components';
 import { UseModalProps } from '@/utils/Modal';
 // import { useWarehouse } from '..';
 // import { addWarehouse, updateWarehouse } from '../api/Warehouse';
@@ -35,29 +35,42 @@ export const WarehouseForm = ({
 		}
 	}, [isUpdate, isDelete, warehouseSelected, setWarehouseForm]);
 
+	const [ isSubmitting, setIsSubmitting ] = useState(false);
+	const [ success, setSuccess ] = useState<string | null>(null);
+	const [ error, setError ] = useState<string | null>(null);
+
 	const handleSubmit = async () => {
-		console.log('warehouseForm:', warehouseForm);
+		// console.log('warehouseForm:', warehouseForm);
+		setIsSubmitting(true);
 		try {
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			if (isUpdate) {
 				// * call updateWarehouseMutation to Update Warehouse
-				console.log('Update Warehouse:', warehouseForm.id);
+				// console.log('Update Warehouse:', warehouseForm.id);
 				await updateWarehouseMutation(warehouseForm);
+				setIsSubmitting(false);
+				setSuccess('Warehouse updated successfully');
 				onClose();
 			}
 			if (isDelete) {
 				// * call removeWarehouseMutation to Remove Warehouse
-				console.log('Remove Warehouse:', warehouseForm.id);
+				// console.log('Remove Warehouse:', warehouseForm.id);
 				await removeWarehouseMutation(warehouseForm.id);
+				setIsSubmitting(false);
+				setSuccess('Warehouse deleted successfully');
 				onClose();
 			} else if (!isUpdate && !isDelete) {
 				// * call addWarehouseMutation to Add Warehouse
-				console.log('Add Warehouse:', warehouseForm.id);
+				// console.log('Add Warehouse:', warehouseForm.id);
 				await addWarehouseMutation(warehouseForm);
+				setIsSubmitting(false);
+				setSuccess('Warehouse added successfully');
 				onClose();
 			}
 		} catch (error) {
-			console.error('Warehouse Data submission failed', error);
+			console.error('Warehouse data submission failed', error);
+			setIsSubmitting(false);
+			setError(error.message);
 		}
 	};
 
@@ -137,29 +150,42 @@ export const WarehouseForm = ({
 									required
 								/>
 							</div>
+
 							<div className="flex flex-row justify-center gap-1">
-								<Button
-									fill={'green'}
-									className=""
-									type="submit"
-									// onClick={handleSubmit}
-								>
-									{isUpdate ? 'Update Warehouse' : 'Add Warehouse'}
-								</Button>
-								<Button
-									fill={'red'}
-									className=""
-									onClick={onClose}
-									type="reset"
-								>
-									Cancel
-								</Button>
-								<Button
-									onClick={() => console.log(warehouseForm)}
-									type="button"
-								>
-									console form
-								</Button>
+								<div className="mt-3 grid w-full grid-flow-row grid-cols-10 gap-4 text-center">
+									<div className="flex flex-col col-span-5 items-start">
+										{success && (
+											<div className="font-bold text-green-700">{success}</div>
+										)}
+										{error && (
+											<div className="font-bold text-red-700">{error}</div>
+										)}
+										{!isSubmitting ? '' : 
+											<div className="flex flex-col flex-wrap items-start"> 
+												<Loading width={30} height={30} /> 
+											</div>}
+									</div>
+									<div className="flex flex-col col-span-5 gap-3 items-end">
+										<div className="flex flex-row">
+											<Button
+												type="reset"
+												fill={'default'}
+												className="flex-1 py-2 text-sm font-bold text-gray-700 hover:text-white"
+												onClick={onClose}
+											>
+												Cancel
+											</Button>
+
+											<Button
+												type="submit"
+												fill={'green'}
+												//onClick={handleSubmit}
+											>
+												{isUpdate ? 'Update Warehouse' : 'Add Warehouse'}
+											</Button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</form>

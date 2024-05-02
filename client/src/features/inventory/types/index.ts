@@ -31,6 +31,8 @@ export interface InventoryProduct {
 	miscellaneous_count?: number;
 	remaining_stocks_count?: number;
 	approved_stocks: number;
+	remaining_unapproved_stocks: number;
+	inventory: Inventory;
 }
 
 export interface InventoryDatabase

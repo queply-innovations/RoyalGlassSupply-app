@@ -8,9 +8,14 @@ import { Button } from '..';
 import { useAuth } from '@/context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import { useInventoryQuery } from '@/features/inventory/hooks';
-import { usePendingTransfersQuery, useTransferQuery } from '@/features/transfer/hooks';
-import { usePendingProductPricesQuery, useProductPricesQuery } from '@/features/product/__test__/hooks';
-import { usePendingReturnQuery, useReturnQuery } from '@/features/pending/pending-return/hooks';
+import {
+	usePendingTransfersQuery,
+	useTransferQuery,
+} from '@/features/transfer/hooks';
+import {
+	usePendingReturnQuery,
+	useReturnQuery,
+} from '@/features/pending/pending-return/hooks';
 import { useState } from 'react';
 import { NavItem } from './NavItem';
 import { Bell, Home } from 'lucide-react';
@@ -25,16 +30,11 @@ export const Navbar = () => {
 	const { logout } = useAuth();
 	const [notifsOpen, setNotifsOpen] = useState(false);
 
-	const { data: productPrices, isLoading } = usePendingProductPricesQuery();
-	const { transfers, isFetching } =
-		usePendingTransfersQuery();
+	const { transfers, isFetching } = usePendingTransfersQuery();
 	const { returns, isFetching: isFetching2 } = usePendingReturnQuery();
 
-	const allIsFetching = isLoading && isFetching && isFetching2;
+	const allIsFetching = isFetching && isFetching2;
 
-	const pendingProductPrices = productPrices.filter(
-		prodPrice => prodPrice.approval_status === 'pending',
-	);
 	const pendingTransfers = transfers.filter(
 		transfer => transfer.approval_status === 'pending',
 	);
@@ -42,7 +42,7 @@ export const Navbar = () => {
 		returnItem => returnItem.refund_status === 'pending',
 	);
 
-	const numberNotif = pendingProductPrices.length + pendingTransfers.length + pendingReturns.length;
+	const numberNotif = pendingTransfers.length + pendingReturns.length;
 
 	return (
 		<div className="nav-icon flex flex-row items-end justify-end gap-x-2">
@@ -61,7 +61,6 @@ export const Navbar = () => {
 					<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
 						<Notifications
 							pendingTransfers={pendingTransfers.length}
-							pendingProdPrices={pendingProductPrices.length}
 							pendingReturns={pendingReturns.length}
 							allIsFetching={allIsFetching}
 						/>

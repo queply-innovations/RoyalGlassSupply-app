@@ -59,7 +59,8 @@ export function DatePickerWithRange({
 						selected={dateRange}
 						onSelect={setDateRange}
 						classNames={{
-							months: 'flex flex-row',
+							day: 'text-sm flex items-center justify-center w-full h-full rounded-md font-medium',
+							months: 'flex flex-row gap-6',
 						}}
 						numberOfMonths={2}
 					/>
