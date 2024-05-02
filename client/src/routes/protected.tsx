@@ -82,6 +82,10 @@ const { ProductPrices } = lazyImport(
 );
 const { Reports } = lazyImport(() => import('@/pages/__test__'), 'Reports');
 const { Returns } = lazyImport(() => import('@/pages/__test__'), 'Returns');
+const { ReturnItems } = lazyImport(
+	() => import('@/pages/__test__'),
+	'ReturnItems',
+);
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
 // const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
@@ -153,6 +157,7 @@ const protectedRoutesConfig = [
 
 	// { path: '/transaction/expenses', element: <Expenses /> },
 	{ path: '/returns', element: <Returns /> },
+	{ path: '/returns/:id', element: <ReturnItems /> },
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
