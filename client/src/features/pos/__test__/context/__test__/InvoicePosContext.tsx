@@ -19,7 +19,9 @@ interface InvoicePosContextProps {
    setCurrentInvoicePos: React.Dispatch<Partial<Invoices>>;
 
    currentInvoiceItemsQueue: ProductPrices[];
-   setCurrentInvoiceItemsQueue: (invoiceItems: ProductPrices[]) => void;
+   setCurrentInvoiceItemsQueue: React.Dispatch<
+      React.SetStateAction<Partial<Invoices>>
+   >;
 
    invoiceItemsDatabase: InvoiceItemDatabase[];
    setInvoiceItemsDatabase: React.Dispatch<InvoiceItemDatabase[]>;
@@ -94,8 +96,23 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
             (prev.delivery_charge ?? 0) +
             (prev.total_tax ?? 0),
       }));
+      if (currentInvoicePos.payment_method !== 'purchase_order') {
+         if (
+            currentInvoicePos.total_amount_due ??
+            0 > (currentInvoicePos.paid_amount ?? 0)
+         ) {
+            setCurrentInvoicePos(prev => ({
+               ...prev,
+               payment_method: 'purchase_order',
+               balance_amount:
+                  currentInvoicePos.total_amount_due ??
+                  0 - (currentInvoicePos.paid_amount ?? 0),
+            }));
+         }
+      }
    }, [
       invoiceSubtotal,
+      currentInvoicePos.paid_amount,
       currentInvoicePos.total_discount,
       currentInvoicePos.delivery_charge,
       currentInvoicePos.total_tax,
