@@ -31,6 +31,7 @@ interface ReturnInvoiceContextProps {
 	handleSubmit: () => Promise<string>;
 	isSubmitting: boolean;
 	setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+	removeReturnItem: (id: number) => void;
 }
 
 interface ReturnInvoiceProviderProps {
@@ -173,6 +174,24 @@ export const ReturnInvoiceProvider = ({
 			});
 	};
 
+	// Function to remove an item from the selected items
+	const removeReturnItem = (id: number) => {
+		setSelectedItems(prevItems => prevItems.filter(item => item.id !== id));
+		setReturnInvoice(prevInvoice => {
+			return {
+				...prevInvoice,
+				return_items: prevInvoice.return_items.filter(
+					item => item.invoice_item_id !== id,
+				),
+			};
+		});
+	};
+
+	useEffect(() => {
+		console.log('items', returnInvoice.return_items);
+		console.log('selected items', selectedItems);
+	}, [returnInvoice.return_items, selectedItems]);
+
 	const value = {
 		returnInvoice,
 		setReturnInvoice,
@@ -189,6 +208,7 @@ export const ReturnInvoiceProvider = ({
 		handleSubmit,
 		isSubmitting,
 		setIsSubmitting,
+		removeReturnItem,
 	};
 
 	return (
