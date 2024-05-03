@@ -1,8 +1,13 @@
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useReportsQuery } from '@/features/reports/hooks/useReportsQuery';
-import { ReportAnalytics, Reports } from '@/features/reports/types';
+import {
+	ReportAnalytics,
+	Reports,
+	TopSellingProducts,
+} from '@/features/reports/types';
 import { useReportAnalyticsQuery } from '@/features/reports/hooks/useReportAnalyticsQuery';
+import { useTopSellingProductsQuery } from '@/features/reports/hooks/useTopSellingProductsQuery';
 
 interface DashboardReportsContextProps {
 	monthRange: DateRange;
@@ -10,6 +15,8 @@ interface DashboardReportsContextProps {
 	isReportsFetching: boolean;
 	reportAnalytics: ReportAnalytics[] | undefined;
 	isReportAnalyticsFetching: boolean;
+	topSellingProducts: TopSellingProducts[] | undefined;
+	isTopSellingProductsFetching: boolean;
 }
 
 interface DashboardReportsProviderProps {
@@ -38,7 +45,13 @@ export const DashboardReportsProvider = ({
 
 	// Fetch reports analytics data for the current year
 	const { data: reportAnalytics, isFetching: isReportAnalyticsFetching } =
-		useReportAnalyticsQuery(new Date().getFullYear());
+		useReportAnalyticsQuery(new Date().getFullYear(), 0);
+
+	// Fetch top selling products
+	const {
+		data: topSellingProducts,
+		isFetching: isTopSellingProductsFetching,
+	} = useTopSellingProductsQuery();
 
 	const value = {
 		monthRange,
@@ -46,6 +59,8 @@ export const DashboardReportsProvider = ({
 		isReportsFetching,
 		reportAnalytics,
 		isReportAnalyticsFetching,
+		topSellingProducts,
+		isTopSellingProductsFetching,
 	};
 
 	return (

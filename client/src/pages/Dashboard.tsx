@@ -1,5 +1,4 @@
 import InventoryTable from '@/components/Tables/Inventory/inventory';
-import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +12,7 @@ import {
 } from '@/features/dashboard/components/cards';
 import { MainLayout } from '@/layouts/MainLayout';
 import { ReportsAnalytics } from '@/features/dashboard/components';
+import { TopSellingProducts } from '@/features/dashboard/components/TopSellingProducts';
 
 // interface DashboardProps {
 // 	state: Array<unknown>;
