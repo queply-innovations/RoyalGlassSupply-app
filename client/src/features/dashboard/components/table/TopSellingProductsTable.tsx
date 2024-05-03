@@ -22,6 +22,14 @@ export const TopSellingProductsTable = ({
 			header: () => <div className="justify-center uppercase">Brand</div>,
 		},
 		{
+			accessorKey: 'product.size',
+			header: () => <div className="justify-center uppercase">Size</div>,
+		},
+		{
+			accessorKey: 'product.color',
+			header: () => <div className="justify-center uppercase">Color</div>,
+		},
+		{
 			accessorKey: 'sold_count',
 			header: () => (
 				<div className="justify-center uppercase">Sold count</div>
