@@ -49,6 +49,10 @@ function createWindow() {
 		// win.loadFile('dist/index.html');
 		win.loadFile(path.join(process.env.DIST, 'index.html'));
 	}
+
+	function removeInvoice() {
+		ipcMain.removeHandler('send-data');
+	}
 	
 	ipcMain.on('print-invoice', (event, data) => {
 		ipcMain.handle('send-data', () => { return data; });
@@ -64,6 +68,7 @@ function createWindow() {
 			},
 		});
 		const windowWebContents: WebContents = newWindow.webContents;
+		windowWebContents.openDevTools();
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
@@ -77,12 +82,18 @@ function createWindow() {
 				windowWebContents.print(options, (success, reason) => { 
 					console.log(success, reason);
 					if (success) {
+						removeInvoice();
 						windowWebContents.close();
 					}
 				})
 			}, 3000);
 		});
-	})
+	});
+
+	// ipcMain.removeHandler('print-transfer');
+	function removeTransfer() {
+		ipcMain.removeHandler('send-transfer');
+	}
 
 	ipcMain.on('print-transfer', (event, data) => {
 		ipcMain.handle('send-transfer', () => { return data; });
@@ -112,6 +123,7 @@ function createWindow() {
 				windowWebContents.print(options, (success, reason) => { 
 					console.log(success, reason);
 					if (success) {
+						removeTransfer();
 						windowWebContents.close();
 					}
 				})
