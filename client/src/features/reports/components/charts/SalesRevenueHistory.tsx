@@ -15,7 +15,7 @@ export const SalesRevenueHistory = () => {
 
 	return (
 		<>
-			<Card className="flex min-h-[28rem] w-full flex-col gap-4">
+			<Card className="flex min-h-[36rem] w-full flex-col gap-4">
 				<CardHeader className="flex w-full flex-none flex-row items-center justify-between gap-4 pb-2">
 					<CardTitle className="flex w-full flex-row justify-between text-base font-bold">
 						Reports Analytics
@@ -44,8 +44,8 @@ export const SalesRevenueHistory = () => {
 								{
 									name: 'Profit',
 									data:
-										reportAnalytics?.map(report =>
-											report.net_profit >= 0 ? report.net_profit : 0,
+										reportAnalytics?.map(
+											report => report.net_profit ?? 0,
 										) ?? [],
 								},
 								{
