@@ -1,4 +1,3 @@
-import InventoryTable from '@/components/Tables/Inventory/inventory';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +12,7 @@ import {
 import { MainLayout } from '@/layouts/MainLayout';
 import { ReportsAnalytics } from '@/features/dashboard/components';
 import { TopSellingProducts } from '@/features/dashboard/components/TopSellingProducts';
+import { InventoryLevelReport } from '@/features/dashboard/components/InventoryLevelReport';
 
 // interface DashboardProps {
 // 	state: Array<unknown>;
@@ -46,7 +46,7 @@ export const Dashboard = () => {
 										<TransferStatus />
 									</div>
 									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
-										<InventoryTable />
+										<InventoryLevelReport />
 										<TopSellingProducts />
 									</div>
 								</div>

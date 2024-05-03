@@ -1,13 +1,15 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useReportsQuery } from '@/features/reports/hooks/useReportsQuery';
 import {
+	InventoryLevelReport,
 	ReportAnalytics,
 	Reports,
 	TopSellingProducts,
 } from '@/features/reports/types';
 import { useReportAnalyticsQuery } from '@/features/reports/hooks/useReportAnalyticsQuery';
 import { useTopSellingProductsQuery } from '@/features/reports/hooks/useTopSellingProductsQuery';
+import { useInventoryLevelReportQuery } from '@/features/reports/hooks/useInventoryLevelReportQuery';
 
 interface DashboardReportsContextProps {
 	monthRange: DateRange;
@@ -17,6 +19,10 @@ interface DashboardReportsContextProps {
 	isReportAnalyticsFetching: boolean;
 	topSellingProducts: TopSellingProducts[] | undefined;
 	isTopSellingProductsFetching: boolean;
+	inventoryLevel: InventoryLevelReport | undefined;
+	isInventoryLevelFetching: boolean;
+	warehouseId: number;
+	setWarehouseId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface DashboardReportsProviderProps {
@@ -53,6 +59,10 @@ export const DashboardReportsProvider = ({
 		isFetching: isTopSellingProductsFetching,
 	} = useTopSellingProductsQuery();
 
+	const [warehouseId, setWarehouseId] = useState(1);
+	const { data: inventoryLevel, isFetching: isInventoryLevelFetching } =
+		useInventoryLevelReportQuery(warehouseId);
+
 	const value = {
 		monthRange,
 		reports,
@@ -61,6 +71,10 @@ export const DashboardReportsProvider = ({
 		isReportAnalyticsFetching,
 		topSellingProducts,
 		isTopSellingProductsFetching,
+		inventoryLevel,
+		isInventoryLevelFetching,
+		warehouseId,
+		setWarehouseId,
 	};
 
 	return (

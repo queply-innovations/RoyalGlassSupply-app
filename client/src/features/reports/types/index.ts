@@ -29,3 +29,9 @@ export interface TopSellingProducts {
 	stocks_unit: string;
 	product: Omit<Product, 'notes'>;
 }
+
+export interface InventoryLevelReport {
+	[inventoryCode: string]: {
+		[productName: string]: string;
+	};
+}

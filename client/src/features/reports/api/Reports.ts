@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
 import { Invoices } from '@/features/invoice/__test__/types';
-import { ReportAnalytics, Reports, TopSellingProducts } from '../types';
+import {
+	InventoryLevelReport,
+	ReportAnalytics,
+	Reports,
+	TopSellingProducts,
+} from '../types';
 
 export const fetchInvoicesDateRange = async (
 	dateFrom: Date,
@@ -171,6 +176,24 @@ export const fetchTopSellingProducts = async (): Promise<
 		})
 		.catch(error => {
 			console.error('Error fetching top selling products:', error);
+			throw error;
+		});
+};
+
+export const fetchInventoryLevelReport = async (
+	warehouseId: number,
+): Promise<InventoryLevelReport> => {
+	return await axios
+		.post(
+			`${API_URLS.REPORTS}/inventory-level`,
+			{ warehouse: warehouseId },
+			{ headers: API_HEADERS() },
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching inventory level report:', error);
 			throw error;
 		});
 };
