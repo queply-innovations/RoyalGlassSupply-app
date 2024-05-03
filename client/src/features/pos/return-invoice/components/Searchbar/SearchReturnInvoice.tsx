@@ -3,29 +3,15 @@ import { Input } from '@/components/ui/input';
 
 import { Search } from 'lucide-react';
 import React, { useState } from 'react';
-import { useReturnInvoiceItemsPos } from '../../context/ReturnInvoiceItems';
 import { ReturnInvoiceInfo } from '../Info/ReturnInvoiceInfo';
 import { ReturnItems } from '../Select/ReturnItems';
 import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
-import { fetchInvoiceByCode } from '@/features/invoice/__test__/api';
 import { toast } from 'react-toastify';
 import { SubmitReturnButton } from '../Submit/SubmitReturnButton';
+import { CashRefundCheckbox } from '../Checkbox/CashRefundCheckbox';
 
 export const SearchReturnInvoice = () => {
 	const [invoiceCodeValue, setInvoiceCodeValue] = useState<string>('IVC01-');
-	// const {
-	// 	setInvoiceCode,
-	// 	toastMessage,
-	// 	returnInvoiceItems,
-	// 	setSelectedReturnItems,
-	// } = useReturnInvoiceItemsPos();
-
-	// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault();
-	// 	setSelectedReturnItems([]);
-	// 	setInvoiceCode(invoiceCodeValue);
-	// };
-
 	const { searchInvoice, returnableItems, returnInvoice } = useReturnInvoice();
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,7 +28,7 @@ export const SearchReturnInvoice = () => {
 	return (
 		<>
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-				<div className="flex w-full flex-row justify-between gap-4">
+				<div className="flex flex-row justify-between w-full gap-4">
 					<Input
 						value={invoiceCodeValue}
 						maxLength={15}
@@ -59,18 +45,16 @@ export const SearchReturnInvoice = () => {
 				</div>
 				{returnableItems.length > 0 && (
 					<>
-						<div className="flex w-full flex-row items-center justify-between pb-4">
+						<div className="flex flex-row items-center justify-between w-full gap-5 pb-4">
 							<ReturnInvoiceInfo />
-							<SubmitReturnButton />
+							<div className="flex flex-row items-center gap-6">
+								<CashRefundCheckbox />
+								<SubmitReturnButton />
+							</div>
 						</div>
 						<ReturnItems />
 					</>
 				)}
-				{/* {toastMessage && (
-					<div className="p-2">
-						<span>{toastMessage}</span>
-					</div>
-				)} */}
 			</form>
 		</>
 	);

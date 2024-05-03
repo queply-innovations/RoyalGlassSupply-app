@@ -49,10 +49,7 @@ export const ReturnInvoiceProvider = ({
 		{} as ReturnInvoice,
 	);
 
-	useEffect(() => {
-		console.log(returnInvoice);
-	}, [returnInvoice]);
-
+	// State to store the selected invoice for return transaction
 	const [selectedInvoice, setSelectedInvoice] = useState<Invoices | undefined>(
 		undefined,
 	);
@@ -89,6 +86,7 @@ export const ReturnInvoiceProvider = ({
 								issued_by: auth?.user.id || 0,
 								refundable_amount: 0,
 								refund_status: 'done',
+								is_cash_refund: 0,
 							} as ReturnInvoice);
 							setSelectedInvoice(data);
 							setReturnableItems(data.invoice_items);

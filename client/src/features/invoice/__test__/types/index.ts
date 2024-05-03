@@ -77,6 +77,7 @@ export interface ReturnInvoice {
 	refundable_amount: number;
 	refund_status: string;
 	return_items: ReturnInvoiceItems[];
+	is_cash_refund: number;
 }
 
 export interface ReturnInvoiceItems {
