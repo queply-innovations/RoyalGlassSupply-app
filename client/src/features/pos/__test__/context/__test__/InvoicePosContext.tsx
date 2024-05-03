@@ -103,7 +103,11 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
             paid_amount: 0,
          }));
       }
-   }, [invoiceSubtotal, currentInvoicePos]);
+   }, [
+      invoiceSubtotal,
+      currentInvoicePos.payment_method,
+      currentInvoicePos.total_amount_due,
+   ]);
 
    // Change handling
    useEffect(() => {
