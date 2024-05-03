@@ -10,6 +10,7 @@ interface DialogButtonsContainerProps {}
 
 export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	const { setDialogOptions, dialogOptions } = usePos();
+	const { currentInvoicePos } = useInvoicePos();
 	// const {
 	// 	currentInvoicePos,
 	// 	currentInvoiceItemsQueue,
@@ -46,7 +47,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 
 	return (
 		<>
-			<div className="flex flex-col gap-2">
+			<div className="mb-1 flex flex-col gap-2">
 				{/* <div className="grid grid-cols-2 gap-2">
                //TODO Add delivery charge
                <Button
@@ -63,22 +64,25 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
                </Button>
             </div> */}
 				<Button
+					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'discount' });
 					}}
 				>
-					Add Discount
+					Set Discount
 				</Button>
 
 				<Button
+					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'payment_type' });
 						console.log('Options:', dialogOptions);
 					}}
 				>
-					Select Payment Type
+					Set Payment Type
 				</Button>
 				<Button
+					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'paid_amount' });
 						console.log('Options:', dialogOptions);
@@ -87,13 +91,17 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					Add Paid Amount
 				</Button>
 				<Button
-					variant={'outline'}
-					className="w-full"
+					variant={'default'}
+					className="w-full disabled:cursor-not-allowed"
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'checkout' });
 						//   handleSubmit();
 					}}
-					disabled={Object.keys(selectedCustomer).length === 0}
+					disabled={
+						Object.keys(selectedCustomer).length === 0 ||
+						(currentInvoicePos.payment_method !== 'purchase_order' &&
+							(currentInvoicePos.change_amount ?? 0) < 0)
+					}
 				>
 					Checkout
 				</Button>
