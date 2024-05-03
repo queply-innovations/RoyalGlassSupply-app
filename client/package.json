@@ -1,5 +1,11 @@
 {
 	"name": "royalglasssupply-app",
+	"author": {
+		"name": "Queply Innovations",
+		"email": "hr@queplyinnovations.com",
+		"url": "https://queplyinnovations.com"
+	},
+	"description": "A desktop application made from electron and react.",
 	"private": true,
 	"version": "1.0.0",
 	"scripts": {
