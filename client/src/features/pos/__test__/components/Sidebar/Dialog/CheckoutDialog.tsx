@@ -18,6 +18,7 @@ import { PaymentInfoContainer } from '../Container';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { toast } from 'react-toastify';
 import { CheckCircle2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const CheckoutDialog = () => {
 	const { setDialogOptions, dialogOptions } = usePos();
@@ -57,6 +58,8 @@ export const CheckoutDialog = () => {
 				});
 			});
 	}
+
+	const navigate = useNavigate();
 
 	// TODO: Check this print function
 	// useEffect(() => {
@@ -123,13 +126,20 @@ export const CheckoutDialog = () => {
 					<DialogClose asChild>
 						{transactionStatus === 'success' ? (
 							<div className="flex w-full flex-row gap-2">
-								<Button>New transaction</Button>
+								<Button
+									className="flex-1"
+									onClick={() => {
+										navigate(0);
+									}}
+								>
+									New transaction
+								</Button>
 								<Button
 									className={`flex-1`}
 									type="submit"
 									onClick={e => {
 										e.preventDefault();
-										setTransactionStatus('confirming');
+										// setTransactionStatus('confirming');
 										sendData();
 									}}
 								>
