@@ -20,6 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ModalTest } from '@/components/__test__/Modal/Modal';
+import { CustomerForm } from './Form/CustomerForm';
+import { useModal } from '@/utils/Modal';
 
 interface SearchCustomerProps {}
 
@@ -37,7 +40,8 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
   const [customerName, setCustomerName] = useState<string>('');
 
   const [selectBoxCustomer, setSelectBoxCustomer] = useState<string>('');
-  console.log('Selected Customer:', selectedCustomer);
+
+  const { isOpen, closeModal, openModal } = useModal();
   function searchCustomer() {
     setSearchFullName(customerName);
   }
@@ -113,7 +117,11 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
               </Select>
             </>
           ) : (
-            <Button>
+            <Button
+              onClick={() => {
+                setOpenSearchCustomer(false);
+                openModal();
+              }}>
               <span className="text-white">Add New Customer</span>
             </Button>
           )}
@@ -129,6 +137,9 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <ModalTest isOpen={isOpen} onClose={closeModal} title="Add Customer">
+        <CustomerForm onClose={closeModal} />
+      </ModalTest>
     </>
   );
 };
