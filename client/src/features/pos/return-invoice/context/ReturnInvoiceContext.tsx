@@ -6,7 +6,11 @@ import {
 	ReturnInvoiceItems,
 } from '@/features/invoice/__test__/types';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { submitReturnInvoice, submitReturnInvoiceItems } from '../api/Returns';
+import {
+	fetchReturnTransactionByCode,
+	submitReturnInvoice,
+	submitReturnInvoiceItems,
+} from '../api/Returns';
 import { useAuth } from '@/context/AuthContext';
 
 interface ReturnInvoiceContextProps {
@@ -68,22 +72,37 @@ export const ReturnInvoiceProvider = ({
 		setReturnableItems([]);
 		setSelectedItems([]);
 
-		return await fetchInvoiceByCode(code)
-			.then(data => {
-				setReturnInvoice({
-					code: `RET-${data.code}`,
-					invoice_id: data.id,
-					issued_by: auth?.user.id || 0,
-					refundable_amount: 0,
-					refund_status: 'done',
-				} as ReturnInvoice);
-				setSelectedInvoice(data);
-				setReturnableItems(data.invoice_items);
-				return 'Invoice found.';
-			})
-			.catch(() => {
-				throw 'Code not found. Please try again.';
-			});
+		// Search for exisiting return transaction
+		return await fetchReturnTransactionByCode(`RET-${code}`).then(
+			returnItems => {
+				const matchFound = returnItems.find(
+					returnItem => returnItem.code === `RET-${code}`,
+				);
+
+				// If a return transaction is not found, fetch the invoice by code
+				if (!matchFound) {
+					return fetchInvoiceByCode(code)
+						.then(data => {
+							setReturnInvoice({
+								code: `RET-${data.code}`,
+								invoice_id: data.id,
+								issued_by: auth?.user.id || 0,
+								refundable_amount: 0,
+								refund_status: 'done',
+							} as ReturnInvoice);
+							setSelectedInvoice(data);
+							setReturnableItems(data.invoice_items);
+							return 'Invoice found.';
+						})
+						.catch(() => {
+							throw 'Code not found. Please try again.';
+						});
+				} else {
+					// If a return transaction is found, throw an error
+					throw 'Invoice already has return transaction history.';
+				}
+			},
+		);
 	};
 
 	const updateQuantity = (id: number, newQuantity: number) => {
@@ -155,25 +174,6 @@ export const ReturnInvoiceProvider = ({
 				throw 'Failed to return items. Please try again.';
 			});
 	};
-
-	// useEffect(() => {
-	// 	if (invoiceCode) {
-	// 		// Fetch the invoice items based on the invoice code
-	// 		// setReturnableItems(invoiceItems);
-	// 		fetchInvoiceByCode(invoiceCode)
-	// 			.then(data => {
-	// 				setReturnInvoice({
-	// 					code: data.code,
-	// 					invoice_id: data.invoice_id,
-	// 					refund_status: 'done',
-	// 				} as ReturnInvoice);
-	// 				setReturnableItems(data.invoice_items);
-	// 			})
-	// 			.then(error => {
-	// 				set;
-	// 			});
-	// 	}
-	// });
 
 	const value = {
 		returnInvoice,

@@ -32,3 +32,25 @@ export const submitReturnInvoiceItems = async (data: ReturnInvoiceItems) => {
 			throw error;
 		});
 };
+
+export const fetchReturnTransactionByCode = async (
+	code: string,
+): Promise<ReturnInvoice[]> => {
+	return await axios
+		.post(
+			`${API_URLS.RETURN_TRANSACTIONS}/searches-filters-sorts`,
+			{
+				search: {
+					code: code,
+				},
+			},
+			{ headers: API_HEADERS() },
+		)
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error fetching return transaction by code:', error);
+			throw error;
+		});
+};
