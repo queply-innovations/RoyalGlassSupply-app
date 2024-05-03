@@ -13,7 +13,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
-import { Invoices } from '@/features/invoice/__test__/types';
 
 interface PaymentTypeDialogProps {
    // value: boolean;
@@ -21,30 +20,29 @@ interface PaymentTypeDialogProps {
 
 export const PaymentTypeDialog = ({}: PaymentTypeDialogProps) => {
    const { setDialogOptions, dialogOptions } = usePos();
-   const { handleInvoicePosChange, currentInvoicePos, setCurrentInvoicePos } =
-      useInvoicePos();
+   const { handleInvoicePosChange, currentInvoicePos } = useInvoicePos();
    const [PaymentType, setPaymentType] = useState<string>('payment');
    useEffect(() => {
       if (currentInvoicePos.type === 'exit') {
          handleInvoicePosChange('payment_method', 'exit');
       }
-      if (currentInvoicePos.type === 'payment') {
-         if (
-            currentInvoicePos.total_amount_due ??
-            0 > (currentInvoicePos.paid_amount ?? 0)
-         ) {
-            setCurrentInvoicePos({
-               ...currentInvoicePos,
-               payment_method: 'purchase_order',
-               balance_amount:
-                  (currentInvoicePos.total_amount_due ?? 0) -
-                  (currentInvoicePos.paid_amount ?? 0),
-            });
-            console.log('Set to Purchase Order');
-         }
-      } else {
-         handleInvoicePosChange('payment_method', 'cash');
-      }
+      // if (currentInvoicePos.type === 'payment') {
+      //   if (
+      //     currentInvoicePos.total_amount_due ??
+      //     0 > (currentInvoicePos.paid_amount ?? 0)
+      //   ) {
+      //     setCurrentInvoicePos({
+      //       ...currentInvoicePos,
+      //       payment_method: 'purchase_order',
+      //       balance_amount:
+      //         (currentInvoicePos.total_amount_due ?? 0) -
+      //         (currentInvoicePos.paid_amount ?? 0),
+      //     });
+      //     console.log('Set to Purchase Order');
+      //   }
+      // } else {
+      //   handleInvoicePosChange('payment_method', 'cash');
+      // }
    }, [currentInvoicePos.type]);
    return (
       <Dialog
