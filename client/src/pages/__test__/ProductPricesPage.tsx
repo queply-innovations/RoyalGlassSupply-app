@@ -90,33 +90,20 @@ export const ProductPrices = () => {
 						</div>
 						<ModalTest
 							title={
-								modalAction === 'add'
-									? 'Add Listing'
-									: modalAction === 'details'
-										? 'Listing Details'
-										: modalAction === 'edit'
-											? 'Edit Listing'
-											: modalAction === 'toggle_active_stat'
-												? 'Toggle Active Status'
-												: ''
+								modalAction === 'details'
+									? 'Listing Details'
+									: modalAction === 'edit'
+										? 'Edit Listing'
+										: ''
 							}
 							isOpen={isOpen}
 							onClose={closeModal}
-							closeOnOverlayClick={
-								modalAction === 'details' ||
-								modalAction === 'toggle_active_stat'
-							}
+							closeOnOverlayClick={modalAction === 'details'}
 						>
 							<>
-								{modalAction === 'add' && (
-									<AddProductPrice onClose={closeModal} />
-								)}
 								{modalAction === 'details' && <ProdPriceDetails />}
 								{modalAction === 'edit' && (
 									<ProductPricesForm onClose={closeModal} />
-								)}
-								{modalAction === 'toggle_active_stat' && (
-									<ProdPriceActiveToggle onClose={closeModal} />
 								)}
 							</>
 						</ModalTest>

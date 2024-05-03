@@ -65,32 +65,16 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		openModal(transfer, 'edit');
 	};
 
+	const handleTransferProducts = (transfer: Transfer) => {
+		setSelectedTransfer(transfer);
+		openModal(transfer, 'products');
+	};
+
 	const handleTransfer = () => {
 		openModal({} as Transfer, 'add');
 	};
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
-		{
-			id: "select",
-			header: ({ table }) => (
-				<input type="checkbox" 
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input type="checkbox" 
-					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-
 		{
 			accessorKey: 'code',
 			sortingFn: "alphanumeric",
@@ -111,7 +95,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.code ? row.original.code : 'N/A'}</div>
+				<div>{row.original.code ? row.original.code : 'N/A'}</div>
 			),
 		},
 
@@ -263,6 +247,23 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 										<span>Edit</span>
 									</DropdownMenuItem>
 								)}
+								<DropdownMenuSeparator className="bg-gray-200" />
+
+								<DropdownMenuItem
+									onClick={() => handleTransferProducts(transferRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="flex w-6 items-center justify-center">
+										{transferRow.transfer_status != 'arrived' && 
+										transferRow.approval_status != 'rejected' ? (
+											<Pencil size={16} strokeWidth={2.25} />
+										) : (
+											<List size={16} strokeWidth={2.25} />
+										)}
+										
+									</span>
+									<span>Transfer Products</span>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

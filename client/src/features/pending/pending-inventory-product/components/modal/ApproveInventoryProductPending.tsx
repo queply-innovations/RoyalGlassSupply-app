@@ -4,8 +4,9 @@ import { Label } from '@/components/ui/label';
 import { usePendingInventoryProduct } from '../../context/PendingInventoryProductContext';
 import { useInventoryProdsMutation } from '@/features/inventory/hooks';
 import { UseModalProps } from '@/utils/Modal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { MoveRight } from 'lucide-react';
 
 interface ApproveInventoryProductPendingProps {
 	onClose: UseModalProps['closeModal'];
@@ -21,20 +22,20 @@ export const ApproveInventoryProductPending = ({
 		handleSubmit,
 	} = useInventoryProdsMutation();
 
-	useEffect(() => {
-		handleChange('status', 1);
-		if (selectedInventoryProduct?.approved_stocks) {
-			handleChange(
-				'approved_stocks',
-				selectedInventoryProduct?.approved_stocks,
-			);
-		} else {
-			handleChange(
-				'approved_stocks',
-				selectedInventoryProduct?.stocks_count,
-			);
-		}
-	}, [selectedInventoryProduct]);
+	// useEffect(() => {
+	// 	handleChange('status', 1);
+	// 	if (selectedInventoryProduct?.approved_stocks) {
+	// 		handleChange(
+	// 			'approved_stocks',
+	// 			selectedInventoryProduct?.approved_stocks,
+	// 		);
+	// 	} else {
+	// 		handleChange(
+	// 			'approved_stocks',
+	// 			selectedInventoryProduct?.stocks_count,
+	// 		);
+	// 	}
+	// }, [selectedInventoryProduct]);
 
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	const handleApprove = (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,13 +61,13 @@ export const ApproveInventoryProductPending = ({
 		<>
 			<div className="flex min-w-[24rem] max-w-2xl flex-col gap-3">
 				<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-3">
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Name</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct?.product.name}
 						</p>
 					</div>
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">
 							Serial No.
 						</h3>
@@ -74,7 +75,7 @@ export const ApproveInventoryProductPending = ({
 							{selectedInventoryProduct?.product.serial_no}
 						</p>
 					</div>
-					<div className="col-span-6 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Brand</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct?.product.brand || (
@@ -92,6 +93,18 @@ export const ApproveInventoryProductPending = ({
 						<h3 className="text-sm font-bold text-gray-600">Color</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct?.product.color}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Color</h3>
+						<p className="text-sm">
+							{selectedInventoryProduct?.product.color}
+						</p>
+					</div>
+					<div className="col-span-3 flex flex-col justify-center gap-1">
+						<h3 className="text-sm font-bold text-gray-600">Supplier</h3>
+						<p className="text-sm">
+							{selectedInventoryProduct?.supplier_id.name}
 						</p>
 					</div>
 				</div>
@@ -159,25 +172,10 @@ export const ApproveInventoryProductPending = ({
 				</div>
 				<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 				<form
-					className="grid w-full grid-flow-row grid-cols-6 gap-3"
+					className="grid w-full grid-flow-row grid-cols-11 gap-3"
 					onSubmit={handleApprove}
 				>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<Label
-							htmlFor="prev_approved_stocks"
-							className="text-sm font-bold text-gray-600"
-						>
-							Previously approved stocks
-						</Label>
-						<Input
-							id="prev_approved_stocks"
-							name="prev_approved_stocks"
-							type="number"
-							readOnly
-							value={selectedInventoryProduct?.approved_stocks || 0}
-						/>
-					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
+					<div className="relative col-span-5 flex flex-col justify-center gap-1">
 						<Label
 							htmlFor="approved_stocks"
 							className="text-sm font-bold text-gray-600"
@@ -188,9 +186,12 @@ export const ApproveInventoryProductPending = ({
 							id="approved_stocks"
 							name="approved_stocks"
 							type="number"
-							min={selectedInventoryProduct?.approved_stocks || 0}
+							min={0}
 							step={1}
-							max={selectedInventoryProduct?.stocks_count} // idk if stocks_count or total_count
+							max={
+								selectedInventoryProduct?.remaining_unapproved_stocks ??
+								0
+							}
 							required
 							autoFocus
 							value={
@@ -198,15 +199,40 @@ export const ApproveInventoryProductPending = ({
 									? String(FormValue.approved_stocks)
 									: ''
 							}
-							onChange={e =>
-								handleChange('approved_stocks', e.target.value)
-							}
-							onBlur={e =>
-								handleChange('approved_stocks', Number(e.target.value))
-							}
+							onChange={e => {
+								handleChange('approved_stocks', e.target.value);
+							}}
+							onBlur={e => {
+								handleChange('approved_stocks', Number(e.target.value));
+							}}
+						/>
+						<span className="absolute bottom-0 right-0 -translate-x-4 -translate-y-2 pb-[2px] text-sm font-medium text-slate-700">
+							/ {selectedInventoryProduct?.remaining_unapproved_stocks}
+						</span>
+					</div>
+					<div className="col-span-1 flex items-center pt-6">
+						<MoveRight
+							size={24}
+							strokeWidth={2}
+							className="mx-auto text-slate-600"
 						/>
 					</div>
-					<div className="col-span-6 flex w-full justify-between whitespace-nowrap pt-3">
+					<div className="col-span-5 flex flex-col justify-center gap-1">
+						<Label
+							htmlFor="prev_approved_stocks"
+							className="text-sm font-bold text-gray-600"
+						>
+							Total approved stocks
+						</Label>
+						<Input
+							id="prev_approved_stocks"
+							name="prev_approved_stocks"
+							type="number"
+							readOnly
+							value={selectedInventoryProduct?.approved_stocks || 0}
+						/>
+					</div>
+					<div className="col-span-11 flex w-full justify-between whitespace-nowrap pt-3">
 						<div className="ml-auto flex flex-row gap-4">
 							<Button
 								fill={'default'}
@@ -220,9 +246,9 @@ export const ApproveInventoryProductPending = ({
 								type="submit"
 								fill={'green'}
 								disabled={
-									isSubmitting ||
-									(FormValue.approved_stocks ?? 0) <=
-										(selectedInventoryProduct?.approved_stocks ?? 0)
+									isSubmitting
+									// (FormValue.approved_stocks ?? 0) <=
+									// 	selectedInventoryProduct.approved_stocks
 								}
 								className="max-w-fit flex-1 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
 							>

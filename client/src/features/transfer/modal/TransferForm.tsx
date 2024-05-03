@@ -142,15 +142,26 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 								Destination
 							</span>
 							<Select
-								onValueChange={value => handleChangeSelect('destination', Number(value))}
-								required
 								name="destination"
+								disabled={true}
 							>
 								<SelectTrigger
 									name="destination"
 									className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 								>
-									<SelectValue placeholder={'Choose source location...'} />
+									<SelectValue placeholder={ 
+										transfer.destination ? (
+											<>
+												{warehouses[transfer.destination - 1]?.name}
+												<span className="truncate text-xs text-slate-700/60">
+													{' '}•{' '} 
+														{warehouses[transfer.destination - 1]?.code} 
+														{' '}•{' '} 
+														{warehouses[transfer.destination - 1]?.location}
+												</span>
+											</>
+										) : 'Choose source location' }
+									/>
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium">
@@ -269,6 +280,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 								onChange={handleChangeDateTime}
 								disabled={transfer.transfer_schedule ? false : true}
 								placeholder={transfer.transfer_schedule ? 'Select time' : 'Select date first'}
+								popupClassName={'redesign'}
 								required
 							/>
 						</div>

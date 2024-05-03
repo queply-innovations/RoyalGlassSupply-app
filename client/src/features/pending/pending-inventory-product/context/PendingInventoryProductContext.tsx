@@ -34,7 +34,14 @@ export const PendingInventoryProductProvider = ({
 		[] as InventoryProduct[],
 	);
 	useEffect(() => {
-		setData(inventories.filter(item => item.status === 0));
+		setData(
+			inventories.filter(
+				item =>
+					item.approved_stocks === 0 ||
+					(item.approved_stocks === item.sold_count &&
+						item.stocks_count !== item.sold_count),
+			),
+		);
 	}, [inventories]);
 
 	const value = {

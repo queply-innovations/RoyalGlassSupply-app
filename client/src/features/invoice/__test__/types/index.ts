@@ -1,9 +1,11 @@
+import { Customer } from '@/features/pos/__test__/types';
 import { Product } from '@/features/product/__test__/types';
 
 export interface Invoices {
+	balance_amount: number;
+	is_paid: number;
 	id: number;
 	code: string;
-	customer_id: number;
 	warehouse_id: number;
 	issued_by: number;
 	type: 'payment' | 'exit' | 'invoice' | string;
@@ -20,13 +22,14 @@ export interface Invoices {
 	created_at: string;
 	updated_at: string;
 	status: string;
+	customer: Customer;
 }
 export interface InvoiceItemDatabase extends Omit<InvoiceItems, 'id'> {}
 
 export interface InvoiceItems {
 	id: number;
-	invoice_id: number | null;
-	product_id: Partial<Product>;
+	invoice_id: number | null | undefined;
+	product: Partial<Product>;
 	product_price_id: number;
 	product_price: number;
 	quantity: number;
@@ -38,6 +41,9 @@ export interface InvoiceItems {
 	source_inventory: number;
 }
 
+export interface ReturnInvoiceDatabase extends Invoices {
+	invoice_items: InvoiceItems[];
+}
 export interface InvoiceTaxes {
 	id: number;
 	invoice_id: number;
@@ -62,4 +68,23 @@ export interface InvoiceProps {
 	invoiceItems: InvoiceItems[];
 	invoiceTaxes: InvoiceTaxes[];
 	invoiceDiscount: InvoiceDiscount[];
+}
+
+export interface ReturnInvoice {
+	code: string;
+	invoice_id: number;
+	issued_by: number;
+	refundable_amount: number;
+	refund_status: string;
+	return_items: ReturnInvoiceItems[];
+	is_cash_refund: number;
+}
+
+export interface ReturnInvoiceItems {
+	return_transaction_id?: number;
+	invoice_item_id: number;
+	quantity: number;
+	unit: string;
+	price: number;
+	reason: string;
 }

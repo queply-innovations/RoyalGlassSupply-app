@@ -36,7 +36,9 @@ export const PendingInventoryProduct = () => {
 										? 'Edit Item'
 										: modalAction === 'view_details'
 											? 'Item Details'
-											: ''
+											: modalAction === 'approve'
+												? 'Approve Item'
+												: ''
 							}
 							isOpen={isOpen}
 							onClose={closeModal}

@@ -9,30 +9,41 @@ import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
 import { useProductPrices } from '@/features/product/__test__';
 import { useEffect } from 'react';
+import { useInvoicePos } from '../../context/__test__/InvoicePosContext';
+import { formatCurrency } from '@/utils/FormatCurrency';
+import { ProductPrices } from '@/features/product/__test__/types';
 
 interface CreateOrderTableProps {}
 
 export const CreateOrderTable = ({}: CreateOrderTableProps) => {
+	// const {
+	// 	invoiceItemsQueue,
+	// 	quantityHandler,
+	// 	formatCurrency,
+	// 	handleInvoiceItemsChange,
+	// 	handleRemoveInvoiceItem,
+	// 	handleChange,
+	// } = useInvoice();
 	const {
-		invoiceItemsQueue,
-		quantityHandler,
-		formatCurrency,
-		handleInvoiceItemsChange,
-		handleRemoveInvoiceItem,
-		handleChange,
-	} = useInvoice();
-	const { data: inventoryProducts } = useInventoryProds();
-	const { data: productPrices } = useProductPrices();
-
+		currentInvoiceItemsQueue,
+		handleInvoicePosChange,
+		handleInvoiceItemQuantity,
+		removeInvoiceItem,
+		invoiceItemsDatabase,
+		setInvoiceItemsDatabase,
+	} = useInvoicePos();
+	// const { data: inventoryProducts } = useInventoryProds();
+	// const { data: productPrices } = useProductPrices();
+	console.log();
 	useEffect(() => {
-		handleChange(
+		handleInvoicePosChange(
 			'subtotal',
-			invoiceItemsQueue.reduce(
+			currentInvoiceItemsQueue.reduce(
 				(acc, currentItem) => acc + currentItem.total_price,
 				0,
 			),
 		);
-	}, [invoiceItemsQueue]);
+	}, [currentInvoiceItemsQueue]);
 
 	const CreateOrderTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
 		{
@@ -55,22 +66,20 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 					<div className="flex flex-col">
 						<div className="flex flex-row gap-2">
 							<span className="text-sm font-bold">
-								{row.original.product_id.name}
+								{row.original.product.name}
 							</span>
 
 							<span className="font-medium">
-								{row.original.product_id.size}
+								{row.original.product.size}
 							</span>
 						</div>
 						<div className="flex flex-row items-center gap-1">
-							{row.original.product_id.brand ? (
-								<span className="">
-									{row.original.product_id.brand}
-								</span>
+							{row.original.product.brand ? (
+								<span className="">{row.original.product.brand}</span>
 							) : (
 								<span className="font-light">(No Brand)</span>
 							)}
-							<span className="">• {row.original.product_id.color}</span>
+							<span className="">• {row.original.product.color}</span>
 						</div>
 					</div>
 				);
@@ -83,9 +92,9 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			size: 150,
 			cell: ({ row }) => {
 				const productIndex = row.index;
-				const productInfo = inventoryProducts.find(
-					inventory => inventory.product.id === row.original.product_id.id,
-				);
+				// const productInfo = inventoryProducts.find(
+				// 	inventory => inventory.product.id === row.original.product_id.id,
+				// );
 				// console.log(
 				// 	'Remaining Stocks:',
 				// 	productInfo?.remaining_stocks_count,
@@ -94,19 +103,24 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 				// 	'Product Name:',
 				// 	row.original.product_id.name,
 				// );
+				const availableStocks =
+					row.original.inventory_product.approved_stocks -
+						row.original.inventory_product.sold_count || 0;
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
 							<Button
 								className="rounded-sm bg-red-300 hover:bg-red-500 disabled:opacity-100"
 								onClick={() => {
-									quantityHandler(
+									handleInvoiceItemQuantity(
 										productIndex,
-										row.original.quantity - 1,
-										productInfo?.remaining_stocks_count ?? 0,
+										availableStocks,
+										invoiceItemsDatabase[row.index].quantity - 1,
 									);
 								}}
-								disabled={row.original.quantity <= 1 ? true : false}
+								disabled={
+									invoiceItemsDatabase[row.index].quantity === 1
+								}
 							>
 								<span>-</span>
 							</Button>
@@ -114,36 +128,37 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 								id="quantity"
 								className="w-20 rounded-none text-center drop-shadow-none"
 								type="number"
-								value={row.original.quantity || ''}
-								onBlur={e => {
-									quantityHandler(
+								// defaultValue={invoiceItemsDatabase[row.index].quantity}
+								value={invoiceItemsDatabase[row.index].quantity || ''}
+								// onBlur={e => {
+								//    handleInvoiceItemQuantiy(
+								//       productIndex,
+								//       Number(e.target.value),
+								//       availableStocks,
+								//    );
+								// }}
+								onChange={e => {
+									console.log(e.target.value);
+									handleInvoiceItemQuantity(
 										productIndex,
+										availableStocks,
 										Number(e.target.value),
-										productInfo
-											? productInfo.remaining_stocks_count ?? 0
-											: 0,
 									);
 								}}
-								onChange={e => {
-									//TODO - rerenders after input loses focus
-									e.target.value;
-								}}
-								disabled={
-									productInfo?.remaining_stocks_count ? false : true
-								}
+								// disabled={availableStocks ? false : true}
 							/>
 							<Button
 								className="rounded-sm bg-slate-500 hover:bg-slate-700 disabled:bg-slate-200"
 								onClick={() => {
-									quantityHandler(
+									handleInvoiceItemQuantity(
 										productIndex,
-										row.original.quantity + 1,
-										productInfo?.remaining_stocks_count ?? 0,
+										availableStocks,
+										invoiceItemsDatabase[row.index].quantity + 1,
 									);
 								}}
 								disabled={
-									row.original.quantity >=
-									(productInfo?.remaining_stocks_count ?? 0)
+									invoiceItemsDatabase[row.index].quantity >=
+									availableStocks
 								}
 							>
 								<span>+</span>
@@ -157,15 +172,12 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			accessorKey: 'price',
 			header: () => <div className="justify-center">Product Price</div>,
 			cell: ({ row }) => {
-				const productOnSale = productPrices.find(
-					inventory => inventory.product.id === row.original.product_id.id,
-				);
 				return (
 					<div className="flex flex-row gap-2">
-						<span>{formatCurrency(row.original.product_price)}</span>
-						{productOnSale?.sale_discount ? (
+						<span>{formatCurrency(row.original.price)}</span>
+						{row.original.on_sale ? (
 							<span className="text-sm font-light">
-								({formatCurrency(productOnSale?.sale_discount ?? 0)})
+								({formatCurrency(row.original.sale_discount ?? 0)})
 							</span>
 						) : null}
 					</div>
@@ -200,24 +212,34 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 			id: 'total_price',
 			accessorKey: 'total_price',
 			header: () => <div className="justify-center">Subtotal</div>,
-			cell: ({ row }) => (
-				<div className="">
-					<span>{formatCurrency(row.original.total_price)}</span>
-				</div>
-			),
+			cell: ({ row }) => {
+				return (
+					<div className="">
+						<span>
+							{formatCurrency(
+								invoiceItemsDatabase[row.index].quantity *
+									row.original.price,
+							)}
+							{/* {formatCurrency(row.original.price * row.original.quantity)} */}
+						</span>
+					</div>
+				);
+			},
+
 			size: 250,
 		},
 		{
 			id: 'actions',
 			size: 100,
 			cell: ({ row }) => {
-				const invoiceIndex = row.index;
+				// const invoiceIndex = row.index;
+
 				return (
 					<div className="flex flex-row justify-center text-xs font-normal uppercase">
 						<Button
 							className="bg-red-500 hover:bg-red-700"
 							onClick={() => {
-								handleRemoveInvoiceItem(invoiceIndex);
+								removeInvoiceItem(row.index);
 							}}
 						>
 							<Trash2Icon color="#FFF" />
@@ -229,11 +251,13 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 	];
 	return (
 		<>
-			{invoiceItemsQueue.length === 0 ? (
-				<TablePlacholder />
+			{currentInvoiceItemsQueue.length === 0 ? (
+				<>
+					<TablePlacholder />
+				</>
 			) : (
 				<PosTable
-					data={invoiceItemsQueue}
+					data={currentInvoiceItemsQueue}
 					columns={CreateOrderTableHeader}
 				/>
 			)}

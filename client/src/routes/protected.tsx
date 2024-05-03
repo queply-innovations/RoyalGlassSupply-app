@@ -11,6 +11,7 @@ import { CustomerProvider } from '@/features/customer/__test__/context/CustomerC
 import { InventoryProdsProvider } from '@/features/inventory/context';
 import { ProductPricesProvider } from '@/features/product/__test__';
 import { JSX } from 'react/jsx-runtime';
+import { InvoicePosProvider } from '@/features/pos/__test__/context/__test__/InvoicePosContext';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { ExpensesPage } = lazyImport(
@@ -47,6 +48,12 @@ const { AddProductPOSPage } = lazyImport(
 	() => import('@/pages/__test__/pos'),
 	'AddProductPOSPage',
 );
+
+const { ReturnItemsPosPage } = lazyImport(
+	() => import('@/pages/__test__/pos'),
+	'ReturnItemsPosPage',
+);
+
 const { PendingInventoryProduct } = lazyImport(
 	() => import('@/pages/__test__/'),
 	'PendingInventoryProduct',
@@ -74,7 +81,11 @@ const { ProductPrices } = lazyImport(
 	'ProductPrices',
 );
 const { Reports } = lazyImport(() => import('@/pages/__test__'), 'Reports');
-const { Return } = lazyImport(() => import('@/pages'), 'Return');
+const { Returns } = lazyImport(() => import('@/pages/__test__'), 'Returns');
+const { ReturnItems } = lazyImport(
+	() => import('@/pages/__test__'),
+	'ReturnItems',
+);
 // const { Supplier } = lazyImport(() => import('@/pages'), 'Supplier');
 const { Supplier } = lazyImport(() => import('@/pages/__test__'), 'Supplier');
 // const { Transaction } = lazyImport(() => import('@/pages'), 'Transaction');
@@ -95,6 +106,10 @@ const { Warehouse } = lazyImport(() => import('@/pages/__test__'), 'Warehouse');
 // const { Transfer } = lazyImport(() => import('@/pages'), 'Transfer');
 const { Transfer } = lazyImport(() => import('@/pages/__test__'), 'Transfer');
 const { Customers } = lazyImport(() => import('@/pages/__test__'), 'Customers');
+const { PrintForm } = lazyImport(
+	() => import('@/features/pos/__test__/components/Form/PrintForm'),
+	'PrintForm',
+);
 
 // const App = () => {
 // 	return (
@@ -129,16 +144,20 @@ const protectedRoutesConfig = [
 	{ path: '/pos/return/:code', element: <PosReturnsPage /> },
 	{ path: '/pos/add-product', element: <AddProductPOSPage /> },
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
+	{ path: '/pos/return-items', element: <ReturnItemsPosPage /> },
+	{ path: '/pos/print-invoice', element: <PrintForm /> },
+
 	{ path: '/pending/inventory', element: <PendingInventoryProduct /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
-	{ path: '/pending/product-listing', element: <PendingProductPrice /> },
+	// { path: '/pending/product-listing', element: <PendingProductPrice /> },
 	{ path: '/transfer', element: <Transfer /> },
 	{ path: '/transaction', element: <Invoice /> },
 	{ path: '/transaction/items/:id', element: <InvoiceItems /> },
 
 	// { path: '/transaction/expenses', element: <Expenses /> },
-	{ path: '/returns', element: <Return /> },
+	{ path: '/returns', element: <Returns /> },
+	{ path: '/returns/:id', element: <ReturnItems /> },
 	{ path: '/inventory', element: <Inventory /> },
 	{ path: '/inventory/items/:id', element: <InventoryItemsPage /> },
 	// { path: '/finance', element: <Finance /> },
@@ -172,15 +191,11 @@ const wrapWithProviders = (
 ) => {
 	if (path.startsWith('/pos')) {
 		return (
-			<InventoryProdsProvider>
-				<ProductPricesProvider>
-					<InvoiceProvider>
-						<CustomerProvider>
-							<PosProvider>{element}</PosProvider>
-						</CustomerProvider>
-					</InvoiceProvider>
-				</ProductPricesProvider>
-			</InventoryProdsProvider>
+			<InvoicePosProvider>
+				<CustomerProvider>
+					<PosProvider>{element}</PosProvider>
+				</CustomerProvider>
+			</InvoicePosProvider>
 		);
 	} else {
 		return element;

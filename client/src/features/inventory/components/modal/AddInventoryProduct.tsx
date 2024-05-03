@@ -108,13 +108,7 @@ export const AddInventoryProducts = ({
 
 				<div
 					className={`relative min-w-[850px] overflow-x-clip transition-all duration-300 
-					${
-						activeTab === 'form'
-							? auth.role === 'admin' || auth.role === 'super_admin'
-								? 'min-h-[400px]'
-								: 'min-h-[336px]'
-							: 'min-h-[600px]'
-					}`}
+					${activeTab === 'form' ? 'min-h-[330px]' : 'min-h-[540px]'}`}
 				>
 					<AnimatePresence initial={false}>
 						{activeTab === 'main' ? (

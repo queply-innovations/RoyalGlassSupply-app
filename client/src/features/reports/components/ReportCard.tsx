@@ -7,86 +7,73 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-import { formatCurrency } from '@/utils/FormatCurrency';
-import { getDateNowByMonth } from '@/utils/timeUtils';
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+	TooltipProvider,
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+} from '@/components/ui/tooltip';
+import { Info } from 'lucide-react';
 
 interface ReportCardProps {
 	title: string;
-	date?: boolean;
-	formatAmount?: boolean;
-	children?: React.ReactNode;
-	filter?: string[];
+	children: React.ReactNode;
+	description?: string;
+	tooltip?: string;
+	footer?: React.ReactNode;
+	bgClassName?: string;
+	textColorClassName?: string;
 }
 
 export const ReportCard = ({
 	title,
-	date,
 	children,
-	formatAmount,
-	filter,
+	description,
+	tooltip,
+	footer,
+	bgClassName,
+	textColorClassName,
 }: ReportCardProps) => {
 	return (
 		<>
-			<Card className="w-full min-w-[320px] max-w-[460px]">
-				<CardHeader className="flex flex-row items-center justify-between gap-4 pb-2">
-					<CardTitle className="text-xl font-bold">{title}</CardTitle>
-					{date && (
-						<>
-							<CardDescription className="!mt-1 font-bold uppercase">
-								{getDateNowByMonth()}
-							</CardDescription>
-						</>
-					)}
-				</CardHeader>
-				<CardContent className="py-2 pt-0">
-					{formatAmount && (
-						<span className="text-lg font-medium">
-							{formatCurrency(200000)}
-						</span>
-					)}
+			<TooltipProvider>
+				<Card
+					className={`w-full max-w-[460px] ${bgClassName ? bgClassName : 'bg-white'} ${textColorClassName ? textColorClassName : 'text-slate-800'} rounded-md border-0 shadow-none`}
+				>
+					<CardHeader className="px-5 pt-4">
+						<CardTitle
+							className={`text-sm font-semibold tracking-normal ${!description && 'mb-5'}`}
+						>
+							<span className="flex flex-row items-center justify-between gap-1">
+								{title}{' '}
+								{tooltip && (
+									<Tooltip>
+										<TooltipTrigger>
+											<Info
+												size={18}
+												strokeWidth={2}
+												className={`${textColorClassName ? textColorClassName : 'text-slate-800'} opacity-60`}
+											/>
+										</TooltipTrigger>
 
-					{children && (
-						<>
-							<span className="text-lg font-medium">{children}</span>
-						</>
-					)}
-				</CardContent>
-				<CardFooter>
-					<div className="flex w-full flex-row items-center justify-between gap-4">
-						<div className="flex flex-row items-center gap-2">
-							<ArrowUpRight className="text-green-500" size={20} />
-							<span className="text-sm font-bold text-green-500">
-								20%
+										<TooltipContent className="max-w-[40ch] font-medium">
+											{tooltip}
+										</TooltipContent>
+									</Tooltip>
+								)}
 							</span>
-						</div>
-						{filter && (
-							<>
-								<Select>
-									<SelectTrigger className="max-w-[50%]">
-										<SelectValue placeholder="filter by" />
-									</SelectTrigger>
-									<SelectContent>
-										{filter.map((item, index) => {
-											return (
-												<SelectItem key={index} value={item}>
-													{item}
-												</SelectItem>
-											);
-										})}
-									</SelectContent>
-								</Select>
-							</>
+						</CardTitle>
+						{description && (
+							<CardDescription
+								className={`text-sm font-medium opacity-70 ${textColorClassName ? textColorClassName : 'text-slate-800'}`}
+							>
+								{description}
+							</CardDescription>
 						)}
-					</div>
-				</CardFooter>
-			</Card>
+					</CardHeader>
+					<CardContent className="px-5 pb-4">{children}</CardContent>
+					{footer && <CardFooter>{footer}</CardFooter>}
+				</Card>
+			</TooltipProvider>
 		</>
 	);
 };

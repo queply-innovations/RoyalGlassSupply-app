@@ -1,38 +1,38 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-	addTransfer, addTransferProduct
+	addTransfer, addTransferProduct, editTransferProduct
 } from '../api/Transfer';
 import { useTransfer } from '../context/TransferContext';
 import { useCallback, useEffect, useState } from 'react';
-import { TransferProduct } from '../types';
+import { TransferProduct, TransferProductFull } from '../types';
 import { useAuth } from '@/context/AuthContext';
 import { useProductPricesQuery, useProductQuery } from '@/features/product/__test__/hooks';
 import { useInventoryProductsQuery, useInventoryQuery } from '@/features/inventory/hooks';
+import { InventoryProduct } from '@/features/inventory/types';
 
 export const useProductAddition = () => {
 	const queryClient = useQueryClient();
-	const { transfers, transferProducts, selectedProduct, selectedTransfer } = useTransfer();
+
+	const { transfers, transferProducts, selectedProduct, selectedTransfer, addProd } = useTransfer();
 	const { auth } = useAuth();
 	const { data: allProducts } = useProductQuery();
 	const { data: allInventoryProducts } = useInventoryProductsQuery(); 
 	const { data: allInventories } = useInventoryQuery();
 
-	const filteredInventoriesSrc = allInventories.filter((inv) => inv.warehouse.id === selectedTransfer.source.id);
-
-	const filteredProductsSrc = allInventoryProducts.filter((prod) => 
-		filteredInventoriesSrc.map((inv) => inv.id).includes(prod.inventory_id)
-		&& prod.capital_price > 0
-		&& (prod.remaining_stocks_count && prod.remaining_stocks_count > 0)
+	const filteredInventoriesSrc = allInventories.filter((inv) => 
+		inv.warehouse.id === selectedTransfer.source.id && 
+		allInventoryProducts.some((prod) => prod.inventory_id === inv.id)
 	);
-
-	// console.log(allInventories);
-	// console.log(filteredProductsSrc);
 	// console.log(filteredInventoriesSrc);
-	// console.log(selectedTransfer);
 
-	const [ bundlesLimit, setBundlesLimit ] = useState<number>(0);
+	const [ filteredProductsSrc, setFilteredProductsSrc ] = useState<InventoryProduct[]>([]);
+	const [ inventoryID, setInventoryID ] = useState<number>(0);
+	const [ invCode, setInvCode ] = useState<string>('');
+	const [ prodName, setProdName ] = useState<string>(selectedProduct.id ? selectedProduct.product.name : '');
+
 	const [ quantityLimit, setQuantityLimit ] = useState<number>(0);
 	const [ damagedCount, setDamagedCount ] = useState<number>(0);
+	const [ resetProd, setResetProd ] = useState<boolean>(false);
 
 	const [ isChanged, setIsChanged ] = useState(false);
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
@@ -40,13 +40,53 @@ export const useProductAddition = () => {
 	const [ success, setSuccess ] = useState<string | null>(null);
 
 	const [ product, setProduct ] = useState({} as TransferProduct);
+
+	function resetBothInit() {
+		if (selectedProduct.id){
+			setProduct(prev => ({
+				...prev,
+				id: selectedProduct.id,
+				transfer_id: selectedProduct.transfer_id,
+				unit: selectedProduct.unit,
+				source_inventory: inventoryID,
+			}))
+		} else {
+			setProduct(prev => ({
+				...prev,
+				id: transferProducts.length + 1,
+				transfer_id: selectedTransfer.id,
+			}))
+		}
+	}
+
 	useEffect(() => {
-		setProduct(prev => ({
-			...prev,
-			id: transferProducts.length + 1,
-			transfer_id: selectedTransfer.id,
-		}))
+		if (addProd){
+			setProduct(prev => ({
+				...prev,
+				id: transferProducts.length + 1,
+				transfer_id: selectedTransfer.id,
+			}))
+		} else {
+			setProduct({
+				id: selectedProduct.id,
+				transfer_id: selectedProduct.transfer_id,
+				product_id: selectedProduct.product.id,
+				total_quantity: selectedProduct.total_quantity,
+				capital_price: selectedProduct.capital_price,
+				unit: selectedProduct.unit,
+				source_inventory: selectedProduct.source_inventory,
+			});
+		}
 	}, []);
+
+	useEffect(() => {
+		if (!addProd) {
+			const origData = allInventoryProducts.find((prod) => prod.id === selectedProduct.source_inventory);
+			setQuantityLimit(origData?.remaining_stocks_count ? origData.remaining_stocks_count : 0);
+			setDamagedCount(origData?.damage_count ? origData.damage_count : 0);
+			setInventoryID(selectedProduct.source_inventory);
+		}
+	}, [allInventoryProducts]);
 
 	const handleChange = (e: any) => {
 		setIsChanged(true);
@@ -60,58 +100,78 @@ export const useProductAddition = () => {
 
 	const handleChangeSelect = (
 		key: string,
-		_value: number,
-		id: number
+		_value: number | string,
+		id?: number
 	) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		const capitalPrice = filteredProductsSrc[id];
-		const src = capitalPrice.id;
-		const valueSet = capitalPrice.capital_price;
-		const bundlesUnit = capitalPrice.bundles_unit;
-		const unit = capitalPrice.unit;
-		const perBundle = capitalPrice.quantity_per_bundle;
-		setProduct(prev => ({
-			...prev,
-			[key]: _value,
-			capital_price: valueSet,
-			bundles_unit: bundlesUnit,
-			unit: unit,
-			quantity_per_bundle: perBundle,
-			source_inventory: src,
-		}));
-		setBundlesLimit(capitalPrice.remaining_stocks_count ? 
-			capitalPrice.remaining_stocks_count / capitalPrice.quantity_per_bundle : 0);
-		setQuantityLimit(capitalPrice.remaining_stocks_count ?
-			capitalPrice.remaining_stocks_count : 0 );
-		setDamagedCount(capitalPrice.damage_count);
+		if (key === "product_id"){
+			const capitalPrice = filteredProductsSrc[id];
+			setProdName(capitalPrice.product.name);
+			const valueSet = capitalPrice.capital_price;
+			const unit = capitalPrice.unit;
+			const value = Number(_value);
+			setProduct(prev => ({
+				...prev,
+				[key]: value,
+				capital_price: valueSet,
+				unit: unit,
+				source_inventory: inventoryID,
+			}));
+			setQuantityLimit(capitalPrice.remaining_stocks_count ?
+				capitalPrice.remaining_stocks_count : 0 );
+			setDamagedCount(capitalPrice.damage_count);
+		} else {
+			setInvCode(_value.toString());
+			const invID = filteredInventoriesSrc.filter((inv) => inv.code === _value)[0].id;
+			setInventoryID(invID);
+			setProdName('');
+			if (product.capital_price) {
+				setResetProd(true);
+				setProduct({} as TransferProduct);
+			}
+		}
 	};
 
+	// useEffect(() => {
+	// 	console.log(product);
+	// }, [product]);
+
+	// useEffect(() => {
+	// 	console.log(invCode);
+	// }, [invCode]);
+
 	useEffect(() => {
-		if (product.bundles_count && product.quantity_per_bundle) {
-			setProduct(prev => ({
-				...prev,
-				total_quantity: product.bundles_count * product.quantity_per_bundle,
-			}));
-		} else {
-			setProduct(prev => ({
-				...prev,
-				total_quantity: 0,
-			}));
+		if (resetProd === true) {
+			setResetProd(false);
+			resetBothInit();
 		}
-	}, [product]);
+	}, [resetProd]);
+
+	useEffect(() => {
+		if (allInventoryProducts.length != 0){
+			setFilteredProductsSrc(
+				allInventoryProducts.filter((prod) => 
+					prod.inventory_id === inventoryID
+						&& (prod.remaining_stocks_count && prod.remaining_stocks_count > 0)
+				)
+			);
+		}
+	}, [inventoryID, allInventoryProducts]);
 
 	const isFormValid = () => {
 		const headers: Array<Object> = Object.keys(product).map(key => {
 			return { text: key }
 		});
 
-		const formChecker = headers.length === 10 ? true : false;
+		console.log(headers.length);
+
+		const formChecker = headers.length === 7 ? true : false;
 
 		if (formChecker) {
-			if (product.bundles_count > bundlesLimit) {
-				return [ false, "Bundles count input is greater than the current stock quantity." ]
+			if (product.total_quantity > quantityLimit) {
+				return [ false, "Quantity input is greater than the current stock quantity." ]
 			} else {
 				return [ true, "" ]
 			}
@@ -124,13 +184,15 @@ export const useProductAddition = () => {
 		setIsSubmitting(true);
 		const checker: any = isFormValid();
 		if (checker[0]) {
-			return await addProductMutation(product);
+			if (addProd) {
+				return await addProductMutation(product);
+			} else {
+				return await editProductMutation(product);
+			}
 		} else {
 			setError(checker[1]);
 			setIsSubmitting(false);
 		}
-		// return await addProductMutation(product);
-		// console.log(product);
 	};
 
 	// Configurations for mutation
@@ -140,7 +202,12 @@ export const useProductAddition = () => {
 			await queryClient.invalidateQueries({ queryKey: ['transfer_products'] });
 			setIsSubmitting(false);
 			setIsChanged(false);
-			setSuccess('Transfer product has been added');
+			if (addProd) {
+				setSuccess('Transfer product has been added');
+			} else {
+				setSuccess('Transfer product has been edited');
+			}
+			
 		},
 		onError: (error: any) => {
 			console.error(error);
@@ -150,19 +217,26 @@ export const useProductAddition = () => {
 	};
 
 	const { mutateAsync: addProductMutation } = useMutation({
-		mutationKey: ['addTransferProduct'],
+		mutationKey: ['transfer_product'],
 		mutationFn: addTransferProduct,
 		...mutationConfig,
 	});
 
+	const { mutateAsync: editProductMutation } = useMutation({
+		mutationKey: ['transfer_product'],
+		mutationFn: editTransferProduct,
+		...mutationConfig,
+	});
+
 	return {
-		// value,
-		// setValue,
 		product,
 		allProducts,
 		allInventoryProducts,
+		inventoryID,
+		invCode,
+		prodName,
+		filteredInventoriesSrc,
 		filteredProductsSrc,
-		bundlesLimit,
 		quantityLimit,
 		damagedCount,
 		isChanged,

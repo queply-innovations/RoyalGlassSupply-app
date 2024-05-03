@@ -1,3 +1,4 @@
+import { InventoryProduct } from '@/features/inventory/types';
 import { Warehouse } from '@/features/warehouse/__test__/types';
 
 export interface Product {
@@ -15,11 +16,14 @@ interface ProductEditor {
 	firstname: string;
 	lastname: string;
 }
+
+// TODO refactor
 export interface ProductPrices {
 	id: number;
-	product: Partial<Product>;
-	type: 'retail' | 'wholesale' | string;
-	unit: string;
+	product: Omit<Product, 'notes'>;
+	inventory_product: InventoryProduct;
+	// type: 'retail' | 'wholesale' | string; // walaon
+	// unit: string; // walaon
 	capital_price: number;
 	markup_price: number;
 	cost: number;

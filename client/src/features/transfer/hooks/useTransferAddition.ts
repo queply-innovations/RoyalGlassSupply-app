@@ -104,10 +104,22 @@ export const useTransferAddition = () => {
 			...prev,
 			[key]: _value,
 		}));
-		if (key === "source") {
+		if (key === "source" && _value == 1) {
 			setSrcCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
-		} else {
-			setDstCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
+			setDstCode(warehouses.find(warehouse => warehouse.id === _value + 1)?.code);
+
+			setTransfer(prev => ({
+				...prev,
+				destination: (_value + 1),
+			}));
+		} else if (key === "source" && _value == 2) {
+			setSrcCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
+			setDstCode(warehouses.find(warehouse => warehouse.id === _value - 1)?.code);
+
+			setTransfer(prev => ({
+				...prev,
+				destination: (_value - 1),
+			}));
 		}
 	};
 

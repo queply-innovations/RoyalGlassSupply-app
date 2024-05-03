@@ -1,4 +1,10 @@
-import { Banknote, LayoutDashboard, PackagePlus } from 'lucide-react';
+import {
+	Banknote,
+	DatabaseBackupIcon,
+	LayoutDashboard,
+	PackagePlus,
+	Undo2,
+} from 'lucide-react';
 import { NavbarRoute } from '../../types';
 
 export const NavbarRoutes: NavbarRoute[] = [
@@ -37,5 +43,19 @@ export const NavbarRoutes: NavbarRoute[] = [
 			icon: <PackagePlus className="h-10 w-10 text-[#CCCCCC]" />,
 		},
 		path: '/pos/add-product',
+	},
+	{
+		allowedRoles: [
+			'super_admin',
+			'admin',
+			'manager',
+			'encoder',
+			'sales_person',
+		],
+		navbarProps: {
+			displayText: 'Return Items',
+			icon: <DatabaseBackupIcon className="h-10 w-10 text-[#CCCCCC]" />,
+		},
+		path: '/pos/return-items',
 	},
 ];

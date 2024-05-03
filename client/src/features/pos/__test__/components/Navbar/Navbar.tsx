@@ -41,7 +41,7 @@ export const Navbar = ({}: NavbarProps) => {
 								return null;
 							}
 						})}
-						<SearchReturns />
+						{/* <SearchReturns /> */}
 					</ul>
 				</div>
 				<div className="mt-auto">
