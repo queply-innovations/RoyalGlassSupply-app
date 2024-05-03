@@ -64,7 +64,6 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
                </Button>
             </div> */}
 				<Button
-					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'discount' });
 					}}
@@ -73,7 +72,6 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 				</Button>
 
 				<Button
-					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'payment_type' });
 						console.log('Options:', dialogOptions);
@@ -82,7 +80,6 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					Set Payment Type
 				</Button>
 				<Button
-					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'paid_amount' });
 						console.log('Options:', dialogOptions);
@@ -90,8 +87,8 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 				>
 					Add Paid Amount
 				</Button>
+				<hr className="my-1 w-full" />
 				<Button
-					variant={'default'}
 					className="w-full disabled:cursor-not-allowed"
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'checkout' });
