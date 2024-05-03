@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { set } from 'date-fns';
 
 interface SearchCustomerProps {}
 
@@ -34,16 +33,6 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
     setOpenSearchCustomer,
     setSearchFullName,
   } = useCustomer();
-
-  // Command Search handlers
-  // const [search, setSearch] = useState('');
-  // const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
-
-  // useEffect(() => {
-  // 	if (selectedCustomer) {
-  // 		setSearch('');
-  // 	}
-  // }, [selectedCustomer, openSearchCustomer]);
 
   const [customerName, setCustomerName] = useState<string>('');
 
@@ -60,7 +49,6 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
       if (selectedCustomer) {
         setSelectedCustomer(selectedCustomer);
       }
-      // setOpenSearchCustomer(false);
     }
   }, [selectBoxCustomer]);
   return (
@@ -141,76 +129,6 @@ export const SearchCustomer = ({}: SearchCustomerProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* <CommandDialog
-				open={openSearchCustomer}
-				onOpenChange={setOpenSearchCustomer}
-			>
-				<CommandInput
-					value={search}
-					onValueChange={setSearch}
-					placeholder={
-						isLoading
-							? 'Loading Customers'
-							: selectedCustomer.id
-								? `${selectedCustomer.firstname} ${selectedCustomer.lastname}`
-								: 'Enter Customer Name'
-					}
-				/>
-				<CommandList>
-					{!search ? null : (
-						<>
-							<CommandEmpty className="flex flex-col gap-2 py-4 pb-1 text-sm text-center">
-								<span className="font-bold uppercase">
-									Customer Not Found
-								</span>
-								<Button
-									className="flex flex-row gap-4"
-									onClick={() => {
-										openModal();
-										setOpenSearchCustomer(false);
-									}}
-								>
-									<UserRoundPlus color="#fff" />
-									<span className="text-white">Add Customer</span>
-								</Button>
-							</CommandEmpty>
-							{Customers.map((customer, index) => {
-								return (
-									<CommandItem
-										className=""
-										key={index}
-										value={
-											customer.id +
-											'' +
-											customer.firstname +
-											' ' +
-											customer.lastname
-										}
-										onSelect={() => {
-											setSelectedCustomer(customer);
-											setOpenSearchCustomer(false);
-											setSearch('');
-											setCurrentInvoicePos({
-												...currentInvoicePos,
-												customer_id: customer.id,
-											});
-										}}
-									>
-										<div className="flex flex-row gap-2">
-											<span>{customer.firstname}</span>
-											<span>{customer.lastname}</span>
-										</div>
-									</CommandItem>
-								);
-							})}
-						</>
-					)}
-				</CommandList>
-			</CommandDialog>
-			<ModalTest isOpen={isOpen} onClose={closeModal} title="Add Customer">
-				<CustomerForm onClose={closeModal} />
-			</ModalTest> */}
     </>
   );
 };
