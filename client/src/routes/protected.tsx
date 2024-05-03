@@ -111,6 +111,11 @@ const { PrintForm } = lazyImport(
 	'PrintForm',
 );
 
+const { TransferProductsPrintTable } = lazyImport(
+	() => import('@/features/transfer/components/TransferProductsPrintTable'),
+	'TransferProductsPrintTable',
+);
+
 // const App = () => {
 // 	return (
 // 		<Suspense
@@ -168,6 +173,8 @@ const protectedRoutesConfig = [
 	{ path: '/products', element: <Products /> },
 	{ path: '/products/listings', element: <ProductPrices /> },
 	{ path: '/supplier', element: <Supplier /> },
+
+	{ path: '/print-transfer', element: <TransferProductsPrintTable /> },
 ];
 
 export const ProtectedRoutes = () => {
@@ -190,13 +197,21 @@ const wrapWithProviders = (
 	element: JSX.Element | null | undefined,
 ) => {
 	if (path.startsWith('/pos')) {
-		return (
-			<InvoicePosProvider>
-				<CustomerProvider>
-					<PosProvider>{element}</PosProvider>
-				</CustomerProvider>
-			</InvoicePosProvider>
-		);
+		if (path.endsWith('/print-invoice')) {
+			return (
+				<InvoicePosProvider>
+					<CustomerProvider>{element}</CustomerProvider>
+				</InvoicePosProvider>
+			);
+		} else {
+			return (
+				<InvoicePosProvider>
+					<CustomerProvider>
+						<PosProvider>{element}</PosProvider>
+					</CustomerProvider>
+				</InvoicePosProvider>
+			);
+		}
 	} else {
 		return element;
 	}

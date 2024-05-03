@@ -1,15 +1,25 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { PosTable } from './PosTable';
-import { InvoiceItemDatabase } from '@/features/invoice/__test__/types';
+import { TablePlacholder } from './EmptyPlaceholder';
+import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
+import {
+	InvoiceItemDatabase,
+	InvoiceItems,
+} from '@/features/invoice/__test__/types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useInventoryProds } from '@/features/inventory/context';
+import { Trash2Icon } from 'lucide-react';
+import { useProductPrices } from '@/features/product/__test__';
+import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useProductPricesQuery } from '@/features/product/__test__/hooks';
 
 interface InvoiceTableProps {
 	queue: any;
+	itemsDatabase: any;
 }
 
-export const InvoiceTable = ({
-	queue
-}: InvoiceTableProps) => {
+export const InvoiceTable = ({ queue, itemsDatabase }: InvoiceTableProps) => {
 	const { data: productPrices, isLoading } = useProductPricesQuery();
 	function formatCurrency(value: number) {
 		return new Intl.NumberFormat('en-US', {
@@ -18,15 +28,19 @@ export const InvoiceTable = ({
 		}).format(value);
 	}
 
-	const InvoiceTableHeader: ColumnDef<InvoiceItemDatabase>[] = [
+	const InvoiceTableHeader: ColumnDef<InvoiceItems>[] = [
 		{
 			accessorKey: 'quantity',
 			header: () => <div className="flex justify-center">Quantity</div>,
 			cell: ({ row }) => {
+				const id = row.original.id;
+				const itemDatabase = itemsDatabase.find(
+					(item: any) => item.product_price_id === id,
+				);
 				return (
 					<div className="flex justify-center ">
 						<div className="flex flex-row border drop-shadow-sm">
-							{row.original.quantity || ''} 
+							{itemDatabase.quantity}
 						</div>
 					</div>
 				);
@@ -39,18 +53,18 @@ export const InvoiceTable = ({
 				return (
 					<div className="flex flex-row gap-2">
 						<span className="text-sm font-bold">
-							{row.original.product_id.name}
+							{row.original.product.name}
 						</span>
-						{row.original.product_id.brand ? (
+						{row.original.product.brand ? (
 							<span className="text-sm">
-								({row.original.product_id.brand})
+								({row.original.product.brand})
 							</span>
 						) : null}
 						<span className="text-[12px]">
-							{row.original.product_id.size}
+							{row.original.product.size}
 						</span>
 
-						{row.original.product_id.color}
+						{row.original.product.color}
 					</div>
 				);
 			},
@@ -59,12 +73,16 @@ export const InvoiceTable = ({
 			accessorKey: 'price',
 			header: () => <div className="justify-center">Unit Cost</div>,
 			cell: ({ row }) => {
+				const id = row.original.id;
+				const itemDatabase = itemsDatabase.find(
+					(item: any) => item.product_price_id === id,
+				);
 				const productOnSale = productPrices.find(
-					inventory => inventory.product.id === row.original.product_id.id,
+					inventory => inventory.product.id === row.original.product.id,
 				);
 				return (
 					<div className="flex flex-row gap-2">
-						<span>{formatCurrency(row.original.product_price)}</span>
+						<span>{formatCurrency(itemDatabase.product_price)}</span>
 						{productOnSale?.sale_discount ? (
 							<span className="text-sm font-light">
 								({formatCurrency(productOnSale?.sale_discount ?? 0)})
@@ -78,21 +96,39 @@ export const InvoiceTable = ({
 			id: 'total_price',
 			accessorKey: 'total_price',
 			header: () => <div className="justify-center">Price</div>,
-			cell: ({ row }) => (
-				<div className="">
-					<span>{formatCurrency(row.original.total_price)}</span>
-				</div>
-			),
+			cell: ({ row }) => {
+				const id = row.original.id;
+				const itemDatabase = itemsDatabase.find(
+					(item: any) => item.product_price_id === id,
+				);
+				return (
+					<div className="">
+						<span>{formatCurrency(itemDatabase.total_price)}</span>
+					</div>
+				);
+			},
 			size: 250,
 		},
 	];
+
+	var total = 0;
+	total = itemsDatabase.reduce((acc: number, cur: any) => {
+		acc += cur.total_price;
+		return acc;
+	}, 0);
+
 	return (
 		<>
+			{/* {invoiceItemsQueue.length === 0 ? (
+				<TablePlacholder />
+			) : ( */}
 			<PosTable
 				data={queue}
 				columns={InvoiceTableHeader}
 				invoice={true}
+				total={total}
 			/>
+			{/* )} */}
 		</>
 	);
 };

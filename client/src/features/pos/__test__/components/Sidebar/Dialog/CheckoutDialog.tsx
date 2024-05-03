@@ -70,6 +70,7 @@ export const CheckoutDialog = () => {
 		window.api.send({
 			fullData: fullData,
 			invoiceItems: currentInvoiceItemsQueue,
+			invoiceItemsDatabase: invoiceItemsDatabase,
 		});
 	}
 

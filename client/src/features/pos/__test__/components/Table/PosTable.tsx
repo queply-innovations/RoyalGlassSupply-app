@@ -19,20 +19,15 @@ interface PosTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	invoice?: boolean;
+	total?: number;
 }
 
 export function PosTable<TData, TValue>({
 	columns,
 	data,
 	invoice,
+	total
 }: PosTableProps<TData, TValue>) {
-	var total = 0;
-	if (invoice) {
-		total = data.reduce((acc: number, cur: any) => {
-			acc += cur.total_price;
-			return acc;
-		}, 0);
-	}
 	const table = useReactTable({
 		data,
 		columns,
@@ -84,7 +79,7 @@ export function PosTable<TData, TValue>({
 							</TableRow>
 						))}
 
-					{invoice && (
+					{invoice && total != null && (
 						<>
 							<TableRow>
 								<TableCell colSpan={3}></TableCell>
