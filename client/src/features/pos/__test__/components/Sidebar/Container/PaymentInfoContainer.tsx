@@ -12,7 +12,7 @@ export const PaymentInfoContainer = () => {
 	return (
 		<>
 			<div className="flex h-full flex-col justify-between p-4 px-2">
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-2">
 					<Items />
 					<Subtotal />
 					<Discount />

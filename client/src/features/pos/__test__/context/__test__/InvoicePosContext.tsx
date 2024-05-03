@@ -96,20 +96,20 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
         (prev.delivery_charge ?? 0) +
         (prev.total_tax ?? 0),
     }));
-    // if (currentInvoicePos.payment_method !== 'purchase_order') {
-    //   if (
-    //     currentInvoicePos.total_amount_due ??
-    //     0 > (currentInvoicePos.paid_amount ?? 0)
-    //   ) {
-    //     setCurrentInvoicePos(prev => ({
-    //       ...prev,
-    //       payment_method: 'purchase_order',
-    //       balance_amount:
-    //         currentInvoicePos.total_amount_due ??
-    //         0 - (currentInvoicePos.paid_amount ?? 0),
-    //     }));
-    //   }
-    // }
+    if (currentInvoicePos.payment_method !== 'purchase_order') {
+      if (
+        currentInvoicePos.total_amount_due ??
+        0 > (currentInvoicePos.paid_amount ?? 0)
+      ) {
+        setCurrentInvoicePos(prev => ({
+          ...prev,
+          payment_method: 'purchase_order',
+          balance_amount:
+            currentInvoicePos.total_amount_due ??
+            0 - (currentInvoicePos.paid_amount ?? 0),
+        }));
+      }
+    }
   }, [
     invoiceSubtotal,
     currentInvoicePos.paid_amount,
@@ -117,6 +117,14 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
     currentInvoicePos.delivery_charge,
     currentInvoicePos.total_tax,
   ]);
+
+  // Change handling
+  useEffect(() => {
+    setCurrentInvoicePos(prev => ({
+      ...prev,
+      change_amount: (prev.paid_amount ?? 0) - (prev.total_amount_due ?? 0),
+    }));
+  }, [currentInvoicePos.paid_amount, currentInvoicePos.total_amount_due]);
 
   function addInvoiceItems(
     tableIndex: number,
@@ -231,6 +239,9 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 
   function removeInvoiceItem(tableIndex: number) {
     setCurrentInvoiceItemsQueue(prev =>
+      prev.filter((_, index) => index !== tableIndex),
+    );
+    setInvoiceItemsDatabase(prev =>
       prev.filter((_, index) => index !== tableIndex),
     );
   }
