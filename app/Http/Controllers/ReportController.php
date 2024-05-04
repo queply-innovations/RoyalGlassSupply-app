@@ -269,8 +269,10 @@ class ReportController extends Controller
                 return $item->inventoryProduct->capital_price * $item->quantity;
             });
 
+            $returnTransaction = $invoice->returnTransaction->refundable_amount ?? 0;
+
             $invoiceData[] = [
-                'total_sales' => $invoice->total_amount_due,
+                'total_sales' => $invoice->total_amount_due - $returnTransaction,
                 'total_capital_price' => array_sum($capitalPrices->toArray())
             ];
         }

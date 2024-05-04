@@ -13,6 +13,10 @@ class Voucher extends Model
 
     protected $fillable = [
         'code',
+        'customer_id',
+        'return_transaction_id',
+        'discounted_price',
+        'is_claimed',
         'generated_by',
         'notes'
     ];
