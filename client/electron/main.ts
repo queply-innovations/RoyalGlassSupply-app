@@ -87,6 +87,7 @@ function createWindow() {
 			pageSize: 'A4',
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
+			copies: 2,
 		};
 		windowWebContents
 			.loadURL('http://localhost:5173/#/pos/print-invoice')
