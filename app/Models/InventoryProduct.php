@@ -21,10 +21,12 @@ class InventoryProduct extends Model
         'quantity_per_bundle',
         'stocks_count',
         'approved_stocks',
+        'purchased_stocks',
         'damage_count',
         'total_count',
         'unit',
-        'status'
+        'status',
+        'product_price_id'
     ];
 
     public $timestamps = false;
@@ -57,5 +59,9 @@ class InventoryProduct extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function productPrice() {
+        return $this->hasOne(ProductPrice::class, 'id', 'product_price_id');
     }
 }

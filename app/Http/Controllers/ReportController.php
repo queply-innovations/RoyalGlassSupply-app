@@ -7,13 +7,47 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Http\Resources\ReportCollection;
 use App\Http\Resources\ReportResource;
+use App\Models\Customer;
+use App\Models\OperationExpense;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class ReportController extends Controller
 {
+    public function dashboard(Request $request) {
+        $request->validate([
+            'date_from' => 'required|date',
+            'date_to' => 'required|date'
+        ]);
+
+        $salesData = $this->getSalesReport($request);
+        $customerData = $this->getCustomerReport($request);
+
+        $data = [
+            ...$salesData,
+            'date_from' => $request->date_from,
+            'date_to' => $request->date_to,
+            'new_customers' => $customerData['new_customers'],
+            'returning_customers' => $customerData['returning_customers']
+        ];
+
+        return $this->sendResponse($data, 'Reports retrieved successfully.');
+    }
+
+    public function analytics(Request $request) {
+        $request->validate([
+            'year' => 'required|integer|digits:4'
+        ]);
+
+        $analyticsData = $this->getAnalyticsReport($request);
+
+        return $this->sendResponse($analyticsData, 'Analytics Report retrieved successfully.');
+    }
+
     public function sales(Request $request)
     {
         //filters include warehouse, type (daily, weekly, monthly, custom)
@@ -194,5 +228,135 @@ class ReportController extends Controller
         }
 
         return new ReportCollection($result);
+    }
+
+    private function getSalesReport($request) {
+        $invoices = Invoice::with(['invoiceItems.inventoryProduct'])
+            ->where('type', 'payment')
+            ->where('is_paid', true)
+            ->where('balance_amount', '<=', 0)
+            ->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])
+            ->when($request->has('warehouse') && $request->warehouse, function($query) use($request) {
+                return $query->where('warehouse_id', $request->warehouse);
+            })
+            ->get();
+
+        $purchasOrders = Invoice::where('type', 'payment')
+            ->where('payment_method', 'purchase_order')
+            ->where('is_paid', false)
+            ->where('balance_amount', '>', 0)
+            ->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])
+            ->when($request->has('warehouse') && $request->warehouse, function($query) use($request) {
+                return $query->where('warehouse_id', $request->warehouse);
+            })
+            ->sum('balance_amount');
+
+        $expenses = OperationExpense::whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ])->sum('amount');
+
+        $invoiceData = [];
+
+        foreach($invoices as $invoice) {
+            $capitalPrices = collect($invoice->invoiceItems)->map(function($item) {
+                return $item->inventoryProduct->capital_price * $item->quantity;
+            });
+
+            $returnTransaction = $invoice->returnTransaction->refundable_amount ?? 0;
+
+            $invoiceData[] = [
+                'total_sales' => $invoice->total_amount_due - $returnTransaction,
+                'total_capital_price' => array_sum($capitalPrices->toArray())
+            ];
+        }
+
+        $sales = array_sum(array_column($invoiceData, 'total_sales'));
+        $capital = array_sum(array_column($invoiceData, 'total_capital_price'));
+        $profit = $sales - ( $capital + $expenses );
+
+        return [
+            'total_sales' => $sales,
+            'total_capital' => $capital,
+            'total_expenses' => $expenses,
+            'total_profit' => $profit,
+            'total_collectibles' => $purchasOrders
+        ];
+    }
+
+    private function getCustomerReport($request) {
+        $dateFrom = Carbon::parse($request->date_from)->format('Y-m-d');
+        $dateTo = Carbon::parse($request->date_to)->format('Y-m-d');
+        $customers = Customer::with('invoices')
+            ->whereHas('invoices')
+            ->get();
+
+        $newCustomer = 0;
+        $returningCustomer = 0;
+
+        foreach($customers as $customer) {
+            $firstInvoice = $customer->invoices[0];
+            $lastInvoice = $customer->invoices[count($customer->invoices) - 1];
+
+            $firstCustomerPurchasedData = Carbon::parse($firstInvoice['created_at'])->format('Y-m-d');
+            $lastCustomerPurchasedData = Carbon::parse($lastInvoice['created_at'])->format('Y-m-d');
+
+            if($dateFrom <= $firstCustomerPurchasedData && $dateTo >= $lastCustomerPurchasedData) {
+                $newCustomer++;
+            } else if($dateFrom <= $lastCustomerPurchasedData && $dateTo >= $lastCustomerPurchasedData) {
+                $returningCustomer++;
+            } else {}
+        }
+
+        return [
+            'new_customers' => $newCustomer,
+            'returning_customers' => $returningCustomer
+        ];
+    }
+
+    private function getAnalyticsReport($request) {
+        $startOfYear = $request->year.'-01-01';
+        $endOfYear = $request->year.'-12-31';
+
+        $data = [];
+
+        $startMonth = Carbon::parse($startOfYear)->format('Y-m-d');
+        $endMonth = Carbon::parse($endOfYear)->format('Y-m-d');
+        $monthRange = CarbonPeriod::create($startMonth, '1 month', $endMonth);
+
+        foreach ($monthRange as $month) {
+            $salesRequest = new Request();
+            $salesRequest->merge([
+                'date_from' => Carbon::parse($month)->startOfMonth(),
+                'date_to' => Carbon::parse($month)->endOfMonth()
+            ]);
+
+            if($request->has('warehouse') && $request->warehouse) {
+                $salesRequest->merge([
+                    'warehouse' => $request->warehouse
+                ]);
+            } 
+
+            $salesReport = $this->getSalesReport($salesRequest);
+
+            $data[] = [
+                'Month' => Carbon::parse($month)->format('F'),
+                'date_from' =>  Carbon::parse($month)->startOfMonth()->format('Y-m-d'),
+                'date_to' => Carbon::parse($month)->endOfMonth()->format('Y-m-d'),
+                'gross_income' => $salesReport['total_sales'],
+                'capital' => $salesReport['total_capital'],
+                'expenses' => $salesReport['total_expenses'],
+                'net_profit' => $salesReport['total_profit'],
+                'collectibles' => $salesReport['total_collectibles']
+            ];
+        }
+
+        return $data;
     }
 }

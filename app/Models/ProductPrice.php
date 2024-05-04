@@ -62,4 +62,8 @@ class ProductPrice extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function inventoryProduct() {
+        return $this->belongsTo(InventoryProduct::class, 'id', 'product_price_id');
+    }
 }

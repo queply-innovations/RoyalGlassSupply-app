@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Http\Resources\CustomerCollection;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -78,6 +79,10 @@ class CustomerController extends Controller
     public function searchFilterAndSort(Request $request)
     {
         $query = Customer::whereNotNull('id');
+
+        if(!empty($request->searchName)) {
+            $query->where(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', '%'.$request->searchName['name'].'%');
+        }
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){

@@ -10,6 +10,7 @@ use App\Models\InvoiceItem;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
@@ -35,23 +36,17 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice_items = $request->invoice_items;
-        $invoice = Invoice::create($request->except(['invoice_items', 'reference_no']));
-        $invoice->update([
-            'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($invoice->id, 6, 0, STR_PAD_LEFT),
-            'reference_no' => $request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
-            'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
-        ]);
+        try {
+            DB::beginTransaction();
 
-        foreach($invoice_items as $index =>$invoice_item){
-            $invoice_items[$index]["invoice_id"] = $invoice->id;
-            $invoice_items[$index]["unit"] = 'pcs';
-            $invoice_items[$index]["source_inventory"] = InventoryProduct::find($invoice_items[$index]["product_id"])->id;
+            $invoice = $this->storeInvoice($request);
+            
+            DB::commit();
+            return new InvoiceResource($invoice);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
         }
-        //return response()->json($invoice_items);
-        $invoice_items = InvoiceItem::insert($invoice_items);
-        
-        return new InvoiceResource($invoice);
     }
 
     /**
@@ -144,5 +139,42 @@ class InvoiceController extends Controller
         }
 
         return new InvoiceResource($query);
+    }
+
+    public function storeInvoice($request) {
+        $invoice_items = $request->invoice_items;
+        $invoice = Invoice::create($request->except(['invoice_items', 'is_paid', 'balance_amount']));
+        $invoice->update([
+            'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($invoice->id, 6, 0, STR_PAD_LEFT),
+            // 'reference_no' => $request->warehouse_id.Carbon::now()->format('mdY').$invoice->id,
+            'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
+        ]);
+
+        if($invoice->payment_method == 'purchase_order') {
+            $balance = $invoice->total_amount_due - $invoice->paid_amount;
+            $invoice->update([
+                'balance_amount' => $balance > 0 ? $balance : 0,
+                'is_paid' => $balance <= 0 
+            ]);
+        }
+
+        foreach($invoice_items as $invoice_item){
+            $inventoryProduct =  InventoryProduct::where('product_id', $invoice_item["product_id"])
+                ->where('product_price_id', $invoice_item['product_price_id'])
+                ->first();
+
+            $createInvoiceItem = InvoiceItem::create([
+                ...$invoice_item,
+                'invoice_id' => $invoice->id,
+                'unit' => 'pcs',
+                'source_inventory' => $inventoryProduct->id
+            ]);
+
+            $inventoryProduct->update([
+                'purchased_stocks' => $inventoryProduct->purchased_stocks + $createInvoiceItem->quantity
+            ]);
+        }
+
+        return $invoice;
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Invoice extends Model
 {
@@ -26,6 +27,8 @@ class Invoice extends Model
         'total_amount_due',
         'paid_amount',
         'change_amount',
+        'balance_amount',
+        'is_paid',
         'or_no',
         'status'
     ];
@@ -51,9 +54,9 @@ class Invoice extends Model
         return $this->hasMany(InvoiceTax::class);
     }
 
-    public function returnTransactions(): HasMany
+    public function returnTransaction(): HasOne
     {
-        return $this->hasMany(ReturnTransaction::class);
+        return $this->hasOne(ReturnTransaction::class);
     }
 
     public function customer(): BelongsTo

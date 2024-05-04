@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\ReturnTransaction;
 use App\Http\Resources\ReturnTransactionCollection;
 use App\Http\Resources\ReturnTransactionResource;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\ReturnTransactionItem;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReturnTransactionController extends Controller
 {
@@ -31,9 +37,18 @@ class ReturnTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $returnTransaction = ReturnTransaction::create($request->all());
+        try {
+            DB::beginTransaction();
+            
+            $returnTransaction = $this->storeReturnTransaction($request);
 
-        return new ReturnTransactionResource($returnTransaction);
+            DB::commit();
+
+            return new ReturnTransactionResource($returnTransaction);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -112,5 +127,39 @@ class ReturnTransactionController extends Controller
         }
 
         return new ReturnTransactionCollection($query->get());
+    }
+
+    private function storeReturnTransaction($request) {
+        $invoice = Invoice::findOrFail($request->invoice_id);
+
+        $store = ReturnTransaction::create($request->except('return_items'));
+
+        foreach($request->return_items as $item) {
+            ReturnTransactionItem::create([
+                ...$item,
+                'return_transaction_id' => $store->id
+            ]);
+
+            $invoiceItem = InvoiceItem::findOrFail($item['invoice_item_id']);
+            $invoiceItem->inventoryProduct->update([
+                'purchased_stocks' => $invoiceItem->inventoryProduct->purchased_stocks - $item['quantity']
+            ]);
+        }
+
+        if((bool) !$request->is_cash_refund) {
+            $voucher = Voucher::create([
+                'code' => str_replace('IVC', 'V', $invoice->code),
+                'customer_id' => $invoice->customer_id,
+                'return_transaction_id' => $store->id,
+                'discounted_price' => $store->refundable_amount,
+                'generated_by' => Auth::id()
+            ]);
+
+            $store->update([
+                'voucher_id' => $voucher->id
+            ]);
+        }
+
+        return $store;
     }
 }

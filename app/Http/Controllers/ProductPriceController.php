@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductCollection;
 use App\Models\ProductPrice;
 use App\Http\Resources\ProductPriceCollection;
 use App\Http\Resources\ProductPriceResource;
@@ -57,7 +58,7 @@ class ProductPriceController extends Controller
      */
     public function update(Request $request, ProductPrice $productPrice)
     {
-        $productPrice->update($request->all());
+        $productPrice->update($request->except(['capital_price']));
 
         return new ProductPriceResource($productPrice);
     }
@@ -77,7 +78,13 @@ class ProductPriceController extends Controller
      */
     public function searchFilterAndSort(Request $request)
     {
-        $query = ProductPrice::whereNotNull('id');
+        $query = ProductPrice::query()
+            ->with(['inventoryProduct.inventory'])
+            ->when($request->has('filter.warehouse_id'), function($q) use($request) {
+                $q->whereHas('inventoryProduct.inventory', function($q) use($request) {
+                    $q->where('warehouse_id', $request->filter['warehouse_id']);
+                });
+            });
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
@@ -87,7 +94,9 @@ class ProductPriceController extends Controller
         
         if(!empty($request->filter)){
             foreach($request->filter as $filter_key => $filter_value){
-                $query->where($filter_key, $filter_value);
+                if($filter_key != 'warehouse_id') {
+                    $query->where($filter_key, $filter_value);
+                }
             }
         }
 

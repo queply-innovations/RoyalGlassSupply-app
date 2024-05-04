@@ -33,7 +33,7 @@ class InvoiceItem extends Model
 
     public function returnTransactionItems(): HasMany
     {
-        return $this->hasMany(ReturnTransacionItem::class);
+        return $this->hasMany(ReturnTransactionItem::class);
     }
 
     public function invoice(): BelongsTo

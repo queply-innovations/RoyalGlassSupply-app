@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
+use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class InventoryProductController extends Controller
 {
@@ -32,8 +34,17 @@ class InventoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        $inventoryProduct = InventoryProduct::create($request->all());
-        return new InventoryProductResource($inventoryProduct);
+        try {
+            DB::beginTransaction();
+
+            $inventoryProduct = $this->createInventoryProduct($request);
+
+            DB::commit();
+            return new InventoryProductResource($inventoryProduct);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
     /**
@@ -57,9 +68,18 @@ class InventoryProductController extends Controller
      */
     public function update(Request $request, InventoryProduct $inventoryProduct)
     {
-        $inventoryProduct->update($request->all());
+        try {
+            DB::beginTransaction();
 
-        return new InventoryProductResource($inventoryProduct);
+            $update = $this->updateInventoryProduct($request, $inventoryProduct);
+            
+            DB::commit();
+
+            return new InventoryProductResource($update);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -153,5 +173,76 @@ class InventoryProductController extends Controller
         }
 
         return new InventoryProductCollection($query->get());
+    }
+
+    private function createInventoryProduct($request) {
+        $inventoryProduct = InventoryProduct::create($request->all());
+
+        $capitalPrice = $inventoryProduct->capital_price;
+        $markupPrice = $capitalPrice * 0.10;
+        $cost = $capitalPrice + $markupPrice;
+
+        $productPriceData = [
+            'product_id' => $inventoryProduct->product_id,
+            'type' => ' ',
+            'unit' => $inventoryProduct->unit,
+            'stocks_quantity' => $inventoryProduct->stocks_count,
+            'capital_price' => $capitalPrice,
+            'markup_price' => $markupPrice,
+            'tax_amount' => 0,
+            'cost' => $cost,
+            'on_sale' => 0,
+            'sale_discount' => 0,
+            'price' => $cost,
+            'warehouse_id' => $inventoryProduct->inventory->warehouse_id,
+            'created_by' => auth()->user()->id,
+            'approval_status' => 'approved',
+            'active_status' => 'active'
+        ];
+
+        $productPrice = ProductPrice::create($productPriceData);
+
+        $inventoryProduct->update([
+            'product_price_id' => $productPrice->id
+        ]);
+
+        return $inventoryProduct;
+    }
+
+    private function updateInventoryProduct($request, $inventoryProduct) {
+
+        if($request->has('capital_price')) {
+            $oldCapitalPrice = $inventoryProduct->capital_price;
+            $markupPercent = $inventoryProduct->productPrice->markup_price / $oldCapitalPrice;
+    
+            $inventoryProduct->update($request->all());
+    
+            $markupPrice = $inventoryProduct->capital_price * $markupPercent;
+            $cost = $inventoryProduct->capital_price + $markupPrice;
+            $price = $cost - $inventoryProduct->productPrice->sale_discount;
+    
+            $inventoryProduct->productPrice->update([
+                'capital_price' => $inventoryProduct->capital_price,
+                'markup_price' => $markupPrice,
+                'cost' => $cost,
+                'price' => $price,
+                'approval_status' => 'approved',
+                'active_status' => 'active'
+            ]);
+        } else if($request->has('approved_stocks') && $request->input('approved_stocks') > 0) {
+            $approvedStockCount =  $inventoryProduct->approved_stocks + $request->approved_stocks;
+
+            if($approvedStockCount > $inventoryProduct->stocks_count) {
+                throw new \Exception('Approved stocks cannot be higher than remaining unapproved stocks count');
+            }
+
+            $inventoryProduct->update([
+                'approved_stocks' => $approvedStockCount
+            ]);
+        } else {
+            $inventoryProduct->update($request->all());
+        }
+
+        return $inventoryProduct;
     }
 }

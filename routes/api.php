@@ -102,6 +102,8 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/vouchers/searches-filters-sorts', [VoucherController::class, 'searchFilterAndSort']);
     Route::post('/warehouses/searches-filters-sorts', [WarehouseController::class, 'searchFilterAndSort']);
 
+    Route::post('/reports', [ReportController::class, 'dashboard']);
+    Route::post('/reports/analytics', [ReportController::class, 'analytics']);
     Route::post('/reports/sales', [ReportController::class, 'sales']);
     Route::post('/reports/top-paying-customers', [ReportController::class, 'topPayingCustomers']);
     Route::post('/reports/most-bought-products', [ReportController::class, 'mostBoughtProducts']);
