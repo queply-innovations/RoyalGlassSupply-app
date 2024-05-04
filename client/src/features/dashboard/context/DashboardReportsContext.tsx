@@ -10,6 +10,8 @@ import {
 import { useReportAnalyticsQuery } from '@/features/reports/hooks/useReportAnalyticsQuery';
 import { useTopSellingProductsQuery } from '@/features/reports/hooks/useTopSellingProductsQuery';
 import { useInventoryLevelReportQuery } from '@/features/reports/hooks/useInventoryLevelReportQuery';
+import { useProductPricesDateRange } from '../hooks/useProductPricesReportQuery';
+import { ProductPrices } from '@/features/product/__test__/types';
 
 interface DashboardReportsContextProps {
 	monthRange: DateRange;
@@ -19,10 +21,11 @@ interface DashboardReportsContextProps {
 	isReportAnalyticsFetching: boolean;
 	topSellingProducts: TopSellingProducts[] | undefined;
 	isTopSellingProductsFetching: boolean;
-	inventoryLevel: InventoryLevelReport | undefined;
+	// inventoryLevel: InventoryLevelReport | undefined;
+	inventoryLevel: ProductPrices[];
 	isInventoryLevelFetching: boolean;
-	warehouseId: number;
-	setWarehouseId: React.Dispatch<React.SetStateAction<number>>;
+	// warehouseId: number;
+	// setWarehouseId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface DashboardReportsProviderProps {
@@ -59,9 +62,27 @@ export const DashboardReportsProvider = ({
 		isFetching: isTopSellingProductsFetching,
 	} = useTopSellingProductsQuery();
 
-	const [warehouseId, setWarehouseId] = useState(1);
-	const { data: inventoryLevel, isFetching: isInventoryLevelFetching } =
-		useInventoryLevelReportQuery(warehouseId);
+	// const [warehouseId, setWarehouseId] = useState(1);
+	// const { data: inventoryLevel, isFetching: isInventoryLevelFetching } =
+	// 	useInventoryLevelReportQuery(warehouseId);
+
+	const { data: productPrices, isLoading: isInventoryLevelFetching } =
+		useProductPricesDateRange();
+	const inventoryLevel = useMemo(() => {
+		if (productPrices.length > 0) {
+			return productPrices.filter(
+				prod =>
+					prod.inventory_product.stocks_count * 0.2 >
+						(prod.inventory_product.remaining_stocks_count ?? 0) &&
+					!(
+						prod.inventory_product.stocks_count ===
+						prod.inventory_product.sold_count
+					),
+			);
+		} else {
+			return [];
+		}
+	}, [productPrices]);
 
 	const value = {
 		monthRange,
@@ -73,8 +94,8 @@ export const DashboardReportsProvider = ({
 		isTopSellingProductsFetching,
 		inventoryLevel,
 		isInventoryLevelFetching,
-		warehouseId,
-		setWarehouseId,
+		// warehouseId,
+		// setWarehouseId,
 	};
 
 	return (
