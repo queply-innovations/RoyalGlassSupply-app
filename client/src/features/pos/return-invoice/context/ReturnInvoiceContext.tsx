@@ -142,31 +142,13 @@ export const ReturnInvoiceProvider = ({
 		// Submit the return invoice
 		setIsSubmitting(true);
 		return await submitReturnInvoice(returnInvoice)
-			.then(res => {
-				// Submit the return invoice items
-				// Iterate through the return items and submit each item
-				return Promise.all(
-					returnInvoice.return_items?.map(async item => {
-						await submitReturnInvoiceItems({
-							...item,
-							return_transaction_id: res.id,
-						} as ReturnInvoiceItems);
-					}),
-				)
-					.then(() => {
-						// If all items are successfully returned, return a success message
-						// Reset all states
-						setReturnInvoice({} as ReturnInvoice);
-						setSelectedInvoice(undefined);
-						setReturnableItems([]);
-						setSelectedItems([]);
-						setIsSubmitting(false);
-						return 'Items successfully returned.';
-					})
-					.catch(() => {
-						setIsSubmitting(false);
-						throw 'Failed to return items. Please try again.';
-					});
+			.then(() => {
+				setReturnInvoice({} as ReturnInvoice);
+				setSelectedInvoice(undefined);
+				setReturnableItems([]);
+				setSelectedItems([]);
+				setIsSubmitting(false);
+				return 'Items successfully returned.';
 			})
 			.catch(() => {
 				setIsSubmitting(false);
