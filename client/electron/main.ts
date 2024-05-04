@@ -79,7 +79,6 @@ function createWindow() {
 			},
 		});
 		const windowWebContents: WebContents = newWindow.webContents;
-		windowWebContents.openDevTools();
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
@@ -126,7 +125,6 @@ function createWindow() {
 			},
 		});
 		const windowWebContents: WebContents = newWindow.webContents;
-		windowWebContents.openDevTools();
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
