@@ -48,29 +48,40 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	return (
 		<>
 			<div className="mb-1 flex flex-col gap-2">
+				{/* //TODO Add delivery charge */}
 				{/* <div className="grid grid-cols-2 gap-2">
-               //TODO Add delivery charge
-               <Button
-                  variant={'outline'}
-                  className="hover:cursor-not-allowed hover:bg-white"
-                  onClick={() => {
-                     setDialogOptions({
-                        open: true,
-                        title: 'delivery_charge',
-                     });
-                     console.log('Options:', dialogOptions);
-                  }}>
-                  Delivery Charge
-               </Button>
-            </div> */}
-				<Button
-					onClick={() => {
-						setDialogOptions({ open: true, title: 'discount' });
-					}}
-				>
-					Set Discount
-				</Button>
-
+					<Button
+						variant={'outline'}
+						className="hover:cursor-not-allowed hover:bg-white"
+						onClick={() => {
+							setDialogOptions({
+								open: true,
+								title: 'delivery_charge',
+							});
+							console.log('Options:', dialogOptions);
+						}}
+					>
+						Delivery Charge
+					</Button>
+				</div> */}
+				<div className="flex w-full flex-row gap-2">
+					<Button
+						className="flex-1"
+						onClick={() => {
+							setDialogOptions({ open: true, title: 'delivery_charge' });
+						}}
+					>
+						Set Delivery
+					</Button>
+					<Button
+						className="flex-1"
+						onClick={() => {
+							setDialogOptions({ open: true, title: 'discount' });
+						}}
+					>
+						Set Discount
+					</Button>
+				</div>
 				<Button
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'payment_type' });

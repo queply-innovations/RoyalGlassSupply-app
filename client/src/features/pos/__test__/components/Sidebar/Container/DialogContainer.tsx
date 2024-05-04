@@ -1,5 +1,6 @@
 import { usePos } from '../../../context/__test__/PosContext';
 import {
+	AddDeliveryChargeDialog,
 	AddDiscountDialog,
 	AddPaidAmount,
 	CheckoutDialog,
@@ -14,6 +15,9 @@ export const DialogContainer = () => {
 			{dialogOptions.title === 'discount' && <AddDiscountDialog />}
 			{dialogOptions.title === 'paid_amount' && <AddPaidAmount />}
 			{dialogOptions.title === 'checkout' && <CheckoutDialog />}
+			{dialogOptions.title === 'delivery_charge' && (
+				<AddDeliveryChargeDialog />
+			)}
 		</>
 	);
 };
