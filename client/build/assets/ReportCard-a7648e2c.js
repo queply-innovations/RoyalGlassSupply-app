@@ -1,0 +1,11 @@
+import{Z as i,j as a,aK as d,i as o,k as m,l as x,aE as h,aF as p,aH as j,bW as f,m as u,cc as y}from"./index-8efc810c.js";import{G as g}from"./timeUtils-d174f095.js";/**
+ * @license lucide-react v0.338.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const v=i("Ban",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"m4.9 4.9 14.2 14.2",key:"1m5liu"}]]);/**
+ * @license lucide-react v0.338.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const k=i("Info",[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["path",{d:"M12 16v-4",key:"1dtifu"}],["path",{d:"M12 8h.01",key:"e9boi3"}]]);function M(s){return g({tag:"svg",attr:{viewBox:"0 0 512 512"},child:[{tag:"path",attr:{d:"M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"}}]})(s)}const T=({title:s,children:l,description:c,tooltip:t,footer:r,bgClassName:n,textColorClassName:e})=>a.jsx(a.Fragment,{children:a.jsx(d,{children:a.jsxs(o,{className:`w-full max-w-[460px] ${n||"bg-white"} ${e||"text-slate-800"} rounded-md border-0 shadow-none`,children:[a.jsxs(m,{className:"px-5 pt-4",children:[a.jsx(x,{className:`text-sm font-semibold tracking-normal ${!c&&"mb-5"}`,children:a.jsxs("span",{className:"flex flex-row items-center justify-between gap-1",children:[s," ",t&&a.jsxs(h,{children:[a.jsx(p,{children:a.jsx(k,{size:18,strokeWidth:2,className:`${e||"text-slate-800"} opacity-60`})}),a.jsx(j,{className:"max-w-[40ch] font-medium",children:t})]})]})}),c&&a.jsx(f,{className:`text-sm font-medium opacity-70 ${e||"text-slate-800"}`,children:c})]}),a.jsx(u,{className:"px-5 pb-4",children:l}),r&&a.jsx(y,{children:r})]})})});export{v as B,M as F,T as R};
