@@ -1,4 +1,12 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, ipcRenderer, WebContents, WebContentsPrintOptions } from 'electron';
+import {
+	app,
+	BrowserWindow,
+	globalShortcut,
+	ipcMain,
+	ipcRenderer,
+	WebContents,
+	WebContentsPrintOptions,
+} from 'electron';
 import path from 'node:path';
 
 // The built directory structure
@@ -25,15 +33,15 @@ function createWindow() {
 		icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
-			// devTools: false, //TODO: Remove on Production
-			plugins: true, 
+			devTools: false, //TODO: Remove on Production
+			plugins: true,
 			nodeIntegration: false,
 			backgroundThrottling: false,
 			contextIsolation: true,
 		},
 	});
-	// win.removeMenu(); // Remove default menu //TODO: Uncomment on Production
-	win.webContents.openDevTools(); // Devtools on Open //TODO: Remove on Production
+	win.removeMenu(); // Remove default menu //TODO: Uncomment on Production
+	// win.webContents.openDevTools(); // Devtools on Open //TODO: Remove on Production
 
 	// Test active push message to Renderer-process.
 	win.webContents.on('did-finish-load', () => {
@@ -53,18 +61,21 @@ function createWindow() {
 	function removeInvoice() {
 		ipcMain.removeHandler('send-data');
 	}
-	
+
 	ipcMain.on('print-invoice', (event, data) => {
-		ipcMain.handle('send-data', () => { return data; });
+		ipcMain.handle('send-data', () => {
+			return data;
+		});
 		const newWindow = new BrowserWindow({
 			fullscreen: true,
 			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js'),
-				plugins: true, 
+				plugins: true,
 				nodeIntegration: false,
 				backgroundThrottling: false,
 				contextIsolation: true,
+				devTools: false,
 			},
 		});
 		const windowWebContents: WebContents = newWindow.webContents;
@@ -74,20 +85,22 @@ function createWindow() {
 			color: false,
 			printBackground: false,
 			pageSize: 'A4',
-			silent: false, //TODO: convert to true after final testing
-			margins: {marginType: 'none'},
+			silent: true, //TODO: convert to true after final testing
+			margins: { marginType: 'none' },
 		};
-		windowWebContents.loadURL('http://localhost:5173/#/pos/print-invoice').then(() => {
-			setTimeout(() => {
-				windowWebContents.print(options, (success, reason) => { 
-					console.log(success, reason);
-					if (success) {
-						removeInvoice();
-						windowWebContents.close();
-					}
-				})
-			}, 3000);
-		});
+		windowWebContents
+			.loadURL('http://localhost:5173/#/pos/print-invoice')
+			.then(() => {
+				setTimeout(() => {
+					windowWebContents.print(options, (success, reason) => {
+						console.log(success, reason);
+						if (success) {
+							removeInvoice();
+							windowWebContents.close();
+						}
+					});
+				}, 3000);
+			});
 	});
 
 	// ipcMain.removeHandler('print-transfer');
@@ -96,16 +109,19 @@ function createWindow() {
 	}
 
 	ipcMain.on('print-transfer', (event, data) => {
-		ipcMain.handle('send-transfer', () => { return data; });
+		ipcMain.handle('send-transfer', () => {
+			return data;
+		});
 		const newWindow = new BrowserWindow({
 			fullscreen: true,
 			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js'),
-				plugins: true, 
+				plugins: true,
 				nodeIntegration: false,
 				backgroundThrottling: false,
 				contextIsolation: true,
+				devTools: false,
 			},
 		});
 		const windowWebContents: WebContents = newWindow.webContents;
@@ -115,21 +131,23 @@ function createWindow() {
 			color: false,
 			printBackground: false,
 			pageSize: 'A4',
-			silent: false, //TODO: convert to true after final testing
-			margins: {marginType: 'none'},
+			silent: true, //TODO: convert to true after final testing
+			margins: { marginType: 'none' },
 		};
-		windowWebContents.loadURL('http://localhost:5173/#/print-transfer').then(() => {
-			setTimeout(() => {
-				windowWebContents.print(options, (success, reason) => { 
-					console.log(success, reason);
-					if (success) {
-						removeTransfer();
-						windowWebContents.close();
-					}
-				})
-			}, 3000);
-		});
-	})
+		windowWebContents
+			.loadURL('http://localhost:5173/#/print-transfer')
+			.then(() => {
+				setTimeout(() => {
+					windowWebContents.print(options, (success, reason) => {
+						console.log(success, reason);
+						if (success) {
+							removeTransfer();
+							windowWebContents.close();
+						}
+					});
+				}, 3000);
+			});
+	});
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
