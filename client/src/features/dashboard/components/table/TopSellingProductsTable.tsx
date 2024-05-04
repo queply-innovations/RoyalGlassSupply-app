@@ -22,16 +22,25 @@ export const TopSellingProductsTable = ({
 			header: () => <div className="justify-center uppercase">Brand</div>,
 		},
 		{
-			accessorKey: 'sold_count',
-			header: () => (
-				<div className="justify-center uppercase">Sold count</div>
-			),
-			cell: ({ row }) => (
-				<div className="justify-center">
-					{Intl.NumberFormat().format(row.original.sold_count)}
-				</div>
-			),
+			accessorKey: 'product.size',
+			header: () => <div className="justify-center uppercase">Size</div>,
 		},
+		{
+			accessorKey: 'product.color',
+			header: () => <div className="justify-center uppercase">Color</div>,
+		},
+		// Hid this column because it shows wrong data
+		// {
+		// 	accessorKey: 'sold_count',
+		// 	header: () => (
+		// 		<div className="justify-center uppercase">Sold count</div>
+		// 	),
+		// 	cell: ({ row }) => (
+		// 		<div className="justify-center">
+		// 			{Intl.NumberFormat().format(row.original.sold_count)}
+		// 		</div>
+		// 	),
+		// },
 	];
 
 	return (

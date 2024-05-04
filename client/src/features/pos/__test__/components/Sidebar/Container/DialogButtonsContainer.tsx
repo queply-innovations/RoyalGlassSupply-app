@@ -48,32 +48,41 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	return (
 		<>
 			<div className="mb-1 flex flex-col gap-2">
+				{/* //TODO Add delivery charge */}
 				{/* <div className="grid grid-cols-2 gap-2">
-               //TODO Add delivery charge
-               <Button
-                  variant={'outline'}
-                  className="hover:cursor-not-allowed hover:bg-white"
-                  onClick={() => {
-                     setDialogOptions({
-                        open: true,
-                        title: 'delivery_charge',
-                     });
-                     console.log('Options:', dialogOptions);
-                  }}>
-                  Delivery Charge
-               </Button>
-            </div> */}
+					<Button
+						variant={'outline'}
+						className="hover:cursor-not-allowed hover:bg-white"
+						onClick={() => {
+							setDialogOptions({
+								open: true,
+								title: 'delivery_charge',
+							});
+							console.log('Options:', dialogOptions);
+						}}
+					>
+						Delivery Charge
+					</Button>
+				</div> */}
+				<div className="flex w-full flex-row gap-2">
+					<Button
+						className="flex-1"
+						onClick={() => {
+							setDialogOptions({ open: true, title: 'delivery_charge' });
+						}}
+					>
+						Set Delivery
+					</Button>
+					<Button
+						className="flex-1"
+						onClick={() => {
+							setDialogOptions({ open: true, title: 'discount' });
+						}}
+					>
+						Set Discount
+					</Button>
+				</div>
 				<Button
-					variant={'outline'}
-					onClick={() => {
-						setDialogOptions({ open: true, title: 'discount' });
-					}}
-				>
-					Set Discount
-				</Button>
-
-				<Button
-					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'payment_type' });
 						console.log('Options:', dialogOptions);
@@ -82,7 +91,6 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					Set Payment Type
 				</Button>
 				<Button
-					variant={'outline'}
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'paid_amount' });
 						console.log('Options:', dialogOptions);
@@ -90,8 +98,8 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 				>
 					Add Paid Amount
 				</Button>
+				<hr className="my-1 w-full" />
 				<Button
-					variant={'default'}
 					className="w-full disabled:cursor-not-allowed"
 					onClick={() => {
 						setDialogOptions({ open: true, title: 'checkout' });

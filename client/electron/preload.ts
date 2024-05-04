@@ -6,6 +6,8 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld('api', {
   send: (data: any) => ipcRenderer.send('print-invoice', data),
   receive: () => ipcRenderer.invoke('send-data'),
+  transferSend: (data: any) => ipcRenderer.send('print-transfer', data),
+  transferRec: () => ipcRenderer.invoke('send-transfer'),
 })
 
 import { contextBridge, ipcRenderer } from 'electron';

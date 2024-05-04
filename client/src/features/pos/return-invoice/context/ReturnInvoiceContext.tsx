@@ -31,6 +31,7 @@ interface ReturnInvoiceContextProps {
 	handleSubmit: () => Promise<string>;
 	isSubmitting: boolean;
 	setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+	removeReturnItem: (id: number) => void;
 }
 
 interface ReturnInvoiceProviderProps {
@@ -141,37 +142,37 @@ export const ReturnInvoiceProvider = ({
 		// Submit the return invoice
 		setIsSubmitting(true);
 		return await submitReturnInvoice(returnInvoice)
-			.then(res => {
-				// Submit the return invoice items
-				// Iterate through the return items and submit each item
-				return Promise.all(
-					returnInvoice.return_items?.map(async item => {
-						await submitReturnInvoiceItems({
-							...item,
-							return_transaction_id: res.id,
-						} as ReturnInvoiceItems);
-					}),
-				)
-					.then(() => {
-						// If all items are successfully returned, return a success message
-						// Reset all states
-						setReturnInvoice({} as ReturnInvoice);
-						setSelectedInvoice(undefined);
-						setReturnableItems([]);
-						setSelectedItems([]);
-						setIsSubmitting(false);
-						return 'Items successfully returned.';
-					})
-					.catch(() => {
-						setIsSubmitting(false);
-						throw 'Failed to return items. Please try again.';
-					});
+			.then(() => {
+				setReturnInvoice({} as ReturnInvoice);
+				setSelectedInvoice(undefined);
+				setReturnableItems([]);
+				setSelectedItems([]);
+				setIsSubmitting(false);
+				return 'Items successfully returned.';
 			})
 			.catch(() => {
 				setIsSubmitting(false);
 				throw 'Failed to return items. Please try again.';
 			});
 	};
+
+	// Function to remove an item from the selected items
+	const removeReturnItem = (id: number) => {
+		setSelectedItems(prevItems => prevItems.filter(item => item.id !== id));
+		setReturnInvoice(prevInvoice => {
+			return {
+				...prevInvoice,
+				return_items: prevInvoice.return_items.filter(
+					item => item.invoice_item_id !== id,
+				),
+			};
+		});
+	};
+
+	useEffect(() => {
+		console.log('items', returnInvoice.return_items);
+		console.log('selected items', selectedItems);
+	}, [returnInvoice.return_items, selectedItems]);
 
 	const value = {
 		returnInvoice,
@@ -189,6 +190,7 @@ export const ReturnInvoiceProvider = ({
 		handleSubmit,
 		isSubmitting,
 		setIsSubmitting,
+		removeReturnItem,
 	};
 
 	return (

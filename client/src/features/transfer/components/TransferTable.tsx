@@ -23,8 +23,10 @@ import {
 	Ban,
 	Check,
 	Clock,
+	Printer,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
@@ -33,6 +35,16 @@ interface TransferTableProps {
 export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
 	const { transfers, transferProducts, isFetching, setSelectedTransfer } = useTransfer();
 	const { auth } = useAuth();
+	const navigate = useNavigate();
+
+	function printTransfer(transfer: Transfer){
+		window.api.transferSend({
+			transfer: transfer,
+			products: transferProducts.filter((prod) => prod.transfer_id === transfer.id)
+		 });
+		// setSelectedTransfer(transfer);
+		// navigate('/print-transfer');
+	}
 
 	// Modal handler to expand transfer details
 	const handleTransferDetails = (transfer: Transfer) => {
@@ -304,6 +316,20 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									</span>
 									<span>Transfer Products</span>
 								</DropdownMenuItem>
+								{/* dropdownmenuitem for transfer details and products to be printed if transfer status
+								is approved and arrived/transferring */}
+								{transferRow.transfer_status == 'enroute' ||
+								transferRow.transfer_status == 'arrived' && (
+									<DropdownMenuItem
+										onClick={() => printTransfer(transferRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Printer size={16} strokeWidth={2.25} />
+										</span>
+										<span>Print Transfer</span>
+									</DropdownMenuItem>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

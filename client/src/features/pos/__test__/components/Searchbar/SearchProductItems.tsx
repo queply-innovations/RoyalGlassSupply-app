@@ -44,12 +44,13 @@ export const SearchProductItems = () => {
                                     (stocks.inventory_product.sold_count ?? 0),
                               )
                               .map((item, index) => {
+                                 const availableStocks =
+                                    item.inventory_product.approved_stocks -
+                                       item.inventory_product.sold_count ?? 0;
                                  return (
                                     <CommandItem
                                        key={index}
                                        onSelect={() => {
-                                          // console.log(item);
-
                                           //Check if it exist in the currentInvoiceItemsQueue array
                                           const selectedInvoiceItemIndex =
                                              currentInvoiceItemsQueue.findIndex(
@@ -57,23 +58,9 @@ export const SearchProductItems = () => {
                                                    invoiceItem.inventory_product
                                                       .product.id === item.id,
                                              );
-
-                                          // If it exist, increment the quantity
                                           //TODO create increment function
                                           if (selectedInvoiceItemIndex !== -1) {
                                              setSearch('');
-                                             //    const updatedSelectedProducts = [
-                                             //       ...invoiceItemsDatabase,
-                                             //    ];
-
-                                             //    updatedSelectedProducts[
-                                             //       selectedInvoiceItemIndex
-                                             //    ].quantity += 1;
-
-                                             // console.log(
-                                             //    'updatedSelectedProducts',
-                                             //    updatedSelectedProducts,
-                                             // );
                                           }
 
                                           //If it doesn't exist, add it to the array
@@ -146,10 +133,10 @@ export const SearchProductItems = () => {
                                                 {formatCurrency(item.price)}
                                              </span>
                                              <span className="font-medium">
-                                                {/* {availableStocks}{' '}
-                                          {availableStocks > 1
-                                             ? 'items'
-                                             : 'item'} */}
+                                                {availableStocks}{' '}
+                                                {availableStocks > 1
+                                                   ? 'items'
+                                                   : 'item'}
                                              </span>
                                           </div>
                                        </div>

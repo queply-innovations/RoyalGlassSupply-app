@@ -4,6 +4,7 @@ import { InvoiceItems } from '@/features/invoice/__test__/types';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { ColumnDef } from '@tanstack/react-table';
 import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
+import { Trash2Icon } from 'lucide-react';
 // import { useDebounce } from "@uidotdev/usehooks";
 
 export const ReturnCols = () => {
@@ -11,7 +12,8 @@ export const ReturnCols = () => {
 };
 
 export const ReturnTableColumns = () => {
-	const { returnInvoice, updateQuantity, isSubmitting } = useReturnInvoice();
+	const { returnInvoice, updateQuantity, isSubmitting, removeReturnItem } =
+		useReturnInvoice();
 
 	const cols: ColumnDef<InvoiceItems>[] = [
 		{
@@ -136,6 +138,26 @@ export const ReturnTableColumns = () => {
 								{formatCurrency(row.original.product_price)}
 							</span>
 						</div>
+					</div>
+				);
+			},
+		},
+		{
+			id: 'actions',
+			size: 100,
+			cell: ({ row }) => {
+				// const invoiceIndex = row.index;
+
+				return (
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
+						<Button
+							className="bg-red-500 hover:bg-red-700"
+							onClick={() => {
+								removeReturnItem(row.original.id);
+							}}
+						>
+							<Trash2Icon color="#FFF" />
+						</Button>
 					</div>
 				);
 			},
