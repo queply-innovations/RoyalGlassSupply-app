@@ -82,6 +82,8 @@ function createWindow() {
 				devTools: false,
 			},
 		});
+		newWindow.removeMenu();
+
 		const printWindow: WebContents = newWindow.webContents;
 		const options: WebContentsPrintOptions = {
 			landscape: false,
@@ -131,6 +133,8 @@ function createWindow() {
 				devTools: false,
 			},
 		});
+		newWindow.removeMenu();
+
 		const windowWebContents: WebContents = newWindow.webContents;
 		const options: WebContentsPrintOptions = {
 			landscape: false,
