@@ -93,7 +93,7 @@ function createWindow() {
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
 			copies: 2,
-			dpi: { horizontal: 300, vertical: 300 },
+			dpi: { horizontal: 600, vertical: 600 },
 		};
 		printWindow.loadURL(invoiceURL).then(() => {
 			setTimeout(() => {
@@ -143,7 +143,7 @@ function createWindow() {
 			pageSize: 'A4',
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
-			dpi: { horizontal: 300, vertical: 300 },
+			dpi: { horizontal: 600, vertical: 600 },
 		};
 		windowWebContents.loadURL(transferURL).then(() => {
 			setTimeout(() => {
