@@ -1,19 +1,14 @@
 import { Button } from '@/components/ui/button';
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog';
+	AlertDialog,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { usePos } from '../../../context/__test__/PosContext';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
-import { Input } from '@/components/ui/input';
-import { useDebounce } from '@uidotdev/usehooks';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
-import { formatCurrency } from '@/utils/FormatCurrency';
 import { PaymentInfoContainer } from '../Container';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { toast } from 'react-toastify';
@@ -23,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 export const CheckoutDialog = () => {
 	const { setDialogOptions, dialogOptions } = usePos();
 	const {
-		handleInvoicePosChange,
 		invoiceItemsDatabase,
 		currentInvoiceItemsQueue,
 		fullData,
@@ -61,14 +55,6 @@ export const CheckoutDialog = () => {
 
 	const navigate = useNavigate();
 
-	// TODO: Check this print function
-	// useEffect(() => {
-	//    if (fullData) {
-	//       console.log(fullData);
-
-	//    }
-	// }, [fullData]);
-
 	function sendData() {
 		window.api.send({
 			fullData: fullData,
@@ -78,29 +64,25 @@ export const CheckoutDialog = () => {
 	}
 
 	return (
-		<Dialog
+		<AlertDialog
 			onOpenChange={() => {
 				setDialogOptions({ open: false, title: '' });
 			}}
 			open={dialogOptions.open}
 		>
-			<DialogContent
-				onInteractOutside={e => {
-					e.preventDefault();
-				}}
-			>
-				<DialogHeader className="items-start">
-					<DialogTitle>
+			<AlertDialogContent>
+				<AlertDialogHeader className="items-start">
+					<AlertDialogTitle>
 						{transactionStatus !== 'success'
 							? 'Checkout'
 							: 'Transaction successful'}
-					</DialogTitle>
+					</AlertDialogTitle>
 					{transactionStatus !== 'success' && (
-						<DialogDescription>
+						<AlertDialogDescription>
 							Confirm the details of this transaction
-						</DialogDescription>
+						</AlertDialogDescription>
 					)}
-				</DialogHeader>
+				</AlertDialogHeader>
 				{transactionStatus !== 'success' ? (
 					<PaymentInfoContainer />
 				) : (
@@ -123,50 +105,48 @@ export const CheckoutDialog = () => {
 					>
 						Cancel
 					</Button>
-					<DialogClose asChild>
-						{transactionStatus === 'success' ? (
-							<div className="flex w-full flex-row gap-2">
-								<Button
-									className="flex-1"
-									onClick={() => {
-										navigate(0);
-									}}
-								>
-									New transaction
-								</Button>
-								<Button
-									className={`flex-1`}
-									type="submit"
-									onClick={e => {
-										e.preventDefault();
-										// setTransactionStatus('confirming');
-										sendData();
-									}}
-								>
-									Print invoice
-								</Button>
-							</div>
-						) : (
+
+					{transactionStatus === 'success' ? (
+						<div className="flex w-full flex-row gap-2">
+							<Button
+								className="flex-1"
+								onClick={() => {
+									navigate(0);
+								}}
+							>
+								New transaction
+							</Button>
 							<Button
 								className={`flex-1`}
-								disabled={transactionStatus === 'submitting'}
 								type="submit"
 								onClick={e => {
 									e.preventDefault();
-									setTransactionStatus('submitting');
-									handleSubmit();
+									sendData();
 								}}
 							>
-								{transactionStatus === 'confirming'
-									? 'Confirm transaction'
-									: transactionStatus === 'submitting'
-										? 'Submitting...'
-										: ''}
+								Print invoice
 							</Button>
-						)}
-					</DialogClose>
+						</div>
+					) : (
+						<Button
+							className={`flex-1`}
+							disabled={transactionStatus === 'submitting'}
+							type="submit"
+							onClick={e => {
+								e.preventDefault();
+								setTransactionStatus('submitting');
+								handleSubmit();
+							}}
+						>
+							{transactionStatus === 'confirming'
+								? 'Confirm transaction'
+								: transactionStatus === 'submitting'
+									? 'Submitting...'
+									: ''}
+						</Button>
+					)}
 				</div>
-			</DialogContent>
-		</Dialog>
+			</AlertDialogContent>
+		</AlertDialog>
 	);
 };

@@ -15,7 +15,16 @@ export const ReturnsTable = () => {
 		<>
 			<DataTable
 				columns={ReturnsTableCols({ handleViewItems })}
-				data={data ?? []}
+				data={
+					data
+						? data.sort((a, b) => {
+								return (
+									new Date(b.created_at).getTime() -
+									new Date(a.created_at).getTime()
+								);
+							})
+						: []
+				}
 				isLoading={isFetching}
 				dataType="Returns"
 				filterWhat="code"
