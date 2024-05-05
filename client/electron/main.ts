@@ -82,7 +82,7 @@ function createWindow() {
 				devTools: false,
 			},
 		});
-		const windowWebContents: WebContents = newWindow.webContents;
+		const printWindow: WebContents = newWindow.webContents;
 		const options: WebContentsPrintOptions = {
 			landscape: false,
 			color: false,
@@ -91,14 +91,15 @@ function createWindow() {
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
 			copies: 2,
+			dpi: { horizontal: 300, vertical: 300 },
 		};
-		windowWebContents.loadURL(invoiceURL).then(() => {
+		printWindow.loadURL(invoiceURL).then(() => {
 			setTimeout(() => {
-				windowWebContents.print(options, (success, reason) => {
+				printWindow.print(options, (success, reason) => {
 					console.log(success, reason);
 					if (success) {
 						removeInvoice();
-						windowWebContents.close();
+						printWindow.close();
 					}
 				});
 			}, 3000);
@@ -138,6 +139,7 @@ function createWindow() {
 			pageSize: 'A4',
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
+			dpi: { horizontal: 300, vertical: 300 },
 		};
 		windowWebContents.loadURL(transferURL).then(() => {
 			setTimeout(() => {

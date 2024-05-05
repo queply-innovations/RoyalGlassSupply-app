@@ -250,7 +250,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		},
 	];
 	return (
-		<>
+		<div className="h-full overflow-y-scroll">
 			{currentInvoiceItemsQueue.length === 0 ? (
 				<>
 					<TablePlacholder />
@@ -261,6 +261,6 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 					columns={CreateOrderTableHeader}
 				/>
 			)}
-		</>
+		</div>
 	);
 };

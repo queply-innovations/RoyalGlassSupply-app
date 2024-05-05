@@ -30,16 +30,21 @@ export const InvoiceTable = ({ queue, itemsDatabase }: InvoiceTableProps) => {
 
 	const InvoiceTableHeader: ColumnDef<InvoiceItems>[] = [
 		{
+			size: 50,
 			accessorKey: 'quantity',
-			header: () => <div className="flex justify-center">Quantity</div>,
+			header: () => (
+				<div className="flex max-w-[50px] justify-center text-sm">
+					Quantity
+				</div>
+			),
 			cell: ({ row }) => {
 				const id = row.original.id;
 				const itemDatabase = itemsDatabase.find(
 					(item: any) => item.product_price_id === id,
 				);
 				return (
-					<div className="flex justify-center ">
-						<div className="flex flex-row border drop-shadow-sm">
+					<div className="flex max-w-[50px] justify-center">
+						<div className="flex flex-row text-xs">
 							{itemDatabase.quantity}
 						</div>
 					</div>
@@ -47,31 +52,32 @@ export const InvoiceTable = ({ queue, itemsDatabase }: InvoiceTableProps) => {
 			},
 		},
 		{
+			size: 800,
 			accessorKey: 'name',
-			header: () => <div className="justify-center">Product Name</div>,
+			header: () => (
+				<div className="justify-center text-sm">Product Name</div>
+			),
 			cell: ({ row }) => {
 				return (
 					<div className="flex flex-row gap-2">
-						<span className="text-sm font-bold">
+						<span className="text-xs font-bold">
 							{row.original.product.name}
 						</span>
 						{row.original.product.brand ? (
-							<span className="text-sm">
+							<span className="text-xs">
 								({row.original.product.brand})
 							</span>
 						) : null}
-						<span className="text-[12px]">
-							{row.original.product.size}
-						</span>
-
-						{row.original.product.color}
+						<span className="text-xs">{row.original.product.size}</span>
+						<span className="text-xs">{row.original.product.color}</span>
 					</div>
 				);
 			},
 		},
 		{
+			size: 250,
 			accessorKey: 'price',
-			header: () => <div className="justify-center">Unit Cost</div>,
+			header: () => <div className="justify-center text-sm">Unit Cost</div>,
 			cell: ({ row }) => {
 				const id = row.original.id;
 				const itemDatabase = itemsDatabase.find(
@@ -82,9 +88,11 @@ export const InvoiceTable = ({ queue, itemsDatabase }: InvoiceTableProps) => {
 				);
 				return (
 					<div className="flex flex-row gap-2">
-						<span>{formatCurrency(itemDatabase.product_price)}</span>
+						<span className="text-xs">
+							{formatCurrency(itemDatabase.product_price)}
+						</span>
 						{productOnSale?.sale_discount ? (
-							<span className="text-sm font-light">
+							<span className="text-xs font-light">
 								({formatCurrency(productOnSale?.sale_discount ?? 0)})
 							</span>
 						) : null}
@@ -93,21 +101,21 @@ export const InvoiceTable = ({ queue, itemsDatabase }: InvoiceTableProps) => {
 			},
 		},
 		{
+			size: 250,
 			id: 'total_price',
 			accessorKey: 'total_price',
-			header: () => <div className="justify-center">Price</div>,
+			header: () => <div className="justify-center text-sm">Subtotal</div>,
 			cell: ({ row }) => {
 				const id = row.original.id;
 				const itemDatabase = itemsDatabase.find(
 					(item: any) => item.product_price_id === id,
 				);
 				return (
-					<div className="">
+					<div className="text-xs">
 						<span>{formatCurrency(itemDatabase.total_price)}</span>
 					</div>
 				);
 			},
-			size: 250,
 		},
 	];
 

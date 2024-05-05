@@ -16,7 +16,7 @@ declare global {
 }
 
 export const PrintForm = ({}: PrintFormProps) => {
-	const [ fullData, setFullData ] = useState<any>();
+	const [fullData, setFullData] = useState<any>();
 	const [wholeData, setWholeData] = useState<any>();
 	const [dateInvoice, setDateInvoice] = useState<any>();
 	const [itemsQueue, setItemsQueue] = useState<any>();
@@ -44,8 +44,8 @@ export const PrintForm = ({}: PrintFormProps) => {
 		<>
 			{fullData && itemsQueue && dateInvoice && (
 				<div className="flex h-full w-screen flex-col p-3">
-					<div className="overflow-x-hidden">
-						<div className="text-base">
+					<div className="">
+						<div className="text-sm">
 							Date:&nbsp;
 							<span className="font-bold">
 								{dateInvoice.toLocaleDateString([], {
@@ -65,8 +65,11 @@ export const PrintForm = ({}: PrintFormProps) => {
 									fullData.customer.lastname}
 							</span>
 						</div>
-						<div className="flex flex-1 flex-col gap-6 p-6">
-							<InvoiceTable queue={itemsQueue} itemsDatabase={itemsDatabase} />
+						<div className="flex flex-1 flex-col">
+							<InvoiceTable
+								queue={itemsQueue}
+								itemsDatabase={itemsDatabase}
+							/>
 						</div>
 					</div>
 				</div>

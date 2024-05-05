@@ -46,7 +46,7 @@ export const Dashboard = () => {
 										<TransferStatus />
 									</div>
 									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
-										<InventoryLevelReport />
+										{/* <InventoryLevelReport /> */}
 										<TopSellingProducts />
 									</div>
 								</div>

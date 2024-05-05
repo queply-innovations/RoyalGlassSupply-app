@@ -9,7 +9,7 @@ export const TopSellingProducts = () => {
 
 	return (
 		<>
-			<Card className="flex min-h-[28rem] w-[50%] flex-col gap-4">
+			<Card className="flex min-h-[28rem] w-full flex-col gap-4">
 				<CardHeader className="flex flex-none flex-row items-center justify-between gap-4 pb-2">
 					<CardTitle className="flex w-full flex-row justify-between text-base font-bold">
 						Top Selling Products
