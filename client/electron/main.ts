@@ -3,7 +3,7 @@ import {
 	BrowserWindow,
 	globalShortcut,
 	ipcMain,
-	ipcRenderer,
+	// ipcRenderer,
 	WebContents,
 	WebContentsPrintOptions,
 } from 'electron';
@@ -63,6 +63,10 @@ function createWindow() {
 	}
 
 	ipcMain.on('print-invoice', (event, data) => {
+		const invoiceURL = app.isPackaged
+			? `file://${path.join(__dirname, '../dist/index.html')}#/pos/print-invoice`
+			: 'http://localhost:5173/#/pos/print-invoice';
+
 		ipcMain.handle('send-data', () => {
 			return data;
 		});
@@ -88,19 +92,17 @@ function createWindow() {
 			margins: { marginType: 'none' },
 			copies: 2,
 		};
-		windowWebContents
-			.loadURL('http://localhost:5173/#/pos/print-invoice')
-			.then(() => {
-				setTimeout(() => {
-					windowWebContents.print(options, (success, reason) => {
-						console.log(success, reason);
-						if (success) {
-							removeInvoice();
-							windowWebContents.close();
-						}
-					});
-				}, 3000);
-			});
+		windowWebContents.loadURL(invoiceURL).then(() => {
+			setTimeout(() => {
+				windowWebContents.print(options, (success, reason) => {
+					console.log(success, reason);
+					if (success) {
+						removeInvoice();
+						windowWebContents.close();
+					}
+				});
+			}, 3000);
+		});
 	});
 
 	// ipcMain.removeHandler('print-transfer');
@@ -109,6 +111,10 @@ function createWindow() {
 	}
 
 	ipcMain.on('print-transfer', (event, data) => {
+		const transferURL = app.isPackaged
+			? `file://${path.join(__dirname, '../dist/index.html')}#/print-transfer`
+			: 'http://localhost:5173/#/print-transfer';
+
 		ipcMain.handle('send-transfer', () => {
 			return data;
 		});
@@ -133,19 +139,17 @@ function createWindow() {
 			silent: true, //TODO: convert to true after final testing
 			margins: { marginType: 'none' },
 		};
-		windowWebContents
-			.loadURL('http://localhost:5173/#/print-transfer')
-			.then(() => {
-				setTimeout(() => {
-					windowWebContents.print(options, (success, reason) => {
-						console.log(success, reason);
-						if (success) {
-							removeTransfer();
-							windowWebContents.close();
-						}
-					});
-				}, 3000);
-			});
+		windowWebContents.loadURL(transferURL).then(() => {
+			setTimeout(() => {
+				windowWebContents.print(options, (success, reason) => {
+					console.log(success, reason);
+					if (success) {
+						removeTransfer();
+						windowWebContents.close();
+					}
+				});
+			}, 3000);
+		});
 	});
 }
 
