@@ -63,6 +63,8 @@ export const CheckoutDialog = () => {
 		});
 	}
 
+	const [isPrinted, setIsPrinted] = useState<boolean>(false);
+
 	return (
 		<AlertDialog
 			onOpenChange={() => {
@@ -109,6 +111,7 @@ export const CheckoutDialog = () => {
 					{transactionStatus === 'success' ? (
 						<div className="flex w-full flex-row gap-2">
 							<Button
+								disabled={!isPrinted}
 								className="flex-1"
 								onClick={() => {
 									navigate(0);
@@ -122,6 +125,7 @@ export const CheckoutDialog = () => {
 								onClick={e => {
 									e.preventDefault();
 									sendData();
+									setIsPrinted(true);
 								}}
 							>
 								Print invoice
