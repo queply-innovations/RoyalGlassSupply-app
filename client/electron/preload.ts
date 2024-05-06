@@ -8,9 +8,9 @@ contextBridge.exposeInMainWorld('api', {
   receive: () => ipcRenderer.invoke('send-data'),
   transferSend: (data: any) => ipcRenderer.send('print-transfer', data),
   transferRec: () => ipcRenderer.invoke('send-transfer'),
+  invSend: (data: any) => ipcRenderer.send('print-inv', data),
+  invRec: () => ipcRenderer.invoke('send-inv'),
 })
-
-import { contextBridge, ipcRenderer } from 'electron';
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));
