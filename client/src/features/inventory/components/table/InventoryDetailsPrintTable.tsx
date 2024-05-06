@@ -57,32 +57,11 @@ export const InventoryDetailsPrintTable: FC<InventoryDetailsPrintTableProps> = (
 						<span className="text-sm font-bold">
 							{row.original.product.name}
 						</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'size',
-			header: () => <div className="justify-center">Product Size</div>,
-			cell: ({ row }) => {
-				return (
-					<div className="flex flex-row gap-2">
-						<span className="text-sm">
+						<span className="text-[12px]">
 							{row.original.product.size}
 						</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'color',
-			header: () => <div className="justify-center">Product Color</div>,
-			cell: ({ row }) => {
-				return (
-					<div className="flex flex-row gap-2">
-						<span className="text-sm">
-							{row.original.product.color}
-						</span>
+
+						{row.original.product.color}
 					</div>
 				);
 			},
@@ -113,7 +92,7 @@ export const InventoryDetailsPrintTable: FC<InventoryDetailsPrintTableProps> = (
 		},
 		{
 			accessorKey: 'stocks_count',
-			header: () => <div className="flex justify-center">Total Stocks</div>,
+			header: () => <div className="flex justify-center">Stocks</div>,
 			cell: ({ row }) => {
 				return (
 					<div className="flex justify-center ">
@@ -126,7 +105,7 @@ export const InventoryDetailsPrintTable: FC<InventoryDetailsPrintTableProps> = (
 		},
 		{
 			accessorKey: 'approved_stocks',
-			header: () => <div className="flex justify-center">Approved Stocks</div>,
+			header: () => <div className="flex justify-center">Approved</div>,
 			cell: ({ row }) => {
 				return (
 					<div className="flex justify-center ">
