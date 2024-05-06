@@ -18,6 +18,8 @@ class CustomerResource extends JsonResource
             'id' => $this->id,
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
+            'address' => $this->address,
+            'contact_no' => $this->contact_no,
             'total_credit' => $this->vouchers->sum('discounted_price'),
             'total_balance' => $this->invoices->sum('balance_amount')
         ];
