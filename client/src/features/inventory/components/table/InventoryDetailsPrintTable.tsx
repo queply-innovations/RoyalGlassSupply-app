@@ -57,11 +57,13 @@ export const InventoryDetailsPrintTable: FC<InventoryDetailsPrintTableProps> = (
 						<span className="text-sm font-bold">
 							{row.original.product.name}
 						</span>
-						<span className="text-[12px]">
-							{row.original.product.size}
-						</span>
+						<br />
 
-						{row.original.product.color}
+						<span className="self-start">
+							{row.original.product.size}
+							<br />
+							{row.original.product.color}
+						</span>
 					</div>
 				);
 			},

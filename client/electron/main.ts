@@ -95,10 +95,8 @@ function createWindow() {
 			setTimeout(() => {
 				printWindow.print(options, (success, reason) => {
 					console.log(success, reason);
-					if (success) {
-						ipcMain.removeHandler('send-data');
-						printWindow.close();
-					}
+					ipcMain.removeHandler('send-data');
+					printWindow.close();
 				});
 			}, 3000);
 		});
@@ -140,10 +138,8 @@ function createWindow() {
 			setTimeout(() => {
 				windowWebContents.print(options, (success, reason) => {
 					console.log(success, reason);
-					if (success) {
-						ipcMain.removeHandler('send-transfer');
-						windowWebContents.close();
-					}
+					ipcMain.removeHandler('send-transfer');
+					windowWebContents.close();
 				});
 			}, 3000);
 		});
@@ -185,10 +181,8 @@ function createWindow() {
 			setTimeout(() => {
 				windowWebContents.print(options, (success, reason) => {
 					console.log(success, reason);
-					if (success) {
-						ipcMain.removeHandler('send-inv');
-						windowWebContents.close();
-					}
+					ipcMain.removeHandler('send-inv');
+					windowWebContents.close();
 				});
 			}, 3000);
 		});
