@@ -20,7 +20,8 @@ export const NavbarItem = ({ item }: NavbarItemProps) => {
 						<Link
 							to={item.path}
 							className={`flex w-full cursor-pointer flex-row justify-center  ${
-								location.pathname === item.path
+								location.hash.substring(1) === item.path || 
+									(location.hash.substring(1) === '/pos' && item.path === '/pos/add-order')
 									? 'bg-primary-background hover:bg-white'
 									: 'hover:bg-white/5'
 							}`}

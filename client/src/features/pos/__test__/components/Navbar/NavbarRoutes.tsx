@@ -14,7 +14,7 @@ export const NavbarRoutes: NavbarRoute[] = [
 			displayText: 'Dashboard',
 			icon: <LayoutDashboard className="h-10 w-10 text-[#CCCCCC]" />,
 		},
-		path: '/dashbard',
+		path: '/dashboard',
 	},
 	{
 		allowedRoles: [
