@@ -42,8 +42,6 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			transfer: transfer,
 			products: transferProducts.filter((prod) => prod.transfer_id === transfer.id)
 		 });
-		// setSelectedTransfer(transfer);
-		// navigate('/print-transfer');
 	}
 
 	// Modal handler to expand transfer details
@@ -316,8 +314,8 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									</span>
 									<span>Transfer Products</span>
 								</DropdownMenuItem>
-								{/* dropdownmenuitem for transfer details and products to be printed if transfer status
-								is approved and arrived/transferring */}
+								{/* dropdownmenuitem for transfer details and products to be printed 
+								if transfer status is arrived/enroute */}
 								{transferRow.transfer_status == 'enroute' ||
 								transferRow.transfer_status == 'arrived' && (
 									<DropdownMenuItem

@@ -12,13 +12,6 @@ interface TransferProductsPrintTableProps {
 export const TransferProductsPrintTable: FC<TransferProductsPrintTableProps> = (
 	{} : TransferProductsPrintTableProps
 ) =>{
-	// const { transfers, transferProducts, isFetching, selectedTransfer } = useTransfer();
-
-	// console.log(selectedTransfer);
-
-	//console.log(window.api.transferRec());
-
-	// const { data: productPrices, isLoading } = useProductPricesQuery();
 	function formatCurrency(value: number) {
 		return new Intl.NumberFormat('en-US', {
 			style: 'currency',
@@ -26,11 +19,7 @@ export const TransferProductsPrintTable: FC<TransferProductsPrintTableProps> = (
 		}).format(value);
 	}
 
-	// const [ fullData, setFullData ] = useState<any>();
-
-	// const dateInvoice = new Date(fullData.updated_at);
 	const [wholeData, setWholeData] = useState<any>();
-	// const [fullData, setFullData] = useState<any>();
 	const [dateCreated, setDateCreated] = useState<any>();
 	const [transferDetails, setTransferDetails] = useState<any>();
 	const [transferProducts, setTransferProducts] = useState<any>();
@@ -45,8 +34,6 @@ export const TransferProductsPrintTable: FC<TransferProductsPrintTableProps> = (
 
 	useEffect(() => {
 		if (wholeData) {
-			// setFullData(wholeData.transfer);
-			console.log(wholeData);
 			setTransferDetails(wholeData.transfer);
 			setTransferProducts(wholeData.products);
 			setDateCreated(new Date(wholeData.transfer.created_at));
@@ -54,7 +41,6 @@ export const TransferProductsPrintTable: FC<TransferProductsPrintTableProps> = (
 	}, [wholeData]);
 
 	useEffect(() => {
-		console.log(transferProducts);
 		if (transferProducts && transferProducts.length > 0) {
 			setShow(true);
 		}
@@ -103,19 +89,6 @@ export const TransferProductsPrintTable: FC<TransferProductsPrintTableProps> = (
 				);
 			},
 		},
-		// {
-		// 	id: 'total_price',
-		// 	accessorKey: 'total_price',
-		// 	header: () => <div className="justify-center">Price</div>,
-		// 	cell: ({ row }) => {
-		// 		return (
-		// 			<div className="">
-		// 				<span>{formatCurrency(itemDatabase.total_price)}</span>
-		// 			</div>
-		// 		);
-		// 	},
-		// 	size: 250,
-		// },
 	];
 
 	return (

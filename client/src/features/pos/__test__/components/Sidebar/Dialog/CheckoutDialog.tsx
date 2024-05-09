@@ -14,6 +14,8 @@ import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoice
 import { toast } from 'react-toastify';
 import { CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
+import { setVoucherClaimed } from '@/features/customer/__test__/api/Vouchers';
 
 export const CheckoutDialog = () => {
 	const { setDialogOptions, dialogOptions } = usePos();
@@ -29,6 +31,7 @@ export const CheckoutDialog = () => {
 		'confirming' | 'submitting' | 'success'
 	>('confirming');
 	const { addInvoiceMutation } = useInvoiceMutation();
+	const { selectedVoucher, setSelectedVoucher } = useCustomer();
 	async function handleSubmit() {
 		setTransactionStatus('submitting');
 		console.log('Invoice:', currentInvoicePos);
@@ -41,6 +44,10 @@ export const CheckoutDialog = () => {
 		// await addInvoiceMutation(data).then(() => window.api.send());
 		await addInvoiceMutation(data)
 			.then(res => {
+				selectedVoucher &&
+					setVoucherClaimed(selectedVoucher.id).then(() =>
+						setSelectedVoucher(undefined),
+					);
 				setFullData(res.data);
 				setTransactionStatus('success');
 				toast.success('Transaction successful.', { autoClose: 3000 });

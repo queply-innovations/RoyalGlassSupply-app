@@ -58,10 +58,6 @@ function createWindow() {
 		win.loadFile(path.join(process.env.DIST, 'index.html'));
 	}
 
-	function removeInvoice() {
-		ipcMain.removeHandler('send-data');
-	}
-
 	ipcMain.on('print-invoice', (event, data) => {
 		const invoiceURL = app.isPackaged
 			? `file://${path.join(__dirname, '../dist/index.html')}#/pos/print-invoice`
@@ -99,19 +95,12 @@ function createWindow() {
 			setTimeout(() => {
 				printWindow.print(options, (success, reason) => {
 					console.log(success, reason);
-					if (success) {
-						removeInvoice();
-						printWindow.close();
-					}
+					ipcMain.removeHandler('send-data');
+					printWindow.close();
 				});
 			}, 3000);
 		});
 	});
-
-	// ipcMain.removeHandler('print-transfer');
-	function removeTransfer() {
-		ipcMain.removeHandler('send-transfer');
-	}
 
 	ipcMain.on('print-transfer', (event, data) => {
 		const transferURL = app.isPackaged
@@ -149,10 +138,51 @@ function createWindow() {
 			setTimeout(() => {
 				windowWebContents.print(options, (success, reason) => {
 					console.log(success, reason);
-					if (success) {
-						removeTransfer();
-						windowWebContents.close();
-					}
+					ipcMain.removeHandler('send-transfer');
+					windowWebContents.close();
+				});
+			}, 3000);
+		});
+	});
+
+	ipcMain.on('print-inv', (event, data) => {
+		const transferURL = app.isPackaged
+			? `file://${path.join(__dirname, '../dist/index.html')}#/print-inv`
+			: 'http://localhost:5173/#/print-inv';
+
+		ipcMain.handle('send-inv', () => {
+			return data;
+		});
+		const newWindow = new BrowserWindow({
+			fullscreen: true,
+			icon: path.join(process.env.VITE_PUBLIC, 'RGS-logo.png'),
+			webPreferences: {
+				preload: path.join(__dirname, 'preload.js'),
+				plugins: true,
+				nodeIntegration: false,
+				backgroundThrottling: false,
+				contextIsolation: true,
+				devTools: false,
+			},
+		});
+		newWindow.removeMenu();
+
+		const windowWebContents: WebContents = newWindow.webContents;
+		const options: WebContentsPrintOptions = {
+			landscape: false,
+			color: false,
+			printBackground: false,
+			pageSize: 'A4',
+			silent: true, //TODO: convert to true after final testing
+			margins: { marginType: 'none' },
+			dpi: { horizontal: 600, vertical: 600 },
+		};
+		windowWebContents.loadURL(transferURL).then(() => {
+			setTimeout(() => {
+				windowWebContents.print(options, (success, reason) => {
+					console.log(success, reason);
+					ipcMain.removeHandler('send-inv');
+					windowWebContents.close();
 				});
 			}, 3000);
 		});
