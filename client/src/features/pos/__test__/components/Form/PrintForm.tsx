@@ -1,11 +1,5 @@
-import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
-import { CreateOrderTable } from '../Table/CreateOrderTable';
 import { InvoiceTable } from '../Table/InvoiceTable';
 import { useEffect, useState } from 'react';
-import { ipcRenderer } from 'electron';
-import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
-import { useInvoicePos } from '../../context/__test__/InvoicePosContext';
 
 interface PrintFormProps {}
 
