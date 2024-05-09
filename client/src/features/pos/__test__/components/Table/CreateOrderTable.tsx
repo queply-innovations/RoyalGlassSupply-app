@@ -1,17 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { PosTable } from './PosTable';
 import { TablePlacholder } from './EmptyPlaceholder';
-import { useInvoice } from '@/features/invoice/__test__/context/InvoiceContext';
 import { InvoiceItemDatabase } from '@/features/invoice/__test__/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useInventoryProds } from '@/features/inventory/context';
 import { Trash2Icon } from 'lucide-react';
-import { useProductPrices } from '@/features/product/__test__';
 import { useEffect } from 'react';
 import { useInvoicePos } from '../../context/__test__/InvoicePosContext';
 import { formatCurrency } from '@/utils/FormatCurrency';
-import { ProductPrices } from '@/features/product/__test__/types';
 
 interface CreateOrderTableProps {}
 
@@ -30,10 +26,8 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
     handleInvoiceItemQuantity,
     removeInvoiceItem,
     invoiceItemsDatabase,
-    setInvoiceItemsDatabase,
   } = useInvoicePos();
-  // const { data: inventoryProducts } = useInventoryProds();
-  // const { data: productPrices } = useProductPrices();
+
   console.log();
   useEffect(() => {
     handleInvoicePosChange(
@@ -49,10 +43,10 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
     {
       id: 'orderItem',
       enableResizing: false,
+      enableHiding: false,
       header: () => {
         return <div className="flex justify-center">Item #</div>;
       },
-      // <div className="flex justify-center">Item #</div>,
       cell: ({ row }) => {
         return <div className="flex justify-center">{row.index + 1}</div>;
       },
@@ -60,6 +54,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
     },
     {
       accessorKey: 'name',
+      enableHiding: false,
       header: () => <div className="justify-center">Product</div>,
       cell: ({ row }) => {
         return (
@@ -85,6 +80,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
       size: 350,
     },
     {
+      enableHiding: false,
       accessorKey: 'quantity',
       header: () => <div className="flex justify-center">Quantity</div>,
       size: 150,
@@ -169,7 +165,21 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
       },
     },
     {
+      id: 'item_capital_price',
+      size: 125,
+      header: () => <div className="justify-center">Capital Price</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="flex flex-row gap-2">
+            <span>{formatCurrency(row.original.capital_price)}</span>
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'price',
+      enableHiding: false,
+
       header: () => <div className="justify-center">Product Price</div>,
       cell: ({ row }) => {
         return (
@@ -209,7 +219,25 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
     // 	},
     // },
     {
+      id: 'item_total_capital_price',
+      size: 125,
+      header: () => <div className="justify-center">Total Capital Price</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="flex flex-row gap-2">
+            <span>
+              {formatCurrency(
+                row.original.capital_price *
+                  invoiceItemsDatabase[row.index].quantity,
+              )}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
       id: 'total_price',
+      enableHiding: false,
       accessorKey: 'total_price',
       header: () => <div className="justify-center">Subtotal</div>,
       cell: ({ row }) => {
@@ -228,6 +256,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
       size: 250,
     },
     {
+      enableHiding: false,
       id: 'actions',
       size: 100,
       cell: ({ row }) => {
