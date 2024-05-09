@@ -58,7 +58,9 @@ export const AddInventoryProductForm = ({
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
 	const { auth } = useAuth();
-	const isAdmin = auth.role?.includes('admin');
+	const canAddCapitalPrice = !!auth.rolePermissions?.find(
+		permission => permission.permission_id === 7,
+	);
 	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
 	// State handlers for dropdowns/popovers
@@ -71,7 +73,7 @@ export const AddInventoryProductForm = ({
 	useEffect(() => {
 		handleChange('inventory_id', inventoryId);
 		handleChange('unit', 'pcs'); // Default unit is pcs
-		isAdmin && handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
+		canAddCapitalPrice && handleChange('status', 1); // automatically set status to approved if user is admin or super_admin
 
 		// If selectedProduct is not undefined, populate the form with selectedProduct's data
 		selectedProduct &&
@@ -85,7 +87,9 @@ export const AddInventoryProductForm = ({
 			handleChange('total_count', selectedProduct.data.total_count));
 
 		// If authenticated user is not an admin, set the capital_price to 0.00
-		!selectedProduct && !isAdmin && handleChange('capital_price', 0);
+		!selectedProduct &&
+			!canAddCapitalPrice &&
+			handleChange('capital_price', 0);
 	}, []);
 
 	// Calculate total count
@@ -201,7 +205,9 @@ export const AddInventoryProductForm = ({
 								</PopoverTrigger>
 								<PopoverContent
 									className={`${
-										isAdmin ? 'max-w-[966px]' : 'max-w-[640px]'
+										canAddCapitalPrice
+											? 'max-w-[966px]'
+											: 'max-w-[640px]'
 									} w-[calc(100vw-170px)] p-0 text-sm font-medium text-slate-700`}
 								>
 									<Command>
@@ -341,7 +347,7 @@ export const AddInventoryProductForm = ({
 					<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 					<div className="grid w-full grid-flow-row grid-cols-12 gap-3">
 						<div
-							className={`relative flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-6' : 'hidden'}`}
+							className={`relative flex flex-col justify-center gap-1 ${canAddCapitalPrice ? 'col-span-6' : 'hidden'}`}
 						>
 							<Label
 								htmlFor="capital_price"
@@ -358,7 +364,7 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								disabled={!isAdmin} // Disable input if user is not an admin
+								disabled={!canAddCapitalPrice} // Disable input if user is not an admin
 								value={FormValue.capital_price || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined
@@ -379,7 +385,7 @@ export const AddInventoryProductForm = ({
 							</span>
 						</div>
 						<div
-							className={`flex flex-col justify-center gap-1 ${isAdmin ? 'col-span-6' : 'col-span-3'}`}
+							className={`flex flex-col justify-center gap-1 ${canAddCapitalPrice ? 'col-span-6' : 'col-span-3'}`}
 						>
 							<Label
 								htmlFor="unit"
