@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { ReturnInvoiceItemsPosProvider } from '@/features/pos/return-invoice/context/ReturnInvoiceItems';
 import { ReturnInvoiceProvider } from '@/features/pos/return-invoice/context/ReturnInvoiceContext';
 import { ReturnCalculations } from '@/features/pos/return-invoice/components/Info/ReturnCalculations';
+import { VoucherDialog } from '@/features/pos/return-invoice/components/Dialog/VoucherDialog';
 
 export const ReturnItemsPosPage = () => {
 	const navigate = useNavigate();
@@ -42,6 +43,7 @@ export const ReturnItemsPosPage = () => {
 						<ReturnTable />
 						<ReturnCalculations />
 					</div>
+					<VoucherDialog />
 				</div>
 				{/* </ReturnInvoiceItemsPosProvider> */}
 			</ReturnInvoiceProvider>
