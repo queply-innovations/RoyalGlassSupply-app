@@ -4,6 +4,8 @@ export interface Customer {
 	lastname: string;
 	address: string;
 	contact_no: number;
+	total_credit: number;
+	total_balance: number;
 }
 
 export interface Voucher {
