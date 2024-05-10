@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { User } from '@/features/auth';
 import {
   ColumnDef,
   flexRender,
@@ -22,6 +23,7 @@ interface PrintTableProps<TData, TValue> {
   deliveryCharge?: number;
   totalDue?: number;
   amountPaid?: number;
+  user: User;
 }
 
 export function PrintTable<TData, TValue>({
@@ -33,6 +35,7 @@ export function PrintTable<TData, TValue>({
   deliveryCharge,
   totalDue,
   amountPaid,
+  user,
 }: PrintTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -44,6 +47,7 @@ export function PrintTable<TData, TValue>({
       maxSize: 500, //enforced during column resizing
     },
   });
+  console.log(user);
   return (
     <>
       <div className="border-gray-400">
@@ -223,7 +227,7 @@ export function PrintTable<TData, TValue>({
         <div className="mt-4 flex flex-col gap-2">
           <hr className="w-full border-gray-400" />
           <div className="mt-4 grid grid-cols-3 text-xs">
-            <p>Issued by:</p>
+            <p>Issued by: {user.firstname + ' ' + user.lastname}</p>
             <p>Prepared by:</p>
             <p>Released/checked by:</p>
           </div>
