@@ -29,6 +29,7 @@ export const API_URLS = {
 	RETURN_TRANSACTIONS: `${API_BASE_URL}/return-transactions`,
 	RETURN_TRANSACTIONS_ITEMS: `${API_BASE_URL}/return-transaction-items`,
 	REPORTS: `${API_BASE_URL}/reports`,
+	VOUCHERS: `${API_BASE_URL}/vouchers`,
 };
 
 export const API_HEADERS = () => {
