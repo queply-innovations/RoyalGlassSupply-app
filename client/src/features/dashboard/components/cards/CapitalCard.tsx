@@ -19,7 +19,7 @@ export const CapitalCard = () => {
 						{Intl.NumberFormat('en-US', {
 							style: 'currency',
 							currency: 'PHP',
-						}).format(reports?.total_capital ?? 0)}
+						}).format(reports?.total_overall_capital ?? 0)}
 					</p>
 				)}
 			</ReportCard>
