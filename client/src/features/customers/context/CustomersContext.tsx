@@ -3,6 +3,7 @@ import {
 	createContext,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from 'react';
 import { Invoice, Customer, CustomerSales } from '../types';
@@ -34,12 +35,17 @@ export const CustomersProvider = ({ children }: CustomersProviderProps) => {
 	// const [ customers, setCustomers ] = useState<Customer[]>([])
 	const { data: customers, isLoading: isCustomersFetching } =
 		useCustomerQuery();
-	const [customersList, setCustomersList] = useState<CustomerSales[]>([]);
+	// const [customersList, setCustomersList] = useState<CustomerSales[]>([]);
 	const isFetching = isInvoicesFetching || isCustomersFetching;
 
-	useEffect(() => {
-		setCustomersList(
-			customers.map(customer => {
+	const customersList: CustomerSales[] = useMemo(() => {
+		if (
+			invoices &&
+			invoices.length > 0 &&
+			customers &&
+			customers.length > 0
+		) {
+			return customers.map(customer => {
 				const customerSales = invoices.reduce((acc, invoice) => {
 					if (
 						invoice.customer.id === customer.id &&
@@ -59,16 +65,11 @@ export const CustomersProvider = ({ children }: CustomersProviderProps) => {
 					total_sales: customerSales,
 					total_transactions: customerTransactions,
 				};
-			}),
-		);
+			});
+		} else {
+			return [] as CustomerSales[];
+		}
 	}, [invoices, customers]);
-
-	// const customerSales = invoices.reduce((acc, invoice) => {
-	//     if (invoice.customer.id === customer.id) {
-	//         return acc + invoice.total_amount_due;
-	//     }
-	//     return acc;
-	// }, 0);
 
 	// invoices.map((invoice: any) => {
 	// 	if (!customersList.includes(invoice.customer.id)) {
