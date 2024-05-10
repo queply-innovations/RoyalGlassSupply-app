@@ -22,8 +22,8 @@ interface DashboardReportsContextProps {
 	topSellingProducts: TopSellingProducts[] | undefined;
 	isTopSellingProductsFetching: boolean;
 	// inventoryLevel: InventoryLevelReport | undefined;
-	inventoryLevel: ProductPrices[];
-	isInventoryLevelFetching: boolean;
+	// inventoryLevel: ProductPrices[];
+	// isInventoryLevelFetching: boolean;
 	// warehouseId: number;
 	// setWarehouseId: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -66,23 +66,23 @@ export const DashboardReportsProvider = ({
 	// const { data: inventoryLevel, isFetching: isInventoryLevelFetching } =
 	// 	useInventoryLevelReportQuery(warehouseId);
 
-	const { data: productPrices, isLoading: isInventoryLevelFetching } =
-		useProductPricesDateRange();
-	const inventoryLevel = useMemo(() => {
-		if (productPrices.length > 0) {
-			return productPrices.filter(
-				prod =>
-					prod.inventory_product.stocks_count * 0.2 >
-						(prod.inventory_product.remaining_stocks_count ?? 0) &&
-					!(
-						prod.inventory_product.stocks_count ===
-						prod.inventory_product.sold_count
-					),
-			);
-		} else {
-			return [];
-		}
-	}, [productPrices]);
+	// const { data: productPrices, isLoading: isInventoryLevelFetching } =
+	// 	useProductPricesDateRange();
+	// const inventoryLevel = useMemo(() => {
+	// 	if (productPrices.length > 0) {
+	// 		return productPrices.filter(
+	// 			prod =>
+	// 				prod.inventory_product.stocks_count * 0.2 >
+	// 					(prod.inventory_product.remaining_stocks_count ?? 0) &&
+	// 				!(
+	// 					prod.inventory_product.stocks_count ===
+	// 					prod.inventory_product.sold_count
+	// 				),
+	// 		);
+	// 	} else {
+	// 		return [];
+	// 	}
+	// }, [productPrices]);
 
 	const value = {
 		monthRange,
@@ -92,8 +92,8 @@ export const DashboardReportsProvider = ({
 		isReportAnalyticsFetching,
 		topSellingProducts,
 		isTopSellingProductsFetching,
-		inventoryLevel,
-		isInventoryLevelFetching,
+		// inventoryLevel,
+		// isInventoryLevelFetching,
 		// warehouseId,
 		// setWarehouseId,
 	};

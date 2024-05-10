@@ -4,16 +4,21 @@ import { useInventoryProductByIdQuery } from '../../hooks/useInventoryProdsQuery
 import { InventoryProduct } from '../../types';
 import { useInventoryProds } from '../../context/InventoryProdsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { useInventoryProductsByInventory } from '../../context';
+import { useInventory, useInventoryProductsByInventory } from '../../context';
+import { Inventory } from '@/features/inventory/types';
+import { Button } from '@/components';
+import { Printer } from 'lucide-react';
 
 interface InventoryProductsTableProps {
 	// id: number;
 	openModal: (data: any, action: string) => void;
+	inventory: Inventory | undefined;
 }
 
 export const InventoryProductsTable = ({
 	// id,
 	openModal,
+	inventory,
 }: InventoryProductsTableProps) => {
 	// const { data, isLoading } = useInventoryProductByIdQuery(id);
 	const { data, isLoading, setSelectedInventoryProduct } =
@@ -43,6 +48,19 @@ export const InventoryProductsTable = ({
 
 	return (
 		<TooltipProvider>
+			<Button
+				fill={isLoading ? 'default' : 'primary'}
+				onClick={() => {
+					window.api.invSend({
+						inventory: inventory,
+						products: data
+					});
+				}}
+				className="flex h-8 flex-row ml-4 mt-2 disabled:cursor-not-allowed disabled:opacity-40"
+			>
+				<Printer size={26} strokeWidth={2} /> Print Inventory Details
+			</Button>
+			
 			<DataTable
 				columns={InventoryProductsCols({
 					handleViewDetails,

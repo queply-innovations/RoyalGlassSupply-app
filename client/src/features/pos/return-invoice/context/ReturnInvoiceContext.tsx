@@ -12,6 +12,7 @@ import {
 	submitReturnInvoiceItems,
 } from '../api/Returns';
 import { useAuth } from '@/context/AuthContext';
+import { Voucher } from '@/features/customer/__test__/types';
 
 interface ReturnInvoiceContextProps {
 	returnInvoice: ReturnInvoice;
@@ -32,6 +33,11 @@ interface ReturnInvoiceContextProps {
 	isSubmitting: boolean;
 	setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 	removeReturnItem: (id: number) => void;
+
+	voucher: Voucher | undefined;
+	setVoucher: React.Dispatch<React.SetStateAction<Voucher | undefined>>;
+	isVoucherDialogOpen: boolean;
+	setIsVoucherDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ReturnInvoiceProviderProps {
@@ -61,6 +67,10 @@ export const ReturnInvoiceProvider = ({
 	// List of the invoice items based on the invoice code
 	const [returnableItems, setReturnableItems] = useState<InvoiceItems[]>([]);
 	const [selectedItems, setSelectedItems] = useState<InvoiceItems[]>([]);
+
+	// Show generated voucher
+	const [voucher, setVoucher] = useState<Voucher | undefined>();
+	const [isVoucherDialogOpen, setIsVoucherDialogOpen] = useState(false);
 
 	const { auth } = useAuth();
 	const searchInvoice = async (code: string) => {
@@ -142,7 +152,9 @@ export const ReturnInvoiceProvider = ({
 		// Submit the return invoice
 		setIsSubmitting(true);
 		return await submitReturnInvoice(returnInvoice)
-			.then(() => {
+			.then(res => {
+				setVoucher(res.voucher ?? undefined);
+				setIsVoucherDialogOpen(res.voucher ? true : false);
 				setReturnInvoice({} as ReturnInvoice);
 				setSelectedInvoice(undefined);
 				setReturnableItems([]);
@@ -191,6 +203,10 @@ export const ReturnInvoiceProvider = ({
 		isSubmitting,
 		setIsSubmitting,
 		removeReturnItem,
+		voucher,
+		setVoucher,
+		isVoucherDialogOpen,
+		setIsVoucherDialogOpen,
 	};
 
 	return (

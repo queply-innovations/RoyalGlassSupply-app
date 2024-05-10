@@ -1,5 +1,3 @@
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -8,14 +6,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { User } from '@/features/auth';
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
-interface PosTableProps<TData, TValue> {
+
+interface PrintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   invoice?: boolean;
@@ -24,9 +23,10 @@ interface PosTableProps<TData, TValue> {
   deliveryCharge?: number;
   totalDue?: number;
   amountPaid?: number;
+  user: User;
 }
 
-export function PosTable<TData, TValue>({
+export function PrintTable<TData, TValue>({
   columns,
   data,
   invoice,
@@ -35,12 +35,8 @@ export function PosTable<TData, TValue>({
   deliveryCharge,
   totalDue,
   amountPaid,
-}: PosTableProps<TData, TValue>) {
-  const [columnVisibility, setColumnVisibility] = useState({
-    item_total_capital_price: false,
-    item_capital_price: false,
-  });
-
+  user,
+}: PrintTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -50,33 +46,23 @@ export function PosTable<TData, TValue>({
       minSize: 50, //enforced during column resizing
       maxSize: 500, //enforced during column resizing
     },
-    state: {
-      columnVisibility,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
   });
+  console.log(user);
   return (
     <>
-      <div className="flex w-full justify-end pb-2 pr-2">
-        <div className="flex flex-row items-center gap-2">
-          <Switch
-            id="showCapital"
-            onCheckedChange={table.getToggleAllColumnsVisibilityHandler()}
-          />
-          <Label htmlFor="showCapital">Show capital prices</Label>
-        </div>
-      </div>
-      <div className="rounded-md border">
+      <div className="border-gray-400">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border border-gray-400">
                 {headerGroup.headers.map(header => {
                   return (
                     <TableHead
                       key={header.id}
-                      style={{ width: `${header.getSize()}px` }}
-                      className={``}>
+                      style={{
+                        width: `${header.getSize()}px`,
+                      }}
+                      className="text-black">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -89,12 +75,14 @@ export function PosTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="[&_tr:last-child]:border-x">
             {table.getRowModel().rows?.length &&
               table.getRowModel().rows.map(row => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="border border-gray-400 text-black">
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id} className="py-3">
+                    <TableCell key={cell.id} className="py-1">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -106,17 +94,18 @@ export function PosTable<TData, TValue>({
 
             {invoice && subtotal && (
               <>
-                <TableRow>
+                <TableRow className="border-0 text-black">
+                  <TableCell key={'none'} colSpan={2}></TableCell>
                   <TableCell
                     key={'subtotal-label'}
-                    colSpan={4}
-                    className="py-2 text-xs font-medium">
+                    colSpan={1}
+                    className="border-b border-l border-gray-400 py-1 text-xs font-medium">
                     <span className="flex w-full justify-end">Subtotal</span>
                   </TableCell>
                   <TableCell
                     colSpan={1}
                     key={'subtotal-value'}
-                    className="py-2">
+                    className="border-b border-r border-gray-400 py-1">
                     <span className="text-left text-xs">
                       {Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -130,18 +119,20 @@ export function PosTable<TData, TValue>({
 
             {invoice && discount && (
               <>
-                <TableRow>
+                <TableRow className="border-0 text-black">
+                  <TableCell key={'none'} colSpan={2}></TableCell>
                   <TableCell
-                    colSpan={4}
+                    colSpan={1}
                     key={'discount-label'}
-                    className="py-2 text-xs font-medium">
+                    className="border-b border-l border-gray-400 py-1 text-xs font-medium">
                     <span className="flex w-full justify-end">Discount</span>
                   </TableCell>
                   <TableCell
                     colSpan={1}
                     key={'discount-value'}
-                    className="py-2">
+                    className="border-b border-r border-gray-400 py-1">
                     <span className="text-left text-xs">
+                      -{' '}
                       {Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: 'PHP',
@@ -154,11 +145,12 @@ export function PosTable<TData, TValue>({
 
             {invoice && deliveryCharge && (
               <>
-                <TableRow>
+                <TableRow className="border-0 text-black">
+                  <TableCell key={'none'} colSpan={2}></TableCell>
                   <TableCell
-                    colSpan={4}
+                    colSpan={1}
                     key={'deliveryCharge-label'}
-                    className="py-2 text-xs font-medium">
+                    className="border-b border-l border-gray-400 py-1 text-xs font-medium">
                     <span className="flex w-full justify-end">
                       Delivery fee
                     </span>
@@ -166,7 +158,7 @@ export function PosTable<TData, TValue>({
                   <TableCell
                     colSpan={1}
                     key={'deliveryCharge-value'}
-                    className="py-2">
+                    className="border-b border-r border-gray-400 py-1">
                     <span className="text-left text-xs">
                       {Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -180,17 +172,18 @@ export function PosTable<TData, TValue>({
 
             {invoice && totalDue && (
               <>
-                <TableRow>
+                <TableRow className="border-0 text-black">
+                  <TableCell key={'none'} colSpan={2}></TableCell>
                   <TableCell
-                    colSpan={4}
+                    colSpan={1}
                     key={'totalDue-label'}
-                    className="py-2 text-xs font-bold">
-                    <span className="flex w-full justify-end">Total</span>
+                    className="border-b border-l border-gray-400 py-1 text-xs font-bold">
+                    <span className="flex w-full justify-end">Total due</span>
                   </TableCell>
                   <TableCell
                     colSpan={1}
                     key={'totalDue-value'}
-                    className="py-2">
+                    className="border-b border-r border-gray-400 py-1">
                     <span className="text-left text-xs font-bold">
                       {Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -204,17 +197,18 @@ export function PosTable<TData, TValue>({
 
             {invoice && amountPaid && (
               <>
-                <TableRow>
+                <TableRow className="border-0 text-black">
+                  <TableCell key={'none'} colSpan={2}></TableCell>
                   <TableCell
-                    colSpan={4}
+                    colSpan={1}
                     key="amountPaid-label"
-                    className="py-2 text-xs font-medium">
+                    className="border-b border-l border-gray-400 py-1 text-xs font-medium">
                     <span className="flex w-full justify-end">Amount paid</span>
                   </TableCell>
                   <TableCell
                     colSpan={1}
                     key="amountPaid-value"
-                    className="py-2">
+                    className="border-b border-r border-gray-400 py-1">
                     <span className="text-left text-xs">
                       {Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -228,11 +222,12 @@ export function PosTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+
       {invoice && (
-        <div className="flex flex-col gap-2">
-          <hr className="col-span-12 h-px w-full border-0 bg-gray-800" />
+        <div className="mt-4 flex flex-col gap-2">
+          <hr className="w-full border-gray-400" />
           <div className="mt-4 grid grid-cols-3 text-xs">
-            <p>Issued by:</p>
+            <p>Issued by: {user.firstname + ' ' + user.lastname}</p>
             <p>Prepared by:</p>
             <p>Released/checked by:</p>
           </div>

@@ -66,6 +66,10 @@ export const AddInventoryProductTable = ({
 	handleSubmit,
 }: AddInventoryProductTableProps) => {
 	const { auth } = useAuth();
+	const canAddCapitalPrice = !!auth.rolePermissions?.find(
+		permission => permission.permission_id === 7,
+	);
+
 	const { setSelectedInventory } = useAddProductPos();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -139,7 +143,7 @@ export const AddInventoryProductTable = ({
 								{tableCols.map(colName => {
 									if (
 										!(colName === 'Capital price') ||
-										auth?.role?.includes('admin')
+										canAddCapitalPrice
 									) {
 										return (
 											<TableHead
@@ -276,7 +280,7 @@ export const AddInventoryProductTable = ({
 														)?.name
 													: row?.data.supplier_id}
 											</TableCell>
-											{auth?.role?.includes('admin') && (
+											{canAddCapitalPrice && (
 												<TableCell
 													className="px-5 py-3"
 													key={row?.id + 'capital_price'}

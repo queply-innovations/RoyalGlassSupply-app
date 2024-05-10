@@ -39,7 +39,8 @@ const RolePermissionsForm = () => {
 				(!o.title.includes('view'.toLowerCase()) &&
 					!o.title.includes('transfer'.toLowerCase()) &&
 					o.title.includes('product'.toLowerCase())) ||
-				o.title.includes('catalog'.toLowerCase()),
+				// o.title.includes('catalog'.toLowerCase()) ||
+				o.title.includes('capital'.toLowerCase()),
 		),
 	);
 

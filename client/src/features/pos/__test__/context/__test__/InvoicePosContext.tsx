@@ -88,15 +88,18 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 	}, [invoiceItemsDatabase]);
 
 	useEffect(() => {
-		setCurrentInvoicePos(prev => ({
-			...prev,
-			subtotal: invoiceSubtotal,
-			total_amount_due:
+		setCurrentInvoicePos(prev => {
+			const totalAmountDue =
 				invoiceSubtotal -
-				(prev.total_discount ?? 0) +
-				(prev.delivery_charge ?? 0) +
-				(prev.total_tax ?? 0),
-		}));
+					(prev.total_discount ?? 0) +
+					(prev.delivery_charge ?? 0) +
+					(prev.total_tax ?? 0) || 0;
+			return {
+				...prev,
+				subtotal: invoiceSubtotal,
+				total_amount_due: totalAmountDue >= 0 ? totalAmountDue : 0,
+			};
+		});
 		if (currentInvoicePos.payment_method === 'purchase_order') {
 			setCurrentInvoicePos(prev => ({
 				...prev,
@@ -110,6 +113,10 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		currentInvoicePos.total_discount,
 		currentInvoicePos.delivery_charge,
 	]);
+
+	useEffect(() => {
+		console.log(currentInvoicePos);
+	}, [currentInvoicePos]);
 
 	// Change handling
 	useEffect(() => {
@@ -228,6 +235,23 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 			// 		0,
 			// 	),
 			// );
+		}
+		if (newQuantity > maxQuantity) {
+			setInvoiceItemsDatabase(prev =>
+				prev.map((item, index) => {
+					if (index === tableIndex) {
+						return {
+							...item,
+							quantity: maxQuantity,
+							total_price:
+								Number(
+									Number(item.product_price * maxQuantity).toFixed(2),
+								) - item.item_discount,
+						};
+					}
+					return item;
+				}),
+			);
 		}
 	}
 

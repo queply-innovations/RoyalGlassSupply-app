@@ -9,11 +9,11 @@ import { useEffect } from 'react';
 function App() {
 	const networkState = useNetwork();
 	const { online } = networkState;
-	
+
 	useEffect(() => {
 		toast.dismiss();
 		if (online) {
-			toast.success('You are currently online!', { autoClose: 3000 });
+			// toast.success('You are currently online!', { autoClose: 3000 });
 		} else {
 			toast.error('You are currently offline.', {
 				autoClose: false,

@@ -111,7 +111,8 @@
 		}
 	}
 
-	table thead, .sticky {
+	table thead,
+	.sticky {
 		position: sticky;
 		top: 0px;
 		margin: 0 0 0 0;

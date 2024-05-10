@@ -12,7 +12,7 @@ import { AddInventoryProducts } from '@/features/inventory/components/modal/AddI
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
 import { ApproveInventoryProduct } from '@/features/inventory/components/modal/inventory-products/ApproveInventoryProduct';
-import { InventoryProductsByInventoryProvider } from '@/features/inventory/context';
+import { InventoryProductsByInventoryProvider, useInventoryProductsByInventory } from '@/features/inventory/context';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -63,6 +63,7 @@ export const InventoryItemsPage = () => {
 							<InventoryProductsTable
 								// id={Number(inventoryId)}
 								openModal={modalHandler}
+								inventory={inventoryItem}
 							/>
 						</div>
 					</div>

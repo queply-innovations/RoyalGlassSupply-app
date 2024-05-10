@@ -8,6 +8,7 @@ export interface Reports {
 	total_expenses: number;
 	total_profit: number;
 	total_collectibles: number;
+	total_overall_capital: number;
 	new_customers: number;
 	returning_customers: number;
 }

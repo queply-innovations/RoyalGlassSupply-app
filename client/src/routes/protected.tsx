@@ -116,6 +116,11 @@ const { TransferProductsPrintTable } = lazyImport(
 	'TransferProductsPrintTable',
 );
 
+const { InventoryDetailsPrintTable } = lazyImport(
+	() => import('@/features/inventory/components/table/InventoryDetailsPrintTable'),
+	'InventoryDetailsPrintTable',
+);
+
 // const App = () => {
 // 	return (
 // 		<Suspense
@@ -175,6 +180,7 @@ const protectedRoutesConfig = [
 	{ path: '/supplier', element: <Supplier /> },
 
 	{ path: '/print-transfer', element: <TransferProductsPrintTable /> },
+	{ path: '/print-inv', element: <InventoryDetailsPrintTable /> },
 ];
 
 export const ProtectedRoutes = () => {
