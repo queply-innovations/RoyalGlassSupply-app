@@ -42,6 +42,7 @@ class ProductInventorySeeder extends Seeder
             $product_price->created_by = 1;
             $product_price->approval_status = 'approved';
             $product_price->active_status = 'active';
+            $product_price->save();
             $inventory_product = new InventoryProduct();
             $inventory_product->product_id = $product->id;
             $inventory_product->inventory_id = $inventory->id;
