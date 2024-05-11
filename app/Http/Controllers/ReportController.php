@@ -23,6 +23,9 @@ class ReportController extends Controller
             'date_from' => 'required|date',
             'date_to' => 'required|date'
         ]);
+        $request->merge([
+            'overall_capital' => true
+        ]);
 
         $salesData = $this->getSalesReport($request);
         $customerData = $this->getCustomerReport($request);
@@ -262,6 +265,14 @@ class ReportController extends Controller
                 Carbon::parse($request->date_to)->endOfDay()
             ])->sum('amount');
 
+        if($request->has('overall_capital') && $request->overall_capital) {
+            $inventoryProduct = InventoryProduct::query()->get(['capital_price', 'stocks_count', 'purchased_stocks']);
+            $totalCapital = collect($inventoryProduct)->map(function($item) {
+                return $item->capital_price * ($item->stocks_count - $item->purchased_stocks);
+            })->toArray();
+            info($totalCapital);
+        }
+
         $invoiceData = [];
 
         foreach($invoices as $invoice) {
@@ -286,7 +297,8 @@ class ReportController extends Controller
             'total_capital' => $capital,
             'total_expenses' => $expenses,
             'total_profit' => $profit,
-            'total_collectibles' => $purchasOrders
+            'total_collectibles' => $purchasOrders,
+            'total_overall_capital' => isset($totalCapital) ? array_sum($totalCapital) : 0
         ];
     }
 
