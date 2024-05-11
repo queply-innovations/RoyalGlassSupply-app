@@ -30,7 +30,9 @@ class ProductInventorySeeder extends Seeder
             $product_price = new ProductPrice();
             $product_price->product_id = $product->id;
             $product_price->unit = 'pcs';
+            $product_price->type = '';
             $product_price->stocks_quantity = 100;
+            $product_price->stocks_unit = '';
             $product_price->capital_price = 100;
             $product_price->markup_price = 100;
             $product_price->tax_amount = 0;
