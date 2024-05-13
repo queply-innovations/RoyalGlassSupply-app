@@ -112,10 +112,10 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						//   handleSubmit();
 					}}
 					disabled={
-						// allows exit type
 						Object.keys(selectedCustomer).length === 0 ||
 						(currentInvoicePos.type === 'payment' &&
 							currentInvoicePos.payment_method !== 'purchase_order' &&
+							currentInvoicePos.payment_method !== 'balance_payment' &&
 							(currentInvoicePos.change_amount ?? 0) < 0)
 					}
 				>
