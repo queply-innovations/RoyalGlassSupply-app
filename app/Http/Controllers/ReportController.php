@@ -236,6 +236,7 @@ class ReportController extends Controller
     private function getSalesReport($request) {
         $invoices = Invoice::with(['invoiceItems.inventoryProduct'])
             ->where('type', 'payment')
+            ->where('payment_method', '!=', 'balance_payment')
             ->where('is_paid', true)
             ->where('balance_amount', '<=', 0)
             ->whereBetween('created_at', [

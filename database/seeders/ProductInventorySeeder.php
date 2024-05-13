@@ -34,9 +34,9 @@ class ProductInventorySeeder extends Seeder
             $product_price->stocks_quantity = 100;
             $product_price->stocks_unit = '';
             $product_price->capital_price = 100;
-            $product_price->markup_price = 100;
+            $product_price->markup_price = 10; // 10% of capital_price
             $product_price->tax_amount = 0;
-            $product_price->cost = 100;
+            $product_price->cost = 110; // capital_price + markup_price
             $product_price->on_sale = 0;
             $product_price->sale_discount = 0;
             $product_price->price = 100;
@@ -55,7 +55,7 @@ class ProductInventorySeeder extends Seeder
             $inventory_product->total_count = 100;
             $inventory_product->damage_count = 0;
             $inventory_product->approved_stocks = 100;
-            $inventory_product->purchased_stocks = 100;
+            $inventory_product->purchased_stocks = 0;
             $inventory_product->unit = 'pcs';
             $inventory_product->status = 1;
             $inventory_product->save();
