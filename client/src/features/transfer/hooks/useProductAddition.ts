@@ -23,7 +23,6 @@ export const useProductAddition = () => {
 		inv.warehouse.id === selectedTransfer.source.id && 
 		allInventoryProducts.some((prod) => prod.inventory_id === inv.id)
 	);
-	// console.log(filteredInventoriesSrc);
 
 	const [ filteredProductsSrc, setFilteredProductsSrc ] = useState<InventoryProduct[]>([]);
 	const [ inventoryID, setInventoryID ] = useState<number>(0);
@@ -32,7 +31,7 @@ export const useProductAddition = () => {
 
 	const [ quantityLimit, setQuantityLimit ] = useState<number>(0);
 	const [ damagedCount, setDamagedCount ] = useState<number>(0);
-	const [ resetProd, setResetProd ] = useState<boolean>(false);
+	// const [ resetProd, setResetProd ] = useState<boolean>(false);
 
 	const [ isChanged, setIsChanged ] = useState(false);
 	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
@@ -59,7 +58,7 @@ export const useProductAddition = () => {
 		}
 	}
 
-	useEffect(() => {
+	useEffect(() => { //Data initialization
 		if (addProd){
 			setProduct(prev => ({
 				...prev,
@@ -79,7 +78,7 @@ export const useProductAddition = () => {
 		}
 	}, []);
 
-	useEffect(() => {
+	useEffect(() => { //Takes effects when allInventoryProducts have been fetched, for edit product
 		if (!addProd) {
 			const origData = allInventoryProducts.find((prod) => prod.id === selectedProduct.source_inventory);
 			setQuantityLimit(origData?.remaining_stocks_count ? origData.remaining_stocks_count : 0);
@@ -106,7 +105,8 @@ export const useProductAddition = () => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		if (key === "product_id"){
+		if (key === "product_id" && id != undefined){
+			console.log(filteredProductsSrc[id]);
 			const capitalPrice = filteredProductsSrc[id];
 			setProdName(capitalPrice.product.name);
 			const valueSet = capitalPrice.capital_price;
@@ -122,34 +122,19 @@ export const useProductAddition = () => {
 			setQuantityLimit(capitalPrice.remaining_stocks_count ?
 				capitalPrice.remaining_stocks_count : 0 );
 			setDamagedCount(capitalPrice.damage_count);
-		} else {
+		} else if (key === "inventory_id") {
 			setInvCode(_value.toString());
 			const invID = filteredInventoriesSrc.filter((inv) => inv.code === _value)[0].id;
 			setInventoryID(invID);
 			setProdName('');
 			if (product.capital_price) {
-				setResetProd(true);
+				resetBothInit();
 				setProduct({} as TransferProduct);
 			}
 		}
 	};
 
-	// useEffect(() => {
-	// 	console.log(product);
-	// }, [product]);
-
-	// useEffect(() => {
-	// 	console.log(invCode);
-	// }, [invCode]);
-
-	useEffect(() => {
-		if (resetProd === true) {
-			setResetProd(false);
-			resetBothInit();
-		}
-	}, [resetProd]);
-
-	useEffect(() => {
+	useEffect(() => { //Triggers when inventoryID changes and allInventoryProducts have been fetched
 		if (allInventoryProducts.length != 0){
 			setFilteredProductsSrc(
 				allInventoryProducts.filter((prod) => 
@@ -164,8 +149,6 @@ export const useProductAddition = () => {
 		const headers: Array<Object> = Object.keys(product).map(key => {
 			return { text: key }
 		});
-
-		console.log(headers.length);
 
 		const formChecker = headers.length === 7 ? true : false;
 

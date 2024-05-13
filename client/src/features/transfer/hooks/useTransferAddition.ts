@@ -104,6 +104,7 @@ export const useTransferAddition = () => {
 			...prev,
 			[key]: _value,
 		}));
+		console.log(key, _value);
 		if (key === "source" && _value == 1) {
 			setSrcCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
 			setDstCode(warehouses.find(warehouse => warehouse.id === _value + 1)?.code);
@@ -120,10 +121,14 @@ export const useTransferAddition = () => {
 				...prev,
 				destination: (_value - 1),
 			}));
+		} else if (key === 'transfer_schedule'){
+			setDateCode(_value.replace(/-/g, ''));
 		}
 	};
 
 	const handleSubmit = async () => {
+		console.log(srcCode, dstCode, dateCode);
+		console.log(transfer);
 		if (srcCode && dstCode && dateCode) {
 			const addCode = 'TRF-' + srcCode + '-' + dstCode + '-' + dateCode + '-' + lastId;
 			setTransfer(prev => ({
@@ -135,6 +140,7 @@ export const useTransferAddition = () => {
 
 	useEffect(() => {
 		async function sendingData() {
+			console.log(isSubmitting);
 			if (transfer.code){
 				const checker: any = isFormValid();
 				setIsSubmitting(true);
