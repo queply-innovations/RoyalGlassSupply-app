@@ -224,8 +224,8 @@ class InvoiceController extends Controller
     
         $store = Invoice::create($request->except(['invoice_items', 'is_paid', 'balance_amount']));
         $store->update([
-            'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($invoice->id, 6, 0, STR_PAD_LEFT),
-            'or_no' => Carbon::now()->format('mdY').$invoice->id.Auth::id(),
+            'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($store->id, 6, 0, STR_PAD_LEFT),
+            'or_no' => Carbon::now()->format('mdY').$store->id.Auth::id(),
         ]);
 
         return $store;
