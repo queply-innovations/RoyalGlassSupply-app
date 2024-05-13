@@ -36,7 +36,7 @@ export const AddDeliveryChargeDialog = () => {
 					<DialogTitle>Add Delivery Charge</DialogTitle>
 				</DialogHeader>
 				<form
-					className="flex flex-col gap-2 "
+					className="flex flex-col gap-6"
 					onSubmit={e => {
 						e.preventDefault();
 					}}

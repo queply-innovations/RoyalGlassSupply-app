@@ -178,7 +178,7 @@ export const PaymentTypeDialog = ({}: PaymentTypeDialogProps) => {
 				</div>
 				<DialogClose asChild>
 					<Button
-						className="w-full bg-gray-200 text-slate-700 hover:bg-gray-400 hover:text-white"
+						// className="w-full bg-gray-200 text-slate-700 hover:bg-gray-400 hover:text-white"
 						type="button"
 						onClick={() => {
 							setDialogOptions({ open: false, title: '' });
