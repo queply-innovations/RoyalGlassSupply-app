@@ -270,7 +270,6 @@ class ReportController extends Controller
             $totalCapital = collect($inventoryProduct)->map(function($item) {
                 return $item->capital_price * ($item->stocks_count - $item->purchased_stocks);
             })->toArray();
-            info($totalCapital);
         }
 
         $invoiceData = [];
