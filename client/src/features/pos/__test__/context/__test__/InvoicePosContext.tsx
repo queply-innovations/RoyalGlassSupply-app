@@ -13,6 +13,7 @@ import {
 	useMemo,
 	useState,
 } from 'react';
+import currency from 'currency.js';
 
 interface InvoicePosContextProps {
 	currentInvoicePos: Partial<Invoices>;
@@ -122,7 +123,7 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 	useEffect(() => {
 		setCurrentInvoicePos(prev => ({
 			...prev,
-			change_amount: (prev.paid_amount ?? 0) - (prev.total_amount_due ?? 0),
+			change_amount: currency((prev.paid_amount ?? 0) - (prev.total_amount_due ?? 0)).value,
 		}));
 	}, [currentInvoicePos.paid_amount, currentInvoicePos.total_amount_due]);
 
