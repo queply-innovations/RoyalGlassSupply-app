@@ -39,7 +39,11 @@ class InvoiceController extends Controller
         try {
             DB::beginTransaction();
 
-            $invoice = $this->storeInvoice($request);
+            if($request->payment_method == 'balance_payment') {
+                $invoice = $this->invoiceBalancePayment($request);
+            } else {
+                $invoice = $this->storeInvoice($request);
+            }
             
             DB::commit();
             return new InvoiceResource($invoice);
@@ -176,5 +180,54 @@ class InvoiceController extends Controller
         }
 
         return $invoice;
+    }
+
+    private function invoiceBalancePayment($request) {
+        $invoices = Invoice::where('customer_id', $request->customer_id)
+            ->where('payment_method', 'purchase_order')
+            ->where('is_paid', false)
+            ->orWhere('balance_amount', '>', 0)
+            ->get();
+
+        if($invoices->count() == 0) {
+            throw new \Exception('No Purchase orders found.');
+        }
+
+        $payableAmount = $request->paid_amount;
+
+        foreach($invoices as $invoice) {
+            if($payableAmount <= 0) {
+                break;
+            }
+            
+            $balance = $invoice->balance_amount;
+            if($payableAmount >= $balance) {
+                $payableAmount = $payableAmount - $balance;
+
+                $invoice->update([
+                    'balance_amount' => 0,
+                    'change_amount' => 0,
+                    'is_paid' => true
+                ]);
+            } else {
+                $balanceDeduction = $balance - $payableAmount;
+
+                $invoice->update([
+                    'balance_amount' => $balanceDeduction,
+                    'change_amount' => 0,
+                    'is_paid' => false
+                ]);
+
+                $payableAmount = 0;
+            }
+        }
+    
+        $store = Invoice::create($request->except(['invoice_items', 'is_paid', 'balance_amount']));
+        $store->update([
+            'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($store->id, 6, 0, STR_PAD_LEFT),
+            'or_no' => Carbon::now()->format('mdY').$store->id.Auth::id(),
+        ]);
+
+        return $store;
     }
 }
