@@ -1,6 +1,6 @@
 import TransferTable from '@/features/transfer/components/TransferTable';
 import { TransferDetails } from '@/features/transfer/modal/TransferDetails';
-import { TransferForm } from '@/features/transfer/modal/TransferForm';
+import { TransferForm2 } from '@/features/transfer/modal/TransferForm2';
 import { TransferProvider } from '@/features/transfer/context/TransferContext';
 import { MainLayout } from '@/layouts/MainLayout';
 import { Transfer as ITransfer } from '@/features/transfer/types';
@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
 import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
+import { NewTransferProvider } from '@/features/transfer/context/NewTransferContext';
 
 export const Transfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -54,7 +55,9 @@ export const Transfer = () => {
 								<TransferEdit onClose={closeModal} />
 							)}
 							{modalAction === 'add' && (
-								<TransferForm onClose={closeModal} />
+								<NewTransferProvider>
+									<TransferForm2 onClose={closeModal} />
+								</NewTransferProvider>
 							)}
 							{modalAction === 'products' && (
 								<TransferProducts onClose={closeModal} />

@@ -1,4 +1,4 @@
-import { StringValidation } from "zod";
+import { StringValidation } from 'zod';
 
 export interface Transfer {
 	id: number;
@@ -7,31 +7,31 @@ export interface Transfer {
 		id: number;
 		firstname: string;
 		lastname: string;
-	}
+	};
 	source: {
 		id: number;
 		code: string;
 		name: string;
-	}
+	};
 	destination: {
 		id: number;
 		code: string;
 		name: string;
-	}
+	};
 	transfer_schedule: string;
 	approval_status: string;
 	approved_by: {
 		id: number;
 		firstname: string;
 		lastname: string;
-	}
+	};
 	transfer_status: string;
 	date_received: string;
 	received_by: {
 		id: number;
 		firstname: string;
 		lastname: string;
-	}
+	};
 	created_at: string;
 	updated_at: string;
 	notes: string;
@@ -95,4 +95,15 @@ export interface Inventory {
 	type: 'transfer';
 	transfer_id: number;
 	notes: string;
+}
+
+export interface TransferDatabaseAdd {
+	created_by: number;
+	source: number; // source warehouse
+	destination: number; // destination warehouse
+	transfer_schedule: string;
+	approval_status: string;
+	transfer_status: string | null;
+	notes: string;
+	transferItems: Omit<TransferProduct, 'id' | 'transfer_id'>[];
 }
