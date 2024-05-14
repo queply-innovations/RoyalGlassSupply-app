@@ -51,7 +51,7 @@ export const DetailsTab = ({ onClose }: DetailsTabProps) => {
 						}
 						onClick={() => setActiveTab('items')}
 					>
-						Proceed
+						Proceed to add items
 					</Button>
 				</div>
 			</div>

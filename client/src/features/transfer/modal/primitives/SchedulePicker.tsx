@@ -36,7 +36,7 @@ export const SchedulePicker = () => {
 									{ dateStyle: 'full' },
 								)
 							) : (
-								<span>Pick a date</span>
+								<span>Pick a date...</span>
 							)}
 						</Button>
 					</PopoverTrigger>
@@ -44,6 +44,7 @@ export const SchedulePicker = () => {
 						<Calendar
 							required
 							mode="single"
+							disabled={{ before: new Date() }}
 							selected={new Date(newTransfer.transfer_schedule ?? '')}
 							onDayClick={value => {
 								const formattedDate = new Date(value).toISOString(); // full timestamp
