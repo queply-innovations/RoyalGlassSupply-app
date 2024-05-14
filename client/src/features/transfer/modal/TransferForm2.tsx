@@ -1,7 +1,7 @@
 import { UseModalProps } from '@/utils/Modal';
 import { useNewTransfer } from '../context/NewTransferContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DetailsTab } from './tabs/DetailsTab';
+import { DetailsTab, ItemsTab } from './tabs';
 
 interface TransferFormProps {
 	onClose: UseModalProps['closeModal'];
@@ -36,6 +36,9 @@ export const TransferForm2 = ({ onClose }: TransferFormProps) => {
 
 				<TabsContent value="details" className="min-w-[540px]">
 					<DetailsTab onClose={onClose} />
+				</TabsContent>
+				<TabsContent value="items" className="min-w-[860px]">
+					<ItemsTab />
 				</TabsContent>
 			</Tabs>
 		</>
