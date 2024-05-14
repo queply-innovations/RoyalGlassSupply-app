@@ -123,6 +123,7 @@ export const useTransferAddition = () => {
 			}));
 		} else if (key === 'transfer_schedule'){
 			setDateCode(_value.replace(/-/g, ''));
+			setDateDisplay(_value);
 		}
 	};
 
