@@ -196,27 +196,15 @@ export const addInventoryProduct = async (
 };
 
 export const addInventoryProducts = async (
-	data: Partial<InventoryProductDatabase>[],
+	data: InventoryProductDatabase[],
 ) => {
-	return Promise.all(
-		data.map(async (inventoryProduct: Partial<InventoryProductDatabase>) => {
-			return await axios
-				.post(API_URLS.INVENTORY_PRODUCTS, inventoryProduct, {
-					headers: API_HEADERS(),
-				})
-				.then(response => {
-					return { status: response.status, data: response.data };
-				})
-				.catch(error => {
-					console.error('Error adding inventory product:', error);
-					throw error;
-				});
-		}),
-	)
-		.then(responses => {
-			let status = responses.map(response => response.status);
-			return status;
-		})
+	return await axios
+		.post(
+			API_URLS.INVENTORY_PRODUCTS,
+			{ data: data },
+			{ headers: API_HEADERS() },
+		)
+		.then(response => ({ status: response.status, data: response.data }))
 		.catch(error => {
 			console.error('Error adding inventory products:', error);
 			throw error;
