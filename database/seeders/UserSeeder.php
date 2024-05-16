@@ -100,6 +100,13 @@ class UserSeeder extends Seeder
                     'email' => $user['email']
                 ], $data);
 
+                $userRole = UserRole::updateOrCreate([
+                    'user_id' => $details->id
+                ], [
+                    'user_id' => $details->id,
+                    'role_id' => $role->id
+                ]);
+
                 $this->command->info("User: {$details->email} created/updated successfully.");
             }
         }
