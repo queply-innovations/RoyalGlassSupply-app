@@ -173,13 +173,11 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
-				if (sched.toString() !== '0000-00-00 00:00:00') {
+				if (sched.toString() !== '0000-00-00') {
 					const details = { 
 						year: 'numeric', 
 						month: 'long', 
-						day: 'numeric', 
-						hour:'numeric',
-						minute:'numeric' };
+						day: 'numeric', };
 					const format = new Date(sched).toLocaleDateString([], details);
 					return (
 						<div className="text-center">{format}</div>

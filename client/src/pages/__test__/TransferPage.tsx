@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
 import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
+import { PendingTransferEdit } from '@/features/pending/pending-transfer/modal/PendingTransferEdit';
 
 export const Transfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -51,7 +52,7 @@ export const Transfer = () => {
 								<TransferDetails onClose={closeModal} />
 							)}
 							{modalAction === 'edit' && (
-								<TransferEdit onClose={closeModal} />
+								<PendingTransferEdit onClose={closeModal} />
 							)}
 							{modalAction === 'add' && (
 								<TransferForm onClose={closeModal} />

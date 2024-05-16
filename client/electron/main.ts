@@ -86,10 +86,9 @@ function createWindow() {
          color: false,
          printBackground: false,
          pageSize: 'A4',
-         silent: true, //TODO: convert to true after final testing
+         silent: false,
          margins: { marginType: 'none' },
          copies: 2,
-         dpi: { horizontal: 500, vertical: 500 },
       };
       printWindow.loadURL(invoiceURL).then(() => {
          setTimeout(() => {
@@ -130,9 +129,8 @@ function createWindow() {
          color: false,
          printBackground: false,
          pageSize: 'A4',
-         silent: true, //TODO: convert to true after final testing
+         silent: false,
          margins: { marginType: 'none' },
-         dpi: { horizontal: 500, vertical: 500 },
       };
       windowWebContents.loadURL(transferURL).then(() => {
          setTimeout(() => {
@@ -173,9 +171,8 @@ function createWindow() {
          color: false,
          printBackground: false,
          pageSize: 'A4',
-         silent: true, //TODO: convert to true after final testing
+         silent: false,
          margins: { marginType: 'none' },
-         dpi: { horizontal: 500, vertical: 500 },
       };
       windowWebContents.loadURL(transferURL).then(() => {
          setTimeout(() => {

@@ -56,7 +56,7 @@ export const usePendingTransfersQuery = () => {
 	// Query for fetching data
 	const { isFetching, data: pendingTransferQuery } = useQuery({
 		// Key for identifying this query
-		queryKey: ['transfers'],
+		queryKey: ['transfersPending'],
 		// Function to fetch data
 		queryFn: () => fetchPendingTransfers(),
 		// Disable refetching

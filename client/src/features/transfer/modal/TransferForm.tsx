@@ -26,7 +26,6 @@ import {
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
-
 import { TimePicker } from "antd";
 
 interface TransferDetailsProps {
@@ -214,8 +213,7 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 						(for PM times, add 12 to the hour)
 					</span> */}
 
-					<div className="flex flex-row grid-cols-12 justify-center gap-3">
-						<div className="flex flex-col col-span-6">
+					<div className="flex flex-col grid-cols-12 justify-center gap-1">
 							<Label
 								htmlFor="date_received"
 								className="text-sm font-bold uppercase"
@@ -263,27 +261,6 @@ export const TransferForm = ({ onClose }: TransferDetailsProps) => {
 									/>
 								</PopoverContent>
 							</Popover>
-						</div>
-
-						<div className="flex flex-col col-span-6">
-							<Label
-								htmlFor="date_received"
-								className="text-sm font-bold uppercase"
-							>
-								Schedule time
-							</Label>
-							<TimePicker 
-								use12Hours 
-								format="hh:mm:ss A" 
-								size="large"
-								value={dateDisplay} 
-								onChange={handleChangeDateTime}
-								disabled={transfer.transfer_schedule ? false : true}
-								placeholder={transfer.transfer_schedule ? 'Select time' : 'Select date first'}
-								popupClassName={'redesign'}
-								required
-							/>
-						</div>
 					</div>
 
 					<div className="flex flex-row gap-3 grid-cols-12">
