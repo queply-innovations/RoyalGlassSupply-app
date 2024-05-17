@@ -57,7 +57,7 @@ export function PosTable<TData, TValue>({
   });
   return (
     <>
-      <div className="flex w-full justify-end pb-2 pr-2">
+      {invoice === false && (<div className="flex w-full justify-end pb-2 pr-2">
         <div className="flex flex-row items-center gap-2">
           <Switch
             id="showCapital"
@@ -65,7 +65,7 @@ export function PosTable<TData, TValue>({
           />
           <Label htmlFor="showCapital">Show capital prices</Label>
         </div>
-      </div>
+      </div>)}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
