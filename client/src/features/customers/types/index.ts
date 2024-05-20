@@ -1,3 +1,5 @@
+import { Customer as CustomerAPI } from '@/features/pos/__test__/types';
+
 export interface User {
 	id: number;
 	username: string;
@@ -20,17 +22,17 @@ export interface Invoice {
 		id: number;
 		firstname: string;
 		lastname: string;
-	}
+	};
 	warehouse: {
 		id: number;
 		code: string;
 		name: string;
-	}
+	};
 	issued_by: {
 		id: number;
 		firstname: string;
 		lastname: string;
-	}
+	};
 	type: string;
 	payment_method: string;
 	reference_no: string | null;
@@ -45,4 +47,10 @@ export interface Invoice {
 	created_at: string;
 	updated_at: string;
 	status: string;
+}
+
+export interface CustomerSales {
+	customer: CustomerAPI;
+	total_sales: number; // total amount of sales, sum of all invoices of type payment
+	total_transactions: number; // total number of transactions
 }

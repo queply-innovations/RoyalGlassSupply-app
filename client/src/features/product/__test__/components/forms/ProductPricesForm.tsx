@@ -196,7 +196,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								type="number"
 								inputMode="numeric"
 								min={0}
-								max={1000}
 								step={0.001}
 								required
 								value={markupPercent || ''}
@@ -223,7 +222,6 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								name="markup_price"
 								type="number"
 								min={0}
-								max={1000}
 								step={0.01}
 								className="pl-7"
 								value={markupValue || ''}

@@ -104,7 +104,7 @@ export const CheckoutDialog = () => {
 				<div className="flex w-full flex-row gap-2">
 					<Button
 						variant={'outline'}
-						className={`${transactionStatus !== 'confirming' && 'hidden'} flex-1`}
+						className={`font-medium ${transactionStatus !== 'confirming' && 'hidden'} flex-1`}
 						type="reset"
 						onClick={() => {
 							setDialogOptions({ open: false, title: '' });

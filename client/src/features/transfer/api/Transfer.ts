@@ -147,19 +147,17 @@ export const addInventory = async (
 };
 
 async function secondResponseParsing(data: any, inventoryID: number, transferProduct: TransferProductFull) {
+	console.log(data, inventoryID, transferProduct);
 	try {
 		const addInvProd = {
 			inventory_id: inventoryID,
 			product_id: transferProduct.product.id,
-			supplier_id: data.supplier_id.id,
+			supplier_id: data[0].supplier_id.id,
 			capital_price: transferProduct.capital_price,
-			bundles_count: transferProduct.bundles_count,
-			bundles_unit: transferProduct.bundles_unit,
-			quantity_per_bundle: transferProduct.quantity_per_bundle,
 			stocks_count: transferProduct.total_quantity,
 			damage_count: data.damage_count,
-			total_count: transferProduct.total_quantity,
 			unit: transferProduct.unit,
+			status: 0,
 		};
 
 		async function secondStepParsing() {
@@ -187,11 +185,13 @@ export const updateAddTrfInvProducts = async (
 	data: TransferProductFull[],
 	inventoryID: number,
 ) => {
+	console.log(data, inventoryID);
 	return Promise.all(
 		data.map(async (transferProduct: TransferProductFull) => {
 			const id = transferProduct.source_inventory;
 			return await axios
-				.get(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, { //GET ORIGINAL INVENTORY PRODUCT
+				.post(`${API_URLS.INVENTORY_PRODUCTS}/searches-filters-sorts`, {'inventory_id': id}, 
+				{
 					headers: API_HEADERS(),
 				})
 				.then(async response => {

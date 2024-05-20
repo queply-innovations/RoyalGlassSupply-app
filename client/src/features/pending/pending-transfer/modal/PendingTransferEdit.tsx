@@ -1,20 +1,33 @@
 import { UseModalProps } from '@/utils/Modal';
 import { Button, Inputbox, Loading, Selectbox } from '@/components';
 import { formatUTCDate } from '@/utils/timeUtils';
-import { usePendingTransfer } from '../context/PendingTransferContext';
+// import { usePendingTransfer } from '../context/PendingTransferContext';
 import { AlertTriangle, Ban, Check, Clock, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { useUserInfoQuery } from '@/features/userinfo/hooks';
 import { useAuth } from '@/context/AuthContext';
+import { Button as Button2 } from '@/components/ui/button';
 
-import DateTimePicker from 'react-datetime-picker';
-import 'react-datetime-picker/dist/DateTimePicker.css';
-import 'react-calendar/dist/Calendar.css';
-import 'react-clock/dist/Clock.css';
-import { Textarea } from '@/components/ui/textarea';
+// import DateTimePicker from 'react-datetime-picker';
+// import 'react-datetime-picker/dist/DateTimePicker.css';
+// import 'react-calendar/dist/Calendar.css';
+// import 'react-clock/dist/Clock.css';
+// import { Textarea } from '@/components/ui/textarea';
 import { useTransfer } from '@/features/transfer/context/TransferContext';
 import { useTransferMutation } from '@/features/transfer/hooks';
+
+import { Label } from '@/components/ui/label';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+import { CalendarDays } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Textarea } from '@/components/ui/textarea';
+import { TimePicker } from "antd";
+import { useEffect } from 'react';
 
 interface TransferDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -41,21 +54,25 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 	const { users } = useUserInfoQuery();
 	const { auth } = useAuth();
 
+	useEffect(() => {
+		console.log(transfer);
+	}, [transfer]);
+
 	const approvalStatusChange = (
 		<>
 		<Select
 			onValueChange={value => handleChangeSelect('approval_status', value)}
 			name="approval_status"
-			value={selectedTransfer.approval_status || ''}
+			value={transfer.approval_status || ''}
 		>
 			<SelectTrigger
 				name="approval_status"
 				className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 			>
 				<SelectValue placeholder={
-					selectedTransfer.approval_status ?
-					selectedTransfer.approval_status.charAt(0).toUpperCase() +
-					selectedTransfer.approval_status.slice(1) 
+					transfer.approval_status ?
+					transfer.approval_status.charAt(0).toUpperCase() +
+					transfer.approval_status.slice(1) 
 					: 'Choose status...'
 				} />
 				<SelectContent className="bg-white font-medium">
@@ -82,7 +99,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 			</SelectTrigger>
 		</Select>
  
-		{transferProducts.filter((prod) => prod.transfer_id === selectedTransfer.id).length === 0 && (
+		{transferProducts.filter((prod) => prod.transfer_id === transfer.id).length === 0 && (
 			<div className="flex align-center group">
 				<AlertTriangle size={30} strokeWidth={2} className="self-center text-yellow-600" />
 				<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-7 rounded-md bg-gray-800 px-1 text-sm text-gray-100 transition-opacity opacity-0 group-hover:opacity-100">
@@ -114,12 +131,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{warehouses[selectedTransfer.source.id - 1]?.name}
+							{warehouses[transfer.source - 1]?.name}
 							<span className="truncate text-xs text-slate-700/60">
 								{' '}•{' '} 
-									{warehouses[selectedTransfer.source.id - 1]?.code} 
+									{warehouses[transfer.source - 1]?.code} 
 									{' '}•{' '} 
-									{warehouses[selectedTransfer.source.id - 1]?.location}
+									{warehouses[transfer.source - 1]?.location}
 							</span>
 						</>
 					) }
@@ -141,7 +158,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={key}
 							value={warehouse.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${warehouse.id === selectedTransfer.source.id && 'selected'}`}
+								${warehouse.id === transfer.source && 'selected'}`}
 						>
 							{warehouse.name}
 
@@ -178,12 +195,12 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{warehouses[selectedTransfer.destination.id - 1]?.name}
+							{warehouses[transfer.destination - 1]?.name}
 							<span className="truncate text-xs text-slate-700/60">
 								{' '}•{' '} 
-									{warehouses[selectedTransfer.destination.id - 1]?.code} 
+									{warehouses[transfer.destination - 1]?.code} 
 									{' '}•{' '} 
-									{warehouses[selectedTransfer.destination.id - 1]?.location}
+									{warehouses[transfer.destination - 1]?.location}
 							</span>
 						</>
 					) }
@@ -205,7 +222,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={warehouse.code}
 							value={warehouse.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${warehouse.id === selectedTransfer.destination.id && 'selected'}`}
+								${warehouse.id === transfer.destination && 'selected'}`}
 						>
 							{warehouse.name}
 
@@ -226,16 +243,16 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 		<Select
 			onValueChange={value => handleChangeSelect('transfer_status', value)}
 			name="transfer_status"
-			value={selectedTransfer.transfer_status || ''}
+			value={transfer.transfer_status || ''}
 		>
 			<SelectTrigger
 				name="transfer_status"
 				className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 			>
 				<SelectValue placeholder={
-					selectedTransfer.transfer_status ?
-					selectedTransfer.transfer_status.charAt(0).toUpperCase() +
-					selectedTransfer.transfer_status.slice(1) 
+					transfer.transfer_status ?
+					transfer.transfer_status.charAt(0).toUpperCase() +
+					transfer.transfer_status.slice(1) 
 					: 'Choose status...'
 				} />
 				<SelectContent className="bg-white font-medium">
@@ -283,9 +300,9 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						</div>
 					) : (
 						<>
-							{selectedTransfer.received_by ? 
-								users[Number(selectedTransfer.received_by) - 1].firstname + ' ' 
-								+ users[Number(selectedTransfer.received_by) - 1].lastname
+							{transfer.received_by ? 
+								users[Number(transfer.received_by) - 1].firstname + ' ' 
+								+ users[Number(transfer.received_by) - 1].lastname
 								: 'Choose user...'
 							}
 						</>
@@ -308,8 +325,8 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 							key={key}
 							value={user.id.toString()}
 							className={`text-sm font-medium text-slate-700 
-								${selectedTransfer.received_by && 
-									user.id === selectedTransfer.received_by.id && 
+								${transfer.received_by && 
+									user.id === transfer.received_by && 
 									'selected'}`}
 						>
 							{user.firstname + ' ' + user.lastname} 
@@ -393,20 +410,11 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 										</>
 									)
 								}
-								{auth.rolePermissions.some((role) => role.permission_id === 22) ? (
-										selectedTransfer.approval_status?.toLowerCase() === 'pending' &&
-										approvalStatusChange
-									) : (
-										<>
-											{selectedTransfer.approval_status.charAt(0).toUpperCase() + 
-												selectedTransfer.approval_status.slice(1)}
-											<Clock
-												size={20}
-												strokeWidth={2}
-												className="text-amber-500"
-											/>
-										</>
-									)
+								{transfer.approval_status?.toLowerCase() === 'pending' && 
+									auth.rolePermissions.some((role) => role.permission_id === 22) && (
+											transfer.approval_status?.toLowerCase() === 'pending' &&
+											approvalStatusChange
+										)
 								}
 							</p>
 						</div>
@@ -438,7 +446,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 					{transfer.approval_status == 'approved' && (
 						<>
 						<div className="grid w-full grid-flow-row grid-cols-8 gap-4">
-							<div className="relative col-span-3 flex flex-col justify-center	gap-1">
+							<div className="relative col-span-2 flex flex-col justify-center	gap-1">
 								<h3 className="text-sm font-bold text-gray-600">
 									Transfer status
 								</h3>
@@ -446,47 +454,120 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 									{transferSelect}
 								</p>
 							</div>
-							<div className="col-span-5 flex flex-col justify-center	gap-1">
+							<div className="col-span-2 flex flex-col justify-center	gap-1">
 								<h3 className="text-sm font-bold text-gray-600">
 									Transfer schedule
 								</h3>
 								<div className="text-sm">
-									<DateTimePicker 
+									{/* <DateTimePicker 
 										onChange={value => handleChangeDateTime("transfer_schedule", value)}
 										value={dateDisplay}
 										format="yyyy-M-d H:mm"
 										minDate={dateDisplay}
 										required
-									/>
+									/> */}
+									<Popover>
+										<PopoverTrigger
+											id="date_received"
+											name="date_received"
+											asChild
+										>
+											<Button2
+												variant={'outline'}
+												className="flex w-full flex-row items-center justify-start gap-2 bg-white text-sm font-normal"
+											>
+												<CalendarDays size={18} strokeWidth={1.5} />
+												{transfer.transfer_schedule
+													? transfer.transfer_schedule.split(' ')[0]
+													: 'Choose date...'}
+											</Button2>
+										</PopoverTrigger>
+										<PopoverContent className="w-auto p-0">
+											<Calendar
+												mode="single"
+												initialFocus
+												required
+												onDayClick={value => {
+													const date = new Date(value!);
+													const formattedDate = `${date.getFullYear()}-${(
+														date.getMonth() + 1
+													)
+														.toString()
+														.padStart(2, '0')}-${date
+														.getDate()
+														.toString()
+														.padStart(2, '0')}`;
+													handleChangeSelect('transfer_schedule', formattedDate);
+												}}
+												selected={
+													transfer.transfer_schedule
+														? new Date(transfer.transfer_schedule.split(' ')[0])
+														: new Date()
+												}
+											/>
+										</PopoverContent>
+									</Popover>
 								</div>
 							</div>
 							{transfer.transfer_status === 'arrived' && (
 								<>
-									<div className="col-span-3 flex flex-col justify-center	gap-1">
+									<div className="col-span-2 flex flex-col justify-center	gap-1">
 										<h3 className="text-sm font-bold text-gray-600">Received by</h3>
 										<p className="text-sm">
 											{receivedSelect}
 										</p>
 									</div>
-									<div className="relative col-span-3 flex flex-col justify-center	gap-1">
+									<div className="col-span-2 flex flex-col justify-center	gap-1">
 										<h3 className="text-sm font-bold text-gray-600">
 											Date received
 										</h3>
 										<div className="text-sm">
-											<DateTimePicker 
-												onChange={value => handleChangeDateTime("date_received", value)}
-												value={dateDisplayArrived}
-												format="yyyy-M-d H:mm"
-												minDate={dateDisplay}
-											/>
+										<Popover>
+											<PopoverTrigger
+												id="date_received"
+												name="date_received"
+												asChild
+											>
+												<Button2
+													variant={'outline'}
+													className="flex w-full flex-row items-center justify-start gap-2 bg-white text-sm font-normal"
+												>
+													<CalendarDays size={18} strokeWidth={1.5} />
+													{transfer.date_received
+														? transfer.date_received.split(' ')[0]
+														: 'Choose date...'}
+												</Button2>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0">
+												<Calendar
+													mode="single"
+													initialFocus
+													required
+													onDayClick={value => {
+														const date = new Date(value!);
+														const formattedDate = `${date.getFullYear()}-${(
+															date.getMonth() + 1
+														)
+															.toString()
+															.padStart(2, '0')}-${date
+															.getDate()
+															.toString()
+															.padStart(2, '0')}`;
+														handleChangeSelect('date_received', formattedDate);
+													}}
+													selected={
+														transfer.date_received
+															? new Date(transfer.date_received.split(' ')[0])
+															: new Date(transfer.transfer_schedule.split(' ')[0])
+													}
+												/>
+											</PopoverContent>
+										</Popover>
 										</div>
 									</div>
 								</>
 							)}
 						</div>
-						<span className="flex flex-col grid-cols-12 text-sm font-bold uppercase text-center">
-							(for PM times, add 12 to the hour)
-						</span>
 						</>
 					)}
 
@@ -537,7 +618,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 									disabled={isChanged ? false : true}
 									onClick={handleSubmit}
 								>
-									{!isSubmitting ? 'Add User' : 'Submitting'}
+									{!isSubmitting ? 'Edit Transfer' : 'Submitting'}
 								</Button>
 							</div>
 						</div>

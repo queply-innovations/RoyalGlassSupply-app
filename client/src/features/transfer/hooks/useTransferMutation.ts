@@ -144,6 +144,7 @@ export const useTransferMutation = () => {
 		key: string,
 		_value: any,
 	) => {
+		console.log(key, _value);
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);

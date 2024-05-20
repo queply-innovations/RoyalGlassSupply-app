@@ -70,6 +70,9 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						onClick={() => {
 							setDialogOptions({ open: true, title: 'delivery_charge' });
 						}}
+						disabled={
+							currentInvoicePos.payment_method === 'balance_payment'
+						}
 					>
 						Set Delivery
 					</Button>
@@ -78,6 +81,9 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						onClick={() => {
 							setDialogOptions({ open: true, title: 'discount' });
 						}}
+						disabled={
+							currentInvoicePos.payment_method === 'balance_payment'
+						}
 					>
 						Set Discount
 					</Button>
@@ -107,7 +113,9 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					}}
 					disabled={
 						Object.keys(selectedCustomer).length === 0 ||
-						(currentInvoicePos.payment_method !== 'purchase_order' &&
+						(currentInvoicePos.type === 'payment' &&
+							currentInvoicePos.payment_method !== 'purchase_order' &&
+							currentInvoicePos.payment_method !== 'balance_payment' &&
 							(currentInvoicePos.change_amount ?? 0) < 0)
 					}
 				>
