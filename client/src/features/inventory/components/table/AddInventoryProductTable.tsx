@@ -18,21 +18,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import {
-	CheckCircle,
-	Clock,
-	MoreVertical,
-	PackageMinus,
-	Pencil,
-} from 'lucide-react';
+import { MoreVertical, PackageMinus, Pencil } from 'lucide-react';
 import { Button as LegacyButton } from '@/components';
 import { useState } from 'react';
-import {
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Tooltip } from '@radix-ui/react-tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { toast } from 'react-toastify';
 
 const tableCols = [
@@ -77,7 +66,7 @@ export const AddInventoryProductTable = ({
 	const submitItems = () => {
 		setIsSubmitting(true);
 		handleSubmit({
-			action: 'batch-add',
+			action: 'add',
 			data: data.map(item => item?.data),
 		})
 			.then(() => {
