@@ -1,15 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-	addInventoryProduct,
-	addInventoryProducts,
-	patchInventoryProduct,
-} from '../api/Inventory';
+import { addInventoryProducts, patchInventoryProduct } from '../api/Inventory';
 import { InventoryProductDatabase } from '../types';
 import { useState } from 'react';
 
 type handleSubmitArgs =
-	| { action: 'add'; data: Partial<InventoryProductDatabase> }
-	| { action: 'batch-add'; data: Partial<InventoryProductDatabase>[] }
+	| { action: 'add'; data: InventoryProductDatabase[] }
 	| { action: 'update'; id: number; data: Partial<InventoryProductDatabase> };
 
 export const useInventoryProdsMutation = () => {
@@ -32,8 +27,6 @@ export const useInventoryProdsMutation = () => {
 	const handleSubmit = async (args: handleSubmitArgs) => {
 		console.log('Submitting: ', args);
 		if (args.action === 'add') {
-			return await addInventoryProductMutation(args.data);
-		} else if (args.action === 'batch-add') {
 			return await addInventoryProductsMutation(args.data);
 		} else if (args.action === 'update') {
 			return await patchInventoryProductMutation({
@@ -64,12 +57,6 @@ export const useInventoryProdsMutation = () => {
 			console.error('Inventory Product Data failed', error);
 		},
 	};
-
-	const { mutateAsync: addInventoryProductMutation } = useMutation({
-		mutationKey: ['addInventoryProduct'],
-		mutationFn: addInventoryProduct,
-		...mutationConfig,
-	});
 
 	const { mutateAsync: addInventoryProductsMutation } = useMutation({
 		mutationKey: ['addInventoryProducts'],
