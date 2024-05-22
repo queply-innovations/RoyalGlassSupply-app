@@ -277,7 +277,11 @@ class ReportController extends Controller
 
         foreach($invoices as $invoice) {
             $capitalPrices = collect($invoice->invoiceItems)->map(function($item) {
-                return $item->inventoryProduct->capital_price * $item->quantity;
+                $returnedItems = collect($item->returnTransactionItems)->map(function($retItem) {
+                    return $retItem->quantity;
+                })->toArray();
+                
+                return $item->inventoryProduct->capital_price * ($item->quantity - array_sum($returnedItems));
             });
 
             $returnTransaction = $invoice->returnTransaction->refundable_amount ?? 0;
