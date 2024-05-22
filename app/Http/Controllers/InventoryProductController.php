@@ -37,10 +37,24 @@ class InventoryProductController extends Controller
         try {
             DB::beginTransaction();
 
-            $inventoryProduct = $this->createInventoryProduct($request);
+            if($request->has('data') && is_array($request->data)) {
+                $createdIds = [];
+                foreach($request->data as $row) {
+                    $inventoryProduct = $this->createInventoryProduct($row);
+                    $createdIds[] = $inventoryProduct->id;
+                }
+
+                $inventoryProducts = InventoryProduct::whereIn('id', $createdIds)->get();
+
+                $resource = new InventoryProductCollection($inventoryProducts);
+            } else {
+                $inventoryProduct = $this->createInventoryProduct($request->all());
+
+                $resource = new InventoryProductResource($inventoryProduct);
+            }
 
             DB::commit();
-            return new InventoryProductResource($inventoryProduct);
+            return $resource;
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => $e->getMessage()], 422);
@@ -176,7 +190,7 @@ class InventoryProductController extends Controller
     }
 
     private function createInventoryProduct($request) {
-        $inventoryProduct = InventoryProduct::create($request->all());
+        $inventoryProduct = InventoryProduct::create($request);
 
         $capitalPrice = $inventoryProduct->capital_price;
         $markupPrice = round($capitalPrice * 0.10);
