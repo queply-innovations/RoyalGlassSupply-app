@@ -21,8 +21,7 @@ class CustomerResource extends JsonResource
             'address' => $this->address,
             'contact_no' => $this->contact_no,
             'total_credit' => $this->vouchers->sum('discounted_price'),
-            'total_balance' => $this->invoices->sum('balance_amount'),
-            'vouchers' => $this->vouchers
+            'total_balance' => $this->invoices->sum('balance_amount')
         ];
     }
 }
