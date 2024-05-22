@@ -16,8 +16,7 @@ class ReturnTransactionItem extends Model
         'quantity',
         'unit',
         'price',
-        'reason',
-        'is_cash_refund'
+        'reason'
     ];
     
     public $timestamps = false;

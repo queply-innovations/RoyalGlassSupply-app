@@ -18,7 +18,7 @@ class ReturnTransaction extends Model
         'refundable_amount',
         'voucher_id',
         'refund_status',
-        'is_cash_refunded'
+        'is_cash_refund'
     ];
 
     protected $with = [
