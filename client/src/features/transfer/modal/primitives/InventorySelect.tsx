@@ -16,7 +16,11 @@ import {
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 
-export const InventorySelect = () => {
+interface InventorySelectProps {
+	tabState: 'details' | 'items';
+}
+
+export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 	const {
 		inventoriesList,
 		inventoriesLoading,
@@ -26,7 +30,9 @@ export const InventorySelect = () => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<div className="col-span-8 flex flex-col gap-1">
+		<div
+			className={`${tabState === 'details' ? 'col-span-11' : 'col-span-8'} flex flex-col gap-1`}
+		>
 			<Label
 				htmlFor="inventory"
 				className="text-sm font-bold text-slate-800"
@@ -42,7 +48,7 @@ export const InventorySelect = () => {
 						role="combobox"
 						aria-expanded={open}
 						className="justify-between"
-						disabled={inventoriesLoading}
+						disabled={inventoriesLoading || tabState === 'items'}
 					>
 						{inventoriesLoading
 							? 'Loading...'

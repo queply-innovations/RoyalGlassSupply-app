@@ -105,5 +105,5 @@ export interface TransferDatabaseAdd {
 	approval_status: string;
 	transfer_status: string | null;
 	notes: string;
-	transferItems: Omit<TransferProduct, 'id' | 'transfer_id'>[];
+	transferItems: Omit<TransferProduct, 'transfer_id'>[];
 }

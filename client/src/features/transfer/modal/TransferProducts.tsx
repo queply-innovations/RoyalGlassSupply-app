@@ -26,7 +26,10 @@ export const TransferProducts = ({ onClose }: TransferProductsProps) => {
 
 	// const filteredTransferProducts = transferProducts.filter((prod) => prod.transfer_id === selectedTransfer.id);
 
-	const openTransferModal = (products: ITransferProductFull | ITransferProduct, action: string) => {
+	const openTransferModal = (
+		products: ITransferProductFull | ITransferProduct,
+		action: string,
+	) => {
 		openModal();
 		setModalAction(action);
 	};
@@ -34,30 +37,30 @@ export const TransferProducts = ({ onClose }: TransferProductsProps) => {
 	return (
 		<>
 			{/* <TransferProductsProvider> */}
-				<div className="flex flex-col gap-5">
-					<TransferProductsTable openModal={openTransferModal} />
-				</div>
-				<ModalTest
-					title={
-						modalAction === 'edit'
-							? 'Edit Transfer Product'
-							: 'Add Transfer Product'
-					}
-					isOpen={isOpen}
-					onClose={closeModal}
-				>
-					<>
-						{modalAction === 'edit' && (
-							<TransferProductsForm onClose={closeModal} />
-						)}
-						{modalAction === 'add' && (
-							<TransferProductsForm onClose={closeModal} />
-						)}
-						{/* {(modalAction === 'add' || modalAction === 'edit') && (
+			<div className="flex flex-col gap-5">
+				<TransferProductsTable openModal={openTransferModal} />
+			</div>
+			<ModalTest
+				title={
+					modalAction === 'edit'
+						? 'Edit Transfer Product'
+						: 'Add Transfer Product'
+				}
+				isOpen={isOpen}
+				onClose={closeModal}
+			>
+				<>
+					{modalAction === 'edit' && (
+						<TransferProductsForm onClose={closeModal} />
+					)}
+					{modalAction === 'add' && (
+						<TransferProductsForm onClose={closeModal} />
+					)}
+					{/* {(modalAction === 'add' || modalAction === 'edit') && (
 							<TransferProductsForm onClose={closeModal} />
 						)} */}
-					</>
-				</ModalTest>
+				</>
+			</ModalTest>
 		</>
 	);
 };

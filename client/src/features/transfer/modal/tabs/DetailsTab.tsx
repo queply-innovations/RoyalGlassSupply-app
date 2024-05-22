@@ -3,6 +3,7 @@ import { SchedulePicker, WarehouseSelect } from '../primitives';
 import { Textarea } from '@/components/ui/textarea';
 import { useNewTransfer } from '../../context/NewTransferContext';
 import { Button } from '@/components';
+import { InventorySelect } from '../primitives';
 
 interface DetailsTabProps {
 	onClose: () => void;
@@ -15,6 +16,7 @@ export const DetailsTab = ({ onClose }: DetailsTabProps) => {
 		<div className="flex flex-col gap-5">
 			<div className="grid grid-cols-11 gap-4">
 				<WarehouseSelect />
+				<InventorySelect tabState="details" />
 				<SchedulePicker />
 
 				<div className="col-span-11 flex flex-col gap-1">

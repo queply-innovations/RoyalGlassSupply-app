@@ -43,7 +43,8 @@ export const NewTransferProvider = ({ children }: NewTransferProviderProps) => {
 	// state to store the new transfer
 	const [newTransfer, setNewTransfer] = useState<TransferDatabaseAdd>({
 		created_by: auth.user.id,
-	} as TransferDatabaseAdd);
+		transferItems: [],
+	} as unknown as TransferDatabaseAdd);
 
 	// handles the change of the new transfer state
 	const handleChange = <K extends keyof TransferDatabaseAdd>(
@@ -57,10 +58,6 @@ export const NewTransferProvider = ({ children }: NewTransferProviderProps) => {
 	const [activeTab, setActiveTab] = useState<'details' | 'items' | string>(
 		'details',
 	);
-
-	useEffect(() => {
-		console.log(newTransfer);
-	}, [newTransfer]);
 
 	// state to store the inventories list
 	const [inventoriesList, setInventoriesList] = useState<Inventory[]>([]);
@@ -111,9 +108,9 @@ export const NewTransferProvider = ({ children }: NewTransferProviderProps) => {
 		}
 	}, [selectedInventory]);
 
-	useEffect(() => {
-		console.log('inventories', inventoriesList);
-	}, [inventoriesList]);
+	// useEffect(() => {
+	// 	console.log('inventories', inventoriesList);
+	// }, [inventoriesList]);
 
 	const value = {
 		newTransfer,

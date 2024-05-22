@@ -6,11 +6,13 @@ import { useNewTransfer } from '../../context/NewTransferContext';
 interface AddItemButtonProps {
 	activeView: string;
 	setActiveView: React.Dispatch<React.SetStateAction<string>>;
+	setEditProduct: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const AddItemButton = ({
 	activeView,
 	setActiveView,
+	setEditProduct,
 }: AddItemButtonProps) => {
 	const { selectedInventory } = useNewTransfer();
 
@@ -22,7 +24,10 @@ export const AddItemButton = ({
 				className="w-full text-sm font-bold text-slate-800 hover:bg-slate-300"
 				onClick={
 					activeView === 'table'
-						? () => setActiveView('form')
+						? () => {
+								setActiveView('form');
+								setEditProduct(null);
+							}
 						: () => setActiveView('table')
 				}
 			>
