@@ -154,6 +154,10 @@ export const ItemsTab = () => {
 
 	const [activeView, setActiveView] = useState<string>('table');
 
+	const handleRequestTransfer = () => {
+		console.log(newTransfer);
+	};
+
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="grid grid-cols-12 gap-4">
@@ -186,8 +190,10 @@ export const ItemsTab = () => {
 				</div>
 			)}
 
-			<div className="flex flex-col items-end">
-				<Button fill={'green'} disabled={true}>
+			<div
+				className={`flex flex-col items-end ${activeView === 'form' ? 'hidden' : ''}`}
+			>
+				<Button onClick={handleRequestTransfer} fill={'green'}>
 					Submit Request
 				</Button>
 			</div>
