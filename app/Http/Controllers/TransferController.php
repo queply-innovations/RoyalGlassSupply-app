@@ -7,8 +7,10 @@ use App\Http\Resources\TransferCollection;
 use App\Http\Resources\TransferResource;
 use App\Models\InventoryProduct;
 use App\Models\TransferProduct;
+use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferController extends Controller
@@ -69,9 +71,17 @@ class TransferController extends Controller
      */
     public function update(Request $request, Transfer $transfer)
     {
-        $transfer->update($request->all());
+        try {
+            DB::beginTransaction();
 
-        return new TransferResource($transfer);
+            $update = $this->updateTransfers($request, $transfer);
+
+            DB::commit();
+            return new TransferResource($update);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -179,5 +189,109 @@ class TransferController extends Controller
         }
 
         return $transfer;
+    }
+
+    private function updateTransfers($request, $transfer) {
+        if($transfer->approval_status != 'pending') {
+            throw new \Exception("Transfer already {$transfer->approval_status}");
+        }
+
+        if($request->has('approval_status')) {
+            switch($request->approval_status) {
+                case 'pending':
+                    $transfer->update($request->all());
+                    $updateTransfer = $transfer;
+                break;
+                case 'approved':
+                    $updateTransfer = $this->approveTransfer($transfer);
+                break;
+                case 'denied':
+                    $updateTransfer = $this->denyTransfer($transfer);
+                break;
+                default:
+                    throw new \Exception('Invalid approval status');
+            }
+        } else {
+            throw new \Exception('Invalid data.');
+        }
+
+        return $updateTransfer;
+    }
+
+    private function approveTransfer($transfer) {
+        $transfer->update([
+            'approval_status' => 'approved',
+            'approved_by' => Auth::id(),
+            'transfer_status' => 'arrived', // need to clarify
+            'date_received' => Carbon::now(), // need to clarify
+            'received_by' => Auth::id() // need to clarify
+        ]);
+
+        $this->createInventoryProduct($transfer);
+
+        return $transfer;
+    }
+
+    private function denyTransfer($transfer) {
+        $transfer->update([
+            'approval_status' => 'denied',
+        ]);
+
+        foreach($transfer->transferProducts as $item) {
+            $item->inventoryProduct->update([
+                'stocks_count' => $item->inventoryProduct->stocks_count + $item->total_quantity,
+                'approved_stocks' => $item->inventoryProduct->stocks_count + $item->total_quantity
+            ]);
+        }
+
+        return $transfer;
+    }
+
+    private function createInventoryProduct($transfer) {
+        $destination = $transfer->destinationWarehouse;
+
+        foreach($transfer->transferProducts as $item) {
+            $inventoryProduct = InventoryProduct::create([
+                'inventory_id' => $destination->id,
+                'product_id' => $item->product_id,
+                'supplier_id' => $item->inventoryProduct->supplier_id,
+                'capital_price' => $item->capital_price,
+                'stocks_count' => $item->total_quantity,
+                'approved_stocks' => $item->total_quantity,
+                'damage_count' => 0,
+                'total_count' => $item->total_quantity,
+                'purchased_stocks' => 0,
+                'unit' => $item->unit,
+                'status' => true
+            ]);
+
+            $capitalPrice = $inventoryProduct->capital_price;
+            $markupPrice = round($capitalPrice * ($destination->code == 'ILI' ? 0.15 : 0.10));
+            $cost = $capitalPrice + $markupPrice;
+
+            $productPriceData = [
+                'product_id' => $inventoryProduct->product_id,
+                'type' => ' ',
+                'unit' => $inventoryProduct->unit,
+                'stocks_quantity' => $inventoryProduct->stocks_count,
+                'capital_price' => $capitalPrice,
+                'markup_price' => $markupPrice,
+                'tax_amount' => 0,
+                'cost' => $cost,
+                'on_sale' => 0,
+                'sale_discount' => 0,
+                'price' => $cost,
+                'warehouse_id' => $destination->id,
+                'created_by' => Auth::id(),
+                'approval_status' => 'approved',
+                'active_status' => 'active'
+            ];
+    
+            $productPrice = ProductPrice::create($productPriceData);
+
+            $inventoryProduct->update([
+                'product_price_id' => $productPrice->id
+            ]);
+        }
     }
 }
