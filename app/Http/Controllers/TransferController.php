@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Transfer;
 use App\Http\Resources\TransferCollection;
 use App\Http\Resources\TransferResource;
+use App\Models\InventoryProduct;
+use App\Models\TransferProduct;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TransferController extends Controller
 {
@@ -31,9 +35,17 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        $transfer = Transfer::create($request->all());
+        try {
+            DB::beginTransaction();
 
-        return new TransferResource($transfer);
+            $transfer = $this->createTransfer($request);
+
+            DB::commit();
+            return new TransferResource($transfer);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -112,5 +124,60 @@ class TransferController extends Controller
         }
 
         return new TransferCollection($query->get());
+    }
+
+    private function createTransfer($request) {
+        $transfer = Transfer::create([
+            ...$request->except(['transferItems']),
+            'approval_status' => 'pending'
+        ]);
+        $transfer->update([
+            'code' => 'TRN-'.Carbon::now()->format('Ymd').'-'.str_pad($transfer->id, 6, 0, STR_PAD_LEFT),
+        ]);
+
+        foreach($request->transferItems as $item) {
+            $product = TransferProduct::create([
+                ...$item,
+                'transfer_id' => $transfer->id
+            ]);
+
+            $inventoryProduct = $product->inventoryProduct;
+
+            $remaining_total_stocks = $inventoryProduct->stocks_count - $inventoryProduct->purchased_stocks;
+
+            if($remaining_total_stocks <= 0) {
+                throw new \Exception("Product: {$product->product->name} has no available stocks.");
+            }
+
+            if($remaining_total_stocks < $product->total_quantity) {
+                throw new \Exception("Product: {$product->product->name} has exceeded the available stocks.");
+            }
+
+            if($inventoryProduct->stocks_count > $inventoryProduct->approved_stocks) {
+                $allowance = $inventoryProduct->stocks_count - $inventoryProduct->approved_stocks;
+
+                if($allowance >= $product->total_quantity ) {
+                    $inventoryProduct->update([
+                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity
+                    ]);
+                } else {
+                    if(($inventoryProduct->stocks_count - $product->total_quantity) < $inventoryProduct->purchased_stocks) {
+                        throw new \Exception("Product: {$product->product->name} has exceeded the purchased stocks.");
+                    }
+
+                    $inventoryProduct->update([
+                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                        'approved_stocks' => $inventoryProduct->stocks_count - $product->total_quantity
+                    ]);
+                }
+            } else {
+                $inventoryProduct->update([
+                    'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                    'approved_stocks' => $inventoryProduct->approved_stocks - $product->total_quantity
+                ]);
+            }
+        }
+
+        return $transfer;
     }
 }
