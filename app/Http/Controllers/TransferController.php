@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transfer;
 use App\Http\Resources\TransferCollection;
 use App\Http\Resources\TransferResource;
+use App\Models\Inventory;
 use App\Models\InventoryProduct;
 use App\Models\TransferProduct;
 use App\Models\ProductPrice;
@@ -250,9 +251,21 @@ class TransferController extends Controller
     private function createInventoryProduct($transfer) {
         $destination = $transfer->destinationWarehouse;
 
+        $inventory = Inventory::create([
+            'warehouse_id' => $destination->id,
+            'created_by' => Auth::id(),
+            'date_received' => Carbon::now(), // need to clarify
+            'type' => 'transfer',
+            'notes' => $transfer->notes,
+            'transfer_id' => $transfer->id
+        ]);
+        $inventory->update([
+            'code' => 'INV-'.$destination->code.'-TRA-'.Carbon::now()->format('Ymd').'-'.str_pad($inventory->id, 6, 0, STR_PAD_LEFT)
+        ]);
+
         foreach($transfer->transferProducts as $item) {
             $inventoryProduct = InventoryProduct::create([
-                'inventory_id' => $destination->id,
+                'inventory_id' => $inventory->id,
                 'product_id' => $item->product_id,
                 'supplier_id' => $item->inventoryProduct->supplier_id,
                 'capital_price' => $item->capital_price,
