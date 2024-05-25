@@ -12,12 +12,21 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
-// import { TransferProduct } from '../../types';
+// import { addTransfer } from '../../api/Transfer';
+import { useTransferAddition } from '../../hooks';
+import { TransferAdd } from '../../types';
+import { Loading } from '@/components';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-export const ItemsTab = () => {
+interface ItemsTabProps {
+	onClose: () => void;
+}
+
+export const ItemsTab = ({ onClose }: ItemsTabProps) => {
 	const { newTransfer, handleChange } = useNewTransfer();
 	const [editProduct, setEditProduct] = useState<any>(null);
-
+	const { addTransferMutation, isPending, success } = useTransferAddition();
 	const TransferProductTableHeader: ColumnDef<any>[] = [
 		{
 			id: 'select',
@@ -154,49 +163,72 @@ export const ItemsTab = () => {
 
 	const [activeView, setActiveView] = useState<string>('table');
 
-	const handleRequestTransfer = () => {
-		console.log(newTransfer);
+	const handleRequestTransfer = async () => {
+		addTransferMutation(newTransfer as unknown as TransferAdd);
 	};
 
+	useEffect(() => {
+		if (success) {
+			toast(success, {
+				position: 'top-right',
+				closeOnClick: true,
+				type: 'success',
+			});
+			onClose();
+		}
+	}, [success]);
+
 	return (
-		<div className="flex flex-col gap-4">
-			<div className="grid grid-cols-12 gap-4">
-				<InventorySelect tabState="items" />
-				<AddItemButton
-					activeView={activeView}
-					setActiveView={setActiveView}
-					setEditProduct={setEditProduct}
-				/>
-			</div>
-
-			{activeView === 'table' && (
-				<div className="h-[400px] w-full bg-slate-100">
-					<DataTable
-						data={newTransfer.transferItems}
-						columns={TransferProductTableHeader}
-						dataType={'Transfer Products'}
-						isLoading={false}
-						hideFilter={true}
-						filterWhat={''}
-					/>
+		<>
+			{isPending && (
+				<div className="absolute left-[45%] top-[43%] z-50">
+					<Loading />
 				</div>
 			)}
-			{activeView === 'form' && (
-				<div className="h-[200px] w-full ">
-					<TransferItemsQueueForm
+			<div className={`flex flex-col gap-4 ${isPending ? 'blur-sm' : ''}`}>
+				<div className="grid grid-cols-12 gap-4">
+					<InventorySelect tabState="items" />
+					<AddItemButton
+						activeView={activeView}
 						setActiveView={setActiveView}
-						editProduct={editProduct}
+						setEditProduct={setEditProduct}
 					/>
 				</div>
-			)}
 
-			<div
-				className={`flex flex-col items-end ${activeView === 'form' ? 'hidden' : ''}`}
-			>
-				<Button onClick={handleRequestTransfer} fill={'green'}>
-					Submit Request
-				</Button>
+				{activeView === 'table' && (
+					<div className="h-[400px] w-full bg-slate-100">
+						<DataTable
+							data={newTransfer.transferItems}
+							columns={TransferProductTableHeader}
+							dataType={'Transfer Products'}
+							isLoading={false}
+							hideFilter={true}
+							filterWhat={''}
+						/>
+					</div>
+				)}
+				{activeView === 'form' && (
+					<div className="h-[200px] w-full ">
+						<TransferItemsQueueForm
+							setActiveView={setActiveView}
+							editProduct={editProduct}
+						/>
+					</div>
+				)}
+
+				<div
+					className={`flex flex-col items-end ${activeView === 'form' ? 'hidden' : ''}`}
+				>
+					<Button
+						disabled={newTransfer.transferItems.length <= 0 || isPending}
+						onClick={handleRequestTransfer}
+						fill={'green'}
+						className="disabled:opacity-50"
+					>
+						Submit Request
+					</Button>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };

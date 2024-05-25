@@ -38,7 +38,7 @@ export const TransferForm2 = ({ onClose }: TransferFormProps) => {
 					<DetailsTab onClose={onClose} />
 				</TabsContent>
 				<TabsContent value="items" className="min-w-[860px]">
-					<ItemsTab />
+					<ItemsTab onClose={onClose} />
 				</TabsContent>
 			</Tabs>
 		</>

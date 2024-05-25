@@ -1,10 +1,18 @@
 import { API_HEADERS, API_URLS } from '@/api';
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { Transfer, TransferAdd, TransferEdit, TransferProduct, TransferProductFull } from '../types';
+import {
+	Transfer,
+	TransferAdd,
+	TransferEdit,
+	TransferProduct,
+	TransferProductFull,
+} from '../types';
 import { useState } from 'react';
 
-export const fetchTransfers = async (updateProgress: any): Promise<Transfer[]> => {
+export const fetchTransfers = async (
+	updateProgress: any,
+): Promise<Transfer[]> => {
 	return await axios
 		.get(API_URLS.TRANSFER, {
 			headers: {
@@ -49,13 +57,12 @@ export const fetchPendingTransfers = async (): Promise<Transfer[]> => {
 
 export const addTransfer = async (data: TransferAdd) => {
 	try {
-		const response = await axios
-			.post(API_URLS.TRANSFER, data, {
-				headers: {
-					Authorization: `Bearer ${storage.getToken()}`,
-					'Accept': 'application/json',
-				},
-			});
+		const response = await axios.post(API_URLS.TRANSFER, data, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				Accept: 'application/json',
+			},
+		});
 		return response.data;
 	} catch (error) {
 		console.error('Error adding transfer:', error);
@@ -66,20 +73,28 @@ export const addTransfer = async (data: TransferAdd) => {
 export const editTransfer = async (data: TransferEdit) => {
 	try {
 		const response = await axios
-			.put(`${API_URLS.TRANSFER}/${data.id}`, data, {
-				headers: {
-					Authorization: `Bearer ${storage.getToken()}`,
-					'Content-Type': 'application/json',
+			.put(
+				`${API_URLS.TRANSFER}/${data.id}?approval_status=${data?.approval_status}`,
+				data,
+				{
+					headers: {
+						Authorization: `Bearer ${storage.getToken()}`,
+						'Content-Type': 'application/json',
+					},
 				},
-			})
-			.then(response => {return response.data;}); 
+			)
+			.then(response => {
+				return response.data;
+			});
 	} catch (error) {
 		console.error('Error editing transfer:', error);
 		throw error;
 	}
 };
 
-export const fetchTransferProducts = async (): Promise<TransferProductFull[]> => {
+export const fetchTransferProducts = async (): Promise<
+	TransferProductFull[]
+> => {
 	return await axios
 		.get(API_URLS.TRANSFER_PRODUCTS, {
 			headers: {
@@ -96,7 +111,9 @@ export const fetchTransferProducts = async (): Promise<TransferProductFull[]> =>
 		});
 };
 
-export const addTransferProduct = async (data: TransferProduct): Promise<TransferProduct[]> => {
+export const addTransferProduct = async (
+	data: TransferProduct,
+): Promise<TransferProduct[]> => {
 	return await axios
 		.post(API_URLS.TRANSFER_PRODUCTS, data, {
 			headers: {
@@ -113,7 +130,9 @@ export const addTransferProduct = async (data: TransferProduct): Promise<Transfe
 		});
 };
 
-export const editTransferProduct = async (data: TransferProduct): Promise<TransferProduct[]> => {
+export const editTransferProduct = async (
+	data: TransferProduct,
+): Promise<TransferProduct[]> => {
 	return await axios
 		.put(`${API_URLS.TRANSFER_PRODUCTS}/${data.id}`, data, {
 			headers: {
@@ -130,9 +149,7 @@ export const editTransferProduct = async (data: TransferProduct): Promise<Transf
 		});
 };
 
-export const addInventory = async (
-	data: any,
-) => {
+export const addInventory = async (data: any) => {
 	return await axios
 		.post(API_URLS.INVENTORY, data, {
 			headers: API_HEADERS(),
@@ -146,7 +163,11 @@ export const addInventory = async (
 		});
 };
 
-async function secondResponseParsing(data: any, inventoryID: number, transferProduct: TransferProductFull) {
+async function secondResponseParsing(
+	data: any,
+	inventoryID: number,
+	transferProduct: TransferProductFull,
+) {
 	try {
 		const addInvProd = {
 			inventory_id: inventoryID,
@@ -164,16 +185,17 @@ async function secondResponseParsing(data: any, inventoryID: number, transferPro
 
 		async function secondStepParsing() {
 			return await axios
-			.post(API_URLS.INVENTORY_PRODUCTS, addInvProd, { //ADD INVENTORY PRODUCT
-				headers: API_HEADERS(),
-			})
-			.then(response => {
-				return { status: response.status, data: response.data };
-			})
-			.catch(error => {
-				console.error('Error adding inventory product:', error);
-				throw error;
-			});
+				.post(API_URLS.INVENTORY_PRODUCTS, addInvProd, {
+					//ADD INVENTORY PRODUCT
+					headers: API_HEADERS(),
+				})
+				.then(response => {
+					return { status: response.status, data: response.data };
+				})
+				.catch(error => {
+					console.error('Error adding inventory product:', error);
+					throw error;
+				});
 		}
 
 		secondStepParsing();
@@ -191,11 +213,16 @@ export const updateAddTrfInvProducts = async (
 		data.map(async (transferProduct: TransferProductFull) => {
 			const id = transferProduct.source_inventory;
 			return await axios
-				.get(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, { //GET ORIGINAL INVENTORY PRODUCT
+				.get(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, {
+					//GET ORIGINAL INVENTORY PRODUCT
 					headers: API_HEADERS(),
 				})
 				.then(async response => {
-					secondResponseParsing(response.data.data, inventoryID, transferProduct);
+					secondResponseParsing(
+						response.data.data,
+						inventoryID,
+						transferProduct,
+					);
 				})
 				.catch(error => {
 					console.error('Error getting inventory product:', error);
@@ -204,20 +231,18 @@ export const updateAddTrfInvProducts = async (
 		}),
 	)
 
-	.then(responses => {
-		let status = responses.map(response => response);
-		return status;
-	})
+		.then(responses => {
+			let status = responses.map(response => response);
+			return status;
+		})
 
-	.catch(error => {
-		console.error('Error parsing inventory products:', error);
-		throw error;
-	});
+		.catch(error => {
+			console.error('Error parsing inventory products:', error);
+			throw error;
+		});
 };
 
-export const initInventoryProduct = async (
-	data: TransferProductFull[],
-) => {
+export const initInventoryProduct = async (data: TransferProductFull[]) => {
 	return Promise.all(
 		data.map(async (transferProduct: TransferProductFull) => {
 			const id = transferProduct.id;
@@ -227,7 +252,8 @@ export const initInventoryProduct = async (
 				quantity_per_bundle: 0,
 			};
 			return await axios
-				.patch(`${API_URLS.TRANSFER_PRODUCTS}/${id}`, trfProduct, { //EDIT TRANSFER PRODUCT
+				.patch(`${API_URLS.TRANSFER_PRODUCTS}/${id}`, trfProduct, {
+					//EDIT TRANSFER PRODUCT
 					headers: API_HEADERS(),
 				})
 				.then(async response => {
@@ -240,13 +266,13 @@ export const initInventoryProduct = async (
 		}),
 	)
 
-	.then(responses => {
-		let status = responses.map(response => response);
-		return status;
-	})
+		.then(responses => {
+			let status = responses.map(response => response);
+			return status;
+		})
 
-	.catch(error => {
-		console.error('Error parsing inventory products:', error);
-		throw error;
-	});
+		.catch(error => {
+			console.error('Error parsing inventory products:', error);
+			throw error;
+		});
 };
