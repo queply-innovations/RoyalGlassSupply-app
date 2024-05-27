@@ -40,6 +40,10 @@ export const EditInventoryProductForm = ({
 	onClose,
 }: EditInventoryProductFormProps) => {
 	const { auth } = useAuth();
+	const canAddCapitalPrice = !!auth.rolePermissions?.find(
+		permission => permission.permission_id === 7,
+	);
+
 	const { selectedInventoryProduct } = useInventoryProductsByInventory();
 	const {
 		value: FormValue,
@@ -235,7 +239,7 @@ export const EditInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								readOnly={auth.role !== 'admin'}
+								readOnly={!canAddCapitalPrice}
 								defaultValue={selectedInventoryProduct?.capital_price.toFixed(
 									2,
 								)}
