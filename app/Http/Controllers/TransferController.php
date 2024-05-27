@@ -56,7 +56,7 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     {
-        return new TransferResource($transfer);
+        return new TransferResource($transfer->load('transferProducts'));
     }
 
     /**
@@ -149,6 +149,7 @@ class TransferController extends Controller
         foreach($request->transferItems as $item) {
             $product = TransferProduct::create([
                 ...$item,
+                'source_inventory' => $item['id'],
                 'transfer_id' => $transfer->id
             ]);
 
@@ -169,7 +170,8 @@ class TransferController extends Controller
 
                 if($allowance >= $product->total_quantity ) {
                     $inventoryProduct->update([
-                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity
+                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                        'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count
                     ]);
                 } else {
                     if(($inventoryProduct->stocks_count - $product->total_quantity) < $inventoryProduct->purchased_stocks) {
@@ -178,12 +180,14 @@ class TransferController extends Controller
 
                     $inventoryProduct->update([
                         'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                        'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
                         'approved_stocks' => $inventoryProduct->stocks_count - $product->total_quantity
                     ]);
                 }
             } else {
                 $inventoryProduct->update([
                     'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                    'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
                     'approved_stocks' => $inventoryProduct->approved_stocks - $product->total_quantity
                 ]);
             }

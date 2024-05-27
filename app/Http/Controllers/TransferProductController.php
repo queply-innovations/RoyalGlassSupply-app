@@ -6,6 +6,7 @@ use App\Models\TransferProduct;
 use App\Http\Resources\TransferProductCollection;
 use App\Http\Resources\TransferProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransferProductController extends Controller
 {
@@ -57,9 +58,17 @@ class TransferProductController extends Controller
      */
     public function update(Request $request, TransferProduct $transferProduct)
     {
-        $transferProduct->update($request->all());
+        try {
+            DB::beginTransaction();
 
-        return new TransferProductResource($transferProduct);
+            $update = $this->updateTransferProduct($request, $transferProduct);
+
+            DB::commit();
+            return new TransferProductResource($update);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -67,9 +76,17 @@ class TransferProductController extends Controller
      */
     public function destroy(TransferProduct $transferProduct)
     {
-        $transferProduct->delete();
+        try {
+            DB::beginTransaction();
+            
+            $this->removeTransferProduct($transferProduct);
 
-        return new TransferProductCollection(TransferProduct::all());
+            DB::commit();
+            return $this->sendSuccess('Removed successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -106,5 +123,28 @@ class TransferProductController extends Controller
         }
 
         return new TransferProductCollection($query->get());
+    }
+
+    private function updateTransferProduct($request, $transferProduct) {
+        $stocks = $transferProduct->total_quantity - $request->total_quantity;
+        $transferProduct->inventoryProduct->update([
+            'stocks_count' => $transferProduct->inventoryProduct->stocks_count + $stocks,
+            'total_count' => ($transferProduct->inventoryProduct->stocks_count + $stocks) - $transferProduct->inventoryProduct->damage_count,
+            'approved_stocks' => $transferProduct->inventoryProduct->approved_stocks + $stocks
+        ]);
+
+        $transferProduct->update($request->all());
+
+        return $transferProduct;
+    }
+
+    private function removeTransferProduct($transferProduct) {
+        $transferProduct->inventoryProduct->update([
+            'stocks_count' => $transferProduct->inventoryProduct->stocks_count + $transferProduct->total_quantity,
+            'total_count' => ($transferProduct->inventoryProduct->stocks_count + $transferProduct->total_quantity) - $transferProduct->damage_count,
+            'approved_stocks' => $transferProduct->inventoryProduct->approved_stocks + $transferProduct->total_quantity
+        ]);
+
+        $transferProduct->delete();
     }
 }
