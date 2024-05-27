@@ -62,6 +62,10 @@ export const AddInventoryProductForm = ({
 	selectedProduct,
 }: AddInventoryProductFormProps) => {
 	const { auth } = useAuth();
+	const canAddCapitalPrice = !!auth.rolePermissions?.find(
+		permission => permission.permission_id === 7,
+	);
+
 	const { value: FormValue, handleChange } = useInventoryProdsMutation();
 
 	// State handlers for dropdowns/popovers
@@ -74,6 +78,8 @@ export const AddInventoryProductForm = ({
 
 	// Initialize form, append inventory_id to form
 	useEffect(() => {
+		console.log(auth.rolePermissions);
+
 		handleChange('inventory_id', inventoryId);
 		handleChange('unit', 'pcs'); // Default unit is pcs
 
@@ -89,7 +95,7 @@ export const AddInventoryProductForm = ({
 
 		// If authenticated user is not an admin, set the capital_price to 0.00
 		!selectedProduct &&
-			!auth.role?.includes('admin') &&
+			!canAddCapitalPrice &&
 			handleChange('capital_price', 0);
 	}, []);
 
@@ -396,7 +402,7 @@ export const AddInventoryProductForm = ({
 								required
 								className="pl-8"
 								placeholder={'0.00'}
-								disabled={!auth.role?.includes('admin')} // Disable input if user is not an admin
+								disabled={!canAddCapitalPrice} // Disable input if user has no permission to add capital price
 								value={FormValue.capital_price || ''}
 								onBlur={e => {
 									FormValue.capital_price !== undefined
