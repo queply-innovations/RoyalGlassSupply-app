@@ -6,13 +6,13 @@ import { useProductAddition, useTransferAddition } from '../hooks';
 import { Roles } from '@/entities';
 import user from '@/store/user';
 import { AlertTriangle, Loader2 } from 'lucide-react';
-import { 
-	Select, 
-	SelectContent, 
-	SelectItem, 
-	SelectTrigger, 
-	SelectValue } 
-	from '@/components/ui/select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { useWarehouseQuery } from '@/features/warehouse/__test__/hooks';
 import { useAuth } from '@/context/AuthContext';
 
@@ -49,24 +49,33 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 		handleChangeSelect,
 	} = useProductAddition();
 
-	const priceAmount = product.capital_price
-		? product.capital_price
-		: 0;
+	const priceAmount = product.capital_price ? product.capital_price : 0;
 
-	const priceLabel = new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "PHP",
+	const priceLabel = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'PHP',
 	}).format(priceAmount);
 
-	success && setTimeout(() => {
-		onClose();
-	}, 1000);
+	success &&
+		setTimeout(() => {
+			onClose();
+		}, 1000);
 
-	const [ invCodePlchldr, setInvCodePlchldr ] = useState<string>(addProd ? invCode : 'Loading...');
+	const [invCodePlchldr, setInvCodePlchldr] = useState<string>(
+		addProd ? invCode : 'Loading...',
+	);
 
 	useEffect(() => {
-		if (filteredInventoriesSrc.length > 0 && !addProd && product.source_inventory){
-			setInvCodePlchldr(filteredInventoriesSrc.filter((inv) => inv.id === product.source_inventory)[0].code);
+		if (
+			filteredInventoriesSrc.length > 0 &&
+			!addProd &&
+			product.source_inventory
+		) {
+			setInvCodePlchldr(
+				filteredInventoriesSrc.filter(
+					inv => inv.id === product.source_inventory,
+				)[0].code,
+			);
 		}
 	}, [product.source_inventory, filteredInventoriesSrc]);
 
@@ -78,8 +87,8 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 				}}
 			>
 				<div className="flex max-w-6xl flex-col gap-5">
-					<div className="grid grid-cols-12 gap-3 justify-center">
-						<div className="flex flex-col col-span-3 gap-1">
+					<div className="grid grid-cols-12 justify-center gap-3">
+						<div className="col-span-3 flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								Transfer Product
 							</span>
@@ -91,7 +100,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								readOnly
 							/>
 						</div>
-						<div className="flex flex-col col-span-3 gap-1">
+						<div className="col-span-3 flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								Transfer ID
 							</span>
@@ -104,26 +113,37 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 							/>
 						</div>
 
-						<div className="flex flex-col col-span-6 gap-1">
+						<div className="col-span-6 flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								Inventory source:
 							</span>
 							<Select
-								onValueChange={value => 
-									handleChangeSelect('inventory_id', value)}
+								onValueChange={value =>
+									handleChangeSelect('inventory_id', value)
+								}
 								required
 								name="inventory_id"
-								value={invCodePlchldr != 'Loading...' ? (addProd ? invCode : invCodePlchldr) : ''}
+								value={
+									invCodePlchldr != 'Loading...'
+										? addProd
+											? invCode
+											: invCodePlchldr
+										: ''
+								}
 							>
 								<SelectTrigger
 									name="inventory_id"
 									className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 								>
-									<SelectValue placeholder={ 
-										addProd ? 
-											(invCode ? invCode : 'Choose inventory...') : 
-											invCodePlchldr 
-										} />
+									<SelectValue
+										placeholder={
+											addProd
+												? invCode
+													? invCode
+													: 'Choose inventory...'
+												: invCodePlchldr
+										}
+									/>
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium">
@@ -151,14 +171,19 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 						</div>
 					</div>
 
-					<div className="grid grid-cols-12 gap-3 justify-center">
-						<div className="flex flex-col col-span-6 gap-1">
+					<div className="grid grid-cols-12 justify-center gap-3">
+						<div className="col-span-6 flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								Product to transfer:
 							</span>
 							<Select
-								onValueChange={value => 
-									handleChangeSelect('product_id', Number(value.split('-')[0]), Number(value.split('-')[1]))}
+								onValueChange={value =>
+									handleChangeSelect(
+										'product_id',
+										Number(value.split('-')[0]),
+										Number(value.split('-')[1]),
+									)
+								}
 								required
 								name="product_id"
 								disabled={inventoryID ? false : true}
@@ -168,32 +193,43 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 									name="product_id"
 									className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 								>
-									<SelectValue placeholder={
-										addProd ? 
-											(inventoryID ? 'Choose product...' : 'Select inventory first') : 
-											(invCodePlchldr != 'Loading...' ? 
-												(prodName == '' ? 'Choose product...' : prodName) : 
-												'Loading...'
-											)
-										} />
+									<SelectValue
+										placeholder={
+											addProd
+												? inventoryID
+													? 'Choose product...'
+													: 'Select inventory first'
+												: invCodePlchldr != 'Loading...'
+													? prodName == ''
+														? 'Choose product...'
+														: prodName
+													: 'Loading...'
+										}
+									/>
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium">
 									{filteredProductsSrc.length <= 0 ? (
-										!addProd && invCodePlchldr != 'Loading...' ? 
-											( <div className="flex h-12 w-full items-center justify-center px-2">
+										!addProd && invCodePlchldr != 'Loading...' ? (
+											<div className="flex h-12 w-full items-center justify-center px-2">
 												No items in selected inventory.
-											</div> ) : ( <div className="px-2"> Loading... </div>)
-									) : ( 
+											</div>
+										) : (
+											<div className="px-2"> Loading... </div>
+										)
+									) : (
 										filteredProductsSrc.map((product, key) => (
 											<SelectItem
 												key={key}
-												value={product.product.id ? 
-													product.product.id.toString() + "-" + key.toString()
-													: ''}
+												value={
+													product.product.id
+														? product.product.id.toString() +
+															'-' +
+															key.toString()
+														: ''
+												}
 												className={`text-sm font-medium text-slate-700
-												${ !addProd && product.product.id == 
-													selectedProduct.product.id && 'selected'}`}
+												${!addProd && product.product.id == selectedProduct.product.id && 'selected'}`}
 											>
 												{product.product.name}
 											</SelectItem>
@@ -202,7 +238,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								</SelectContent>
 							</Select>
 						</div>
-						<div className="flex flex-col col-span-6 gap-1">
+						<div className="col-span-6 flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								Capital Price:
 							</span>
@@ -210,14 +246,14 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								name="capital_price"
 								type="string"
 								value={priceLabel}
-								onChange={handleChange}
+								// onChange={handleChange}
 								disabled
 								readOnly
 							/>
 						</div>
 					</div>
 
-					<div className="flex flex-row gap-3 justify-center">
+					<div className="flex flex-row justify-center gap-3">
 						<div className="flex flex-col gap-1">
 							<span className="text-sm font-bold uppercase">
 								TOTAL QUANTITY
@@ -225,53 +261,63 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 							<Inputbox
 								name="total_quantity"
 								type="string"
-								value={ product.total_quantity || '' }
+								value={product.total_quantity || ''}
 								placeholder={`Available stocks: ${quantityLimit}`}
-								onChange={handleChange}
-								disabled={ product.capital_price ? false : true }
+								// onChange={handleChange}
+								disabled={product.capital_price ? false : true}
 								required
 							/>
 						</div>
 
 						<div className="flex flex-col gap-1">
-							<span className="text-sm font-bold uppercase">
-								UNIT
-							</span>
+							<span className="text-sm font-bold uppercase">UNIT</span>
 							<Inputbox
 								name="unit"
 								type="string"
 								value={product.unit || ''}
-								placeholder='box, pieces, etc.'
+								placeholder="box, pieces, etc."
 								disabled
 								readOnly
 							/>
 						</div>
 
-						{product.total_quantity != 0 && damagedCount != 0 && product.total_quantity == quantityLimit && (
-							<div className="grid content-end mb-2 group">
-								<AlertTriangle size={30} strokeWidth={2} className="self-center text-yellow-600" />
-								<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-2 rounded-md bg-gray-800 px-1 text-sm text-gray-100 transition-opacity opacity-0 group-hover:opacity-100">
-									Some damaged goods ({damagedCount} {product.unit}) are included in the transfer.
-								</span>
-							</div>
-						)}
+						{product.total_quantity != 0 &&
+							damagedCount != 0 &&
+							product.total_quantity == quantityLimit && (
+								<div className="group mb-2 grid content-end">
+									<AlertTriangle
+										size={30}
+										strokeWidth={2}
+										className="self-center text-yellow-600"
+									/>
+									<span className="text-nowrap absolute left-1/2 mx-auto -translate-x-10 -translate-y-2 rounded-md bg-gray-800 px-1 text-sm text-gray-100 opacity-0 transition-opacity group-hover:opacity-100">
+										Some damaged goods ({damagedCount} {product.unit})
+										are included in the transfer.
+									</span>
+								</div>
+							)}
 					</div>
-					
+
 					<div className="flex flex-row justify-center gap-1">
 						<div className="mt-3 grid w-full grid-flow-row grid-cols-10 gap-4 text-center">
-							<div className="flex flex-col col-span-5 items-start">
+							<div className="col-span-5 flex flex-col items-start">
 								{success && (
-									<div className="font-bold text-green-700">{success}</div>
+									<div className="font-bold text-green-700">
+										{success}
+									</div>
 								)}
 								{error && (
 									<div className="font-bold text-red-700">{error}</div>
 								)}
-								{!isSubmitting ? '' : 
-									<div className="flex flex-col flex-wrap items-start"> 
-										<Loading width={30} height={30} /> 
-									</div>}
+								{!isSubmitting ? (
+									''
+								) : (
+									<div className="flex flex-col flex-wrap items-start">
+										<Loading width={30} height={30} />
+									</div>
+								)}
 							</div>
-							<div className="flex flex-col col-span-5 gap-3 items-end">
+							<div className="col-span-5 flex flex-col items-end gap-3">
 								<div className="flex flex-row">
 									<Button
 										type="reset"
@@ -289,7 +335,11 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 											disabled={isChanged ? false : true}
 											onClick={handleSubmit}
 										>
-											{!isSubmitting ? (addProd ? 'Add Product' : 'Edit Product') : 'Submitting'}
+											{!isSubmitting
+												? addProd
+													? 'Add Product'
+													: 'Edit Product'
+												: 'Submitting'}
 										</Button>
 									)}
 								</div>

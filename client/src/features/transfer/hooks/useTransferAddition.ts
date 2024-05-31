@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-	addTransfer
-} from '../api/Transfer';
+import { addTransfer } from '../api/Transfer';
 import { useTransfer } from '../context/TransferContext';
 import { useCallback, useEffect, useState } from 'react';
 import { TransferAdd } from '../types';
@@ -16,48 +14,50 @@ export const useTransferAddition = () => {
 
 	const lastId = transfers[0] ? transfers[transfers.length - 1].id + 1 : 1;
 
-	const [ isChanged, setIsChanged ] = useState(false);
-	const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
-	const [ error, setError ] = useState<string | null>(null);
-	const [ success, setSuccess ] = useState<string | null>(null);
-	const [ dateDisplay, setDateDisplay ] = useState<any>(null);
-	const [ srcCode, setSrcCode ] = useState<any>();
-	const [ dstCode, setDstCode ] = useState<any>();
-	const [ dateCode, setDateCode ] = useState<any>();
+	const [isChanged, setIsChanged] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [dateDisplay, setDateDisplay] = useState<any>(null);
+	const [srcCode, setSrcCode] = useState<any>();
+	const [dstCode, setDstCode] = useState<any>();
+	const [dateCode, setDateCode] = useState<any>();
 
-	const [ transfer, setTransfer ] = useState({} as TransferAdd);
+	const [transfer, setTransfer] = useState({} as TransferAdd);
 	useEffect(() => {
 		setTransfer(prev => ({
 			...prev,
-			approval_status: "pending",
+			approval_status: 'pending',
 			created_by: auth.user.id,
 			transfer_schedule: '',
-		}))
+		}));
 	}, []);
 
 	const isFormValid = () => {
 		const headers: Array<Object> = Object.keys(transfer).map(key => {
-			return { text: key }
+			return { text: key };
 		});
 
-		const formChecker = headers.length === 6 || headers.length > 6 ? true : false;
+		const formChecker =
+			headers.length === 6 || headers.length > 6 ? true : false;
 
-		if(formChecker){
-			const checker = transfer.source === transfer.destination ? false : true;
-			if (checker){
+		if (formChecker) {
+			const checker =
+				transfer.source === transfer.destination ? false : true;
+			if (checker) {
 				const checker2 = transfer.transfer_schedule === '' ? false : true;
-				if (checker2){
-					return [ checker2, "" ];
+				if (checker2) {
+					return [checker2, ''];
 				} else {
-					return [ checker2, "Please fill up transfer schedule" ];
+					return [checker2, 'Please fill up transfer schedule'];
 				}
 			} else {
-				return [ checker, "You cannot have the same source and destination" ];
+				return [checker, 'You cannot have the same source and destination'];
 			}
 		} else {
-			return [ formChecker, "Please fill up all fields" ];
+			return [formChecker, 'Please fill up all fields'];
 		}
-	}
+	};
 
 	const handleChange = (e: any) => {
 		setIsChanged(true);
@@ -69,34 +69,39 @@ export const useTransferAddition = () => {
 		}));
 	};
 
-	const handleChangeDateTime = (
-		time: any
-	) => {
+	const handleChangeDateTime = (time: any) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
-		if (time){
+		if (time) {
 			setDateDisplay(time);
-			const hourFormat = time.$H < 10 ? '0' + time.$H.toString() : time.$H.toString();
-			const minuteFormat = time.$m < 10 ? '0' + time.$m.toString() : time.$m.toString();
-			const secondFormat = time.$s < 10 ? '0' + time.$s.toString() : time.$s.toString();
+			const hourFormat =
+				time.$H < 10 ? '0' + time.$H.toString() : time.$H.toString();
+			const minuteFormat =
+				time.$m < 10 ? '0' + time.$m.toString() : time.$m.toString();
+			const secondFormat =
+				time.$s < 10 ? '0' + time.$s.toString() : time.$s.toString();
 			setTransfer(prev => ({
 				...prev,
-				transfer_schedule: transfer.transfer_schedule + " " + hourFormat + ":" + minuteFormat + ":" + secondFormat
+				transfer_schedule:
+					transfer.transfer_schedule +
+					' ' +
+					hourFormat +
+					':' +
+					minuteFormat +
+					':' +
+					secondFormat,
 			}));
 		} else {
 			setDateDisplay(null);
 			setTransfer(prev => ({
 				...prev,
-				transfer_schedule: transfer.transfer_schedule.split(' ')[0]
+				transfer_schedule: transfer.transfer_schedule.split(' ')[0],
 			}));
 		}
 	};
 
-	const handleChangeSelect = (
-		key: string,
-		_value: any,
-	) => {
+	const handleChangeSelect = (key: string, _value: any) => {
 		setIsChanged(true);
 		setSuccess(null);
 		setError(null);
@@ -105,23 +110,31 @@ export const useTransferAddition = () => {
 			[key]: _value,
 		}));
 		console.log(key, _value);
-		if (key === "source" && _value == 1) {
-			setSrcCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
-			setDstCode(warehouses.find(warehouse => warehouse.id === _value + 1)?.code);
+		if (key === 'source' && _value == 1) {
+			setSrcCode(
+				warehouses.find(warehouse => warehouse.id === _value)?.code,
+			);
+			setDstCode(
+				warehouses.find(warehouse => warehouse.id === _value + 1)?.code,
+			);
 
 			setTransfer(prev => ({
 				...prev,
-				destination: (_value + 1),
+				destination: _value + 1,
 			}));
-		} else if (key === "source" && _value == 2) {
-			setSrcCode(warehouses.find(warehouse => warehouse.id === _value)?.code);
-			setDstCode(warehouses.find(warehouse => warehouse.id === _value - 1)?.code);
+		} else if (key === 'source' && _value == 2) {
+			setSrcCode(
+				warehouses.find(warehouse => warehouse.id === _value)?.code,
+			);
+			setDstCode(
+				warehouses.find(warehouse => warehouse.id === _value - 1)?.code,
+			);
 
 			setTransfer(prev => ({
 				...prev,
-				destination: (_value - 1),
+				destination: _value - 1,
 			}));
-		} else if (key === 'transfer_schedule'){
+		} else if (key === 'transfer_schedule') {
 			setDateCode(_value.replace(/-/g, ''));
 			setDateDisplay(_value);
 		}
@@ -131,7 +144,8 @@ export const useTransferAddition = () => {
 		console.log(srcCode, dstCode, dateCode);
 		console.log(transfer);
 		if (srcCode && dstCode && dateCode) {
-			const addCode = 'TRF-' + srcCode + '-' + dstCode + '-' + dateCode + '-' + lastId;
+			const addCode =
+				'TRF-' + srcCode + '-' + dstCode + '-' + dateCode + '-' + lastId;
 			setTransfer(prev => ({
 				...prev,
 				code: addCode,
@@ -141,8 +155,7 @@ export const useTransferAddition = () => {
 
 	useEffect(() => {
 		async function sendingData() {
-			console.log(isSubmitting);
-			if (transfer.code){
+			if (transfer.code) {
 				const checker: any = isFormValid();
 				setIsSubmitting(true);
 				if (checker[0]) {
@@ -172,7 +185,7 @@ export const useTransferAddition = () => {
 		},
 	};
 
-	const { mutateAsync: addTransferMutation } = useMutation({
+	const { mutateAsync: addTransferMutation, isPending } = useMutation({
 		mutationKey: ['addTransfer'],
 		mutationFn: addTransfer,
 		...mutationConfig,
@@ -185,6 +198,7 @@ export const useTransferAddition = () => {
 		lastId,
 		isChanged,
 		isSubmitting,
+		isPending,
 		error,
 		success,
 		dateDisplay,
