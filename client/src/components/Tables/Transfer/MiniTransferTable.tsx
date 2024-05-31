@@ -25,9 +25,10 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { Transfer } from '@/features/transfer/types';
 import { useTransfer } from '@/features/transfer/context/TransferContext';
+import { usePendingTransfersQuery, useTransferQuery } from '@/features/transfer/hooks';
 
 export const MiniTransferTable = () =>{
-	const { transfers, isFetching } = useTransfer();
+	const { transfers, isFetching } = useTransferQuery();
 	
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
@@ -63,13 +64,11 @@ export const MiniTransferTable = () =>{
 			},
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
-				if (sched.toString() !== '0000-00-00 00:00:00') {
+				if (sched.toString() !== '0000-00-00') {
 					const details = { 
 						year: 'numeric', 
 						month: 'long', 
-						day: 'numeric', 
-						hour:'numeric',
-						minute:'numeric' };
+						day: 'numeric', };
 					const format = new Date(sched).toLocaleDateString([], details);
 					return (
 						<div className="text-center">{format}</div>
@@ -119,7 +118,7 @@ export const MiniTransferTable = () =>{
 	return (
 		<>
 			<DataTable
-				data={transfers.slice(-3).reverse()}
+				data={transfers.slice(-6).reverse()}
 				columns={TransferTableHeader}
 				filterWhat={"approval_status"}
 				dataType={"Transfer"}

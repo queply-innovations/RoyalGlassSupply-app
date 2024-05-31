@@ -117,7 +117,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			enableSorting: true,
 			header:	({ column }) => {
 				return (
-					<div>
+					<div className="flex justify-center">
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
@@ -141,7 +141,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			enableSorting: true,
 			header:	({ column }) => {
 				return (
-					<div>
+					<div className="flex justify-center">
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
@@ -160,9 +160,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 					const details = { 
 						year: 'numeric', 
 						month: 'long', 
-						day: 'numeric', 
-						hour:'numeric',
-						minute:'numeric' };
+						day: 'numeric', };
 					const format = new Date(sched).toLocaleDateString([], details);
 					return (
 						<div className="text-center">{format}</div>
