@@ -1,6 +1,5 @@
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useNewTransfer } from '@/features/transfer/context/NewTransferContext';
 import { TransferProduct } from '@/features/transfer/types';
 
 interface ItemCapitalPriceProps {
@@ -14,7 +13,6 @@ export const ItemCapitalPrice = ({
 	selectedProduct,
 	setSelectedProduct,
 }: ItemCapitalPriceProps) => {
-	const { newTransfer } = useNewTransfer();
 	return (
 		<>
 			<div className="relative flex w-1/2 flex-col justify-center gap-1">

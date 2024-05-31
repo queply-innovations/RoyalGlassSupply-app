@@ -154,7 +154,6 @@ export const useTransferAddition = () => {
 
 	useEffect(() => {
 		async function sendingData() {
-			console.log(isSubmitting);
 			if (transfer.code) {
 				const checker: any = isFormValid();
 				setIsSubmitting(true);

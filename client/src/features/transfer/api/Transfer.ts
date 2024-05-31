@@ -149,6 +149,25 @@ export const editTransferProduct = async (
 		});
 };
 
+export const deleteTransferProduct = async (data: {
+	id: string;
+}): Promise<TransferProduct[]> => {
+	return await axios
+		.delete(`${API_URLS.TRANSFER_PRODUCTS}/${data.id}`, {
+			headers: {
+				Authorization: `Bearer ${storage.getToken()}`,
+				'Content-Type': 'application/json',
+			},
+		})
+		.then(response => {
+			return response.data.data;
+		})
+		.catch(error => {
+			console.error('Error deleting transfer product:', error);
+			throw error;
+		});
+};
+
 export const addInventory = async (data: any) => {
 	return await axios
 		.post(API_URLS.INVENTORY, data, {

@@ -32,21 +32,25 @@ interface TransferProductsTableProps {
 	openModal: (data: TransferProductFull, action: string) => void;
 }
 
-export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModal }: TransferProductsTableProps) =>{
-	const { 
-		transfers, 
-		transferProducts, 
-		isFetching, 
-		selectedTransfer, 
-		setSelectedTransfer, 
-		selectedProduct, 
+export const TransferProductsTable: FC<TransferProductsTableProps> = ({
+	openModal,
+}: TransferProductsTableProps) => {
+	const {
+		transfers,
+		transferProducts,
+		isFetching,
+		selectedTransfer,
+		setSelectedTransfer,
+		selectedProduct,
 		setSelectedProduct,
 		addProd,
-		setAddProd 
+		setAddProd,
 	} = useTransfer();
 	const { auth } = useAuth();
 
-	const filteredTransferProducts = transferProducts.filter((prod) => prod.transfer_id === selectedTransfer.id);
+	const filteredTransferProducts = transferProducts.filter(
+		prod => prod.transfer_id === selectedTransfer.id,
+	);
 
 	const handleEditProduct = (product: TransferProductFull) => {
 		setSelectedProduct(product);
@@ -60,21 +64,25 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 	};
 
 	// console.log(addProd);
-	
+
 	const TransferProductTableHeader: ColumnDef<TransferProductFull>[] = [
 		{
-			id: "select",
+			id: 'select',
 			header: ({ table }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={table.getIsAllPageRowsSelected()}
-					onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+					onChange={e =>
+						table.toggleAllPageRowsSelected(!!e.target.checked)
+					}
 					aria-label="Select all"
 				/>
 			),
 			cell: ({ row }) => (
-				<input type="checkbox" 
+				<input
+					type="checkbox"
 					checked={row.getIsSelected()}
-					onChange={(e) => row.toggleSelected(!!e.target.checked)}
+					onChange={e => row.toggleSelected(!!e.target.checked)}
 					aria-label="Select row"
 					className="justify-center"
 				/>
@@ -85,35 +93,41 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 
 		{
 			id: 'product_name',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
-			header:	({ column }) => {
+			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row items-center bg-transparent text-black"
 						>
-							PRODUCT NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							PRODUCT NAME{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
 				);
 			},
 			cell: ({ row }) => {
 				return (
-					<div className="flex flex-row text-xs justify-center font-normal uppercase">
+					<div className="flex flex-row justify-center text-xs font-normal uppercase">
 						{row.original.product.name}
 					</div>
 				);
-			}
+			},
 		},
 
 		{
 			accessorKey: 'total_quantity',
-			header:	() => <div className="text-center">TOTAL QUANTITY</div>,
+			header: () => <div className="text-center">TOTAL QUANTITY</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.total_quantity}</div>
 			),
@@ -121,7 +135,7 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 
 		{
 			accessorKey: 'unit',
-			header:	() => <div className="text-center">UNIT</div>,
+			header: () => <div className="text-center">UNIT</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.unit}</div>
 			),
@@ -129,15 +143,15 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 
 		{
 			id: 'actions',
-			header:	() => <div></div>,
+			header: () => <div></div>,
 			cell: ({ row }) => {
 				const productRow = row.original;
 				return (
-					selectedTransfer.transfer_status != 'arrived' && 
+					selectedTransfer.transfer_status != 'arrived' &&
 					selectedTransfer.approval_status != 'rejected' && (
-						<div className="flex flex-row text-xs justify-center font-normal uppercase">
-							<Button 
-								fill={'yellow'} 
+						<div className="flex flex-row justify-center text-xs font-normal uppercase">
+							<Button
+								fill={'yellow'}
 								textColor={'black'}
 								onClick={() => handleEditProduct(productRow)}
 							>
@@ -146,9 +160,8 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 						</div>
 					)
 				);
-			}
-		}
-
+			},
+		},
 	];
 
 	return (
@@ -156,13 +169,18 @@ export const TransferProductsTable: FC<TransferProductsTableProps> = ({ openModa
 			<DataTable
 				data={filteredTransferProducts}
 				columns={TransferProductTableHeader}
-				filterWhat={"product_name"}
-				dataType={"Transfer Products"}
-				openModal={selectedTransfer.transfer_status != 'arrived' && 
-							selectedTransfer.approval_status != 'rejected' ? handleAddProduct : undefined}
-				isLoading={isFetching} />
+				filterWhat={'product_name'}
+				dataType={'Transfer Products'}
+				openModal={
+					selectedTransfer.transfer_status != 'arrived' &&
+					selectedTransfer.approval_status != 'rejected'
+						? handleAddProduct
+						: undefined
+				}
+				isLoading={isFetching}
+			/>
 
-				{/* TODO: PLEASE CHECK IF ADD TRANSFER PRODUCT IS HIDDEN IF TRANSFER HAS ARRIVED */}
+			{/* TODO: PLEASE CHECK IF ADD TRANSFER PRODUCT IS HIDDEN IF TRANSFER HAS ARRIVED */}
 		</>
 	);
 };

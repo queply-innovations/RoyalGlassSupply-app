@@ -20,8 +20,6 @@ export const ItemStocksCount = ({
 	selectedProduct,
 	setSelectedProduct,
 }: ItemStocksCountProps) => {
-	const { newTransfer } = useNewTransfer();
-
 	return (
 		<>
 			<div className="relative flex w-1/2 flex-col justify-center gap-1">

@@ -10,6 +10,7 @@ import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
 import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
 import { NewTransferProvider } from '@/features/transfer/context/NewTransferContext';
+import { TransferProductEdit } from '@/features/transfer/modal/TransferProductEdit';
 
 export const Transfer = () => {
 	const { isOpen, openModal, closeModal } = useModal();
@@ -60,8 +61,9 @@ export const Transfer = () => {
 									<TransferForm2 onClose={closeModal} />
 								</NewTransferProvider>
 							)}
+
 							{modalAction === 'products' && (
-								<TransferProducts onClose={closeModal} />
+								<TransferProductEdit onClose={closeModal} />
 							)}
 							{/* {modalAction === 'print' && (
 								// <TransferProductsPrint />

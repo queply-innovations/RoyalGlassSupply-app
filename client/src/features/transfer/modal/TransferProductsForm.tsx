@@ -246,7 +246,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								name="capital_price"
 								type="string"
 								value={priceLabel}
-								onChange={handleChange}
+								// onChange={handleChange}
 								disabled
 								readOnly
 							/>
@@ -263,7 +263,7 @@ export const TransferProductsForm = ({ onClose }: TransferProductsProps) => {
 								type="string"
 								value={product.total_quantity || ''}
 								placeholder={`Available stocks: ${quantityLimit}`}
-								onChange={handleChange}
+								// onChange={handleChange}
 								disabled={product.capital_price ? false : true}
 								required
 							/>
