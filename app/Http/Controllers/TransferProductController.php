@@ -142,7 +142,17 @@ class TransferProductController extends Controller
             throw new \Exception('Transfer record does not exists');
         }
 
-        $product = TransferProduct::create($request->all());
+        $product = TransferProduct::create([
+            'transfer_id' => $request->transfer_id,
+            'product_id' => $request->product_id,
+            'capital_price' => $request->capital_price,
+            'bundles_count' => 0,
+            'bundles_unit' => '',
+            'quantity_per_bundle' => 0,
+            'total_quantity' => $request->total_quantity,
+            'unit' => $request->unit,
+            'source_inventory' => $request->id
+        ]);
 
         $inventoryProduct = $product->inventoryProduct;
 

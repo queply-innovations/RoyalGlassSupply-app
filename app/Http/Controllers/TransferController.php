@@ -56,7 +56,7 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     {
-        return new TransferResource($transfer->load('transferProducts'));
+        return new TransferResource($transfer);
     }
 
     /**
