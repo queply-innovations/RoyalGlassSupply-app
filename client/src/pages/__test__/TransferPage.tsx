@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import { TransferEdit } from '@/features/transfer/modal/TransferEdit';
 import { TransferProducts } from '@/features/transfer/modal/TransferProducts';
+import { NewTransferProvider } from '@/features/transfer/context/NewTransferContext';
 import { TransferProductEdit } from '@/features/transfer/modal/TransferProductEdit';
 import { PendingTransferEdit } from '@/features/pending/pending-transfer/modal/PendingTransferEdit';
 
