@@ -259,7 +259,7 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 	);
 
 	const assignedInventory = filteredInventoriesSrc.find(
-		data => data?.id === filteredTransferProducts[0]?.source_inventory,
+		data => data?.warehouse.id === selectedTransfer.source.id,
 	);
 
 	const [activeView, setActiveView] = useState<string>('table');

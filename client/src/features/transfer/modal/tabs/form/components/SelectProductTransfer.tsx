@@ -42,14 +42,10 @@ export const SelectProductsTransfer = ({
 		isInventoryLoading,
 	} = useProductAddition();
 
-	const { transferProducts, selectedTransfer } = useTransfer();
-
-	const filteredTransferProducts = transferProducts.filter(
-		prod => prod.transfer_id === selectedTransfer.id,
-	);
+	const { selectedTransfer } = useTransfer();
 
 	const assignedInventory = filteredInventoriesSrc.find(
-		data => data?.id === filteredTransferProducts[0]?.source_inventory,
+		data => data?.warehouse.id === selectedTransfer.source.id,
 	);
 
 	useEffect(() => {
