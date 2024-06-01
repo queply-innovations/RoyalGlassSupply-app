@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class RemoveDuplicateProductsCommand extends Command
 {
