@@ -26,6 +26,7 @@ export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 		inventoriesLoading,
 		selectedInventory,
 		setSelectedInventory,
+		newTransfer,
 	} = useNewTransfer();
 	const [open, setOpen] = useState(false);
 
@@ -48,7 +49,11 @@ export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 						role="combobox"
 						aria-expanded={open}
 						className="justify-between"
-						disabled={inventoriesLoading || tabState === 'items'}
+						disabled={
+							newTransfer.source === undefined ||
+							inventoriesLoading ||
+							tabState === 'items'
+						}
 					>
 						{inventoriesLoading
 							? 'Loading...'

@@ -59,7 +59,9 @@ export const DeleteProduct = ({ onClose }: DeleteProductProps) => {
 				</div>
 				<hr className="h-px w-full border-0 bg-gray-200" />
 				<div className="flex flex-row justify-between">
-					<p className="max-w-[50%] text-sm">
+					<p
+						className={`max-w-[50%] text-sm ${isDeletable !== undefined && !isDeletable && 'text-red-700'}`}
+					>
 						{isDeletable !== undefined
 							? isDeletable
 								? 'This product can be deleted. Are you sure you want to proceed? This action cannot be undone.'

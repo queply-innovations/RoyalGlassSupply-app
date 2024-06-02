@@ -164,7 +164,11 @@ export const ItemsTab = ({ onClose }: ItemsTabProps) => {
 	const [activeView, setActiveView] = useState<string>('table');
 
 	const handleRequestTransfer = async () => {
-		addTransferMutation(newTransfer as unknown as TransferAdd);
+		addTransferMutation(newTransfer as unknown as TransferAdd).catch(
+			error => {
+				toast.error(error.response.data.message);
+			},
+		);
 	};
 
 	useEffect(() => {
