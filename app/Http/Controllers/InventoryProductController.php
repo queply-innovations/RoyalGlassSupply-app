@@ -101,9 +101,10 @@ class InventoryProductController extends Controller
      */
     public function destroy(InventoryProduct $inventoryProduct)
     {
+        $inventoryProduct->productPrice->delete();
         $inventoryProduct->delete();
 
-        return new InventoryProductCollection(InventoryProduct::all());
+        return $this->sendSuccess('Product successfully removed.');
     }
 
     /**

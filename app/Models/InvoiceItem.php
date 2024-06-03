@@ -61,6 +61,11 @@ class InvoiceItem extends Model
         return $this->belongsTo(InventoryProduct::class, 'source_inventory');
     }
 
+    public function inventoryProductWithTrashed(): BelongsTo
+    {
+        return $this->belongsTo(InventoryProduct::class, 'source_inventory')->withTrashed();
+    }
+
     public function getTotalStocksQuantityAttribute ()
     {
         return ($this->quantity * $this->productPrice->stocks_quantity);

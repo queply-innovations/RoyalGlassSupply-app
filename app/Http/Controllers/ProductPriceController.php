@@ -68,9 +68,10 @@ class ProductPriceController extends Controller
      */
     public function destroy(ProductPrice $productPrice)
     {
+        $productPrice->inventoryProduct->delete();
         $productPrice->delete();
         
-        return new ProductPriceCollection(ProductPrice::all());
+        return $this->sendSuccess('Product removed successfully');
     }
 
     /**
