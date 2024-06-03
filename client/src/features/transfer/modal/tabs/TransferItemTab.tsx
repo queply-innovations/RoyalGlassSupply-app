@@ -361,7 +361,7 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 								}
 							}}
 							disabled={assignedInventory?.code ? false : true}
-							className="w-full text-sm font-bold text-slate-800 hover:bg-slate-300"
+							className={`w-full text-sm font-bold text-slate-800 hover:bg-slate-300 ${activeView === 'table' && 'hidden'}`}
 						>
 							<div className="flex items-center gap-2">
 								{activeView == 'table' && (

@@ -32,16 +32,21 @@ interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
 }
 
-export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTableProps) =>{
-	const { transfers, transferProducts, isFetching, setSelectedTransfer } = useTransfer();
+export const TransferTable: FC<TransferTableProps> = ({
+	openModal,
+}: TransferTableProps) => {
+	const { transfers, transferProducts, isFetching, setSelectedTransfer } =
+		useTransfer();
 	const { auth } = useAuth();
 	const navigate = useNavigate();
 
-	function printTransfer(transfer: Transfer){
+	function printTransfer(transfer: Transfer) {
 		window.api.transferSend({
 			transfer: transfer,
-			products: transferProducts.filter((prod) => prod.transfer_id === transfer.id)
-		 });
+			products: transferProducts.filter(
+				prod => prod.transfer_id === transfer.id,
+			),
+		});
 	}
 
 	// Modal handler to expand transfer details
@@ -64,65 +69,69 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 	const handleAddTransfer = () => {
 		openModal({} as Transfer, 'add');
 	};
-	
+
 	const TransferTableHeader: ColumnDef<Transfer>[] = [
 		{
 			accessorKey: 'code',
-			sortingFn: "alphanumeric",
+			sortingFn: 'alphanumeric',
 			enableSorting: true,
-			header:	({ column }) => {
+			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row items-center bg-transparent text-black"
 						>
-							TRANSFER CODE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							TRANSFER CODE{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.code ? row.original.code : 'N/A'}</div>
+				<div className="text-center">
+					{row.original.code ? row.original.code : 'N/A'}
+				</div>
 			),
 		},
 
 		{
 			accessorKey: 'source',
-			header:	() => <div className="text-center">SOURCE-DESTINATION</div>,
+			header: () => <div className="text-center">SOURCE-DESTINATION</div>,
 			cell: ({ row }) => {
 				const source: any = row.original.source;
 				const destination: any = row.original.destination;
 				return (
-					<div className="text-center">{source.code}-{destination.code}</div>
+					<div className="text-center">
+						{source.code}-{destination.code}
+					</div>
 				);
 			},
 		},
 
 		{
 			id: 'transfer_products',
-			header:	() => <div className="text-center">PRODUCTS ADDED?</div>,
-			cell: ({ row }) => {
+			header: () => <div className="text-center">PRODUCTS ADDED?</div>,
+			cell: () => {
 				return (
 					<div className="flex justify-center">
-						{
-							transferProducts.filter((prod) => prod.transfer_id === row.original.id).length > 0 ? (
-								<Check
-									size={20}
-									strokeWidth={2}
-									className="text-green-600"
-								/>
-							) : (
-								<Ban
-									size={20}
-									strokeWidth={2}
-									className="text-red-600"
-								/>
-							)
-						}
+						{transferProducts.length > 0 ? (
+							<Check
+								size={20}
+								strokeWidth={2}
+								className="text-green-600"
+							/>
+						) : (
+							<Ban size={20} strokeWidth={2} className="text-red-600" />
+						)}
 					</div>
 				);
 			},
@@ -130,43 +139,59 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			accessorKey: 'transfer_status',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
-			header:	({ column }) => {
+			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row items-center bg-transparent text-black"
 						>
-							TRANSFER STATUS {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							TRANSFER STATUS{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">{row.original.transfer_status ? row.original.transfer_status : 'N/A'}</div>
+				<div className="text-center">
+					{row.original.transfer_status
+						? row.original.transfer_status
+						: 'N/A'}
+				</div>
 			),
 		},
 
 		{
 			accessorKey: 'transfer_schedule',
-			sortingFn: "datetime",
+			sortingFn: 'datetime',
 			enableSorting: true,
-			header:	({ column }) => {
+			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row items-center bg-transparent text-black"
 						>
-							SCHEDULE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							SCHEDULE{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
 				);
@@ -174,18 +199,15 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			cell: ({ row }) => {
 				const sched: any = row.getValue('transfer_schedule');
 				if (sched.toString() !== '0000-00-00') {
-					const details = { 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric', };
+					const details = {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					};
 					const format = new Date(sched).toLocaleDateString([], details);
-					return (
-						<div className="text-center">{format}</div>
-					);
+					return <div className="text-center">{format}</div>;
 				} else {
-					return (
-						<div className="text-center">N/A</div>
-					);
+					return <div className="text-center">N/A</div>;
 				}
 			},
 		},
@@ -193,17 +215,23 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 		{
 			accessorKey: 'date_received',
 			enableSorting: true,
-			header:	({ column }) => {
+			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() =>
 								column.toggleSorting(column.getIsSorted() === 'asc')
 							}
-							className="flex flex-row bg-transparent text-black items-center"
+							className="flex flex-row items-center bg-transparent text-black"
 						>
-							DATE RECEIVED {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							DATE RECEIVED{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
 				);
@@ -211,52 +239,43 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			cell: ({ row }) => {
 				const sched: any = row.getValue('date_received');
 				if (sched) {
-					const details = { 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric', 
-						hour:'numeric',
-						minute:'numeric' };
+					const details = {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+						hour: 'numeric',
+						minute: 'numeric',
+					};
 					const format = new Date(sched).toLocaleDateString([], details);
-					return (
-						<div className="text-center">{format}</div>
-					);
+					return <div className="text-center">{format}</div>;
 				} else {
-					return (
-						<div className="text-center">N/A</div>
-					);
+					return <div className="text-center">N/A</div>;
 				}
-				
 			},
 		},
 
 		{
 			accessorKey: 'approval_status',
-			header:	() => <div className="text-center">APPROVAL STATUS</div>,
+			header: () => <div className="text-center">APPROVAL STATUS</div>,
 			cell: ({ row }) => {
 				return (
-					<div className="flex mx-auto items-center justify-center">
-						{
-							row.original.approval_status.toLowerCase() === 'approved' ? ( 
-								<Check
-									size={20}
-									strokeWidth={2}
-									className="text-green-600"
-								/> 
-							) : row.original.approval_status.toLowerCase() === 'rejected' ? (
-								<Ban
-									size={20}
-									strokeWidth={2}
-									className="text-red-600"
-								/>
-							) : (
-								<Clock
-									size={20}
-									strokeWidth={2}
-									className="text-amber-500"
-								/>
-							)
-						}
+					<div className="mx-auto flex items-center justify-center">
+						{row.original.approval_status.toLowerCase() === 'approved' ? (
+							<Check
+								size={20}
+								strokeWidth={2}
+								className="text-green-600"
+							/>
+						) : row.original.approval_status.toLowerCase() ===
+						  'rejected' ? (
+							<Ban size={20} strokeWidth={2} className="text-red-600" />
+						) : (
+							<Clock
+								size={20}
+								strokeWidth={2}
+								className="text-amber-500"
+							/>
+						)}
 					</div>
 				);
 			},
@@ -264,7 +283,7 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 
 		{
 			id: 'actions',
-			header:	() => <div></div>,
+			header: () => <div></div>,
 			cell: ({ row }) => {
 				const transferRow = row.original;
 				return (
@@ -302,37 +321,35 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
 								>
 									<span className="flex w-6 items-center justify-center">
-										{transferRow.transfer_status != 'arrived' && 
+										{transferRow.transfer_status != 'arrived' &&
 										transferRow.approval_status != 'rejected' ? (
 											<Pencil size={16} strokeWidth={2.25} />
 										) : (
 											<List size={16} strokeWidth={2.25} />
 										)}
-										
 									</span>
 									<span>Transfer Products</span>
 								</DropdownMenuItem>
 								{/* dropdownmenuitem for transfer details and products to be printed 
 								if transfer status is arrived/enroute */}
 								{transferRow.transfer_status == 'enroute' ||
-								transferRow.transfer_status == 'arrived' && (
-									<DropdownMenuItem
-										onClick={() => printTransfer(transferRow)}
-										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-									>
-										<span className="flex w-6 items-center justify-center">
-											<Printer size={16} strokeWidth={2.25} />
-										</span>
-										<span>Print Transfer</span>
-									</DropdownMenuItem>
-								)}
+									(transferRow.transfer_status == 'arrived' && (
+										<DropdownMenuItem
+											onClick={() => printTransfer(transferRow)}
+											className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+										>
+											<span className="flex w-6 items-center justify-center">
+												<Printer size={16} strokeWidth={2.25} />
+											</span>
+											<span>Print Transfer</span>
+										</DropdownMenuItem>
+									))}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
 				);
-			}
-		}
-
+			},
+		},
 	];
 
 	return (
@@ -340,10 +357,11 @@ export const TransferTable: FC<TransferTableProps> = ({ openModal }: TransferTab
 			<DataTable
 				data={transfers}
 				columns={TransferTableHeader}
-				filterWhat={"approval_status"}
-				dataType={"Transfer"}
+				filterWhat={'approval_status'}
+				dataType={'Transfer'}
 				openModal={handleAddTransfer}
-				isLoading={isFetching} />
+				isLoading={isFetching}
+			/>
 		</>
 	);
 };
