@@ -234,7 +234,7 @@ class ReportController extends Controller
     }
 
     private function getSalesReport($request) {
-        $invoices = Invoice::with(['invoiceItems.inventoryProduct'])
+        $invoices = Invoice::with(['invoiceItems.inventoryProductWithTrashed'])
             ->where('type', 'payment')
             ->where('payment_method', '!=', 'balance_payment')
             ->where('is_paid', true)
@@ -267,7 +267,7 @@ class ReportController extends Controller
             ])->sum('amount');
 
         if($request->has('overall_capital') && $request->overall_capital) {
-            $inventoryProduct = InventoryProduct::query()->get(['capital_price', 'stocks_count', 'purchased_stocks']);
+            $inventoryProduct = InventoryProduct::withTrashed()->get(['capital_price', 'stocks_count', 'purchased_stocks']);
             $totalCapital = collect($inventoryProduct)->map(function($item) {
                 return $item->capital_price * ($item->stocks_count - $item->purchased_stocks);
             })->toArray();
@@ -277,7 +277,11 @@ class ReportController extends Controller
 
         foreach($invoices as $invoice) {
             $capitalPrices = collect($invoice->invoiceItems)->map(function($item) {
-                return $item->inventoryProduct->capital_price * $item->quantity;
+                $returnedItems = collect($item->returnTransactionItems)->map(function($retItem) {
+                    return $retItem->quantity;
+                })->toArray();
+                
+                return $item->inventoryProductWithTrashed->capital_price * ($item->quantity - array_sum($returnedItems));
             });
 
             $returnTransaction = $invoice->returnTransaction->refundable_amount ?? 0;

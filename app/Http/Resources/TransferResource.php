@@ -30,7 +30,7 @@ class TransferResource extends JsonResource
             'notes' => $this->notes,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'transfer_products' => new TransferProductCollection($this->whenLoaded('transferProducts'))
+            'transfer_products' => new TransferProductCollection($this->transferProducts)
         ];
     }
 }
