@@ -173,7 +173,13 @@ export const useTransferAddition = () => {
 	const mutationConfig = {
 		onSuccess: async () => {
 			// Reset loading state
-			await queryClient.invalidateQueries({ queryKey: ['transfers'] });
+			await queryClient.invalidateQueries({
+				predicate: query => {
+					return ['transfers', 'transfer_products'].includes(
+						query.queryKey[0] as string,
+					);
+				},
+			});
 			setIsSubmitting(false);
 			setIsChanged(false);
 			setSuccess('Transfer info has been added');
