@@ -79,11 +79,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->productPrices->forceDelete();
-        $product->inventoryProducts->forceDelete();
+        foreach($product->productPrices as $productPrice) {
+            $productPrice->forceDelete();
+        }
+        foreach($product->inventoryProducts as $inventoryProduct) {
+            $inventoryProduct->forceDelete();
+        }
         $product->delete();
 
-        return new ProductCollection(Product::all());
+        return $this->sendSuccess('Product removed successfully.');
     }
 
     /**
