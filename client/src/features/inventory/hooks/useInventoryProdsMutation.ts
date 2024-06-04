@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addInventoryProducts, patchInventoryProduct } from '../api/Inventory';
+import {
+	addInventoryProducts,
+	patchInventoryProduct,
+	deleteInventoryProduct,
+} from '../api/Inventory';
 import { InventoryProductDatabase } from '../types';
 import { useState } from 'react';
 
@@ -70,10 +74,17 @@ export const useInventoryProdsMutation = () => {
 		...mutationConfig,
 	});
 
+	const { mutateAsync: deleteInventoryProductMutation } = useMutation({
+		mutationKey: ['deleteInventoryProduct'],
+		mutationFn: deleteInventoryProduct,
+		...mutationConfig,
+	});
+
 	return {
 		value,
 		setValue,
 		handleChange,
 		handleSubmit,
+		deleteInventoryProductMutation,
 	};
 };

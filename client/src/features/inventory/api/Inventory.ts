@@ -230,3 +230,15 @@ export const patchInventoryProduct = async ({
 			throw error;
 		});
 };
+
+export const deleteInventoryProduct = async (id: number) => {
+	return await axios
+		.delete(`${API_URLS.INVENTORY_PRODUCTS}/${id}`, {
+			headers: API_HEADERS(),
+		})
+		.then(response => ({ message: response.data.message }))
+		.catch(error => {
+			console.error('Error deleting inventory product:', error);
+			throw error;
+		});
+};
