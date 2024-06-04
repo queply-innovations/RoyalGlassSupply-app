@@ -80,10 +80,10 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         foreach($product->productPrices as $productPrice) {
-            $productPrice->forceDelete();
+            $productPrice->delete();
         }
         foreach($product->inventoryProducts as $inventoryProduct) {
-            $inventoryProduct->forceDelete();
+            $inventoryProduct->delete();
         }
         $product->delete();
 
