@@ -5,3 +5,4 @@ export * from './modal/AddProduct';
 export * from './modal/ProdPriceDetails';
 export * from './modal/ProdPriceActiveToggle';
 export * from './modal/AddProdPrice';
+export * from './modal/DeleteProdPrice';

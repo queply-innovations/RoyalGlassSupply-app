@@ -9,6 +9,7 @@ import {
 	ProdPriceDetails,
 	ProdPriceActiveToggle,
 	ProductPricesTable,
+	DeleteProdPrice,
 } from '@/features/product/__test__/components';
 import { useModal } from '@/utils/Modal';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
@@ -94,7 +95,9 @@ export const ProductPrices = () => {
 									? 'Listing Details'
 									: modalAction === 'edit'
 										? 'Edit Listing'
-										: ''
+										: modalAction === 'delete'
+											? 'Delete Listing'
+											: ''
 							}
 							isOpen={isOpen}
 							onClose={closeModal}
@@ -104,6 +107,9 @@ export const ProductPrices = () => {
 								{modalAction === 'details' && <ProdPriceDetails />}
 								{modalAction === 'edit' && (
 									<ProductPricesForm onClose={closeModal} />
+								)}
+								{modalAction === 'delete' && (
+									<DeleteProdPrice onClose={closeModal} />
 								)}
 							</>
 						</ModalTest>
