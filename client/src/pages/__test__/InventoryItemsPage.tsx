@@ -12,7 +12,11 @@ import { AddInventoryProducts } from '@/features/inventory/components/modal/AddI
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
 import { ApproveInventoryProduct } from '@/features/inventory/components/modal/inventory-products/ApproveInventoryProduct';
-import { InventoryProductsByInventoryProvider, useInventoryProductsByInventory } from '@/features/inventory/context';
+import {
+	InventoryProductsByInventoryProvider,
+	useInventoryProductsByInventory,
+} from '@/features/inventory/context';
+import { DeleteInventoryProduct } from '@/features/inventory/components/modal/inventory-products/DeleteInventoryProduct';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -80,7 +84,9 @@ export const InventoryItemsPage = () => {
 										? 'Item Details'
 										: modalAction === 'approve'
 											? 'Approve Item'
-											: ''
+											: modalAction === 'delete'
+												? 'Delete Item'
+												: ''
 						}
 					>
 						<>
@@ -96,6 +102,9 @@ export const InventoryItemsPage = () => {
 							)}
 							{modalAction === 'approve' && (
 								<ApproveInventoryProduct onClose={closeModal} />
+							)}
+							{modalAction === 'delete' && (
+								<DeleteInventoryProduct onClose={closeModal} />
 							)}
 						</>
 					</ModalTest>

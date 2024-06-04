@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addProductListing, patchProductListing } from '../api/Products';
+import {
+	addProductListing,
+	patchProductListing,
+	deleteProductListing,
+} from '../api/Products';
 import { useState } from 'react';
 import { ProductPricesDatabase } from '../types';
 
@@ -87,6 +91,12 @@ export const useProductPricesMutation = () => {
 		...mutationConfig,
 	});
 
+	const { mutateAsync: deleteProductPricesMutation } = useMutation({
+		mutationKey: ['deleteProductListing'],
+		mutationFn: deleteProductListing,
+		...mutationConfig,
+	});
+
 	return {
 		value,
 		setValue,
@@ -94,5 +104,6 @@ export const useProductPricesMutation = () => {
 		handleSubmit,
 		addProductPricesMutation,
 		patchProductPricesMutation,
+		deleteProductPricesMutation,
 	};
 };

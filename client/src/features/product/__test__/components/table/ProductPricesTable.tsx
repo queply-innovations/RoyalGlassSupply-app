@@ -29,6 +29,12 @@ export const ProductPricesTable = ({
 		openModal(productPrice, 'edit');
 	};
 
+	// Modal handler to delete product pricing/listing
+	const handleDeleteProdPrice = (productPrice: ProductPrices) => {
+		setSelectedProductPrice(productPrice);
+		openModal(productPrice, 'delete');
+	};
+
 	return (
 		<>
 			<TooltipProvider>
@@ -36,6 +42,7 @@ export const ProductPricesTable = ({
 					columns={ProductPricesColumns({
 						handleProdPriceDetails,
 						handleEditProdPrice,
+						handleDeleteProdPrice,
 					})}
 					data={
 						filterWarehouse

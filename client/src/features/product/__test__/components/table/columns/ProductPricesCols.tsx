@@ -17,6 +17,7 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	Trash2,
 } from 'lucide-react';
 import currency from 'currency.js';
 import {
@@ -28,6 +29,7 @@ import {
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
 	handleEditProdPrice: (productPrice: ProductPrices) => void;
+	handleDeleteProdPrice: (productPrice: ProductPrices) => void;
 }
 
 /**
@@ -40,6 +42,7 @@ interface ProductPricesColumnsProps {
 export const ProductPricesColumns = ({
 	handleProdPriceDetails,
 	handleEditProdPrice,
+	handleDeleteProdPrice,
 }: ProductPricesColumnsProps): ColumnDef<ProductPrices>[] => {
 	const columnDefinition: ColumnDef<ProductPrices>[] = [
 		{
@@ -253,6 +256,16 @@ export const ProductPricesColumns = ({
 										<Pencil size={16} strokeWidth={2.25} />
 									</span>
 									<span>Edit</span>
+								</DropdownMenuItem>
+								<DropdownMenuSeparator className="bg-gray-200" />
+								<DropdownMenuItem
+									onClick={() => handleDeleteProdPrice(productRow)}
+									className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
+								>
+									<span className="flex w-6 items-center justify-center">
+										<Trash2 size={16} strokeWidth={2.25} />
+									</span>
+									<span>Delete</span>
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>

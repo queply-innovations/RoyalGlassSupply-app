@@ -314,3 +314,15 @@ export const fetchProductPricesByDateRange = async (
 			return error;
 		});
 };
+
+export const deleteProductListing = async (id: number) => {
+	return await axios
+		.delete(`${API_URLS.PRODUCT_PRICES}/${id}`, {
+			headers: API_HEADERS(),
+		})
+		.then(response => ({ message: response.data.message }))
+		.catch(error => {
+			console.error('Error deleting product listing:', error);
+			throw error;
+		});
+};
