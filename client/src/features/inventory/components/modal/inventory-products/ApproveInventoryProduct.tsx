@@ -80,25 +80,19 @@ export const ApproveInventoryProduct = ({
 							)}
 						</p>
 					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Size</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct.product.size}
 						</p>
 					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Color</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct.product.color}
 						</p>
 					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
-						<h3 className="text-sm font-bold text-gray-600">Color</h3>
-						<p className="text-sm">
-							{selectedInventoryProduct.product.color}
-						</p>
-					</div>
-					<div className="col-span-3 flex flex-col justify-center gap-1">
+					<div className="col-span-4 flex flex-col justify-center gap-1">
 						<h3 className="text-sm font-bold text-gray-600">Supplier</h3>
 						<p className="text-sm">
 							{selectedInventoryProduct.supplier_id.name}
