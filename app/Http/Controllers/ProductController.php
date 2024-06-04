@@ -79,6 +79,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $product->productPrices->forceDelete();
+        $product->inventoryProducts->forceDelete();
         $product->delete();
 
         return new ProductCollection(Product::all());
