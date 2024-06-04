@@ -19,8 +19,8 @@ export const DeleteInventoryProduct = ({
 	const handleDelete = () => {
 		setIsSubmitting(true);
 		deleteInventoryProductMutation(selectedInventoryProduct.id)
-			.then(() => {
-				toast.success('Inventory product deleted successfully.');
+			.then(res => {
+				toast.success(res.message);
 				onClose();
 			})
 			.catch(error => {
