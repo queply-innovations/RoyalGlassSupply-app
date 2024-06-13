@@ -115,15 +115,17 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		currentInvoicePos.delivery_charge,
 	]);
 
-	useEffect(() => {
-		console.log(currentInvoicePos);
-	}, [currentInvoicePos]);
+	// useEffect(() => {
+	// 	console.log(currentInvoicePos);
+	// }, [currentInvoicePos]);
 
 	// Change handling
 	useEffect(() => {
 		setCurrentInvoicePos(prev => ({
 			...prev,
-			change_amount: currency((prev.paid_amount ?? 0) - (prev.total_amount_due ?? 0)).value,
+			change_amount: currency(
+				(prev.paid_amount ?? 0) - (prev.total_amount_due ?? 0),
+			).value,
 		}));
 	}, [currentInvoicePos.paid_amount, currentInvoicePos.total_amount_due]);
 

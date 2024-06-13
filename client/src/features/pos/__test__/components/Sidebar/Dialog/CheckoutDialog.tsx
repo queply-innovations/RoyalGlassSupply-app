@@ -7,7 +7,7 @@ import {
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { usePos } from '../../../context/__test__/PosContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 import { PaymentInfoContainer } from '../Container';
 import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
@@ -25,6 +25,7 @@ export const CheckoutDialog = () => {
 		fullData,
 		setFullData,
 		currentInvoicePos,
+		setCurrentInvoicePos,
 	} = useInvoicePos();
 
 	const [transactionStatus, setTransactionStatus] = useState<
@@ -35,8 +36,6 @@ export const CheckoutDialog = () => {
 	async function handleSubmit() {
 		setTransactionStatus('submitting');
 		console.log('Invoice:', currentInvoicePos);
-		console.log('InvoiceItems:', currentInvoiceItemsQueue);
-		console.log('InvoiceItemsDatabase:', invoiceItemsDatabase);
 		const data: any = currentInvoicePos;
 		data['invoice_items'] = invoiceItemsDatabase.map((d: any) => {
 			return { ...d, product_id: d.product_id };
@@ -60,6 +59,20 @@ export const CheckoutDialog = () => {
 			});
 	}
 
+	useEffect(() => {
+		if (dialogOptions.title === 'checkout_discount') {
+			//@ts-ignore
+			setCurrentInvoicePos(previous => {
+				return { ...previous, status: 'pending' };
+			});
+		} else {
+			//@ts-ignore
+			setCurrentInvoicePos(previous => {
+				return { ...previous, status: 'approved' };
+			});
+		}
+	}, [dialogOptions.title]);
+
 	const navigate = useNavigate();
 
 	function sendData() {
@@ -81,7 +94,7 @@ export const CheckoutDialog = () => {
 				<AlertDialogHeader className="items-start">
 					<AlertDialogTitle>
 						{transactionStatus !== 'success'
-							? 'Checkout'
+							? `${dialogOptions.title === 'checkout' ? 'Checkout' : 'Checkout with Discount'}`
 							: 'Transaction successful'}
 					</AlertDialogTitle>
 					{transactionStatus !== 'success' && (

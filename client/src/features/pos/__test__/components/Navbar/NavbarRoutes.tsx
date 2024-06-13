@@ -3,7 +3,7 @@ import {
 	DatabaseBackupIcon,
 	LayoutDashboard,
 	PackagePlus,
-	Undo2,
+	ClipboardList,
 } from 'lucide-react';
 import { NavbarRoute } from '../../types';
 
@@ -57,5 +57,13 @@ export const NavbarRoutes: NavbarRoute[] = [
 			icon: <DatabaseBackupIcon className="h-10 w-10 text-[#CCCCCC]" />,
 		},
 		path: '/pos/return-items',
+	},
+	{
+		allowedRoles: ['super_admin', 'admin', 'manager'],
+		navbarProps: {
+			displayText: 'Pending Invoices',
+			icon: <ClipboardList className="h-10 w-10 text-[#CCCCCC]" />,
+		},
+		path: '/pos/pending-invoices',
 	},
 ];

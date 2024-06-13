@@ -63,6 +63,16 @@ const { PendingReturn } = lazyImport(
 	() => import('@/pages/__test__'),
 	'PendingReturn',
 );
+
+const { PendingInvoices } = lazyImport(
+	() => import('@/pages/__test__'),
+	'PendingInvoices',
+);
+
+const { PosPendingInvoices } = lazyImport(
+	() => import('@/pages/__test__'),
+	'PosPendingInvoices',
+);
 // const { PendingTransfer } = lazyImport(
 // 	() => import('@/pages'),
 // 	'PendingTransfer',
@@ -117,7 +127,10 @@ const { TransferProductsPrintTable } = lazyImport(
 );
 
 const { InventoryDetailsPrintTable } = lazyImport(
-	() => import('@/features/inventory/components/table/InventoryDetailsPrintTable'),
+	() =>
+		import(
+			'@/features/inventory/components/table/InventoryDetailsPrintTable'
+		),
 	'InventoryDetailsPrintTable',
 );
 
@@ -156,10 +169,15 @@ const protectedRoutesConfig = [
 	{ path: '/pos/add-invoice', element: <PointOfSalePage /> },
 	{ path: '/pos/return-items', element: <ReturnItemsPosPage /> },
 	{ path: '/pos/print-invoice', element: <PrintForm /> },
+	{
+		path: '/pos/pending-invoices',
+		element: <PosPendingInvoices />,
+	},
 
 	{ path: '/pending/inventory', element: <PendingInventoryProduct /> },
 	{ path: '/pending/return', element: <PendingReturn /> },
 	{ path: '/pending/transfer', element: <PendingTransfer /> },
+	{ path: '/pending/invoices', element: <PendingInvoices /> },
 	// { path: '/pending/product-listing', element: <PendingProductPrice /> },
 	{ path: '/transfer', element: <Transfer /> },
 	{ path: '/transaction', element: <Invoice /> },

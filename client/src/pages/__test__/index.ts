@@ -25,3 +25,5 @@ export * from './PendingProductPricePage';
 export * from './PendingInventoryProductPage';
 export * from './ReturnsPage';
 export * from './ReturnItemsPage';
+export * from './PosPendingInvoices';
+export * from './PendingInvoicesPage';

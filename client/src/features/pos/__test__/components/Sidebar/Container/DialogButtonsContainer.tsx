@@ -105,6 +105,23 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					Add Paid Amount
 				</Button>
 				<hr className="my-1 w-full" />
+
+				<Button
+					className="w-full disabled:cursor-not-allowed"
+					onClick={() => {
+						setDialogOptions({ open: true, title: 'checkout_discount' });
+						//   handleSubmit();
+					}}
+					disabled={
+						Object.keys(selectedCustomer).length === 0 ||
+						(currentInvoicePos.type === 'payment' &&
+							currentInvoicePos.payment_method !== 'purchase_order' &&
+							currentInvoicePos.payment_method !== 'balance_payment' &&
+							(currentInvoicePos.change_amount ?? 0) < 0)
+					}
+				>
+					Checkout with Discount
+				</Button>
 				<Button
 					className="w-full disabled:cursor-not-allowed"
 					onClick={() => {
