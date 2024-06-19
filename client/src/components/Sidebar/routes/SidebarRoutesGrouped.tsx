@@ -59,7 +59,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 						},
 					},
 					{
-						id: 'pending-return',
+						id: 'pending-invoices',
 						permissionId: [13],
 						path: '/pending/invoices',
 						itemProps: {

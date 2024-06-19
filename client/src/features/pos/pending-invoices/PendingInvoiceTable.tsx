@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPendingInvoices } from './api/PendingInvoice';
 import { DataTable } from '@/components/Tables/DataTable';
@@ -15,12 +15,10 @@ import {
 
 import {
 	MoreVertical,
-	Pencil,
 	List,
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
-	Clock,
 	BadgeCheck,
 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -28,11 +26,11 @@ import { ColumnDef } from '@tanstack/react-table';
 const PendingInvoiceTable = ({
 	openModal,
 	setSelectedInvoice,
-	viewFrom,
+	setModalAction,
 }: {
 	openModal: any;
 	setSelectedInvoice: React.Dispatch<React.SetStateAction<any>>;
-	viewFrom?: string;
+	setModalAction: React.Dispatch<React.SetStateAction<'details' | 'approve'>>;
 }) => {
 	const { data: listOfPendingInvoices, isLoading } = useQuery({
 		queryKey: ['pending-invoices'],
@@ -108,7 +106,7 @@ const PendingInvoiceTable = ({
 			accessorKey: 'discount_amount',
 			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
+			header: () => {
 				return (
 					<div className="mx-auto flex flex-row justify-center text-center">
 						DISCOUNT AMOUNT
@@ -129,7 +127,7 @@ const PendingInvoiceTable = ({
 			accessorKey: 'subtotal',
 			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
+			header: () => {
 				return (
 					<div className="mx-auto flex flex-row justify-center text-center">
 						SUBTOTAL
@@ -150,7 +148,7 @@ const PendingInvoiceTable = ({
 			accessorKey: 'total_amount_due',
 			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
+			header: () => {
 				return (
 					<div className="mx-auto flex flex-row justify-center text-center">
 						TOTAL AMOUNT DUE
@@ -171,7 +169,7 @@ const PendingInvoiceTable = ({
 			accessorKey: 'paid_amount',
 			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
+			header: () => {
 				return (
 					<div className="mx-auto flex flex-row justify-center text-center">
 						PAID AMOUNT
@@ -205,33 +203,32 @@ const PendingInvoiceTable = ({
 									Actions
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
-								{viewFrom === 'dashboard' ? (
-									<DropdownMenuItem
-										onClick={() => {
-											setSelectedInvoice(invoiceRow);
-											openModal();
-										}}
-										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-									>
-										<span className="w-15 flex items-center justify-center">
-											<List size={20} strokeWidth={2.25} />
-										</span>
-										<span>Details</span>
-									</DropdownMenuItem>
-								) : (
-									<DropdownMenuItem
-										onClick={() => {
-											setSelectedInvoice(invoiceRow);
-											openModal();
-										}}
-										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-									>
-										<span className="w-15 flex items-center justify-center">
-											<BadgeCheck size={25} strokeWidth={2.25} />
-										</span>
-										<span>Approve Invoice</span>
-									</DropdownMenuItem>
-								)}
+								<DropdownMenuItem
+									onClick={() => {
+										setSelectedInvoice(invoiceRow);
+										setModalAction('details');
+										openModal();
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="w-15 flex items-center justify-center">
+										<List size={18} strokeWidth={2} />
+									</span>
+									<span>Details</span>
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => {
+										setSelectedInvoice(invoiceRow);
+										setModalAction('approve');
+										openModal();
+									}}
+									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+								>
+									<span className="w-15 flex items-center justify-center">
+										<BadgeCheck size={18} strokeWidth={2} />
+									</span>
+									<span>Approve Invoice</span>
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

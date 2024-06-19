@@ -4,10 +4,16 @@ import { useModal } from '@/utils/Modal';
 import { useState } from 'react';
 import { ModalTest } from '@/components/__test__/Modal/Modal';
 import PendingInvoiceDetails from '@/features/pos/pending-invoices/components/PendingInvoiceDetails';
+import DialogPendingInvoice from '@/features/pos/pending-invoices/components/DialogPendingInvoice';
 
 export const PendingInvoices = () => {
 	const { openModal, isOpen, closeModal } = useModal();
 	const [selectedInvoice, setSelectedInvoice] = useState<any>(undefined);
+
+	const [modalAction, setModalAction] = useState<'details' | 'approve'>(
+		'details',
+	);
+
 	return (
 		<>
 			<MainLayout title="Pending Invoice">
@@ -17,7 +23,7 @@ export const PendingInvoices = () => {
 							<PendingInvoiceTable
 								openModal={openModal}
 								setSelectedInvoice={setSelectedInvoice}
-								viewFrom="dashboard"
+								setModalAction={setModalAction}
 							/>
 						</div>
 					</div>
@@ -25,12 +31,27 @@ export const PendingInvoices = () => {
 						<Form onClose={closeModal} />
 					</ModalTest> */}
 					<ModalTest
-						title={'Invoice Details'}
+						title={
+							modalAction === 'details'
+								? 'Invoice Details'
+								: modalAction === 'approve'
+									? 'Approve Invoice'
+									: ''
+						}
 						isOpen={isOpen}
 						onClose={closeModal}
 						closeOnOverlayClick={false}
 					>
-						<PendingInvoiceDetails selectedInvoice={selectedInvoice} />
+						{modalAction === 'approve' ? (
+							<DialogPendingInvoice
+								selectedInvoice={selectedInvoice}
+								closeModal={closeModal}
+							/>
+						) : modalAction === 'details' ? (
+							<PendingInvoiceDetails selectedInvoice={selectedInvoice} />
+						) : (
+							<></>
+						)}
 					</ModalTest>
 				</>
 			</MainLayout>
