@@ -15,6 +15,7 @@ export const DialogContainer = () => {
 			{dialogOptions.title === 'discount' && <AddDiscountDialog />}
 			{dialogOptions.title === 'paid_amount' && <AddPaidAmount />}
 			{dialogOptions.title === 'checkout' && <CheckoutDialog />}
+			{dialogOptions.title === 'checkout_discount' && <CheckoutDialog />}
 			{dialogOptions.title === 'delivery_charge' && (
 				<AddDeliveryChargeDialog />
 			)}
