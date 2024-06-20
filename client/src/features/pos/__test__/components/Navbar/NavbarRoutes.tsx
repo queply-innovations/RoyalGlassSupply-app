@@ -58,12 +58,12 @@ export const NavbarRoutes: NavbarRoute[] = [
 		},
 		path: '/pos/return-items',
 	},
-	{
-		allowedRoles: ['super_admin', 'admin', 'manager'],
-		navbarProps: {
-			displayText: 'Pending Invoices',
-			icon: <ClipboardList className="h-10 w-10 text-[#CCCCCC]" />,
-		},
-		path: '/pos/pending-invoices',
-	},
+	// {
+	// 	allowedRoles: ['super_admin', 'admin', 'manager'],
+	// 	navbarProps: {
+	// 		displayText: 'Pending Invoices',
+	// 		icon: <ClipboardList className="h-10 w-10 text-[#CCCCCC]" />,
+	// 	},
+	// 	path: '/pos/pending-invoices',
+	// },
 ];

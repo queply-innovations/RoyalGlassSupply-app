@@ -21,10 +21,10 @@ const PendingInvoiceDetails = ({
 				</TabsList>
 
 				<TabsContent value="details">
-					<div className="flex max-w-4xl flex-col gap-4">
+					<div className="flex max-w-4xl flex-col gap-4 font-medium">
 						<div className="mt-3 grid w-full grid-flow-row grid-cols-12 gap-4">
 							<div className="col-span-6 flex flex-col justify-center gap-1">
-								<h3 className="text-sm font-bold">Invoice Code</h3>
+								<h3 className="text-sm font-bold">Invoice code</h3>
 								<p className="text-sm text-gray-800">
 									{selectedInvoice.code ? selectedInvoice.code : 'N/A'}
 								</p>
@@ -42,7 +42,7 @@ const PendingInvoiceDetails = ({
 						<hr className="my-2 h-px w-full border-0 bg-gray-200" />
 						<div className="grid w-full grid-flow-row grid-cols-6 gap-4">
 							<div className="relative col-span-3 flex flex-col justify-center	gap-1">
-								<h3 className="text-sm font-bold">Sub Total</h3>
+								<h3 className="text-sm font-bold">Subtotal</h3>
 								<p className="text-sm text-gray-800">
 									{Intl.NumberFormat('en-US', {
 										style: 'currency',
@@ -51,7 +51,16 @@ const PendingInvoiceDetails = ({
 								</p>
 							</div>
 							<div className="col-span-3 flex flex-col justify-center	gap-1">
-								<h3 className="text-sm font-bold">Total Amount Due</h3>
+								<h3 className="text-sm font-bold">Delivery charge</h3>
+								<p className="text-sm text-gray-800">
+									{Intl.NumberFormat('en-US', {
+										style: 'currency',
+										currency: 'PHP',
+									}).format(selectedInvoice.delivery_charge)}
+								</p>
+							</div>
+							<div className="col-span-3 flex flex-col justify-center	gap-1">
+								<h3 className="text-sm font-bold">Total amount due</h3>
 								<p className="text-sm text-gray-800">
 									{Intl.NumberFormat('en-US', {
 										style: 'currency',
@@ -59,17 +68,10 @@ const PendingInvoiceDetails = ({
 									}).format(selectedInvoice.total_amount_due)}
 								</p>
 							</div>
-							<div className="col-span-3 flex flex-col justify-center	gap-1">
-								<h3 className="text-sm font-bold">Paid Amount</h3>
-								<p className="text-sm text-gray-800">
-									{Intl.NumberFormat('en-US', {
-										style: 'currency',
-										currency: 'PHP',
-									}).format(selectedInvoice.paid_amount)}
-								</p>
-							</div>
 							<div className="relative col-span-3 flex flex-col justify-center	gap-1">
-								<h3 className="text-sm font-bold">Total Discount</h3>
+								<h3 className="text-sm font-bold">
+									Requested discount
+								</h3>
 								<p className="text-sm text-gray-800">
 									{Intl.NumberFormat('en-US', {
 										style: 'currency',
