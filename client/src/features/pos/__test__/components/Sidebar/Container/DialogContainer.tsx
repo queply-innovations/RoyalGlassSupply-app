@@ -5,6 +5,7 @@ import {
 	AddPaidAmount,
 	CheckoutDialog,
 	PaymentTypeDialog,
+	CheckoutDiscount,
 } from '../Dialog';
 
 export const DialogContainer = () => {
@@ -15,7 +16,7 @@ export const DialogContainer = () => {
 			{dialogOptions.title === 'discount' && <AddDiscountDialog />}
 			{dialogOptions.title === 'paid_amount' && <AddPaidAmount />}
 			{dialogOptions.title === 'checkout' && <CheckoutDialog />}
-			{dialogOptions.title === 'checkout_discount' && <CheckoutDialog />}
+			{dialogOptions.title === 'checkout_discount' && <CheckoutDiscount />}
 			{dialogOptions.title === 'delivery_charge' && (
 				<AddDeliveryChargeDialog />
 			)}

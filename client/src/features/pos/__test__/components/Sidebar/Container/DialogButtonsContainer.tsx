@@ -19,7 +19,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	// } = useInvoicePos();
 	// const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
 	const { addInvoiceMutation } = useInvoiceMutation();
-	const { selectedCustomer } = useCustomer();
+	const { selectedCustomer, selectedVoucher } = useCustomer();
 
 	// async function handleSubmit() {
 	// 	console.log('Invoice:', currentInvoicePos);
@@ -117,7 +117,8 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						(currentInvoicePos.type === 'payment' &&
 							currentInvoicePos.payment_method !== 'purchase_order' &&
 							currentInvoicePos.payment_method !== 'balance_payment' &&
-							(currentInvoicePos.change_amount ?? 0) < 0)
+							(currentInvoicePos.change_amount ?? 0) < 0) ||
+						selectedVoucher !== undefined // disable discount request if voucher is selected
 					}
 				>
 					Checkout with Discount
