@@ -105,3 +105,23 @@ export const removeInvoice = (id: number) => {
 			throw error;
 		});
 };
+
+export const updatePendingInvoice = ({
+	id,
+	data,
+}: {
+	id: number;
+	data: Partial<Invoices>;
+}) => {
+	return axios
+		.put(`${API_URLS.INVOICE}/${id}`, data, {
+			headers: API_HEADERS(),
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error updating invoice:', error);
+			throw error;
+		});
+};
