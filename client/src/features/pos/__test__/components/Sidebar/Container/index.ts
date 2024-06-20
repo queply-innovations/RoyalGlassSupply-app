@@ -4,3 +4,7 @@ export * from './CustomerInfoContainer';
 export * from './PaymentInfoContainer';
 export * from './DialogButtonsContainer';
 export * from './DialogContainer';
+export * from './ConfirmTransactionContainer';
+export * from './ApprovalWaitingContainer';
+export * from './UpdateDiscountContainer';
+export * from './UpdatePaidAmountContainer';
