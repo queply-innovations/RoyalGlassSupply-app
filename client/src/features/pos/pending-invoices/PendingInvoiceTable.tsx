@@ -1,6 +1,4 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPendingInvoices } from './api/PendingInvoice';
 import { DataTable } from '@/components/Tables/DataTable';
 
 import {
@@ -21,21 +19,21 @@ import {
 	ArrowUpDown,
 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
+import { Invoices } from '@/features/invoice/__test__/types';
 
 const PendingInvoiceTable = ({
+	data,
+	isLoading,
 	openModal,
 	setSelectedInvoice,
 	setModalAction,
 }: {
+	data: Invoices[] | undefined;
+	isLoading: boolean;
 	openModal: any;
 	setSelectedInvoice: React.Dispatch<React.SetStateAction<any>>;
 	setModalAction: React.Dispatch<React.SetStateAction<'details' | 'approve'>>;
 }) => {
-	const { data: listOfPendingInvoices, isLoading } = useQuery({
-		queryKey: ['pending-invoices'],
-		queryFn: fetchPendingInvoices,
-	});
-
 	const PendingReturnTableHeader: ColumnDef<any>[] = [
 		{
 			accessorKey: 'code',
@@ -225,7 +223,7 @@ const PendingInvoiceTable = ({
 
 	return (
 		<DataTable
-			data={listOfPendingInvoices || []}
+			data={data || []}
 			columns={PendingReturnTableHeader}
 			filterWhat={''}
 			hideFilter={true}
