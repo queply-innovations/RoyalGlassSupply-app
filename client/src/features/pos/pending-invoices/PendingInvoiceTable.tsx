@@ -1,41 +1,26 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPendingInvoices } from './api/PendingInvoice';
 import { DataTable } from '@/components/Tables/DataTable';
 
-import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components';
+import { Button } from '@/components';
 
-import {
-	MoreVertical,
-	List,
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-} from 'lucide-react';
+import { List, ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
+import { Invoices } from '@/features/invoice/__test__/types';
+import { formatUTCDate } from '@/utils/timeUtils';
 
 const PendingInvoiceTable = ({
+	data,
+	isLoading,
 	openModal,
 	setSelectedInvoice,
 	setModalAction,
 }: {
+	data: Invoices[] | undefined;
+	isLoading: boolean;
 	openModal: any;
 	setSelectedInvoice: React.Dispatch<React.SetStateAction<any>>;
 	setModalAction: React.Dispatch<React.SetStateAction<'details' | 'approve'>>;
 }) => {
-	const { data: listOfPendingInvoices, isLoading } = useQuery({
-		queryKey: ['pending-invoices'],
-		queryFn: fetchPendingInvoices,
-	});
-
 	const PendingReturnTableHeader: ColumnDef<any>[] = [
 		{
 			accessorKey: 'code',
@@ -82,7 +67,7 @@ const PendingInvoiceTable = ({
 							}
 							className="mx-auto flex flex-row items-center bg-transparent text-black"
 						>
-							CUSTOMER NAME{' '}
+							CUSTOMER{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp />
 							) : column.getIsSorted() === 'desc' ? (
@@ -108,7 +93,7 @@ const PendingInvoiceTable = ({
 			header: () => {
 				return (
 					<div className="mx-auto flex flex-row justify-center text-center">
-						DISCOUNT AMOUNT
+						DISCOUNT
 					</div>
 				);
 			},
@@ -185,39 +170,42 @@ const PendingInvoiceTable = ({
 				return <div className="text-center">{formatted}</div>;
 			},
 		},
+		{
+			accessorKey: 'created_at',
+			sortingFn: 'text',
+			enableSorting: true,
+			header: () => {
+				return (
+					<div className="mx-auto flex flex-row justify-center text-center">
+						Created at
+					</div>
+				);
+			},
+			cell: ({ row }) => (
+				<div className="text-center">
+					{formatUTCDate(row.original.created_at)}
+				</div>
+			),
+		},
 
 		{
-			id: 'actions',
+			id: 'view_items',
 			header: () => <div></div>,
 			cell: ({ row }) => {
 				const invoiceRow = row.original;
 				return (
-					<div className="flex flex-row text-xs font-normal uppercase">
-						<DropdownMenu>
-							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
-								<MoreVertical size={16} strokeWidth={2.25} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="relative z-50 w-44 bg-white">
-								<DropdownMenuLabel className="text-center">
-									Actions
-								</DropdownMenuLabel>
-								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() => {
-										setSelectedInvoice(invoiceRow);
-										setModalAction('details');
-										openModal();
-									}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="w-15 flex items-center justify-center">
-										<List size={18} strokeWidth={2} />
-									</span>
-									<span>Details</span>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+					<Button
+						className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300"
+						onClick={() => {
+							setSelectedInvoice(invoiceRow);
+							setModalAction('details');
+							openModal();
+						}}
+					>
+						<span className="w-15 flex items-center justify-center text-black">
+							<List size={16} strokeWidth={2.5} />
+						</span>
+					</Button>
 				);
 			},
 		},
@@ -225,7 +213,7 @@ const PendingInvoiceTable = ({
 
 	return (
 		<DataTable
-			data={listOfPendingInvoices || []}
+			data={data || []}
 			columns={PendingReturnTableHeader}
 			filterWhat={''}
 			hideFilter={true}
