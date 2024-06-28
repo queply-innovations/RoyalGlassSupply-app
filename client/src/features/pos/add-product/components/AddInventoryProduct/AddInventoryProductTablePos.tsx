@@ -77,23 +77,21 @@ export const AddInventoryProductTable = ({
 	const submitItems = async () => {
 		setIsSubmitting(true);
 		const response = await handleSubmit({
-			action: 'batch-add',
+			action: 'add',
 			data: data.map(item => item?.data),
 		})
-			.then(res => {
-				if (Array.isArray(res) && res.length > 0) {
-					toast.success('Items added to inventory', {
-						autoClose: 5000,
-						closeButton: true,
-					});
-					setSelectedInventory(undefined); // clear selected inventory
-				}
+			.then(() => {
+				toast.success('Items added to inventory.');
+				setIsSubmitting(false);
+				setSelectedInventory(undefined);
 			})
-			.catch(() => {
-				toast.error('Error adding items to inventory', {
-					autoClose: 5000,
-					closeButton: true,
-				});
+			.catch((err: any) => {
+				setError('Error adding items to inventory');
+				if (err.response.data.message) {
+					toast.error(err.response.data.message);
+				} else {
+					toast.error('Error adding items to inventory.');
+				}
 			});
 
 		// Check if there are errors in the response array

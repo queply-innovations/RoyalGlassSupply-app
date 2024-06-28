@@ -84,7 +84,8 @@ export const AddInventoryProductForm = ({
 			handleChange('unit', selectedProduct.data.unit),
 			handleChange('stocks_count', selectedProduct.data.stocks_count),
 			handleChange('damage_count', selectedProduct.data.damage_count),
-			handleChange('total_count', selectedProduct.data.total_count));
+			handleChange('total_count', selectedProduct.data.total_count),
+			handleChange('approved_stocks', selectedProduct.data.approved_stocks));
 
 		// If authenticated user is not an admin, set the capital_price to 0.00
 		!selectedProduct &&
