@@ -73,6 +73,10 @@ export const ProductPricesColumns = ({
 			},
 		},
 		{
+			accessorKey: 'product.brand',
+			header: () => <div className="justify-center uppercase">Brand</div>,
+		},
+		{
 			accessorKey: 'product.size',
 			header: () => <div className="justify-center uppercase">Size</div>,
 		},
