@@ -58,7 +58,17 @@ class ProductPriceController extends Controller
      */
     public function update(Request $request, ProductPrice $productPrice)
     {
-        $productPrice->update($request->except(['capital_price']));
+        $markupPrice = $request->has('markup_price') ? round($request->markup_price) : 0;
+        $cost = ($request->capital_price ?? 0) + $markupPrice;
+        $price = $cost - $productPrice->sale_discount;
+
+        $data = [
+            ...$request->except(['capital_price', 'markup_price']),
+            'markup_price' => $markupPrice,
+            'cost' => $cost
+        ];
+
+        $productPrice->update($data);
 
         return new ProductPriceResource($productPrice);
     }

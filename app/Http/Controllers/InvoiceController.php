@@ -102,7 +102,7 @@ class InvoiceController extends Controller
      */
     public function searchFilterAndSort(Request $request)
     {
-        $query = Invoice::whereNotNull('id');
+        $query = Invoice::query()->with(['invoiceItems.inventoryProduct']);
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){

@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\InventoryProduct;
+use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +28,8 @@ class InvoiceItemResource extends JsonResource
             'discount_approval_status' => $this->discount_approval_status,
             'approved_by' => new UserResource($this->approvedBy),
             'total_price' => $this->total_price,
-            'source_inventory' => $this->source_inventory
+            'source_inventory' => $this->source_inventory,
+            'inventory_product' => new InventoryProductResource($this->whenLoaded('inventoryProduct'))
         ];
     }
 }
