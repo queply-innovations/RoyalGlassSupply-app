@@ -3,18 +3,9 @@ import { useProductPrices } from '../..';
 import { useProductPricesMutation } from '../../hooks';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import { useEffect, useState } from 'react';
 import { formatUTCDate } from '@/utils/timeUtils';
 import { Button } from '@/components';
-import { useAuth } from '@/context/AuthContext';
 import currency from 'currency.js';
 import {
 	getMarkupPercentage,
@@ -29,7 +20,7 @@ interface ProductPricesFormProps {
 }
 
 export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
-	const { auth } = useAuth();
+	// const { auth } = useAuth();
 	const { selectedProductPrice } = useProductPrices();
 	const {
 		value: FormValue,
@@ -201,9 +192,36 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								value={markupPercent || ''}
 								onChange={handleMarkupPercentChange}
 								onBlur={e => {
-									e.target.value = currency(markupPercent, {
-										precision: 3,
-									}).value.toString();
+									// If input is empty or 0, set markup percent to 0
+									if (
+										e.target.value === '' ||
+										e.target.value === '0'
+									) {
+										setMarkupPercent(0);
+										setMarkupValue(0);
+									} else {
+										// Adjusts the markup value so the cost will be rounded to the nearest 0.5
+										const roundedCost =
+											Math.round(
+												(selectedProductPrice.capital_price +
+													selectedProductPrice.capital_price *
+														(Number(e.target.value) / 100)) *
+													2,
+											) / 2;
+										const adjustedMarkupValue =
+											roundedCost -
+											selectedProductPrice.capital_price;
+										setMarkupValue(
+											currency(adjustedMarkupValue).value,
+										);
+										setMarkupPercent(
+											getMarkupPercentage(
+												selectedProductPrice.capital_price,
+												adjustedMarkupValue,
+												3,
+											),
+										);
+									}
 								}}
 							/>
 							<span className="absolute bottom-0 right-0 mr-2 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -227,7 +245,35 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								value={markupValue || ''}
 								onChange={handleMarkupValueChange}
 								onBlur={e => {
-									e.target.value = Number(markupValue).toFixed(2);
+									// If input is empty or 0, set markup value to 0
+									if (
+										e.target.value === '' ||
+										e.target.value === '0'
+									) {
+										setMarkupValue(0);
+										setMarkupPercent(0);
+									} else {
+										// Adjusts the markup value so the cost will be rounded to the nearest 0.5
+										const roundedCost =
+											Math.round(
+												(selectedProductPrice.capital_price +
+													Number(e.target.value)) *
+													2,
+											) / 2;
+										const adjustedMarkupValue =
+											roundedCost -
+											selectedProductPrice.capital_price;
+										setMarkupValue(
+											currency(adjustedMarkupValue).value,
+										);
+										setMarkupPercent(
+											getMarkupPercentage(
+												selectedProductPrice.capital_price,
+												adjustedMarkupValue,
+												3,
+											),
+										);
+									}
 								}}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
