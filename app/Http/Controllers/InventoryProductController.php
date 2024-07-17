@@ -194,8 +194,14 @@ class InventoryProductController extends Controller
         $inventoryProduct = InventoryProduct::create($request);
 
         $capitalPrice = $inventoryProduct->capital_price;
-        $markupPrice = round($capitalPrice * 0.10);
+        $markupPrice = $capitalPrice * 0.10;
         $cost = $capitalPrice + $markupPrice;
+
+        if(floor($cost) != $cost) {
+            $oldCost = $capitalPrice + $markupPrice;
+            $cost = round($cost);
+            $markupPrice = $markupPrice + ($cost - $oldCost);
+        }
 
         $productPriceData = [
             'product_id' => $inventoryProduct->product_id,
@@ -232,8 +238,15 @@ class InventoryProductController extends Controller
     
             $inventoryProduct->update($request->all());
     
-            $markupPrice = round($inventoryProduct->capital_price * $markupPercent);
+            $markupPrice = $inventoryProduct->capital_price * $markupPercent;
             $cost = $inventoryProduct->capital_price + $markupPrice;
+
+            if(floor($cost) != $cost) {
+                $oldCost = $inventoryProduct->capital_price + $markupPrice;
+                $cost = round($cost);
+                $markupPrice = $markupPrice + ($cost - $oldCost);
+            }
+
             $price = $cost - $inventoryProduct->productPrice->sale_discount;
     
             $inventoryProduct->productPrice->update([
