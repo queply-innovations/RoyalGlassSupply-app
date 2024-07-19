@@ -20,31 +20,25 @@ import {
 } from 'lucide-react';
 
 interface PendingInventoryProductColsProps {
-	inventories: Inventory[];
 	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
 	handleEditInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 	handleApproveInventoryProduct: (inventoryProduct: InventoryProduct) => void;
 }
 
 export const PendingInventoryProductCols = ({
-	inventories,
 	handleViewDetails,
 	handleEditInventoryProduct,
 	handleApproveInventoryProduct,
 }: PendingInventoryProductColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
-			accessorKey: 'inventory_id',
+			accessorKey: 'inventory.id',
 			header: () => (
 				<div className="justify-center uppercase">Inventory</div>
 			),
 			cell: ({ row }) => (
 				<div>
-					{inventories
-						? inventories.find(
-								item => item.id === row.original.inventory_id,
-							)?.code
-						: row.original.inventory_id}
+					{row.original.inventory.code}
 				</div>
 			),
 		},

@@ -2,7 +2,6 @@ import { InventoryProduct } from '@/features/inventory/types';
 import { usePendingInventoryProduct } from '../../context/PendingInventoryProductContext';
 import { DataTable } from '@/components/Tables/DataTable';
 import { PendingInventoryProductCols } from './PendingInventoryProductCols';
-import { useInventory } from '@/features/inventory/context';
 
 interface PendingInventoryProductTableProps {
 	openModal: (data: InventoryProduct, action: string) => void;
@@ -13,7 +12,6 @@ export const PendingInventoryProductTable = ({
 }: PendingInventoryProductTableProps) => {
 	const { data, isLoading, setSelectedInventoryProduct } =
 		usePendingInventoryProduct();
-	const { data: inventories } = useInventory();
 
 	const handleViewDetails = (inventoryProduct: InventoryProduct) => {
 		setSelectedInventoryProduct(inventoryProduct);
@@ -36,7 +34,6 @@ export const PendingInventoryProductTable = ({
 		<>
 			<DataTable
 				columns={PendingInventoryProductCols({
-					inventories,
 					handleViewDetails,
 					handleEditInventoryProduct,
 					handleApproveInventoryProduct,
