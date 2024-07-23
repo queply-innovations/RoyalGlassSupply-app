@@ -34,6 +34,7 @@ class UpdateSellingPricesOnProductPricesTable extends Command
 
             foreach($productPrices as $productPrice) {
                 $capitalPrice = $productPrice->capital_price;
+                if($capitalPrice == 0) continue;
                 $markupPercent = $productPrice->markup_price / $capitalPrice;
         
                 $markupPrice = $productPrice->capital_price * $markupPercent;
