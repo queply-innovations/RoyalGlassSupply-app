@@ -76,24 +76,12 @@ export const useInventoryProductByIdQuery = (inventory_id: number) => {
 };
 
 export const usePendingInventoryProductQuery = () => {
-	// State of the response data
-	const [data, setData] = useState<InventoryProduct[]>(
-		[] as InventoryProduct[],
-	);
-
 	// Query for fetching inventory products and isLoading state
-	const { data: result, isFetching: isLoading } = useQuery({
+	const { data, isFetching: isLoading } = useQuery({
 		queryKey: ['pendingInventoryProducts'],
 		queryFn: () => fetchPendingInventoryProducts(),
 		refetchOnWindowFocus: false,
 	});
-
-	// Update states when query results changes [result, isLoading]
-	useEffect(() => {
-		if (!isLoading && result) {
-			setData(result);
-		}
-	}, [result, isLoading]);
 
 	return { data, isLoading };
 };

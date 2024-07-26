@@ -53,6 +53,7 @@ export const useInventoryProdsMutation = () => {
 						'inventory',
 						'inventoryProducts',
 						'inventoryProductById',
+						'pendingInventoryProducts',
 					].includes(query.queryKey[0] as string);
 				},
 			});
