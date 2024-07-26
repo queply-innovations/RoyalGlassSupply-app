@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
+use App\Models\Inventory;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -188,6 +189,16 @@ class InventoryProductController extends Controller
         }
 
         return new InventoryProductCollection($query->get());
+    }
+
+    public function pendingProducts() {
+        $inventoryProduct = InventoryProduct::whereHas('inventory')
+            ->where('approved_stocks', 0)
+            ->orWhereColumn('purchased_stocks', 'stocks_count')
+            ->orWhereColumn('approved_stocks', 'purchased_stocks')
+            ->get();
+
+        return new InventoryProductCollection($inventoryProduct);
     }
 
     private function createInventoryProduct($request) {
