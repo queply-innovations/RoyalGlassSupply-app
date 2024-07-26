@@ -123,13 +123,9 @@ export const fetchPendingInventoryProducts = async (): Promise<
 	InventoryProduct[]
 > => {
 	return await axios
-		.post(
-			`${API_URLS.INVENTORY_PRODUCTS}/searches-filters-sorts`,
-			{ status: 0 },
-			{
-				headers: API_HEADERS(),
-			},
-		)
+		.get(`${API_URLS.INVENTORY_PRODUCTS}/pending/products`, {
+			headers: API_HEADERS(),
+		})
 		.then(response => {
 			return response.data.data;
 		})

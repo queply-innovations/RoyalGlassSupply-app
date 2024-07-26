@@ -131,7 +131,7 @@ export const InventoryProductsCols = ({
 					<Tooltip>
 						<TooltipTrigger>
 							<span
-								className={`${stocksCountLow >= remainingStocks ? 'font-bold text-red-700' : stocksCountHalf >= remainingStocks ? 'font-semibold text-amber-700' : ''}`}
+								className={`${stocksCountLow >= remainingStocks ? 'font-extrabold text-red-600 drop-shadow' : stocksCountHalf >= remainingStocks ? 'font-extrabold text-amber-600 drop-shadow' : ''}`}
 							>
 								{remainingStocks}
 							</span>
@@ -154,7 +154,6 @@ export const InventoryProductsCols = ({
 				<Tooltip>
 					<div className="group relative flex w-fit items-center">
 						<TooltipTrigger>
-							{/* {!!row.original.status ? ( */}
 							{row.original.approved_stocks > 0 ? (
 								<CheckCircle
 									size={20}
@@ -174,7 +173,6 @@ export const InventoryProductsCols = ({
 								{row.original.approved_stocks > 0
 									? 'Approved'
 									: 'Pending'}
-								{/* {!!row.original.status ? 'Approved' : 'Pending'} */}
 							</p>
 						</TooltipContent>
 					</div>

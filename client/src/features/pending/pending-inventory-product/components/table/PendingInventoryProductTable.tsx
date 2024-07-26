@@ -38,7 +38,9 @@ export const PendingInventoryProductTable = ({
 					handleEditInventoryProduct,
 					handleApproveInventoryProduct,
 				})}
-				data={data.sort((a, b) => b.inventory_id - a.inventory_id)}
+				data={
+					data ? data.sort((a, b) => b.inventory_id - a.inventory_id) : []
+				}
 				filterWhat={'product'}
 				isLoading={isLoading}
 				dataType="Inventory Product"

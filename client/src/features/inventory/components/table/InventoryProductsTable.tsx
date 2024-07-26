@@ -1,10 +1,8 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { InventoryProductsCols } from './columns/InventoryProductsCols';
-import { useInventoryProductByIdQuery } from '../../hooks/useInventoryProdsQuery';
 import { InventoryProduct } from '../../types';
-import { useInventoryProds } from '../../context/InventoryProdsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { useInventory, useInventoryProductsByInventory } from '../../context';
+import { useInventoryProductsByInventory } from '../../context';
 import { Inventory } from '@/features/inventory/types';
 import { Button } from '@/components';
 import { Printer } from 'lucide-react';
@@ -16,14 +14,11 @@ interface InventoryProductsTableProps {
 }
 
 export const InventoryProductsTable = ({
-	// id,
 	openModal,
 	inventory,
 }: InventoryProductsTableProps) => {
-	// const { data, isLoading } = useInventoryProductByIdQuery(id);
 	const { data, isLoading, setSelectedInventoryProduct } =
 		useInventoryProductsByInventory();
-	// const { setSelectedInventoryProduct } = useInventoryProds();
 
 	const handleAddInventoryProduct = () => {
 		openModal({} as InventoryProduct, 'add');
