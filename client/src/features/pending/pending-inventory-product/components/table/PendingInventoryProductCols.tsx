@@ -7,7 +7,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components';
-import { InventoryProduct, Inventory } from '@/features/inventory/types';
+import { InventoryProduct } from '@/features/inventory/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowDown,
@@ -32,15 +32,32 @@ export const PendingInventoryProductCols = ({
 }: PendingInventoryProductColsProps) => {
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
-			accessorKey: 'inventory.id',
-			header: () => (
-				<div className="justify-center uppercase">Inventory</div>
-			),
-			cell: ({ row }) => (
-				<div>
-					{row.original.inventory.code}
-				</div>
-			),
+			id: 'inventory_code',
+			accessorKey: 'inventory.code',
+			sortingFn: 'text',
+			enableSorting: true,
+			header: ({ column }) => {
+				return (
+					<div>
+						<Button
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="flex flex-row items-center whitespace-nowrap bg-transparent uppercase text-slate-700"
+						>
+							Inventory{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp size={18} strokeWidth={2} />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown size={18} strokeWidth={2} />
+							) : (
+								<ArrowUpDown size={18} strokeWidth={2} />
+							)}
+						</Button>
+					</div>
+				);
+			},
+			cell: ({ row }) => <div>{row.original.inventory.code}</div>,
 		},
 		{
 			id: 'product',
