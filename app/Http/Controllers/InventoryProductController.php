@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InventoryProduct;
 use App\Http\Resources\InventoryProductCollection;
 use App\Http\Resources\InventoryProductResource;
+use App\Models\Inventory;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -190,6 +191,16 @@ class InventoryProductController extends Controller
         return new InventoryProductCollection($query->get());
     }
 
+    public function pendingProducts() {
+        $inventoryProduct = InventoryProduct::whereHas('inventory')
+            ->where('approved_stocks', 0)
+            ->orWhereColumn('purchased_stocks', 'stocks_count')
+            ->orWhereColumn('approved_stocks', 'purchased_stocks')
+            ->get();
+
+        return new InventoryProductCollection($inventoryProduct);
+    }
+
     private function createInventoryProduct($request) {
         $inventoryProduct = InventoryProduct::create($request);
 
@@ -266,6 +277,21 @@ class InventoryProductController extends Controller
 
             $inventoryProduct->update([
                 'approved_stocks' => $approvedStockCount
+            ]);
+        } else if($request->has('stocks_count') && $request->has('total_count')) {
+            $approvedStocks = $inventoryProduct->approved_stocks;
+            $stocksCount = $request->stocks_count;
+            $approved = $approvedStocks;
+
+            if($stocksCount < $approvedStocks) {
+                $total = $approvedStocks - $stocksCount;
+                $approved = $approvedStocks - $total;
+            } 
+
+            $inventoryProduct->update([
+                'stocks_count' => $request->stocks_count,
+                'approved_stocks' => $approved,
+                'total_count' => $request->stocks_count - $inventoryProduct->damage_count   
             ]);
         } else {
             $inventoryProduct->update($request->all());
