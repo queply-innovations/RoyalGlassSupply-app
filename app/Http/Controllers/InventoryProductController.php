@@ -267,6 +267,21 @@ class InventoryProductController extends Controller
             $inventoryProduct->update([
                 'approved_stocks' => $approvedStockCount
             ]);
+        } else if($request->has('stocks_count') && $request->has('total_count')) {
+            $approvedStocks = $inventoryProduct->approved_stocks;
+            $stocksCount = $request->stocks_count;
+            $approved = $approvedStocks;
+
+            if($stocksCount < $approvedStocks) {
+                $total = $approvedStocks - $stocksCount;
+                $approved = $approvedStocks - $total;
+            } 
+
+            $inventoryProduct->update([
+                'stocks_count' => $request->stocks_count,
+                'approved_stocks' => $approved,
+                'total_count' => $request->stocks_count - $inventoryProduct->damage_count   
+            ]);
         } else {
             $inventoryProduct->update($request->all());
         }
