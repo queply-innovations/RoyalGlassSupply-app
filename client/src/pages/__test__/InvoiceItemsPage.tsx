@@ -1,11 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { InvoiceItemsTable } from '@/features/invoice/__test__/components/table/InvoiceItemsTable';
-import { InvoiceProvider } from '@/features/invoice/__test__/context/InvoiceContext';
 import {
 	useInvoiceItemQueryById,
 	useInvoiceQueryById,
 } from '@/features/invoice/__test__/hooks/useInvoiceQuery';
-import { ProductPricesProvider } from '@/features/product/__test__';
 import { MainLayout } from '@/layouts/MainLayout';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { formatUTCMMDDYYYY } from '@/utils/timeUtils';
@@ -30,10 +28,20 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 		navigate(-1);
 	};
 
+	const formattedPaymentMethod = (paymentMethod: string | undefined) => {
+		if (paymentMethod) {
+			return paymentMethod
+				.split('_')
+				.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+				.join(' ');
+		}
+		return '';
+	};
+
 	return (
 		<>
 			<MainLayout title="Transaction Items">
-				<div className="flex h-full max-h-full flex-1 flex-col gap-5 rounded-lg border border-black/10 bg-white p-5">
+				<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
 					<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
 						<Button
 							onClick={() => handleNavigateBack()}
@@ -42,79 +50,100 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 							<ChevronLeft size={22} strokeWidth={2.25} />
 							<span>Go back</span>
 						</Button>
-						<div className="flex flex-row gap-8">
-							<div className="flex flex-col">
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Invoice code:</h2>
-									<span>
-										{!isInvoiceLoading ? invoice?.code : 'Loading...'}
-									</span>
+
+						{!isInvoiceLoading && (
+							<div className="flex w-full flex-row justify-between gap-4 text-xs font-medium text-slate-800">
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Code"
+										type="string"
+										value={invoice?.code}
+									/>
+
+									<InvoiceDetail
+										label="Total due"
+										type="currency"
+										value={invoice?.total_amount_due}
+									/>
 								</div>
 
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Created at:</h2>
-									<span>
-										{!isInvoiceLoading
-											? formatUTCMMDDYYYY(invoice?.created_at)
-											: 'Loading...'}
-									</span>
-								</div>
-							</div>
-							<div className="flex flex-col">
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Issued By:</h2>
-									<span>
-										{!isInvoiceLoading
-											? invoice?.issued_by.firstname +
-												' ' +
-												invoice?.issued_by.lastname
-											: 'Loading...'}
-									</span>
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Billed to"
+										type="string"
+										value={
+											invoice?.customer.firstname +
+											' ' +
+											invoice?.customer.lastname
+										}
+									/>
+
+									<InvoiceDetail
+										label="Delivery"
+										type="currency"
+										value={invoice?.delivery_charge}
+									/>
 								</div>
 
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Customer:</h2>
-									<span className="capitalize">
-										{!isInvoiceLoading
-											? invoice?.customer.firstname +
-												' ' +
-												invoice?.customer.lastname
-											: 'Loading...'}
-									</span>
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Issued by"
+										type="string"
+										value={
+											//@ts-ignore
+											invoice?.issued_by.firstname +
+											' ' +
+											//@ts-ignore
+											invoice?.issued_by.lastname
+										}
+									/>
+
+									<InvoiceDetail
+										label="Discount"
+										type="currency"
+										value={invoice?.total_discount}
+									/>
+								</div>
+
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Reference number"
+										type="string"
+										value={
+											invoice?.reference_no
+												? invoice?.reference_no
+												: 'N/A'
+										}
+									/>
+
+									<InvoiceDetail
+										label="Balance"
+										type="currency"
+										value={invoice?.balance_amount}
+									/>
+								</div>
+
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Date issued"
+										type="string"
+										//@ts-ignore
+										value={`${formatUTCMMDDYYYY(invoice?.created_at!)} (${invoice?.warehouse.code})`}
+									/>
+
+									<InvoiceDetail
+										label="Paid amount"
+										type="string"
+										value={`${formatCurrency(invoice?.paid_amount!)} (${formattedPaymentMethod(
+											invoice?.payment_method,
+										)})`}
+									/>
 								</div>
 							</div>
-							<div className="flex flex-col">
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Total Amount Due:</h2>
-									<span>
-										{!isInvoiceLoading
-											? formatCurrency(invoice?.total_amount_due)
-											: 'Loading...'}
-									</span>
-								</div>
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Warehouse:</h2>
-									<span>
-										{!isInvoiceLoading
-											? invoice?.warehouse.code
-											: 'Loading...'}
-									</span>
-								</div>
-							</div>
-							<div className="flex flex-col">
-								<div className="flex flex-row gap-2">
-									<h2 className="font-bold">Balance Amount:</h2>
-									<span>
-										{!isInvoiceLoading
-											? formatCurrency(invoice?.balance_amount)
-											: 'Loading...'}
-									</span>
-								</div>
-							</div>
-						</div>
+						)}
 					</div>
-					{/* //TODO Table here */}
-					<div>
+
+					<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">
 						{!isItemsLoading && (
 							<>
 								<InvoiceItemsTable items={invoiceItems} />
@@ -125,4 +154,37 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 			</MainLayout>
 		</>
 	);
+};
+
+interface InvoiceDetailProps {
+	type: 'string' | 'number' | 'date' | 'currency';
+	label: string;
+	value: string | number | undefined;
+}
+const InvoiceDetail = ({
+	type = 'string',
+	label,
+	value,
+}: InvoiceDetailProps) => {
+	const formatted = (valueParam: typeof value) => {
+		switch (type) {
+			case 'string':
+				return valueParam;
+			case 'number':
+				return Number(valueParam);
+			case 'date':
+				return formatUTCMMDDYYYY(valueParam as string);
+			case 'currency':
+				return formatCurrency(valueParam as number);
+			default:
+				return valueParam;
+		}
+	};
+
+	return value !== undefined ? (
+		<div className="flex flex-1 gap-1">
+			<h3 className="font-extrabold">{label}:</h3>
+			<p>{formatted(value)}</p>
+		</div>
+	) : null;
 };
