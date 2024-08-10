@@ -153,44 +153,7 @@ class TransferController extends Controller
                 'transfer_id' => $transfer->id
             ]);
 
-            $inventoryProduct = $product->inventoryProduct;
-
-            $remaining_total_stocks = $inventoryProduct->stocks_count - $inventoryProduct->purchased_stocks;
-
-            if($remaining_total_stocks <= 0) {
-                throw new \Exception("Product: {$product->product->name} has no available stocks.");
-            }
-
-            if($remaining_total_stocks < $product->total_quantity) {
-                throw new \Exception("Product: {$product->product->name} has exceeded the available stocks.");
-            }
-
-            if($inventoryProduct->stocks_count > $inventoryProduct->approved_stocks) {
-                $allowance = $inventoryProduct->stocks_count - $inventoryProduct->approved_stocks;
-
-                if($allowance >= $product->total_quantity ) {
-                    $inventoryProduct->update([
-                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
-                        'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count
-                    ]);
-                } else {
-                    if(($inventoryProduct->stocks_count - $product->total_quantity) < $inventoryProduct->purchased_stocks) {
-                        throw new \Exception("Product: {$product->product->name} has exceeded the purchased stocks.");
-                    }
-
-                    $inventoryProduct->update([
-                        'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
-                        'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
-                        'approved_stocks' => $inventoryProduct->stocks_count - $product->total_quantity
-                    ]);
-                }
-            } else {
-                $inventoryProduct->update([
-                    'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
-                    'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
-                    'approved_stocks' => $inventoryProduct->approved_stocks - $product->total_quantity
-                ]);
-            }
+            $this->processTransferProduct($product);
         }
 
         return $transfer;
@@ -232,7 +195,7 @@ class TransferController extends Controller
             'received_by' => Auth::id() // need to clarify
         ]);
 
-        $this->createInventoryProduct($transfer);
+        $this->approveTransferProduct($transfer);
 
         return $transfer;
     }
@@ -252,62 +215,114 @@ class TransferController extends Controller
         return $transfer;
     }
 
-    private function createInventoryProduct($transfer) {
-        $destination = $transfer->destinationWarehouse;
+    private function createInventoryProduct($transferItem, $inventory) {
+        $destination = $transferItem->transfer->destinationWarehouse;
 
-        $inventory = Inventory::create([
+        $inventoryProduct = InventoryProduct::create([
+            'inventory_id' => $inventory->id,
+            'product_id' => $transferItem->product_id,
+            'supplier_id' => $transferItem->inventoryProduct->supplier_id,
+            'capital_price' => $transferItem->capital_price,
+            'stocks_count' => $transferItem->total_quantity,
+            'approved_stocks' => $transferItem->total_quantity,
+            'damage_count' => 0,
+            'total_count' => $transferItem->total_quantity,
+            'purchased_stocks' => 0,
+            'unit' => $transferItem->unit,
+            'status' => true
+        ]);
+
+        $capitalPrice = $inventoryProduct->capital_price;
+        $markupPrice = round($capitalPrice * ($destination->code == 'ILI' ? 0.15 : 0.10));
+        $cost = $capitalPrice + $markupPrice;
+
+        $productPriceData = [
+            'product_id' => $inventoryProduct->product_id,
+            'type' => ' ',
+            'unit' => $inventoryProduct->unit,
+            'stocks_quantity' => $inventoryProduct->stocks_count,
+            'capital_price' => $capitalPrice,
+            'markup_price' => $markupPrice,
+            'tax_amount' => 0,
+            'cost' => $cost,
+            'on_sale' => 0,
+            'sale_discount' => 0,
+            'price' => $cost,
             'warehouse_id' => $destination->id,
             'created_by' => Auth::id(),
-            'date_received' => Carbon::now(), // need to clarify
-            'type' => 'transfer',
-            'notes' => $transfer->notes,
-            'transfer_id' => $transfer->id
+            'approval_status' => 'approved',
+            'active_status' => 'active'
+        ];
+
+        $productPrice = ProductPrice::create($productPriceData);
+
+        $inventoryProduct->update([
+            'product_price_id' => $productPrice->id
         ]);
-        $inventory->update([
-            'code' => 'INV-'.$destination->code.'-TRA-'.Carbon::now()->format('Ymd').'-'.str_pad($inventory->id, 6, 0, STR_PAD_LEFT)
-        ]);
+    }
+
+    private function approveTransferProduct($transfer) {
+        $destinationInventory = $transfer->destinationInventory;
+
+        $inventoryProducts = InventoryProduct::where('inventory_id', $destinationInventory->id)->get();
 
         foreach($transfer->transferProducts as $item) {
-            $inventoryProduct = InventoryProduct::create([
-                'inventory_id' => $inventory->id,
-                'product_id' => $item->product_id,
-                'supplier_id' => $item->inventoryProduct->supplier_id,
-                'capital_price' => $item->capital_price,
-                'stocks_count' => $item->total_quantity,
-                'approved_stocks' => $item->total_quantity,
-                'damage_count' => 0,
-                'total_count' => $item->total_quantity,
-                'purchased_stocks' => 0,
-                'unit' => $item->unit,
-                'status' => true
-            ]);
+            $checkIinventoryProduct = InventoryProduct::where('inventory_id', $destinationInventory->id)
+                ->where('capital_price', $item->capital_price)
+                ->exists();
 
-            $capitalPrice = $inventoryProduct->capital_price;
-            $markupPrice = round($capitalPrice * ($destination->code == 'ILI' ? 0.15 : 0.10));
-            $cost = $capitalPrice + $markupPrice;
+            if($checkIinventoryProduct) {
+                $inventoryProduct = InventoryProduct::where('inventory_id', $destinationInventory->id)
+                    ->where('capital_price', $item->capital_price)
+                    ->first();
 
-            $productPriceData = [
-                'product_id' => $inventoryProduct->product_id,
-                'type' => ' ',
-                'unit' => $inventoryProduct->unit,
-                'stocks_quantity' => $inventoryProduct->stocks_count,
-                'capital_price' => $capitalPrice,
-                'markup_price' => $markupPrice,
-                'tax_amount' => 0,
-                'cost' => $cost,
-                'on_sale' => 0,
-                'sale_discount' => 0,
-                'price' => $cost,
-                'warehouse_id' => $destination->id,
-                'created_by' => Auth::id(),
-                'approval_status' => 'approved',
-                'active_status' => 'active'
-            ];
-    
-            $productPrice = ProductPrice::create($productPriceData);
+                $inventoryProduct->update([
+                    'stocks_count' => $item->destinationInventory->stocks_count,
+                    'total_count' => $item->destinationInventory->stocks_count - $item->destinationInventory->damage_count
+                ]);
+            } else {
+                $this->createInventoryProduct($item, $destinationInventory);
+            }
+        }
+    }
 
+    private function processTransferProduct($product) {
+        $inventoryProduct = $product->inventoryProduct;
+
+        $remaining_total_stocks = $inventoryProduct->stocks_count - $inventoryProduct->purchased_stocks;
+
+        if($remaining_total_stocks <= 0) {
+            throw new \Exception("Product: {$product->product->name} has no available stocks.");
+        }
+
+        if($remaining_total_stocks < $product->total_quantity) {
+            throw new \Exception("Product: {$product->product->name} has exceeded the available stocks.");
+        }
+
+        if($inventoryProduct->stocks_count > $inventoryProduct->approved_stocks) {
+            $allowance = $inventoryProduct->stocks_count - $inventoryProduct->approved_stocks;
+
+            if($allowance >= $product->total_quantity ) {
+                $inventoryProduct->update([
+                    'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                    'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count
+                ]);
+            } else {
+                if(($inventoryProduct->stocks_count - $product->total_quantity) < $inventoryProduct->purchased_stocks) {
+                    throw new \Exception("Product: {$product->product->name} has exceeded the purchased stocks.");
+                }
+
+                $inventoryProduct->update([
+                    'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                    'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
+                    'approved_stocks' => $inventoryProduct->stocks_count - $product->total_quantity
+                ]);
+            }
+        } else {
             $inventoryProduct->update([
-                'product_price_id' => $productPrice->id
+                'stocks_count' => $inventoryProduct->stocks_count - $product->total_quantity,
+                'total_count' => ($inventoryProduct->stocks_count - $product->total_quantity) - $inventoryProduct->damage_count,
+                'approved_stocks' => $inventoryProduct->approved_stocks - $product->total_quantity
             ]);
         }
     }
