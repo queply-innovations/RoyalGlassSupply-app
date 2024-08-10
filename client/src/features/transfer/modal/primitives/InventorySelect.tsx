@@ -18,15 +18,17 @@ import { Label } from '@/components/ui/label';
 
 interface InventorySelectProps {
 	tabState: 'details' | 'items';
+	from?: 'source' | 'destination';
 }
 
-export const InventorySelect = ({ tabState }: InventorySelectProps) => {
+export const InventorySelect = ({ tabState, from }: InventorySelectProps) => {
 	const {
 		inventoriesList,
 		inventoriesLoading,
 		selectedInventory,
 		setSelectedInventory,
 		newTransfer,
+		setNewTransfer,
 	} = useNewTransfer();
 	const [open, setOpen] = useState(false);
 
@@ -36,9 +38,9 @@ export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 		>
 			<Label
 				htmlFor="inventory"
-				className="text-sm font-bold text-slate-800"
+				className="text-sm font-bold capitalize text-slate-800"
 			>
-				Inventory
+				Inventory {from}
 			</Label>
 
 			<Popover open={open} onOpenChange={setOpen}>
@@ -51,23 +53,25 @@ export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 						className="justify-between"
 						disabled={
 							newTransfer.source === undefined ||
-							inventoriesLoading ||
+							inventoriesLoading[from!] ||
 							tabState === 'items'
 						}
 					>
-						{inventoriesLoading
+						{inventoriesLoading[from!]
 							? 'Loading...'
-							: selectedInventory
-								? inventoriesList.find(
+							: selectedInventory[from!]
+								? inventoriesList[from!]?.find(
 										inventory =>
-											inventory.id === selectedInventory.id,
+											inventory.id === selectedInventory[from!]?.id,
 									)?.code
 								: 'Select inventory...'}
 						<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="max-h-[300px] w-[568px] overflow-auto p-0">
-					<Command defaultValue={selectedInventory?.id.toString() ?? ''}>
+					<Command
+						defaultValue={selectedInventory[from!]?.id.toString() ?? ''}
+					>
 						<CommandInput
 							placeholder="Search inventory..."
 							className="text-sm font-medium"
@@ -76,13 +80,24 @@ export const InventorySelect = ({ tabState }: InventorySelectProps) => {
 							No inventory found.
 						</CommandEmpty>
 						<CommandGroup>
-							{inventoriesList.map(inventory => (
+							{inventoriesList[from!]?.map(inventory => (
 								<CommandItem
 									key={inventory.id}
 									className="flex justify-between text-sm"
 									value={inventory.id.toString()}
 									onSelect={() => {
-										setSelectedInventory(inventory);
+										setSelectedInventory(previous => {
+											return { ...previous, [from!]: inventory };
+										});
+										if (from == 'destination') {
+											setNewTransfer(previous => {
+												return {
+													...previous,
+													destination_inventory: inventory.id,
+												};
+											});
+										}
+
 										setOpen(false);
 									}}
 								>

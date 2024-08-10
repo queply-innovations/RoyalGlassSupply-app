@@ -56,7 +56,7 @@ export const SelectProducts = ({
 							<CommandEmpty>No match found</CommandEmpty>
 							<ScrollArea className="max-h-[200px] overflow-y-scroll">
 								<CommandGroup>
-									{inventoryProducts.map(product => {
+									{inventoryProducts.source.map(product => {
 										return (
 											<CommandItem
 												key={product?.id}

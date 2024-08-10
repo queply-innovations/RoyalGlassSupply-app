@@ -34,9 +34,9 @@ export const SelectProductsButton = ({
 						role="combobox"
 						className={`w-full justify-between text-sm font-bold text-slate-700 disabled:cursor-not-allowed`}
 						variant={'outline'}
-						disabled={inventoryProducts.length === 0}
+						disabled={inventoryProducts.source.length === 0}
 					>
-						{inventoryProducts.length > 0
+						{inventoryProducts.source.length > 0
 							? selectedProduct
 								? selectedProduct.product_name
 								: 'Select product...'

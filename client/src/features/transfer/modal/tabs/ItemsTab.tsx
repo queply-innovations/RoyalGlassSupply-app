@@ -171,6 +171,8 @@ export const ItemsTab = ({ onClose }: ItemsTabProps) => {
 		);
 	};
 
+	console.log(newTransfer);
+
 	useEffect(() => {
 		if (success) {
 			toast(success, {
@@ -191,7 +193,7 @@ export const ItemsTab = ({ onClose }: ItemsTabProps) => {
 			)}
 			<div className={`flex flex-col gap-4 ${isPending ? 'blur-sm' : ''}`}>
 				<div className="grid grid-cols-12 gap-4">
-					<InventorySelect tabState="items" />
+					<InventorySelect tabState="items" from="source" />
 					<AddItemButton
 						activeView={activeView}
 						setActiveView={setActiveView}
