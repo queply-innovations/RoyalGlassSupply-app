@@ -16,7 +16,8 @@ export const DetailsTab = ({ onClose }: DetailsTabProps) => {
 		<div className="flex flex-col gap-5">
 			<div className="grid grid-cols-11 gap-4">
 				<WarehouseSelect />
-				<InventorySelect tabState="details" />
+				<InventorySelect tabState="details" from="source" />
+				<InventorySelect tabState="details" from="destination" />
 				<SchedulePicker />
 
 				<div className="col-span-11 flex flex-col gap-1">

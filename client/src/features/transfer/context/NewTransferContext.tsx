@@ -20,12 +20,23 @@ interface NewTransferContextProps {
 		React.SetStateAction<'details' | 'items' | string>
 	>;
 
-	inventoriesList: Inventory[];
-	inventoriesLoading: boolean;
-	selectedInventory: Inventory | null;
-	setSelectedInventory: React.Dispatch<React.SetStateAction<Inventory | null>>;
+	inventoriesList: { source: Inventory[]; destination: Inventory[] };
+	inventoriesLoading: { source: boolean; destination: boolean };
+	selectedInventory: {
+		source: Inventory | null;
+		destination: Inventory | null;
+	};
+	setSelectedInventory: React.Dispatch<
+		React.SetStateAction<{
+			source: Inventory | null;
+			destination: Inventory | null;
+		}>
+	>;
 
-	inventoryProducts: InventoryProduct[];
+	inventoryProducts: {
+		source: InventoryProduct[];
+		destination: InventoryProduct[];
+	};
 	inventoryProductsLoading: boolean;
 }
 
@@ -60,45 +71,108 @@ export const NewTransferProvider = ({ children }: NewTransferProviderProps) => {
 	);
 
 	// state to store the inventories list
-	const [inventoriesList, setInventoriesList] = useState<Inventory[]>([]);
-	const [inventoriesLoading, setInventoriesLoading] = useState<boolean>(false);
+	const [inventoriesList, setInventoriesList] = useState<{
+		source: Inventory[];
+		destination: Inventory[];
+	}>({ source: [], destination: [] });
+
+	const [inventoriesLoading, setInventoriesLoading] = useState<{
+		source: boolean;
+		destination: boolean;
+	}>({ source: false, destination: false });
 	// state to store the selected inventory
-	const [selectedInventory, setSelectedInventory] = useState<Inventory | null>(
-		null,
-	);
+	const [selectedInventory, setSelectedInventory] = useState<{
+		source: Inventory | null;
+		destination: Inventory | null;
+	}>({
+		source: null,
+		destination: null,
+	});
+
 	// fetch inventories by warehouse id if source is selected
 	useEffect(() => {
 		if (newTransfer.source) {
-			setInventoriesList([]); // clear the inventories list
-			setSelectedInventory(null); // clear the selected inventory
-			setInventoryProducts([]); // clear the inventory products
-			setInventoriesLoading(true); // set loading to true
+			setInventoriesList(previous => {
+				return { ...previous, source: [] };
+			}); // clear the inventories list
+			setSelectedInventory(previous => {
+				return { ...previous, source: null };
+			}); // clear the selected inventory
+			setInventoryProducts(previous => {
+				return { ...previous, source: [] };
+			}); // clear the inventory products
+			setInventoriesLoading(previous => {
+				return { ...previous, source: true };
+			}); // set loading to true
 			fetchInventoryByWarehouseId(newTransfer.source)
 				.then(res => {
-					setInventoriesList(res);
-					setInventoriesLoading(false);
+					setInventoriesList(previous => {
+						return { ...previous, source: res };
+					});
+					setInventoriesLoading(previous => {
+						return { ...previous, source: false };
+					});
 				})
 				.catch(err => {
 					console.log(err);
-					setInventoriesLoading(false);
+					setInventoriesLoading(previous => {
+						return { ...previous, source: false };
+					});
 				});
 		}
 	}, [newTransfer.source]);
 
+	useEffect(() => {
+		if (newTransfer.destination) {
+			setInventoriesList(previous => {
+				return { ...previous, destination: [] };
+			}); // clear the inventories list
+			setSelectedInventory(previous => {
+				return { ...previous, source: null };
+			}); // clear the selected inventory
+			setInventoryProducts(previous => {
+				return { ...previous, destination: [] };
+			}); // clear the inventory products
+			setInventoriesLoading(previous => {
+				return { ...previous, destination: true };
+			}); // set loading to true
+			fetchInventoryByWarehouseId(newTransfer.destination)
+				.then(res => {
+					setInventoriesList(previous => {
+						return { ...previous, destination: res };
+					});
+					setInventoriesLoading(previous => {
+						return { ...previous, destination: false };
+					});
+				})
+				.catch(err => {
+					console.log(err);
+					setInventoriesLoading(previous => {
+						return { ...previous, destination: false };
+					});
+				});
+		}
+	}, [newTransfer.destination]);
+
 	// fetch inventory products by inventory id if selectedInventory is selected
-	const [inventoryProducts, setInventoryProducts] = useState<
-		InventoryProduct[]
-	>([]);
+	const [inventoryProducts, setInventoryProducts] = useState<{
+		source: InventoryProduct[];
+		destination: InventoryProduct[];
+	}>({ source: [], destination: [] });
 	const [inventoryProductsLoading, setInventoryProductsLoading] =
 		useState<boolean>(false);
 	// fetch inventory products by inventory id if selectedInventory is selected
 	useEffect(() => {
-		if (selectedInventory) {
-			setInventoryProducts([]); // clear the inventory products
+		if (selectedInventory.source) {
+			setInventoryProducts(previous => {
+				return { ...previous, source: [] };
+			}); // clear the inventory products
 			setInventoryProductsLoading(true); // set loading to true
-			fetchInventoryProductById(selectedInventory.id)
+			fetchInventoryProductById(selectedInventory.source?.id as number)
 				.then(res => {
-					setInventoryProducts(res);
+					setInventoryProducts(previous => {
+						return { ...previous, source: res };
+					});
 					setInventoryProductsLoading(false);
 				})
 				.catch(err => {
@@ -106,7 +180,7 @@ export const NewTransferProvider = ({ children }: NewTransferProviderProps) => {
 					setInventoryProductsLoading(false);
 				});
 		}
-	}, [selectedInventory]);
+	}, [selectedInventory.source]);
 
 	// useEffect(() => {
 	// 	console.log('inventories', inventoriesList);
