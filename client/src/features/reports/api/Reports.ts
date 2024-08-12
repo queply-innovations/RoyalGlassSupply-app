@@ -7,6 +7,7 @@ import {
 	Reports,
 	TopSellingProducts,
 } from '../types';
+import { dateToString } from '../utils/dateUtils';
 
 export const fetchInvoicesDateRange = async (
 	dateFrom: Date,
@@ -120,8 +121,8 @@ export const fetchReports = async (
 		.post(
 			`${API_URLS.REPORTS}`,
 			{
-				date_from: dateFrom.toISOString().split('T')[0],
-				date_to: dateTo.toISOString().split('T')[0],
+				date_from: dateToString(dateFrom),
+				date_to: dateToString(dateTo),
 			},
 			{
 				headers: API_HEADERS(),
