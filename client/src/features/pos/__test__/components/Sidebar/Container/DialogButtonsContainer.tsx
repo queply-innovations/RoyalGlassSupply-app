@@ -114,11 +114,12 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 					}}
 					disabled={
 						Object.keys(selectedCustomer).length === 0 ||
+						selectedVoucher !== undefined || // disable discount request if voucher is selected
+						(currentInvoicePos.total_discount ?? 0) <= 0 ||
 						(currentInvoicePos.type === 'payment' &&
 							currentInvoicePos.payment_method !== 'purchase_order' &&
 							currentInvoicePos.payment_method !== 'balance_payment' &&
-							(currentInvoicePos.change_amount ?? 0) < 0) ||
-						selectedVoucher !== undefined // disable discount request if voucher is selected
+							(currentInvoicePos.change_amount ?? 0) < 0)
 					}
 				>
 					Checkout with Discount
