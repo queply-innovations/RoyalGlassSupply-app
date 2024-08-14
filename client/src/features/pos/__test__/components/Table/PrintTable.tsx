@@ -213,7 +213,9 @@ export function PrintTable<TData, TValue>({
 										className="border-b border-l border-gray-400 py-1 text-xs font-bold"
 									>
 										<span className="flex w-full justify-end">
-											{!isBalancePayment ? 'Total due' : 'Balance'}
+											{!isBalancePayment
+												? 'Total due'
+												: 'Previous balance'}
 										</span>
 									</TableCell>
 									<TableCell

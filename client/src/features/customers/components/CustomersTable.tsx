@@ -1,39 +1,13 @@
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
-import { Invoice, Customer, CustomerSales } from '../types';
+import { CustomerSales } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
-import { FC } from 'react';
 import { useCustomers } from '../context/CustomersContext';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components';
 
-import {
-	MoreVertical,
-	List,
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
-interface UserSalesTableProps {
-	openModal: (data: Customer, action: string) => void;
-}
-
-export const UserSalesTable: FC<UserSalesTableProps> = ({
-	openModal,
-}: UserSalesTableProps) => {
+export const UserSalesTable = () => {
 	const { customersList, isFetching } = useCustomers();
-
-	// const handleInvoiceDetails = (invoice: Customer) => {
-	// 	setSelectedInvoice(invoice.invoices);
-	// 	openModal(invoice, 'details');
-	// };
 
 	const UserSalesTableHeader: ColumnDef<CustomerSales>[] = [
 		{
@@ -209,36 +183,6 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({
 				</div>
 			),
 		},
-
-		// {
-		// 	id: 'actions',
-		// 	header: () => <div></div>,
-		// 	cell: ({ row }) => {
-		// 		const userSalesRow = row.original;
-		// 		return (
-		// 			<div className="flex flex-row text-xs font-normal uppercase">
-		// 				<DropdownMenu>
-		// 					<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
-		// 						<MoreVertical size={16} strokeWidth={2.25} />
-		// 					</DropdownMenuTrigger>
-		// 					<DropdownMenuContent className="relative z-50 bg-white w-44">
-		// 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-		// 						<DropdownMenuSeparator className="bg-gray-200" />
-		// 						<DropdownMenuItem
-		// 							onClick={() => handleInvoiceDetails(userSalesRow)}
-		// 							className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200"
-		// 						>
-		// 							<span className="flex items-center justify-center w-6">
-		// 								<List size={16} strokeWidth={2.25} />
-		// 							</span>
-		// 							<span>Details</span>
-		// 						</DropdownMenuItem>
-		// 					</DropdownMenuContent>
-		// 				</DropdownMenu>
-		// 			</div>
-		// 		);
-		// 	},
-		// },
 	];
 
 	return (
@@ -248,9 +192,8 @@ export const UserSalesTable: FC<UserSalesTableProps> = ({
 					b.total_sales > a.total_sales ? 1 : -1,
 				)}
 				columns={UserSalesTableHeader}
-				filterWhat={''}
-				hideFilter={true}
-				dataType={''}
+				filterWhat={'customer'}
+				dataType={'customer'}
 				openModal={undefined}
 				isLoading={isFetching}
 			/>

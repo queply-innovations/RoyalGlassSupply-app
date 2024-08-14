@@ -33,7 +33,7 @@ export const ReturnItemsPosPage = () => {
 									}}
 								>
 									<ChevronLeft size={20} strokeWidth={2.5} />
-									Go Back
+									Go back
 								</Button>
 							</div>
 							<div>

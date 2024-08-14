@@ -125,7 +125,7 @@ const PendingInvoiceDetails = ({
 					/>
 				</div>
 
-				<div className="grid grid-cols-2 gap-4 text-sm font-medium">
+				<div className="flex flex-row flex-wrap justify-between gap-4 text-sm font-medium">
 					<p className="flex flex-col gap-1">
 						<span className="font-bold">Total capital</span>
 						<span>
@@ -136,12 +136,39 @@ const PendingInvoiceDetails = ({
 						</span>
 					</p>
 					<p className="flex flex-col gap-1">
+						<span className="font-bold">Subtotal</span>
+						<span>
+							{Intl.NumberFormat('en-PH', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedInvoice.subtotal || 0)}
+						</span>
+					</p>
+					<p className="flex flex-col gap-1">
+						<span className="font-bold">Total amount due</span>
+						<span>
+							{Intl.NumberFormat('en-PH', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedInvoice.total_amount_due || 0)}
+						</span>
+					</p>
+					<p className="flex flex-col gap-1">
 						<span className="font-bold">Requested discount</span>
 						<span>
 							{Intl.NumberFormat('en-PH', {
 								style: 'currency',
 								currency: 'PHP',
 							}).format(selectedInvoice.total_discount || 0)}
+						</span>
+					</p>
+					<p className="flex flex-col gap-1">
+						<span className="font-bold">Delivery charge</span>
+						<span>
+							{Intl.NumberFormat('en-PH', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(selectedInvoice.delivery_charge || 0)}
 						</span>
 					</p>
 				</div>

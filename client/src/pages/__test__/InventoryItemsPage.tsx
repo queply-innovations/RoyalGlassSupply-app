@@ -12,11 +12,15 @@ import { AddInventoryProducts } from '@/features/inventory/components/modal/AddI
 import { EditInventoryProductForm } from '@/features/inventory/components/forms/EditInventoryProductForm';
 import { ViewDetails } from '@/features/inventory/components/modal/inventory-products/ViewDetails';
 import { ApproveInventoryProduct } from '@/features/inventory/components/modal/inventory-products/ApproveInventoryProduct';
-import {
-	InventoryProductsByInventoryProvider,
-	useInventoryProductsByInventory,
-} from '@/features/inventory/context';
+import { InventoryProductsByInventoryProvider } from '@/features/inventory/context';
 import { DeleteInventoryProduct } from '@/features/inventory/components/modal/inventory-products/DeleteInventoryProduct';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 
 export const InventoryItemsPage = () => {
 	// Get id from url
@@ -32,6 +36,9 @@ export const InventoryItemsPage = () => {
 		navigate(-1);
 	};
 
+	// State for filter
+	const [filter, setFilter] = useState<'all' | 'no_stock'>('all');
+
 	// Modal handlers
 	const { openModal, isOpen, closeModal } = useModal();
 	const [modalAction, setModalAction] = useState<string>('');
@@ -46,6 +53,7 @@ export const InventoryItemsPage = () => {
 			<MainLayout title={`Inventory items`}>
 				<InventoryProductsByInventoryProvider
 					inventoryId={Number(inventoryId)}
+					filter={filter}
 				>
 					<div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
 						<div className="text-primary-dark-gray flex flex-row items-center gap-6 text-sm font-medium">
@@ -56,11 +64,35 @@ export const InventoryItemsPage = () => {
 								<ChevronLeft size={22} strokeWidth={2.25} />
 								<span>Go back</span>
 							</Button>
+
 							<div className="flex flex-row gap-2">
 								<h2 className="font-bold">Inventory code:</h2>
 								<span>
 									{!isLoading ? inventoryItem?.code : 'Loading...'}
 								</span>
+							</div>
+
+							<div className="ml-auto flex flex-row items-center gap-4">
+								<p className="font-medium">Filter:</p>
+								<Select
+									value={filter}
+									onValueChange={value =>
+										setFilter(value as 'all' | 'no_stock')
+									}
+								>
+									<SelectTrigger className="w-[280px]">
+										<SelectValue
+											className="font-medium"
+											placeholder="Filter"
+										/>
+									</SelectTrigger>
+									<SelectContent className="font-medium">
+										<SelectItem value="all">Show all</SelectItem>
+										<SelectItem value="no_stock">
+											Show no remaining stocks only
+										</SelectItem>
+									</SelectContent>
+								</Select>
 							</div>
 						</div>
 						<div className="max-h-[calc(100%-4rem)] w-full flex-1 rounded-md border">

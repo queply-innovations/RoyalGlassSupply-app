@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
 import { InventoryProduct } from '../types';
 import { useInventoryProductByIdQuery } from '../hooks/useInventoryProdsQuery';
 
@@ -12,6 +12,7 @@ interface InventoryProductsByInventoryContextProps {
 interface InventoryProductsByInventoryProviderProps {
 	children: ReactNode;
 	inventoryId: number;
+	filter: 'all' | 'no_stock';
 }
 
 const InventoryProdsInventoryProductsByInventoryContext = createContext<
@@ -21,11 +22,23 @@ const InventoryProdsInventoryProductsByInventoryContext = createContext<
 export const InventoryProductsByInventoryProvider = ({
 	children,
 	inventoryId,
+	filter,
 }: InventoryProductsByInventoryProviderProps) => {
 	const [selectedInventoryProduct, setSelectedInventoryProduct] =
 		useState<InventoryProduct>({} as InventoryProduct);
 
-	const { data, isLoading } = useInventoryProductByIdQuery(inventoryId);
+	const { data: inventoryProducts, isLoading } =
+		useInventoryProductByIdQuery(inventoryId);
+
+	const data = useMemo(() => {
+		if (filter === 'no_stock') {
+			return inventoryProducts.filter(
+				item => item.remaining_stocks_count === 0,
+			);
+		}
+		return inventoryProducts;
+	}, [filter, inventoryProducts]);
+
 	const value = {
 		data,
 		isLoading,

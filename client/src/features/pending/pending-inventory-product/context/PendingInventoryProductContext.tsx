@@ -1,6 +1,6 @@
 import { usePendingInventoryProductQuery } from '@/features/inventory/hooks';
 import { InventoryProduct } from '@/features/inventory/types';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 interface PendingInventoryProductContextProps {
 	data: InventoryProduct[] | undefined;
@@ -25,7 +25,19 @@ export const PendingInventoryProductProvider = ({
 	const [selectedInventoryProduct, setSelectedInventoryProduct] =
 		useState<InventoryProduct>();
 
-	const { data, isLoading } = usePendingInventoryProductQuery();
+	const { data: inventoryProds, isLoading } =
+		usePendingInventoryProductQuery();
+	const data = useMemo(() => {
+		return inventoryProds?.filter(product => {
+			return (
+				// Check if product has total inventory of more than 0.
+				// Then show if sold count is equal to approved stocks, given there are still unapproved stocks.
+				product.total_count > 0 &&
+				product.sold_count === product.approved_stocks &&
+				product.remaining_unapproved_stocks > 0
+			);
+		});
+	}, [inventoryProds]);
 
 	const value = {
 		data,

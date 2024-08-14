@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/Tables/DataTable';
 import { Transfer } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useTransfer } from '../context/TransferContext';
 import {
 	Button,
@@ -26,7 +26,6 @@ import {
 	Printer,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 interface TransferTableProps {
 	openModal: (data: Transfer, action: string) => void;
@@ -38,7 +37,10 @@ export const TransferTable: FC<TransferTableProps> = ({
 	const { transfers, transferProducts, isFetching, setSelectedTransfer } =
 		useTransfer();
 	const { auth } = useAuth();
-	const navigate = useNavigate();
+	const userPermissions = auth.rolePermissions.map(
+		//@ts-ignore
+		item => item.permission.title,
+	);
 
 	function printTransfer(transfer: Transfer) {
 		window.api.transferSend({
@@ -304,32 +306,43 @@ export const TransferTable: FC<TransferTableProps> = ({
 									</span>
 									<span>Transfer Details</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleEditTransfer(transferRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit Transfer</span>
-								</DropdownMenuItem>
+								{userPermissions.includes('edit_transfer') && (
+									<DropdownMenuItem
+										onClick={() => handleEditTransfer(transferRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit Transfer</span>
+									</DropdownMenuItem>
+								)}
 
 								<DropdownMenuSeparator className="bg-gray-200" />
 
-								<DropdownMenuItem
-									onClick={() => handleTransferProducts(transferRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										{transferRow.transfer_status != 'arrived' &&
-										transferRow.approval_status != 'rejected' ? (
-											<Pencil size={16} strokeWidth={2.25} />
-										) : (
-											<List size={16} strokeWidth={2.25} />
-										)}
-									</span>
-									<span>Transfer Products</span>
-								</DropdownMenuItem>
+								{[
+									'add_transfer_product',
+									'update_transfer_product',
+								].every(permission =>
+									userPermissions.includes(permission),
+								) && (
+									<DropdownMenuItem
+										onClick={() =>
+											handleTransferProducts(transferRow)
+										}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											{transferRow.transfer_status != 'arrived' &&
+											transferRow.approval_status != 'rejected' ? (
+												<Pencil size={16} strokeWidth={2.25} />
+											) : (
+												<List size={16} strokeWidth={2.25} />
+											)}
+										</span>
+										<span>Transfer Products</span>
+									</DropdownMenuItem>
+								)}
 								{/* dropdownmenuitem for transfer details and products to be printed 
 								if transfer status is arrived/enroute */}
 								{transferRow.transfer_status == 'enroute' ||
@@ -352,14 +365,24 @@ export const TransferTable: FC<TransferTableProps> = ({
 		},
 	];
 
+	const transfersSorted = useMemo(() => {
+		return transfers.sort((a, b) => {
+			return b.id - a.id;
+		});
+	}, [transfers]);
+
 	return (
 		<>
 			<DataTable
-				data={transfers}
+				data={transfersSorted}
 				columns={TransferTableHeader}
 				filterWhat={'approval_status'}
 				dataType={'Transfer'}
-				openModal={handleAddTransfer}
+				openModal={
+					userPermissions.includes('add_transfer')
+						? handleAddTransfer
+						: undefined
+				}
 				isLoading={isFetching}
 			/>
 		</>
