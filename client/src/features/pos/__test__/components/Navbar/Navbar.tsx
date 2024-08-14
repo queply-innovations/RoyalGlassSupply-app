@@ -1,18 +1,18 @@
-import { NavbarRoutes } from './NavbarRoutes';
-import { NavbarItem } from './NavbarItem';
 import Logo from '/RGS-logo.png';
 import { LogoutButton } from './LogoutButton';
-
-import { SearchReturns } from './SearchReturns';
 import { useAuth } from '@/context/AuthContext';
-import { Role } from '../../types';
+import { NavRoutes } from './Routes/NavRoutes';
+import { NavItem } from './Routes/NavItem';
 
 interface NavbarProps {}
 
 export const Navbar = ({}: NavbarProps) => {
 	const { auth } = useAuth();
+	const userPermissions = auth.rolePermissions.map(
+		//@ts-ignore
+		item => item.permission.title,
+	);
 
-	// console.log(auth.role);
 	return (
 		<>
 			<nav
@@ -28,20 +28,21 @@ export const Navbar = ({}: NavbarProps) => {
 								className="h-11 w-11 rounded-full bg-white p-1"
 							/>
 						</div>
-						{NavbarRoutes.map((route, index) => {
-							if (auth.role && route.navbarProps) {
-								if (
-									!!route.allowedRoles.find(role =>
-										role.includes(auth.role!.split('_')[0] as Role),
-									)
-								) {
-									return <NavbarItem key={index} item={route} />;
-								}
-							} else {
-								return null;
-							}
+						{NavRoutes.map(route => {
+							return route.isAdmin && auth.role === 'admin' ? (
+								<NavItem
+									key={route.navProps.path}
+									navProps={route.navProps}
+								/>
+							) : route.permissions.every(permission =>
+									userPermissions.includes(permission),
+							  ) ? (
+								<NavItem
+									key={route.navProps.path}
+									navProps={route.navProps}
+								/>
+							) : null;
 						})}
-						{/* <SearchReturns /> */}
 					</ul>
 				</div>
 				<div className="mt-auto">
