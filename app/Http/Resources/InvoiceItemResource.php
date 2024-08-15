@@ -29,7 +29,8 @@ class InvoiceItemResource extends JsonResource
             'approved_by' => new UserResource($this->approvedBy),
             'total_price' => $this->total_price,
             'source_inventory' => $this->source_inventory,
-            'inventory_product' => new InventoryProductResource($this->whenLoaded('inventoryProduct'))
+            'inventory_product' => new InventoryProductResource($this->whenLoaded('inventoryProduct')),
+            'product_price' => $this->productPrice
         ];
     }
 }
