@@ -1,18 +1,18 @@
 import { Button } from '@/components/Button';
 import { DataTable } from '@/components/Tables/DataTable';
-import { CustomerSales } from '../types';
+import { CustomerSale } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCustomers } from '../context/CustomersContext';
 
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
 export const UserSalesTable = () => {
-	const { customersList, isFetching } = useCustomers();
+	const { customers, isFetching } = useCustomers();
 
-	const UserSalesTableHeader: ColumnDef<CustomerSales>[] = [
+	const UserSalesTableHeader: ColumnDef<CustomerSale>[] = [
 		{
-			accessorKey: 'customer.firstname',
-			id: 'customer',
+			accessorKey: 'customers.firstname',
+			id: 'customer_name',
 			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
@@ -35,24 +35,20 @@ export const UserSalesTable = () => {
 				);
 			},
 			cell: ({ row }) => (
-				<div>
-					{row.original.customer.firstname +
-						' ' +
-						row.original.customer.lastname}
-				</div>
+				<div>{row.original.firstname + ' ' + row.original.lastname}</div>
 			),
 		},
 
 		{
 			id: 'address',
 			header: () => <div>ADDRESS</div>,
-			cell: ({ row }) => <div>{row.original.customer.address}</div>,
+			cell: ({ row }) => <div>{row.original.address}</div>,
 		},
 
 		{
 			id: 'contact_no',
 			header: () => <div>CONTACT NO</div>,
-			cell: ({ row }) => <div>{row.original.customer.contact_no}</div>,
+			cell: ({ row }) => <div>{row.original.contact_no}</div>,
 		},
 
 		{
@@ -84,7 +80,7 @@ export const UserSalesTable = () => {
 					{Intl.NumberFormat('en-PH', {
 						style: 'currency',
 						currency: 'PHP',
-					}).format(row.original.customer.total_balance)}
+					}).format(row.original.total_balance)}
 				</div>
 			),
 		},
@@ -118,37 +114,37 @@ export const UserSalesTable = () => {
 					{Intl.NumberFormat('en-PH', {
 						style: 'currency',
 						currency: 'PHP',
-					}).format(row.original.customer.total_credit)}
+					}).format(row.original.total_credit)}
 				</div>
 			),
 		},
 
-		{
-			accessorKey: 'total_transactions',
-			id: 'total_transactions',
-			sortingFn: 'basic',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<Button
-						onClick={() => {
-							column.toggleSorting(column.getIsSorted() === 'asc');
-						}}
-						className="flex flex-row items-center bg-transparent text-slate-800"
-					>
-						TRANSACTIONS{' '}
-						{column.getIsSorted() === 'asc' ? (
-							<ArrowUp />
-						) : column.getIsSorted() === 'desc' ? (
-							<ArrowDown />
-						) : (
-							<ArrowUpDown />
-						)}
-					</Button>
-				);
-			},
-			cell: ({ row }) => <div>{row.original.total_transactions}</div>,
-		},
+		// {
+		// 	accessorKey: 'total_transactions',
+		// 	id: 'total_transactions',
+		// 	sortingFn: 'basic',
+		// 	enableSorting: true,
+		// 	header: ({ column }) => {
+		// 		return (
+		// 			<Button
+		// 				onClick={() => {
+		// 					column.toggleSorting(column.getIsSorted() === 'asc');
+		// 				}}
+		// 				className="flex flex-row items-center bg-transparent text-slate-800"
+		// 			>
+		// 				TRANSACTIONS{' '}
+		// 				{column.getIsSorted() === 'asc' ? (
+		// 					<ArrowUp />
+		// 				) : column.getIsSorted() === 'desc' ? (
+		// 					<ArrowDown />
+		// 				) : (
+		// 					<ArrowUpDown />
+		// 				)}
+		// 			</Button>
+		// 		);
+		// 	},
+		// 	cell: ({ row }) => <div>{row.original.total_transactions}</div>,
+		// },
 
 		{
 			accessorKey: 'total_sales',
@@ -188,11 +184,13 @@ export const UserSalesTable = () => {
 	return (
 		<>
 			<DataTable
-				data={customersList.sort((a, b) =>
-					b.total_sales > a.total_sales ? 1 : -1,
-				)}
+				data={
+					customers?.sort((a, b) =>
+						b.total_sales > a.total_sales ? 1 : -1,
+					) || []
+				}
 				columns={UserSalesTableHeader}
-				filterWhat={'customer'}
+				filterWhat={'customer_name'}
 				dataType={'customer'}
 				openModal={undefined}
 				isLoading={isFetching}
