@@ -111,8 +111,12 @@ class InvoiceController extends Controller
         }
         
         if(!empty($request->filter)){
-            foreach($request->filter as $filter_key => $filter_value){
-                $query->where($filter_key, $filter_value);
+            foreach($request->filter as $filter_key => $filter_value) {
+                if($filter_key == 'created_at') {
+                    $query->where(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"), $filter_value);
+                } else {
+                    $query->where($filter_key, $filter_value);
+                }
             }
         }
 
