@@ -43,9 +43,7 @@ export const ReturnItemsCols = () => {
 		},
 		{
 			accessorKey: 'price',
-			header: () => (
-				<div className="justify-center uppercase">Selling price</div>
-			),
+			header: () => <div className="justify-center uppercase">Price</div>,
 			cell: ({ row }) => {
 				return (
 					<div className="uppercase">
