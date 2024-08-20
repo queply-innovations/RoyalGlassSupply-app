@@ -1,8 +1,10 @@
-import { API_URLS, API_HEADERS } from "@/api";
-import axios from "axios";
-import { ReturnTransactions, ReturnTransactionsRaw } from "../types";
+import { API_URLS, API_HEADERS } from '@/api';
+import axios from 'axios';
+import { ReturnTransactions, ReturnTransactionsRaw } from '../types';
 
-export const fetchReturnTransactions = async (): Promise<ReturnTransactionsRaw[]> => {
+export const fetchReturnTransactions = async (): Promise<
+	ReturnTransactionsRaw[]
+> => {
 	return await axios
 		.get(API_URLS.RETURN_TRANSACTIONS, {
 			headers: API_HEADERS(),
@@ -16,7 +18,9 @@ export const fetchReturnTransactions = async (): Promise<ReturnTransactionsRaw[]
 		});
 };
 
-export const fetchPendingReturnTransactions = async (): Promise<ReturnTransactionsRaw[]> => {
+export const fetchPendingReturnTransactions = async (): Promise<
+	ReturnTransactionsRaw[]
+> => {
 	return await axios
 		.post(
 			`${API_URLS.RETURN_TRANSACTIONS}/searches-filters-sorts`,
@@ -48,6 +52,30 @@ export const editReturnTransactions = async (data: ReturnTransactions) => {
 		})
 		.catch(error => {
 			console.error('Error editing return transactions:', error);
+			throw error;
+		});
+};
+
+export const setReturnApproval = async ({
+	returnId,
+	approval,
+}: {
+	returnId: number;
+	approval: 'approve' | 'deny';
+}) => {
+	return await axios
+		.patch(
+			`${API_URLS.RETURN_TRANSACTIONS}/${returnId}`,
+			{ refund_status: approval },
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error updating return transaction:', error);
 			throw error;
 		});
 };
