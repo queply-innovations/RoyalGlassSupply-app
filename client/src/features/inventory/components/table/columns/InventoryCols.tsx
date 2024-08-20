@@ -18,6 +18,7 @@ import {
 	MoreVertical,
 	Pencil,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface InventoryColsProps {
 	handleViewItems: (inventory: Inventory) => void;
@@ -30,55 +31,9 @@ export const InventoryCols = ({
 	handleViewDetails,
 	handleEditInventory,
 }: InventoryColsProps) => {
+	const { permissionListNames } = useAuth();
+
 	const columnDefinition: ColumnDef<Inventory>[] = [
-		// {
-		// 	id: 'select',
-		// 	header: ({ table }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={table.getIsAllPageRowsSelected()}
-		// 			onChange={e =>
-		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
-		// 			}
-		// 			aria-label="Select all"
-		// 		/>
-		// 	),
-		// 	cell: ({ row }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={row.getIsSelected()}
-		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
-		// 			aria-label="Select row"
-		// 			className="justify-center"
-		// 		/>
-		// 	),
-		// },
-		// {
-		// 	accessorKey: 'id',
-		// 	sortingFn: 'text',
-		// 	enableSorting: true,
-		// 	header: ({ column }) => {
-		// 		return (
-		// 			<div>
-		// 				<Button
-		// 					onClick={() =>
-		// 						column.toggleSorting(column.getIsSorted() === 'asc')
-		// 					}
-		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-		// 				>
-		// 					Id{' '}
-		// 					{column.getIsSorted() === 'asc' ? (
-		// 						<ArrowUp size={18} strokeWidth={2} />
-		// 					) : column.getIsSorted() === 'desc' ? (
-		// 						<ArrowDown size={18} strokeWidth={2} />
-		// 					) : (
-		// 						<ArrowUpDown size={18} strokeWidth={2} />
-		// 					)}
-		// 				</Button>
-		// 			</div>
-		// 		);
-		// 	},
-		// },
 		{
 			accessorKey: 'code',
 			sortingFn: 'text',
@@ -131,32 +86,6 @@ export const InventoryCols = ({
 				);
 			},
 		},
-		// {
-		// 	accessorKey: 'type',
-		// 	sortingFn: 'text',
-		// 	enableSorting: true,
-		// 	header: ({ column }) => {
-		// 		return (
-		// 			<div>
-		// 				<Button
-		// 					onClick={() =>
-		// 						column.toggleSorting(column.getIsSorted() === 'asc')
-		// 					}
-		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-		// 				>
-		// 					Type{' '}
-		// 					{column.getIsSorted() === 'asc' ? (
-		// 						<ArrowUp size={18} strokeWidth={2} />
-		// 					) : column.getIsSorted() === 'desc' ? (
-		// 						<ArrowDown size={18} strokeWidth={2} />
-		// 					) : (
-		// 						<ArrowUpDown size={18} strokeWidth={2} />
-		// 					)}
-		// 				</Button>
-		// 			</div>
-		// 		);
-		// 	},
-		// },
 		{
 			accessorKey: 'date_received',
 			header: () => <div className="justify-center uppercase">Received</div>,
@@ -192,40 +121,6 @@ export const InventoryCols = ({
 				);
 			},
 		},
-		// {
-		// 	accessorKey: 'created_at',
-		// 	sortingFn: 'text',
-		// 	enableSorting: true,
-		// 	header: ({ column }) => {
-		// 		return (
-		// 			<div>
-		// 				<Button
-		// 					onClick={() =>
-		// 						column.toggleSorting(column.getIsSorted() === 'asc')
-		// 					}
-		// 					className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-		// 				>
-		// 					Created at{' '}
-		// 					{column.getIsSorted() === 'asc' ? (
-		// 						<ArrowUp size={18} strokeWidth={2} />
-		// 					) : column.getIsSorted() === 'desc' ? (
-		// 						<ArrowDown size={18} strokeWidth={2} />
-		// 					) : (
-		// 						<ArrowUpDown size={18} strokeWidth={2} />
-		// 					)}
-		// 				</Button>
-		// 			</div>
-		// 		);
-		// 	},
-		// 	cell: ({ row }) => {
-		// 		const formattedDate = formatUTCDate(row.original.created_at);
-		// 		return (
-		// 			<div className="uppercase">
-		// 				<span>{formattedDate}</span>
-		// 			</div>
-		// 		);
-		// 	},
-		// },
 		{
 			accessorKey: 'notes',
 			header: () => <div className="justify-center uppercase">Notes</div>,
@@ -252,17 +147,22 @@ export const InventoryCols = ({
 							<DropdownMenuContent className="relative z-50 w-44 bg-white">
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() => {
-										handleViewItems(inventoryRow);
-									}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Boxes size={16} strokeWidth={2} />
-									</span>
-									<span>View items</span>
-								</DropdownMenuItem>
+								{permissionListNames?.includes(
+									'view_inventory_items',
+								) && (
+									<DropdownMenuItem
+										onClick={() => {
+											handleViewItems(inventoryRow);
+										}}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Boxes size={16} strokeWidth={2} />
+										</span>
+										<span>View items</span>
+									</DropdownMenuItem>
+								)}
+
 								<DropdownMenuItem
 									onClick={() => {
 										handleViewDetails(inventoryRow);
@@ -274,17 +174,20 @@ export const InventoryCols = ({
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => {
-										handleEditInventory(inventoryRow);
-									}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit</span>
-								</DropdownMenuItem>
+
+								{permissionListNames?.includes('edit_inventory') && (
+									<DropdownMenuItem
+										onClick={() => {
+											handleEditInventory(inventoryRow);
+										}}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit</span>
+									</DropdownMenuItem>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

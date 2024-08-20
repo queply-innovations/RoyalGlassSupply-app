@@ -17,8 +17,7 @@ import {
 	Pencil,
 	Trash2,
 } from 'lucide-react';
-
-// TODO: Update notes column to include a popover to reveal notes instead of a simple cell value
+import { useAuth } from '@/context/AuthContext';
 
 interface ProductsColumnsProps {
 	handleEditProduct: (product: Product) => void;
@@ -35,55 +34,8 @@ export const ProductsCols = ({
 	handleEditProduct,
 	handleDeleteProduct,
 }: ProductsColumnsProps): ColumnDef<Product>[] => {
+	const { permissionListNames } = useAuth();
 	const columnDefinition: ColumnDef<Product>[] = [
-		// {
-		// 	id: 'select',
-		// 	header: ({ table }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={table.getIsAllPageRowsSelected()}
-		// 			onChange={e =>
-		// 				table.toggleAllPageRowsSelected(!!e.target.checked)
-		// 			}
-		// 			aria-label="Select all"
-		// 		/>
-		// 	),
-		// 	cell: ({ row }) => (
-		// 		<input
-		// 			type="checkbox"
-		// 			checked={row.getIsSelected()}
-		// 			onChange={e => row.toggleSelected(!!e.target.checked)}
-		// 			aria-label="Select row"
-		// 			className="justify-center"
-		// 		/>
-		// 	),
-		// },
-		// {
-		// 	accessorKey: 'id',
-		// 	sortingFn: 'text',
-		// 	enableSorting: true,
-		// 	header: ({ column }) => {
-		// 		return (
-		// 			<div>
-		// 				<Button
-		// 					onClick={() =>
-		// 						column.toggleSorting(column.getIsSorted() === 'asc')
-		// 					}
-		// 					className="ml-auto mr-auto flex flex-row items-center bg-transparent uppercase text-slate-700"
-		// 				>
-		// 					Id{' '}
-		// 					{column.getIsSorted() === 'asc' ? (
-		// 						<ArrowUp size={18} strokeWidth={2} />
-		// 					) : column.getIsSorted() === 'desc' ? (
-		// 						<ArrowDown size={18} strokeWidth={2} />
-		// 					) : (
-		// 						<ArrowUpDown size={18} strokeWidth={2} />
-		// 					)}
-		// 				</Button>
-		// 			</div>
-		// 		);
-		// 	},
-		// },
 		{
 			accessorKey: 'serial_no',
 			sortingFn: 'text',
@@ -166,24 +118,29 @@ export const ProductsCols = ({
 							<DropdownMenuContent className="relative z-50 w-44 bg-white">
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() => handleEditProduct(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span className="font-medium">Edit</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleDeleteProduct(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Trash2 size={16} strokeWidth={2.25} />
-									</span>
-									<span className="font-medium">Delete</span>
-								</DropdownMenuItem>
+								{permissionListNames?.includes('update_product') && (
+									<DropdownMenuItem
+										onClick={() => handleEditProduct(productRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span className="font-medium">Edit</span>
+									</DropdownMenuItem>
+								)}
+
+								{permissionListNames?.includes('delete_product') && (
+									<DropdownMenuItem
+										onClick={() => handleDeleteProduct(productRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Trash2 size={16} strokeWidth={2.25} />
+										</span>
+										<span className="font-medium">Delete</span>
+									</DropdownMenuItem>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

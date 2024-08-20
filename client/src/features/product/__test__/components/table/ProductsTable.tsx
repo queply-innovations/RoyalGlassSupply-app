@@ -9,7 +9,7 @@ interface ProductsTableProps {
 }
 
 export const ProductsTable = ({ openModal }: ProductsTableProps) => {
-	const { auth } = useAuth();
+	const { auth, permissionListNames } = useAuth();
 	const { data, isLoading, setSelectedProduct } = useProducts();
 
 	// Modal handler to add product
@@ -42,7 +42,11 @@ export const ProductsTable = ({ openModal }: ProductsTableProps) => {
 				data={data.sort((a, b) => b.id - a.id)} // Sort by id, highest first
 				filterWhat={'name'}
 				dataType={'Product'}
-				openModal={handleAddProduct}
+				openModal={
+					permissionListNames?.includes('add_product')
+						? handleAddProduct
+						: undefined
+				}
 				isLoading={isLoading}
 			/>
 		</>

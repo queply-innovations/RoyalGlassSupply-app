@@ -4,6 +4,7 @@ import { Inventory } from '../../types';
 import { InventoryCols } from './columns/InventoryCols';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 interface InventoryTableProps {
 	openModal: (data: Inventory, action: string) => void;
@@ -16,6 +17,7 @@ export const InventoryTable = ({
 	filterWarehouse,
 	setTotalInventories,
 }: InventoryTableProps) => {
+	const { permissionListNames } = useAuth();
 	const [inventoryData, setInventoryData] = useState<Inventory[]>([]);
 	const { data, isLoading, setSelectedInventory } = useInventory();
 	const navigate = useNavigate();
@@ -69,7 +71,11 @@ export const InventoryTable = ({
 				})}
 				filterWhat={'code'}
 				dataType={'Inventory'}
-				openModal={handleAddInventory}
+				openModal={
+					permissionListNames?.includes('add_inventory')
+						? handleAddInventory
+						: undefined
+				}
 				isLoading={isLoading}
 			/>
 		</>

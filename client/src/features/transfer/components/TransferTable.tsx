@@ -36,11 +36,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 }: TransferTableProps) => {
 	const { transfers, transferProducts, isFetching, setSelectedTransfer } =
 		useTransfer();
-	const { auth } = useAuth();
-	const userPermissions = auth.rolePermissions.map(
-		//@ts-ignore
-		item => item.permission.title,
-	);
+	const { permissionListNames } = useAuth();
 
 	function printTransfer(transfer: Transfer) {
 		window.api.transferSend({
@@ -306,7 +302,8 @@ export const TransferTable: FC<TransferTableProps> = ({
 									</span>
 									<span>Transfer Details</span>
 								</DropdownMenuItem>
-								{userPermissions.includes('edit_transfer') && (
+
+								{permissionListNames?.includes('edit_transfer') && (
 									<DropdownMenuItem
 										onClick={() => handleEditTransfer(transferRow)}
 										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
@@ -324,7 +321,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 									'add_transfer_product',
 									'update_transfer_product',
 								].every(permission =>
-									userPermissions.includes(permission),
+									permissionListNames?.includes(permission),
 								) && (
 									<DropdownMenuItem
 										onClick={() =>
@@ -379,7 +376,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 				filterWhat={'approval_status'}
 				dataType={'Transfer'}
 				openModal={
-					userPermissions.includes('add_transfer')
+					permissionListNames?.includes('add_transfer')
 						? handleAddTransfer
 						: undefined
 				}

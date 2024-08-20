@@ -6,6 +6,7 @@ import { useInventoryProductsByInventory } from '../../context';
 import { Inventory } from '@/features/inventory/types';
 import { Button } from '@/components';
 import { Printer } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface InventoryProductsTableProps {
 	// id: number;
@@ -17,6 +18,7 @@ export const InventoryProductsTable = ({
 	openModal,
 	inventory,
 }: InventoryProductsTableProps) => {
+	const { permissionListNames } = useAuth();
 	const { data, isLoading, setSelectedInventoryProduct } =
 		useInventoryProductsByInventory();
 
@@ -73,7 +75,11 @@ export const InventoryProductsTable = ({
 				data={data ? data : []}
 				filterWhat={'product_name'}
 				dataType={'Items'}
-				openModal={handleAddInventoryProduct}
+				openModal={
+					permissionListNames?.includes('add_inventory_product')
+						? handleAddInventoryProduct
+						: undefined
+				}
 				isLoading={isLoading}
 			/>
 		</TooltipProvider>

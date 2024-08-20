@@ -12,14 +12,24 @@ import { User } from '../types';
 import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useUserInfo } from '../context/UserInfoContext';
-import { Loader2, ArrowUp, ArrowDown, ArrowUpDown, MoreVertical, List } from 'lucide-react';
+import {
+	ArrowUp,
+	ArrowDown,
+	ArrowUpDown,
+	MoreVertical,
+	List,
+} from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface UserTableProps {
 	openModal: (data: User, action: string) => void;
 }
 
-export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps) =>{
-	const { users, isFetching, progress, progress2, setSelectedUser } = useUserInfo();
+export const UserInfoTable: FC<UserTableProps> = ({
+	openModal,
+}: UserTableProps) => {
+	const { permissionListNames } = useAuth();
+	const { users, isFetching, setSelectedUser } = useUserInfo();
 
 	const handleEditUser = (user: User) => {
 		setSelectedUser(user);
@@ -34,26 +44,32 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 	const handleAddUser = () => {
 		openModal({} as User, 'add');
 	};
-	
+
 	const UserInfoTableHeader: ColumnDef<User>[] = [
 		{
 			accessorKey: 'lastname',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
 						<Button
 							onClick={() => {
-								column.toggleSorting(column.getIsSorted() === "asc"); 
+								column.toggleSorting(column.getIsSorted() === 'asc');
 							}}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent text-black"
 						>
-							LAST NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							LAST NAME{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
-				)
+				);
 			},
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.lastname}</div>
@@ -62,20 +78,28 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'firstname',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
 						<Button
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent text-black"
 						>
-							FIRST NAME {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							FIRST NAME{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
-				)
+				);
 			},
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.firstname}</div>
@@ -84,20 +108,28 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'position',
-			sortingFn: "text",
+			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
 				return (
 					<div>
 						<Button
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-							className="bg-transparent text-black flex flex-row items-center ml-auto mr-auto"
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === 'asc')
+							}
+							className="ml-auto mr-auto flex flex-row items-center bg-transparent text-black"
 						>
-							ROLE {column.getIsSorted() === "asc" ? <ArrowUp /> : 
-										column.getIsSorted() === "desc" ? <ArrowDown /> : <ArrowUpDown />}
+							ROLE{' '}
+							{column.getIsSorted() === 'asc' ? (
+								<ArrowUp />
+							) : column.getIsSorted() === 'desc' ? (
+								<ArrowDown />
+							) : (
+								<ArrowUpDown />
+							)}
 						</Button>
 					</div>
-				)
+				);
 			},
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.position}</div>
@@ -106,47 +138,23 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 
 		{
 			accessorKey: 'username',
-			header:	() => <div className="text-center">USERNAME</div>,
+			header: () => <div className="text-center">USERNAME</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.username}</div>
 			),
 		},
 
-		// {
-		// 	accessorKey: 'contact_no',
-		// 	header:	() => <div className="text-center">CONTACT #</div>,
-		// 	cell: ({ row }) => (
-		// 		<div className="text-center">{row.original.contact_no}</div>
-		// 	),
-		// },
-
 		{
 			accessorKey: 'email',
-			header:	() => <div className="text-center">EMAIL ADDRESS</div>,
+			header: () => <div className="text-center">EMAIL ADDRESS</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.email}</div>
 			),
 		},
 
 		{
-			// id: 'actions',
-			// header:	() => <div className="text-center">ACTION</div>,
-			// cell: ({ row }) => {
-			// 	const userinfoRow = row.original;
-			// 	return (
-			// 		<div className="flex flex-row text-xs justify-center font-normal uppercase">
-			// 			<Button 
-			// 				fill={'yellow'} 
-			// 				textColor={'black'}
-			// 				onClick={() => handleEditUser(userinfoRow)}
-			// 			>
-			// 				Edit User
-			// 			</Button>
-			// 		</div>
-			// 	);
-			// }
 			id: 'actions',
-			header:	() => <div></div>,
+			header: () => <div></div>,
 			cell: ({ row }) => {
 				const userRow = row.original;
 				return (
@@ -159,32 +167,37 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 								<DropdownMenuLabel>Actions</DropdownMenuLabel>
 								<DropdownMenuSeparator className="bg-gray-200" />
 
-								<DropdownMenuItem
-									onClick={() => handleEditUser(userRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<List size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit User</span>
-								</DropdownMenuItem>
+								{permissionListNames?.includes('modify_users') && (
+									<DropdownMenuItem
+										onClick={() => handleEditUser(userRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<List size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit User</span>
+									</DropdownMenuItem>
+								)}
 
-								<DropdownMenuItem
-									onClick={() => handleEditPerms(userRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<List size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit User Permission</span>
-								</DropdownMenuItem>
+								{permissionListNames?.includes(
+									'modify_access_users',
+								) && (
+									<DropdownMenuItem
+										onClick={() => handleEditPerms(userRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<List size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit User Permission</span>
+									</DropdownMenuItem>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
 				);
-			}
-		}
-
+			},
+		},
 	];
 
 	return (
@@ -192,10 +205,15 @@ export const UserInfoTable: FC<UserTableProps> = ({ openModal }: UserTableProps)
 			<DataTable
 				data={users}
 				columns={UserInfoTableHeader}
-				filterWhat={"username"}
-				dataType={"User"}
-				openModal={handleAddUser}
-				isLoading={isFetching} />
+				filterWhat={'username'}
+				dataType={'User'}
+				openModal={
+					permissionListNames?.includes('manage_users')
+						? handleAddUser
+						: undefined
+				}
+				isLoading={isFetching}
+			/>
 		</>
 	);
 };

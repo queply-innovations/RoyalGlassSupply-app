@@ -25,6 +25,7 @@ import {
 	TooltipTrigger,
 	TooltipContent,
 } from '@/components/ui/tooltip';
+import { useAuth } from '@/context/AuthContext';
 
 interface ProductPricesColumnsProps {
 	handleProdPriceDetails: (productPrice: ProductPrices) => void;
@@ -44,6 +45,7 @@ export const ProductPricesColumns = ({
 	handleEditProdPrice,
 	handleDeleteProdPrice,
 }: ProductPricesColumnsProps): ColumnDef<ProductPrices>[] => {
+	const { permissionListNames } = useAuth();
 	const columnDefinition: ColumnDef<ProductPrices>[] = [
 		{
 			id: 'name',
@@ -252,25 +254,39 @@ export const ProductPricesColumns = ({
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleEditProdPrice(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit</span>
-								</DropdownMenuItem>
-								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() => handleDeleteProdPrice(productRow)}
-									className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Trash2 size={16} strokeWidth={2.25} />
-									</span>
-									<span>Delete</span>
-								</DropdownMenuItem>
+
+								{permissionListNames?.includes(
+									'edit_product_price',
+								) && (
+									<DropdownMenuItem
+										onClick={() => handleEditProdPrice(productRow)}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit</span>
+									</DropdownMenuItem>
+								)}
+
+								{permissionListNames?.includes(
+									'delete_product_price',
+								) && (
+									<>
+										<DropdownMenuSeparator className="bg-gray-200" />
+										<DropdownMenuItem
+											onClick={() =>
+												handleDeleteProdPrice(productRow)
+											}
+											className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
+										>
+											<span className="flex w-6 items-center justify-center">
+												<Trash2 size={16} strokeWidth={2.25} />
+											</span>
+											<span>Delete</span>
+										</DropdownMenuItem>
+									</>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
