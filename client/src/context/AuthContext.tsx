@@ -1,10 +1,17 @@
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
-import { User, UserResponse, getUserAssignedAt, getUserRole, getUserRolePermissions } from '@/features/auth';
+import {
+	User,
+	UserResponse,
+	getUserAssignedAt,
+	getUserRole,
+	getUserRolePermissions,
+} from '@/features/auth';
 import {
 	ReactNode,
 	createContext,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from 'react';
 import storage from '@/utils/storage';
@@ -27,6 +34,7 @@ interface AuthContextProps {
 		updateProgress: any,
 	): Promise<UserResponse>;
 	logout(): void;
+	permissionListNames: string[] | undefined;
 }
 
 interface AuthProviderProps {
@@ -81,14 +89,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					// assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
 				} as AuthProps);
 
-				useEffect(() => { console.log(auth); }, [auth]);
-
+				useEffect(() => {
+					console.log(auth);
+				}, [auth]);
 			}
 			return response;
 		} catch (error: any) {
 			throw new Error(error);
 		}
 	}
+
+	const permissionListNames = useMemo(() => {
+		//@ts-ignore
+		return auth.rolePermissions?.map(permission => {
+			return permission.permission.title;
+		});
+	}, [auth]);
 
 	// Nullify user data and clear local storage
 	function logout() {
@@ -108,6 +124,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		auth,
 		login,
 		logout,
+		permissionListNames,
 	};
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
