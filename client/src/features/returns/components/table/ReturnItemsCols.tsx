@@ -9,37 +9,52 @@ export const ReturnItemsCols = () => {
 			header: () => <div className="justify-center uppercase">Product</div>,
 			cell: ({ row }) => {
 				return (
-					<div>
-						<span className="max-w-[20ch] truncate">
+					<div className="flex flex-row gap-2 ">
+						{row.original.invoice_item.product.brand ? (
+							<>
+								<span>({row.original.invoice_item.product.brand})</span>
+							</>
+						) : null}
+						<span className="font-bold">
 							{row.original.invoice_item.product.name}
+						</span>
+						<span className="">
+							{row.original.invoice_item.product.size}
+						</span>
+						<span className="">
+							{row.original.invoice_item.product.color}
 						</span>
 					</div>
 				);
 			},
 		},
 		{
-			accessorKey: 'invoice_item.product.brand',
-			header: () => <div className="justify-center uppercase">Brand</div>,
-		},
-		{
-			accessorKey: 'invoice_item.product.size',
-			header: () => <div className="justify-center uppercase">Size</div>,
-		},
-		{
-			accessorKey: 'invoice_item.product.color',
-			header: () => <div className="justify-center uppercase">Color</div>,
-		},
-		{
-			accessorKey: 'invoice_item.product.serial_no',
-			header: () => <div className="justify-center uppercase">Serial</div>,
+			accessorKey: 'unit',
+			header: () => <div className="justify-center uppercase">Unit</div>,
 		},
 		{
 			accessorKey: 'quantity',
 			header: () => <div className="justify-center uppercase">QTY</div>,
 		},
 		{
-			accessorKey: 'unit',
-			header: () => <div className="justify-center uppercase">Unit</div>,
+			accessorKey: 'capital_price',
+			header: () => <div className="justify-center uppercase">Capital</div>,
+			cell: ({ row }) => {
+				return (
+					<div className="uppercase">
+						<span className="max-w-[25ch] truncate">
+							{Intl.NumberFormat('en-PH', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(
+								//@ts-expect-error 'type not updated'
+								row.original.invoice_item.product_price.capital_price ??
+									0,
+							)}
+						</span>
+					</div>
+				);
+			},
 		},
 		{
 			accessorKey: 'price',
