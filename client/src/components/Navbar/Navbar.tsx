@@ -1,21 +1,6 @@
-import { NavIcons } from './NavIcons';
-import { HiUser } from 'react-icons/hi2';
-import { GoHomeFill } from 'react-icons/go';
-import { IoNotifications } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-import { Inputbox } from '../Inputbox';
-import { Button } from '..';
-import { useAuth } from '@/context/AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
-import { useInventoryQuery } from '@/features/inventory/hooks';
-import {
-	usePendingTransfersQuery,
-	useTransferQuery,
-} from '@/features/transfer/hooks';
-import {
-	usePendingReturnQuery,
-	useReturnQuery,
-} from '@/features/pending/pending-return/hooks';
+import { usePendingTransfersQuery } from '@/features/transfer/hooks';
+import { usePendingReturnQuery } from '@/features/pending/pending-return/hooks';
 import { useState } from 'react';
 import { NavItem } from './NavItem';
 import { Bell, Home } from 'lucide-react';
@@ -27,22 +12,19 @@ import {
 import { Notifications } from './Notifications';
 
 export const Navbar = () => {
-	const { logout } = useAuth();
 	const [notifsOpen, setNotifsOpen] = useState(false);
 
 	const { transfers, isFetching } = usePendingTransfersQuery();
-	const { returns, isFetching: isFetching2 } = usePendingReturnQuery();
+	const { returns: pendingReturns, isFetching: isFetching2 } =
+		usePendingReturnQuery();
 
 	const allIsFetching = isFetching && isFetching2;
 
 	const pendingTransfers = transfers.filter(
 		transfer => transfer.approval_status === 'pending',
 	);
-	const pendingReturns = returns.filter(
-		returnItem => returnItem.refund_status === 'pending',
-	);
 
-	const numberNotif = pendingTransfers.length + pendingReturns.length;
+	const numberNotif = pendingTransfers.length + (pendingReturns?.length || 0);
 
 	return (
 		<div className="nav-icon flex flex-row items-end justify-end gap-x-2">
@@ -61,7 +43,7 @@ export const Navbar = () => {
 					<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
 						<Notifications
 							pendingTransfers={pendingTransfers.length}
-							pendingReturns={pendingReturns.length}
+							pendingReturns={pendingReturns?.length || 0}
 							allIsFetching={allIsFetching}
 						/>
 					</PopoverContent>
