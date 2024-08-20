@@ -74,6 +74,7 @@ class ReturnTransactionController extends Controller
     {
         try {
             if(!$request->has('refund_status')) throw new \Exception('No return transaction status found.');
+            if($returnTransaction->refund_status != 'pending') throw new \Exception('Return Transaction already updated.');
 
             switch($request->refund_status) {
                 case 'approve':
@@ -118,7 +119,7 @@ class ReturnTransactionController extends Controller
      */
     public function searchFilterAndSort(Request $request)
     {
-        $query = ReturnTransaction::whereNotNull('id');
+        $query = ReturnTransaction::query();
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
@@ -159,27 +160,9 @@ class ReturnTransactionController extends Controller
             ReturnTransactionItem::create([
                 ...$item,
                 'return_transaction_id' => $store->id,
+                'price' => $item['price']['price']
             ]);
-
-            // $invoiceItem = InvoiceItem::findOrFail($item['invoice_item_id']);
-            // $invoiceItem->inventoryProduct->update([
-            //     'purchased_stocks' => $invoiceItem->inventoryProduct->purchased_stocks - $item['quantity']
-            // ]);
         }
-
-        // if((bool) !$request->is_cash_refund) {
-        //     $voucher = Voucher::create([
-        //         'code' => str_replace('IVC', 'V', $invoice->code),
-        //         'customer_id' => $invoice->customer_id,
-        //         'return_transaction_id' => $store->id,
-        //         'discounted_price' => $store->refundable_amount,
-        //         'generated_by' => Auth::id()
-        //     ]);
-
-        //     $store->update([
-        //         'voucher_id' => $voucher->id
-        //     ]);
-        // }
 
         return $store;
     }
@@ -194,19 +177,19 @@ class ReturnTransactionController extends Controller
             ]);
         }
 
-        // if((bool) !$request->is_cash_refund) {
-        //     $voucher = Voucher::create([
-        //         'code' => str_replace('IVC', 'V', $invoice->code),
-        //         'customer_id' => $invoice->customer_id,
-        //         'return_transaction_id' => $store->id,
-        //         'discounted_price' => $store->refundable_amount,
-        //         'generated_by' => Auth::id()
-        //     ]);
+        if((bool) !$returnTransaction->is_cash_refund) {
+            $voucher = Voucher::create([
+                'code' => str_replace('IVC', 'V', $returnTransaction->invoice->code),
+                'customer_id' => $returnTransaction->invoice->customer_id,
+                'return_transaction_id' => $returnTransaction->id,
+                'discounted_price' => $returnTransaction->refundable_amount,
+                'generated_by' => Auth::id()
+            ]);
 
-        //     $store->update([
-        //         'voucher_id' => $voucher->id
-        //     ]);
-        // }
+            $returnTransaction->update([
+                'voucher_id' => $voucher->id
+            ]);
+        }
 
         $returnTransaction->update([
             'refund_status' => 'done'
