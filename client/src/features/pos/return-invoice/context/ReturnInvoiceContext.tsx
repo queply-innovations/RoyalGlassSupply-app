@@ -84,15 +84,13 @@ export const ReturnInvoiceProvider = ({
 				const item = returnItems.find(
 					returnItem => returnItem.code === `RET-${code}`,
 				);
-				// Check if a return transaction is found and if it is done or pending
-				const matchFound =
-					item?.refund_status === 'done' ||
-					item?.refund_status === 'pending'
-						? true
-						: false;
 
 				// If a return transaction is not found, fetch the invoice by code
-				if (!matchFound) {
+				if (
+					item === undefined ||
+					(item.refund_status !== 'done' &&
+						item.refund_status !== 'pending')
+				) {
 					return fetchInvoiceByCode(code)
 						.then(data => {
 							setReturnInvoice({
@@ -110,9 +108,12 @@ export const ReturnInvoiceProvider = ({
 						.catch(() => {
 							throw 'Code not found. Please try again.';
 						});
+				} else if (item?.refund_status === 'pending') {
+					// If a return transaction is found, throw an error
+					throw 'Invoice has a pending return transaction.';
 				} else {
 					// If a return transaction is found, throw an error
-					throw 'Invoice already had a return transaction.';
+					throw 'Invoice already has a return transaction.';
 				}
 			},
 		);
@@ -157,15 +158,13 @@ export const ReturnInvoiceProvider = ({
 		// Submit the return invoice
 		setIsSubmitting(true);
 		return await submitReturnInvoice(returnInvoice)
-			.then(res => {
-				setVoucher(res.voucher ?? undefined);
-				setIsVoucherDialogOpen(res.voucher ? true : false);
+			.then(() => {
 				setReturnInvoice({} as ReturnInvoice);
 				setSelectedInvoice(undefined);
 				setReturnableItems([]);
 				setSelectedItems([]);
 				setIsSubmitting(false);
-				return 'Items successfully returned.';
+				return 'Return items successfully submitted. Please wait for approval from admin.';
 			})
 			.catch(() => {
 				setIsSubmitting(false);

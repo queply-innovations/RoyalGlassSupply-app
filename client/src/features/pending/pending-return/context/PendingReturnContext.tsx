@@ -1,9 +1,9 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
-import { usePendingReturnQuery, useReturnQuery } from '../hooks';
-import { ReturnTransactions, ReturnTransactionsRaw } from '../types';
+import { usePendingReturnQuery } from '../hooks';
+import { ReturnTransactionsRaw } from '../types';
 
 interface ReturnContextProps {
-	returns: ReturnTransactionsRaw[];
+	returns: ReturnTransactionsRaw[] | undefined;
 	isFetching: boolean;
 	selectedReturn: ReturnTransactionsRaw;
 	setSelectedReturn: (selectedReturn: ReturnTransactionsRaw) => void;
@@ -18,23 +18,21 @@ interface ReturnProviderProps {
 }
 
 export const ReturnProvider = ({ children }: ReturnProviderProps) => {
-	// State of the selected transfer
-	const [selectedReturn, setSelectedReturn] =
-		useState<ReturnTransactionsRaw>({} as ReturnTransactionsRaw);
-
 	const { returns, isFetching } = usePendingReturnQuery();
+	// State of the selected transfer
+	const [selectedReturn, setSelectedReturn] = useState<ReturnTransactionsRaw>(
+		{} as ReturnTransactionsRaw,
+	);
 
-	const value = { 
+	const value = {
 		returns,
 		selectedReturn,
 		setSelectedReturn,
-		isFetching
+		isFetching,
 	};
 
 	return (
-		<ReturnContext.Provider value={value}>
-			{children}
-		</ReturnContext.Provider>
+		<ReturnContext.Provider value={value}>{children}</ReturnContext.Provider>
 	);
 };
 
@@ -42,9 +40,7 @@ export function useReturn() {
 	const context = useContext(ReturnContext);
 
 	if (!context) {
-		throw new Error(
-			'useReturnContext must be used within ReturnContext',
-		);
+		throw new Error('useReturnContext must be used within ReturnContext');
 	}
 	return context;
 }
