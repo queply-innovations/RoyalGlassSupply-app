@@ -10,8 +10,10 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { Notifications } from './Notifications';
+import { useAuth } from '@/context/AuthContext';
 
 export const Navbar = () => {
+	const { permissionListNames } = useAuth();
 	const [notifsOpen, setNotifsOpen] = useState(false);
 
 	const { transfers, isFetching } = usePendingTransfersQuery();
@@ -31,31 +33,34 @@ export const Navbar = () => {
 			<Link to="/dashboard">
 				<NavItem title="Home" icon={<Home size={20} />} />
 			</Link>
-			<div className="relative">
-				<Popover onOpenChange={() => setNotifsOpen(!notifsOpen)}>
-					<PopoverTrigger asChild>
-						<NavItem
-							title="Notifications"
-							icon={<Bell size={20} />}
-							isActive={notifsOpen}
-						/>
-					</PopoverTrigger>
-					<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
-						<Notifications
-							pendingTransfers={pendingTransfers.length}
-							pendingReturns={pendingReturns?.length || 0}
-							allIsFetching={allIsFetching}
-						/>
-					</PopoverContent>
-				</Popover>
-				{numberNotif > 0 && (
-					<span className="pointer-events-none absolute right-0 top-0 flex -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-red-500 px-2 py-1 ">
-						<p className="line-clamp-1 text-xs font-medium leading-tight text-white">
-							{numberNotif <= 100 ? numberNotif : '100+'}
-						</p>
-					</span>
-				)}
-			</div>
+
+			{permissionListNames?.includes('view_pending_page') && (
+				<div className="relative">
+					<Popover onOpenChange={() => setNotifsOpen(!notifsOpen)}>
+						<PopoverTrigger asChild>
+							<NavItem
+								title="Notifications"
+								icon={<Bell size={20} />}
+								isActive={notifsOpen}
+							/>
+						</PopoverTrigger>
+						<PopoverContent className="w-fit -translate-x-5 rounded-lg px-2 pb-2 shadow-xl">
+							<Notifications
+								pendingTransfers={pendingTransfers.length}
+								pendingReturns={pendingReturns?.length || 0}
+								allIsFetching={allIsFetching}
+							/>
+						</PopoverContent>
+					</Popover>
+					{numberNotif > 0 && (
+						<span className="pointer-events-none absolute right-0 top-0 flex -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-red-500 px-2 py-1 ">
+							<p className="line-clamp-1 text-xs font-medium leading-tight text-white">
+								{numberNotif <= 100 ? numberNotif : '100+'}
+							</p>
+						</span>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

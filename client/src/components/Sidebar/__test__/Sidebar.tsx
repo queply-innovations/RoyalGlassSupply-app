@@ -2,12 +2,10 @@ import { useAuth } from '@/context/AuthContext';
 import SidebarLogo from '../components/SidebarLogo';
 import { SidebarRoutesGrouped } from '../routes/SidebarRoutesGrouped';
 import { SidebarItem } from '../components/items/SidebarItem';
-import { Role } from '../types';
-import { SetStateAction, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components';
-import { all } from 'axios';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SidebarProps {}
@@ -21,8 +19,6 @@ const Sidebar = ({}: SidebarProps) => {
 	const permissionsList = auth.rolePermissions?.map(
 		permission => permission.permission_id,
 	);
-
-	console.log('User Permissions:', permissionsList);
 
 	return (
 		<>

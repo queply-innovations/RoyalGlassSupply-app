@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 export type NavRouteType = {
-	permissions: String[]; // permission title, not ID
+	permissions: string[]; // permission title, not ID
 	isAdmin?: boolean; // if true, disregard permissions and show only for admin
 	navProps: {
 		path: string;
@@ -18,8 +18,8 @@ export type NavRouteType = {
 
 export const NavRoutes: NavRouteType[] = [
 	{
-		permissions: [''],
-		isAdmin: true,
+		permissions: ['view_pos_page'],
+		// isAdmin: true,
 		navProps: {
 			path: '/dashboard',
 			displayText: 'Dashboard',
@@ -43,7 +43,7 @@ export const NavRoutes: NavRouteType[] = [
 		},
 	},
 	{
-		permissions: ['view_returns_page'],
+		permissions: ['view_pos_page'],
 		navProps: {
 			path: '/pos/return-items',
 			displayText: 'Return Items',
