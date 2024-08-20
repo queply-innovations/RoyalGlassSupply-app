@@ -19,6 +19,7 @@ export const SearchProductItems = () => {
 		setInvoiceItemsDatabase,
 		currentInvoicePos,
 	} = useInvoicePos();
+
 	return (
 		<>
 			<div className="relative z-20 pb-10">

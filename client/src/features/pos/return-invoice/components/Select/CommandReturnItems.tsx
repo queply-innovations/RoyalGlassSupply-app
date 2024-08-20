@@ -9,15 +9,13 @@ interface CommandReturnItemsProps {
 }
 
 export const CommandReturnItems = ({ isOpen }: CommandReturnItemsProps) => {
-	// const { returnInvoiceItems, selectedReturnItems, setSelectedReturnItems } =
-	// 	useReturnInvoice();
 	const {
 		returnableItems,
 		returnInvoice,
 		setReturnInvoice,
 		setSelectedItems,
 	} = useReturnInvoice();
-	console.log('Return Invoice Items:', returnableItems);
+
 	return (
 		<>
 			{returnableItems.map((item, key) => (
@@ -79,7 +77,10 @@ export const CommandReturnItems = ({ isOpen }: CommandReturnItemsProps) => {
 								<span>{item.quantity} pc</span>
 							)}
 							<span className="font-bold">
-								{formatCurrency(item.product_price)}
+								{
+									//@ts-expect-error 'price' does not exist on type 'InvoiceItems'
+									formatCurrency(item.product_price.price ?? 0)
+								}
 							</span>
 						</div>
 					</div>

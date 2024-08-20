@@ -5,7 +5,6 @@ import { formatCurrency } from '@/utils/FormatCurrency';
 import { ColumnDef } from '@tanstack/react-table';
 import { useReturnInvoice } from '../../context/ReturnInvoiceContext';
 import { Trash2Icon } from 'lucide-react';
-// import { useDebounce } from "@uidotdev/usehooks";
 
 export const ReturnCols = () => {
 	return <></>;
@@ -63,9 +62,7 @@ export const ReturnTableColumns = () => {
 						<Input
 							type="number"
 							min={1}
-							// max={row.original.quantity}
 							className="max-w-[100px]"
-							// defaultValue={1}
 							readOnly
 							value={
 								returnInvoice.return_items.find(
@@ -105,19 +102,19 @@ export const ReturnTableColumns = () => {
 					<div className="flex flex-col">
 						<div className="flex flex-row items-center gap-2">
 							{row.original.product.brand && (
-								<span className="text-sm font-light">
+								<span className="text-xs font-light">
 									({row.original.product.brand})
 								</span>
 							)}
-							<span className="text-sm font-bold">
+							<span className="text-xs font-bold">
 								{row.original.product.name}
 							</span>
 							•
-							<span className="text-sm font-medium capitalize">
+							<span className="text-xs font-medium capitalize">
 								{row.original.product.size}
 							</span>
 							•
-							<span className="text-sm font-bold uppercase">
+							<span className="text-xs font-bold uppercase">
 								{row.original.product.color}
 							</span>
 						</div>
@@ -130,12 +127,14 @@ export const ReturnTableColumns = () => {
 			size: 100,
 			header: () => <div className="justify-center">Price</div>,
 			cell: ({ row }) => {
-				// const debouncedQuantity = useDebounce()
 				return (
 					<div className="flex flex-col">
 						<div className="flex flex-row gap-2">
-							<span className="text-sm font-bold">
-								{formatCurrency(row.original.product_price)}
+							<span className="text-xs font-bold">
+								{
+									// @ts-expect-error 'price' does not exist on type 'InvoiceItems'
+									formatCurrency(row.original.product_price.price ?? 0)
+								}
 							</span>
 						</div>
 					</div>
@@ -146,8 +145,6 @@ export const ReturnTableColumns = () => {
 			id: 'actions',
 			size: 100,
 			cell: ({ row }) => {
-				// const invoiceIndex = row.index;
-
 				return (
 					<div className="flex flex-row justify-center text-xs font-normal uppercase">
 						<Button

@@ -3,13 +3,11 @@ import {
 	InvoiceItems,
 	Invoices,
 	ReturnInvoice,
-	ReturnInvoiceItems,
 } from '@/features/invoice/__test__/types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import {
 	fetchReturnTransactionByCode,
 	submitReturnInvoice,
-	submitReturnInvoiceItems,
 } from '../api/Returns';
 import { useAuth } from '@/context/AuthContext';
 import { Voucher } from '@/features/customer/__test__/types';
@@ -83,9 +81,15 @@ export const ReturnInvoiceProvider = ({
 		// Search for exisiting return transaction
 		return await fetchReturnTransactionByCode(`RET-${code}`).then(
 			returnItems => {
-				const matchFound = returnItems.find(
+				const item = returnItems.find(
 					returnItem => returnItem.code === `RET-${code}`,
 				);
+				// Check if a return transaction is found and if it is done or pending
+				const matchFound =
+					item?.refund_status === 'done' ||
+					item?.refund_status === 'pending'
+						? true
+						: false;
 
 				// If a return transaction is not found, fetch the invoice by code
 				if (!matchFound) {
@@ -108,7 +112,7 @@ export const ReturnInvoiceProvider = ({
 						});
 				} else {
 					// If a return transaction is found, throw an error
-					throw 'Invoice already has return transaction history.';
+					throw 'Invoice already had a return transaction.';
 				}
 			},
 		);
@@ -136,7 +140,8 @@ export const ReturnInvoiceProvider = ({
 		if (returnInvoice.return_items) {
 			const refundableAmount = returnInvoice.return_items.reduce(
 				(acc, item) => {
-					return acc + item.quantity * item.price;
+					//@ts-expect-error 'price' does not exist on type 'InvoiceItems'
+					return acc + item.quantity * item.price.price;
 				},
 				0,
 			);
@@ -180,11 +185,6 @@ export const ReturnInvoiceProvider = ({
 			};
 		});
 	};
-
-	useEffect(() => {
-		console.log('items', returnInvoice.return_items);
-		console.log('selected items', selectedItems);
-	}, [returnInvoice.return_items, selectedItems]);
 
 	const value = {
 		returnInvoice,

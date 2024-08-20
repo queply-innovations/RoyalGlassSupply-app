@@ -4,7 +4,7 @@ export const ReturnCalculations = () => {
 	const { returnInvoice } = useReturnInvoice();
 
 	return (
-		<div className="flex w-full flex-row justify-end gap-8 border-t px-6 pt-2 text-base">
+		<div className="flex w-full flex-row justify-end gap-8 border-t px-6 pt-2 text-sm">
 			{returnInvoice.return_items && (
 				<h3 className="space-x-2">
 					<span className="font-medium">Total items:</span>
