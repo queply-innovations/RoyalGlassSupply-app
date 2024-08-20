@@ -72,7 +72,25 @@ class ReturnTransactionController extends Controller
      */
     public function update(Request $request, ReturnTransaction $returnTransaction)
     {
-        $returnTransaction->update($request->all());
+        try {
+            if(!$request->has('refund_status')) throw new \Exception('No return transaction status found.');
+
+            switch($request->refund_status) {
+                case 'approve':
+                    $update = $this->approveReturnTransaction($returnTransaction);
+                    $message = 'Return Transaction approved successfully.';
+                break;
+                case 'deny':
+                    $update = $this->denyReturnTransaction($returnTransaction);
+                    $message = 'Return Transaction denied.';
+                break;
+                default: throw new \Exception('Invalid transaction status');
+            }
+
+            return $this->sendSuccess($message);
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
 
         return new ReturnTransactionResource($returnTransaction);
     }
@@ -132,34 +150,72 @@ class ReturnTransactionController extends Controller
     private function storeReturnTransaction($request) {
         $invoice = Invoice::findOrFail($request->invoice_id);
 
-        $store = ReturnTransaction::create($request->except('return_items'));
+        $store = ReturnTransaction::create([
+            ...$request->except('return_items'),
+            'refund_status' => 'pending'
+        ]);
 
         foreach($request->return_items as $item) {
             ReturnTransactionItem::create([
                 ...$item,
-                'return_transaction_id' => $store->id
+                'return_transaction_id' => $store->id,
             ]);
 
+            // $invoiceItem = InvoiceItem::findOrFail($item['invoice_item_id']);
+            // $invoiceItem->inventoryProduct->update([
+            //     'purchased_stocks' => $invoiceItem->inventoryProduct->purchased_stocks - $item['quantity']
+            // ]);
+        }
+
+        // if((bool) !$request->is_cash_refund) {
+        //     $voucher = Voucher::create([
+        //         'code' => str_replace('IVC', 'V', $invoice->code),
+        //         'customer_id' => $invoice->customer_id,
+        //         'return_transaction_id' => $store->id,
+        //         'discounted_price' => $store->refundable_amount,
+        //         'generated_by' => Auth::id()
+        //     ]);
+
+        //     $store->update([
+        //         'voucher_id' => $voucher->id
+        //     ]);
+        // }
+
+        return $store;
+    }
+
+    private function approveReturnTransaction($returnTransaction) {
+        $items = $returnTransaction->returnTransactionItems;
+
+        foreach($items as $item) {
             $invoiceItem = InvoiceItem::findOrFail($item['invoice_item_id']);
             $invoiceItem->inventoryProduct->update([
                 'purchased_stocks' => $invoiceItem->inventoryProduct->purchased_stocks - $item['quantity']
             ]);
         }
 
-        if((bool) !$request->is_cash_refund) {
-            $voucher = Voucher::create([
-                'code' => str_replace('IVC', 'V', $invoice->code),
-                'customer_id' => $invoice->customer_id,
-                'return_transaction_id' => $store->id,
-                'discounted_price' => $store->refundable_amount,
-                'generated_by' => Auth::id()
-            ]);
+        // if((bool) !$request->is_cash_refund) {
+        //     $voucher = Voucher::create([
+        //         'code' => str_replace('IVC', 'V', $invoice->code),
+        //         'customer_id' => $invoice->customer_id,
+        //         'return_transaction_id' => $store->id,
+        //         'discounted_price' => $store->refundable_amount,
+        //         'generated_by' => Auth::id()
+        //     ]);
 
-            $store->update([
-                'voucher_id' => $voucher->id
-            ]);
-        }
+        //     $store->update([
+        //         'voucher_id' => $voucher->id
+        //     ]);
+        // }
 
-        return $store;
+        $returnTransaction->update([
+            'refund_status' => 'done'
+        ]);
+    }
+
+    private function denyReturnTransaction($returnTransaction) {
+        $returnTransaction->update([
+            'refund_status' => 'denied'
+        ]);
     }
 }
