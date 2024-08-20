@@ -14,12 +14,15 @@ interface SidebarProps {}
 
 const Sidebar = ({}: SidebarProps) => {
 	const { auth, logout } = useAuth();
-	const { pathname } = useLocation(); // Get the current pathname/URL
-	const [openedItem, setOpenedItem] = useState<string | undefined>(); // State for opened item
+	const { pathname } = useLocation();
+	const [openedItem, setOpenedItem] = useState<string | undefined>();
 
-	const permissionsList = auth.rolePermissions?.map(permission => {
-		return permission.permission_id;
-	});
+	// Extract the list of permission IDs for the current user
+	const permissionsList = auth.rolePermissions?.map(
+		permission => permission.permission_id,
+	);
+
+	console.log('User Permissions:', permissionsList);
 
 	return (
 		<>
@@ -34,62 +37,52 @@ const Sidebar = ({}: SidebarProps) => {
 						style={{ '--border': '216 12% 84%' } as React.CSSProperties}
 					>
 						<ul className="items-star flex w-full flex-col gap-1 overflow-y-auto px-2">
-							{SidebarRoutesGrouped.map((group, index) => {
-								// Check if user's role is included in the allowed roles of the group items
+							{SidebarRoutesGrouped.map((group, groupIndex) => {
+								// Filter the items within each group based on permissions
 								const allowedItems = group.items.filter(item => {
-									if (
-										item.permissionId.some(id =>
-											permissionsList?.includes(id),
-										)
-									) {
-										return item;
+									// Check if the user has any of the permissions required for this item
+									const hasPermission = item.permissionId.some(id =>
+										permissionsList?.includes(id),
+									);
+
+									// Filter children based on permissions if they exist
+									if (item.children) {
+										item.children = item.children.filter(child =>
+											child.permissionId.some(id =>
+												permissionsList?.includes(id),
+											),
+										);
 									}
+
+									// Only return true if the user has permission for the parent or any of its children
+									return (
+										hasPermission ||
+										(item.children && item.children.length > 0)
+									);
 								});
-								const groupAllowed = allowedItems.length > 0;
-								return group.groupName ? (
-									// If group has a name, display group name
-									// Group name is used to categorize the items contextually
-									<div className="w-full" key={index}>
-										{/* Just hide the group name if no items inside */}
-										{groupAllowed && (
+
+								// Skip rendering the group if there are no allowed items
+								if (allowedItems.length === 0) return null;
+
+								return (
+									<div className="w-full" key={groupIndex}>
+										{group.groupName && (
 											<div className="px-4 pb-1 pt-4">
 												<span className="text-xs font-semibold text-slate-500/80">
 													{group.groupName}
 												</span>
 											</div>
 										)}
-										{group.items.map(
-											(item, index) =>
-												// Check if user's role is included in the allowed roles of the item
-												// Don't display the item if user's role isn't allowed
-												item.permissionId.some(id =>
-													permissionsList?.includes(id),
-												) && (
-													<SidebarItem
-														key={index}
-														item={item}
-														pathname={pathname}
-														openedItem={openedItem}
-														setOpenedItem={setOpenedItem}
-													/>
-												),
-										)}
+										{allowedItems.map((item, itemIndex) => (
+											<SidebarItem
+												key={itemIndex}
+												item={item}
+												pathname={pathname}
+												openedItem={openedItem}
+												setOpenedItem={setOpenedItem}
+											/>
+										))}
 									</div>
-								) : (
-									group.items.map(
-										(item, index) =>
-											item.permissionId.some(id =>
-												permissionsList?.includes(id),
-											) && (
-												<SidebarItem
-													key={index}
-													item={item}
-													pathname={pathname}
-													openedItem={openedItem}
-													setOpenedItem={setOpenedItem}
-												/>
-											),
-									)
 								);
 							})}
 						</ul>
