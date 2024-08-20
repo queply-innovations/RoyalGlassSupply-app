@@ -11,10 +11,10 @@ const RolePermissionsForm = () => {
 	const {
 		roles,
 		roleSelect,
-		permissions,
+		// permissions,
 		allPermissions,
 		permissionChange,
-		roleId,
+		// roleId,
 		isChanged,
 		isSubmitting,
 		error,
@@ -55,6 +55,10 @@ const RolePermissionsForm = () => {
 	const viewMgmt = allPermissions.filter(o =>
 		Object.keys(o).some(keyVal => o.title.includes('view'.toLowerCase())),
 	);
+
+	const inventoryMgmt = allPermissions.filter(perm => {
+		return !perm.title.includes('view') && perm.title.includes('inventory');
+	});
 
 	// ! Returns error 500 when submitting only 1 change?
 
@@ -248,6 +252,57 @@ const RolePermissionsForm = () => {
 									)}
 								</div>
 							</div>
+
+							<div className="space-y-1">
+								<p className="ml-4 text-sm font-semibold text-slate-500/80">
+									Inventory
+								</p>
+								<div className="w-full divide-y rounded-lg border">
+									{inventoryMgmt.length === 0 ? (
+										<div className="flex flex-col items-center">
+											<Loader2
+												size={28}
+												strokeWidth={2}
+												className="animate-spin"
+											/>
+										</div>
+									) : (
+										inventoryMgmt.map(perm => {
+											return (
+												<div
+													key={perm.id}
+													className="flex w-full flex-row items-center justify-between p-4"
+												>
+													<Label
+														htmlFor={perm.title}
+														className="cursor-pointer text-sm capitalize text-slate-700"
+													>
+														{perm.title.split('_').join(' ')}
+													</Label>
+													<Switch
+														id={perm.title}
+														name={perm.title}
+														value={perm.id}
+														className="data-[state=checked]:bg-primary-green data-[state=unchecked]:bg-gray-300"
+														checked={permissionChange.some(
+															perms => {
+																return perms.permission_id ===
+																	perm.id
+																	? true
+																	: false;
+															},
+														)}
+														onCheckedChange={checked =>
+															handleChange(checked, perm.id)
+														}
+													/>
+												</div>
+											);
+										})
+									)}
+								</div>
+							</div>
+
 							<div className="space-y-1">
 								<p className="ml-4 text-sm font-semibold text-slate-500/80">
 									Transfers
@@ -298,6 +353,7 @@ const RolePermissionsForm = () => {
 									)}
 								</div>
 							</div>
+
 							<div className="space-y-1">
 								<p className="ml-4 text-sm font-semibold text-slate-500/80">
 									Views

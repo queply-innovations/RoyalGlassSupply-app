@@ -2,7 +2,6 @@ import { SidebarListItems } from '../types';
 import {
 	CircleUserRound,
 	Clock,
-	ArrowRightLeft,
 	ExternalLink,
 	Undo2,
 	ClipboardList,
@@ -12,7 +11,6 @@ import {
 	Truck,
 	Boxes,
 	Laptop2,
-	Calculator,
 	BookUser,
 	HandCoins,
 } from 'lucide-react';
@@ -66,14 +64,6 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 							title: 'Pending Invoices',
 						},
 					},
-					// {
-					// 	id: 'pending-listing',
-					// 	permissionId: [13],
-					// 	path: '/pending/product-listing',
-					// 	itemProps: {
-					// 		title: 'Pending Listing',
-					// 	},
-					// },
 				],
 			},
 			{
@@ -85,24 +75,6 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					icon: <HandCoins size={20} strokeWidth={1.75} />,
 				},
 			},
-			// {
-			//   id: 'transactions',
-			//   permissionId: [11],
-			//   itemProps: {
-			//     title: 'Transactions',
-			//     icon: <ArrowRightLeft size={20} strokeWidth={1.75} />,
-			//   },
-			//   children: [
-			// {
-			// 	id: 'transaction-return',
-			// 	permissionId: [11, 17],
-			// 	path: '/transaction/return',
-			// 	itemProps: {
-			// 		title: 'Transaction Return',
-			// 	},
-			// },
-			// ],
-			// },
 			{
 				id: 'inventories',
 				permissionId: [18],
@@ -154,7 +126,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 				children: [
 					{
 						id: 'user-information',
-						permissionId: [9, 1, 3],
+						permissionId: [9],
 						path: '/user/information',
 						itemProps: {
 							title: 'User Information',
@@ -170,7 +142,7 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					},
 					{
 						id: 'role-perms',
-						permissionId: [9, 2],
+						permissionId: [2],
 						path: '/user/role-perms',
 						itemProps: {
 							title: 'Role Permissions',
@@ -196,16 +168,6 @@ export const SidebarRoutesGrouped: SidebarGroup[] = [
 					icon: <BookUser size={20} strokeWidth={1.75} />,
 				},
 			},
-			//TODO: add invoice page,
-			// {
-			// 	id: 'invoices',
-			// 	permissionId: [10], //TODO EDIT PERMISSION ID
-			// 	path: '/invoice',
-			// 	itemProps: {
-			// 		title: 'Invoices',
-			// 		icon: <Calculator size={20} strokeWidth={1.75} />,
-			// 	},
-			// },
 			{
 				id: 'reports',
 				permissionId: [19],

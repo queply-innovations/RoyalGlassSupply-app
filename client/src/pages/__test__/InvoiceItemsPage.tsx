@@ -8,6 +8,7 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { formatUTCMMDDYYYY } from '@/utils/timeUtils';
 import { ChevronLeft } from 'lucide-react';
+import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface InvoiceItemsProps {}
@@ -38,6 +39,16 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 		return '';
 	};
 
+	console.log('items', invoiceItems);
+	const totalCapital = useMemo(() => {
+		return invoiceItems.reduce(
+			(acc, item) =>
+				// @ts-expect-error 'type not updated'
+				acc + (item.product_price.capital_price ?? 0) * item.quantity,
+			0,
+		);
+	}, [invoiceItems]);
+
 	return (
 		<>
 			<MainLayout title="Transaction Items">
@@ -61,14 +72,6 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 									/>
 
 									<InvoiceDetail
-										label="Total due"
-										type="currency"
-										value={invoice?.total_amount_due}
-									/>
-								</div>
-
-								<div className="flex flex-col gap-1">
-									<InvoiceDetail
 										label="Billed to"
 										type="string"
 										value={
@@ -77,25 +80,34 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 											invoice?.customer.lastname
 										}
 									/>
+								</div>
+
+								<div className="flex flex-col gap-1">
+									<InvoiceDetail
+										label="Date issued"
+										type="string"
+										//@ts-expect-error 'type not updated'
+										value={`${formatUTCMMDDYYYY(invoice?.created_at ?? '')} (${invoice?.warehouse.code})`}
+									/>
 
 									<InvoiceDetail
-										label="Delivery"
-										type="currency"
-										value={invoice?.delivery_charge}
+										label="Issued by"
+										type="string"
+										value={
+											//@ts-expect-error 'type not updated'
+											invoice?.issued_by.firstname +
+											' ' +
+											//@ts-expect-error 'type not updated'
+											invoice?.issued_by.lastname
+										}
 									/>
 								</div>
 
 								<div className="flex flex-col gap-1">
 									<InvoiceDetail
-										label="Issued by"
-										type="string"
-										value={
-											//@ts-ignore
-											invoice?.issued_by.firstname +
-											' ' +
-											//@ts-ignore
-											invoice?.issued_by.lastname
-										}
+										label="Delivery"
+										type="currency"
+										value={invoice?.delivery_charge}
 									/>
 
 									<InvoiceDetail
@@ -107,34 +119,29 @@ export const InvoiceItems = ({}: InvoiceItemsProps) => {
 
 								<div className="flex flex-col gap-1">
 									<InvoiceDetail
-										label="Reference number"
-										type="string"
-										value={
-											invoice?.reference_no
-												? invoice?.reference_no
-												: 'N/A'
-										}
+										label="Total capital"
+										type="currency"
+										value={totalCapital}
 									/>
 
 									<InvoiceDetail
-										label="Balance"
+										label="Total due"
 										type="currency"
-										value={invoice?.balance_amount}
+										value={invoice?.total_amount_due}
 									/>
 								</div>
 
 								<div className="flex flex-col gap-1">
 									<InvoiceDetail
-										label="Date issued"
-										type="string"
-										//@ts-ignore
-										value={`${formatUTCMMDDYYYY(invoice?.created_at!)} (${invoice?.warehouse.code})`}
+										label="Balance"
+										type="currency"
+										value={invoice?.balance_amount}
 									/>
 
 									<InvoiceDetail
 										label="Paid amount"
 										type="string"
-										value={`${formatCurrency(invoice?.paid_amount!)} (${formattedPaymentMethod(
+										value={`${formatCurrency(invoice?.paid_amount ?? 0)} (${formattedPaymentMethod(
 											invoice?.payment_method,
 										)})`}
 									/>

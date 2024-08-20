@@ -1,23 +1,12 @@
-import {
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useMemo,
-	useState,
-} from 'react';
-import { Invoice, Customer, CustomerSales } from '../types';
+import { ReactNode, createContext, useContext, useState } from 'react';
+import { CustomerSale } from '../types';
 import { useCustomersQuery } from '../hooks';
-import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
-import { useCustomerQuery } from '@/features/customer/__test__/hooks/useCustomerQuery';
 
 interface CustomersContextProps {
-	customersList: CustomerSales[];
-	// invoices: Invoice[];
+	customers: CustomerSale[] | undefined;
 	isFetching: boolean;
-	// customers: Customer[];
-	selectedInvoice: Invoice[];
-	setSelectedInvoice: (invoice: Invoice[]) => void;
+	selectedCustomer: CustomerSale | undefined;
+	setSelectedCustomer: (customer: CustomerSale) => void;
 }
 
 export const CustomersContext = createContext<
@@ -29,70 +18,16 @@ interface CustomersProviderProps {
 }
 
 export const CustomersProvider = ({ children }: CustomersProviderProps) => {
-	const [selectedInvoice, setSelectedInvoice] = useState<Invoice[]>([]);
-	// const [ customersList, setCustomersList ] = useState<any>([]);
-	const { invoices, isFetching: isInvoicesFetching } = useCustomersQuery();
-	// const [ customers, setCustomers ] = useState<Customer[]>([])
-	const { data: customers, isLoading: isCustomersFetching } =
-		useCustomerQuery();
-	// const [customersList, setCustomersList] = useState<CustomerSales[]>([]);
-	const isFetching = isInvoicesFetching || isCustomersFetching;
-
-	const customersList: CustomerSales[] = useMemo(() => {
-		if (
-			invoices &&
-			invoices.length > 0 &&
-			customers &&
-			customers.length > 0
-		) {
-			return customers.map(customer => {
-				const customerSales = invoices.reduce((acc, invoice) => {
-					if (
-						invoice.customer.id === customer.id &&
-						invoice.type === 'payment'
-					) {
-						return acc + invoice.total_amount_due;
-					}
-					return acc;
-				}, 0);
-
-				const customerTransactions =
-					invoices.filter(invoice => invoice.customer.id === customer.id)
-						?.length ?? 0;
-
-				return {
-					customer: customer,
-					total_sales: customerSales,
-					total_transactions: customerTransactions,
-				};
-			});
-		} else {
-			return [] as CustomerSales[];
-		}
-	}, [invoices, customers]);
-
-	// invoices.map((invoice: any) => {
-	// 	if (!customersList.includes(invoice.customer.id)) {
-	// 		setCustomersList([...customersList, invoice.customer.id ]);
-	// 	}
-	// });
-
-	// useEffect(() => {
-	// 	customersList.map((customer: number) => {
-	// 		setCustomers([...customers, {
-	// 			id: customer,
-	// 			invoices: invoices.filter((invoice: any) => invoice.customer.id === customer)
-	// 		}]);
-	// 	});
-	// }, [customersList]);
+	const [selectedCustomer, setSelectedCustomer] = useState<
+		CustomerSale | undefined
+	>(undefined);
+	const { customers, isFetching } = useCustomersQuery();
 
 	const value = {
-		customersList,
-		// invoices,
+		customers,
 		isFetching,
-		// customers,
-		selectedInvoice,
-		setSelectedInvoice,
+		selectedCustomer,
+		setSelectedCustomer,
 	};
 
 	return (

@@ -25,6 +25,7 @@ import {
 	TooltipTrigger,
 	TooltipContent,
 } from '@/components/ui/tooltip';
+import { useAuth } from '@/context/AuthContext';
 
 interface InventoryProductsColsProps {
 	handleViewDetails: (inventoryProduct: InventoryProduct) => void;
@@ -39,6 +40,8 @@ export const InventoryProductsCols = ({
 	handleApproveInventoryProduct,
 	handleDeleteInventoryProduct,
 }: InventoryProductsColsProps) => {
+	const { permissionListNames } = useAuth();
+
 	const columnDefinition: ColumnDef<InventoryProduct>[] = [
 		{
 			id: 'product_name',
@@ -203,40 +206,59 @@ export const InventoryProductsCols = ({
 									</span>
 									<span>Details</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => {
-										handleEditInventoryProduct(inventoryItemRow);
-									}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Pencil size={16} strokeWidth={2.25} />
-									</span>
-									<span>Edit</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() =>
-										handleApproveInventoryProduct(inventoryItemRow)
-									}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<CheckCircle size={16} strokeWidth={2.25} />
-									</span>
-									<span>Approve stocks</span>
-								</DropdownMenuItem>
-								<DropdownMenuSeparator className="bg-gray-200" />
-								<DropdownMenuItem
-									onClick={() =>
-										handleDeleteInventoryProduct(inventoryItemRow)
-									}
-									className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<Trash2 size={16} strokeWidth={2.25} />
-									</span>
-									<span>Delete</span>
-								</DropdownMenuItem>
+
+								{permissionListNames?.includes(
+									'edit_inventory_items',
+								) && (
+									<DropdownMenuItem
+										onClick={() => {
+											handleEditInventoryProduct(inventoryItemRow);
+										}}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<Pencil size={16} strokeWidth={2.25} />
+										</span>
+										<span>Edit</span>
+									</DropdownMenuItem>
+								)}
+
+								{permissionListNames?.includes(
+									'approve_inventory_items',
+								) && (
+									<DropdownMenuItem
+										onClick={() =>
+											handleApproveInventoryProduct(inventoryItemRow)
+										}
+										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
+									>
+										<span className="flex w-6 items-center justify-center">
+											<CheckCircle size={16} strokeWidth={2.25} />
+										</span>
+										<span>Approve stocks</span>
+									</DropdownMenuItem>
+								)}
+
+								{permissionListNames?.includes(
+									'delete_inventory_items',
+								) && (
+									<>
+										<DropdownMenuSeparator className="bg-gray-200" />
+										<DropdownMenuItem
+											onClick={() =>
+												handleDeleteInventoryProduct(
+													inventoryItemRow,
+												)
+											}
+											className="flex flex-row items-center gap-3 rounded-md p-2 focus:bg-red-100 focus:text-red-700"
+										>
+											<span className="flex w-6 items-center justify-center">
+												<Trash2 size={16} strokeWidth={2.25} />
+											</span>
+											<span>Delete</span>
+										</DropdownMenuItem>
+									</>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

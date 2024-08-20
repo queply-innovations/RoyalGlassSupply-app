@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { InvoiceItemDatabase, InvoiceItems } from '../../types';
-import { PosTable } from '@/features/pos/__test__/components/Table/PosTable';
+import { InvoiceItemDatabase } from '../../types';
 import { DataTable } from '@/components/Tables/DataTable';
 
 interface InvoiceItemsTableProps {
@@ -42,6 +41,24 @@ export const InvoiceItemsTable = ({ items }: InvoiceItemsTableProps) => {
 			},
 		},
 		{
+			id: 'capital_price',
+			enableResizing: false,
+			header: () => {
+				return <div className="flex ">Capital</div>;
+			},
+			cell: ({ row }) => {
+				return (
+					<div className="flex ">
+						{Intl.NumberFormat('en-PH', {
+							style: 'currency',
+							currency: 'PHP',
+							//@ts-expect-error 'type not updated'
+						}).format(row.original.product_price.capital_price ?? 0)}
+					</div>
+				);
+			},
+		},
+		{
 			id: 'price',
 			enableResizing: false,
 			header: () => {
@@ -53,7 +70,25 @@ export const InvoiceItemsTable = ({ items }: InvoiceItemsTableProps) => {
 						{Intl.NumberFormat('en-PH', {
 							style: 'currency',
 							currency: 'PHP',
-						}).format(row.original.product_price ?? 0)}
+							//@ts-expect-error 'type not updated'
+						}).format(row.original.product_price.price ?? 0)}
+					</div>
+				);
+			},
+		},
+		{
+			id: 'subtotal',
+			enableResizing: false,
+			header: () => {
+				return <div className="flex ">Subtotal</div>;
+			},
+			cell: ({ row }) => {
+				return (
+					<div className="flex ">
+						{Intl.NumberFormat('en-PH', {
+							style: 'currency',
+							currency: 'PHP',
+						}).format(row.original.total_price ?? 0)}
 					</div>
 				);
 			},

@@ -10,11 +10,20 @@ import {
 	DropdownMenuTrigger,
 } from '@/components';
 import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
 	Boxes,
 	MoreVertical,
+	Ban,
+	CheckCircle,
+	Clock,
 } from 'lucide-react';
 
 interface ReturnsTableColsProps {
@@ -40,11 +49,11 @@ export const ReturnsTableCols = ({
 						>
 							Code{' '}
 							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
+								<ArrowUp strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
+								<ArrowDown strokeWidth={2} />
 							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
+								<ArrowUpDown strokeWidth={2} />
 							)}
 						</Button>
 					</div>
@@ -66,11 +75,11 @@ export const ReturnsTableCols = ({
 						>
 							Invoice code{' '}
 							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
+								<ArrowUp strokeWidth={2} />
 							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
+								<ArrowDown strokeWidth={2} />
 							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
+								<ArrowUpDown strokeWidth={2} />
 							)}
 						</Button>
 					</div>
@@ -116,7 +125,7 @@ export const ReturnsTableCols = ({
 		{
 			accessorKey: 'created_at',
 			header: () => (
-				<div className="justify-center uppercase">Issued at</div>
+				<div className="justify-center uppercase">Processed at</div>
 			),
 			cell: ({ row }) => {
 				return (
@@ -132,6 +141,45 @@ export const ReturnsTableCols = ({
 							}).format(new Date(row.original.created_at))}
 						</span>
 					</div>
+				);
+			},
+		},
+		{
+			accessorKey: 'refund_status',
+			header: () => <div className="justify-center uppercase">Status</div>,
+			cell: ({ row }) => {
+				const status = row.original.refund_status;
+				return (
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger className="flex items-center">
+								{status === 'done' ? (
+									<CheckCircle
+										size={18}
+										strokeWidth={2.25}
+										className="text-green-700"
+									/>
+								) : status === 'denied' ? (
+									<Ban
+										size={18}
+										strokeWidth={2.25}
+										className="text-red-700"
+									/>
+								) : (
+									<Clock
+										size={18}
+										strokeWidth={2.25}
+										className="text-yellow-600"
+									/>
+								)}
+							</TooltipTrigger>
+							<TooltipContent>
+								<p className="text-sm font-medium capitalize">
+									{status}
+								</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 			},
 		},

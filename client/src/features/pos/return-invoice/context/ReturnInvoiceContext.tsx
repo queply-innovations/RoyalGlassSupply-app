@@ -3,13 +3,11 @@ import {
 	InvoiceItems,
 	Invoices,
 	ReturnInvoice,
-	ReturnInvoiceItems,
 } from '@/features/invoice/__test__/types';
 import { createContext, useContext, useEffect, useState } from 'react';
 import {
 	fetchReturnTransactionByCode,
 	submitReturnInvoice,
-	submitReturnInvoiceItems,
 } from '../api/Returns';
 import { useAuth } from '@/context/AuthContext';
 import { Voucher } from '@/features/customer/__test__/types';
@@ -83,12 +81,16 @@ export const ReturnInvoiceProvider = ({
 		// Search for exisiting return transaction
 		return await fetchReturnTransactionByCode(`RET-${code}`).then(
 			returnItems => {
-				const matchFound = returnItems.find(
+				const item = returnItems.find(
 					returnItem => returnItem.code === `RET-${code}`,
 				);
 
 				// If a return transaction is not found, fetch the invoice by code
-				if (!matchFound) {
+				if (
+					item === undefined ||
+					(item.refund_status !== 'done' &&
+						item.refund_status !== 'pending')
+				) {
 					return fetchInvoiceByCode(code)
 						.then(data => {
 							setReturnInvoice({
@@ -106,9 +108,12 @@ export const ReturnInvoiceProvider = ({
 						.catch(() => {
 							throw 'Code not found. Please try again.';
 						});
+				} else if (item?.refund_status === 'pending') {
+					// If a return transaction is found, throw an error
+					throw 'Invoice has a pending return transaction.';
 				} else {
 					// If a return transaction is found, throw an error
-					throw 'Invoice already has return transaction history.';
+					throw 'Invoice already has a return transaction.';
 				}
 			},
 		);
@@ -136,7 +141,8 @@ export const ReturnInvoiceProvider = ({
 		if (returnInvoice.return_items) {
 			const refundableAmount = returnInvoice.return_items.reduce(
 				(acc, item) => {
-					return acc + item.quantity * item.price;
+					//@ts-expect-error 'price' does not exist on type 'InvoiceItems'
+					return acc + item.quantity * item.price.price;
 				},
 				0,
 			);
@@ -152,15 +158,13 @@ export const ReturnInvoiceProvider = ({
 		// Submit the return invoice
 		setIsSubmitting(true);
 		return await submitReturnInvoice(returnInvoice)
-			.then(res => {
-				setVoucher(res.voucher ?? undefined);
-				setIsVoucherDialogOpen(res.voucher ? true : false);
+			.then(() => {
 				setReturnInvoice({} as ReturnInvoice);
 				setSelectedInvoice(undefined);
 				setReturnableItems([]);
 				setSelectedItems([]);
 				setIsSubmitting(false);
-				return 'Items successfully returned.';
+				return 'Return items successfully submitted. Please wait for approval from admin.';
 			})
 			.catch(() => {
 				setIsSubmitting(false);
@@ -180,11 +184,6 @@ export const ReturnInvoiceProvider = ({
 			};
 		});
 	};
-
-	useEffect(() => {
-		console.log('items', returnInvoice.return_items);
-		console.log('selected items', selectedItems);
-	}, [returnInvoice.return_items, selectedItems]);
 
 	const value = {
 		returnInvoice,

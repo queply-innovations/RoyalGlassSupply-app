@@ -15,6 +15,17 @@ export interface Customer {
 	invoices: Invoice[];
 }
 
+export interface CustomerSale {
+	id: number;
+	firstname: string;
+	address: string;
+	lastname: string;
+	contact_no: string;
+	total_credit: number;
+	total_balance: number;
+	total_sales: number;
+}
+
 export interface Invoice {
 	id: number;
 	code: string;
