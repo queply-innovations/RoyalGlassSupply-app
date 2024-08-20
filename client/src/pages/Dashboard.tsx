@@ -21,10 +21,10 @@ import { InventoryLevelReport } from '@/features/dashboard/components/InventoryL
 export const Dashboard = () => {
 	const { auth } = useAuth();
 
-	// Redirect to POS if user role includes 'encoder' or 'sales'
-	if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
-		return <Navigate to="/pos" />;
-	}
+	// // Redirect to POS if user role includes 'encoder' or 'sales'
+	// if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
+	// 	return <Navigate to="/pos" />;
+	// }
 
 	return (
 		<MainLayout title="Dashboard">
