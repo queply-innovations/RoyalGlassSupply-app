@@ -12,8 +12,6 @@ import { InventoryProdsProvider } from '@/features/inventory/context';
 import { ProductPricesProvider } from '@/features/product/__test__';
 import { JSX } from 'react/jsx-runtime';
 import { InvoicePosProvider } from '@/features/pos/__test__/context/__test__/InvoicePosContext';
-import { useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
 
 const { Dashboard } = lazyImport(() => import('@/pages'), 'Dashboard');
 const { ExpensesPage } = lazyImport(
@@ -210,14 +208,15 @@ const protectedRoutesConfig = [
 ];
 
 export const ProtectedRoutes = () => {
-	const { auth } = useAuth();
-	const navigate = useNavigate();
-	useEffect(() => {
-		// Redirect to POS if user role includes 'encoder' or 'sales' on first render
-		if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
-			navigate('/pos');
-		}
-	}, []);
+	// ! Removed due to redirecting to POS even when trying to print
+	// const { auth } = useAuth();
+	// const navigate = useNavigate();
+	// useEffect(() => {
+	// 	// Redirect to POS if user role includes 'encoder' or 'sales' on first render
+	// 	if (auth.role?.includes('encoder') || auth.role?.includes('sales')) {
+	// 		navigate('/pos');
+	// 	}
+	// }, []);
 
 	return (
 		<>
