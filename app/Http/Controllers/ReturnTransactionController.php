@@ -72,7 +72,26 @@ class ReturnTransactionController extends Controller
      */
     public function update(Request $request, ReturnTransaction $returnTransaction)
     {
-        $returnTransaction->update($request->all());
+        try {
+            if(!$request->has('refund_status')) throw new \Exception('No return transaction status found.');
+            if($returnTransaction->refund_status != 'pending') throw new \Exception('Return Transaction already updated.');
+
+            switch($request->refund_status) {
+                case 'approve':
+                    $update = $this->approveReturnTransaction($returnTransaction);
+                    $message = 'Return Transaction approved successfully.';
+                break;
+                case 'deny':
+                    $update = $this->denyReturnTransaction($returnTransaction);
+                    $message = 'Return Transaction denied.';
+                break;
+                default: throw new \Exception('Invalid transaction status');
+            }
+
+            return $this->sendSuccess($message);
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
 
         return new ReturnTransactionResource($returnTransaction);
     }
@@ -100,7 +119,7 @@ class ReturnTransactionController extends Controller
      */
     public function searchFilterAndSort(Request $request)
     {
-        $query = ReturnTransaction::whereNotNull('id');
+        $query = ReturnTransaction::query();
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
@@ -132,34 +151,54 @@ class ReturnTransactionController extends Controller
     private function storeReturnTransaction($request) {
         $invoice = Invoice::findOrFail($request->invoice_id);
 
-        $store = ReturnTransaction::create($request->except('return_items'));
+        $store = ReturnTransaction::create([
+            ...$request->except('return_items'),
+            'refund_status' => 'pending'
+        ]);
 
         foreach($request->return_items as $item) {
             ReturnTransactionItem::create([
                 ...$item,
-                'return_transaction_id' => $store->id
+                'return_transaction_id' => $store->id,
+                'price' => $item['price']['price']
             ]);
+        }
 
+        return $store;
+    }
+
+    private function approveReturnTransaction($returnTransaction) {
+        $items = $returnTransaction->returnTransactionItems;
+
+        foreach($items as $item) {
             $invoiceItem = InvoiceItem::findOrFail($item['invoice_item_id']);
             $invoiceItem->inventoryProduct->update([
                 'purchased_stocks' => $invoiceItem->inventoryProduct->purchased_stocks - $item['quantity']
             ]);
         }
 
-        if((bool) !$request->is_cash_refund) {
+        if((bool) !$returnTransaction->is_cash_refund) {
             $voucher = Voucher::create([
-                'code' => str_replace('IVC', 'V', $invoice->code),
-                'customer_id' => $invoice->customer_id,
-                'return_transaction_id' => $store->id,
-                'discounted_price' => $store->refundable_amount,
+                'code' => str_replace('IVC', 'V', $returnTransaction->invoice->code),
+                'customer_id' => $returnTransaction->invoice->customer_id,
+                'return_transaction_id' => $returnTransaction->id,
+                'discounted_price' => $returnTransaction->refundable_amount,
                 'generated_by' => Auth::id()
             ]);
 
-            $store->update([
+            $returnTransaction->update([
                 'voucher_id' => $voucher->id
             ]);
         }
 
-        return $store;
+        $returnTransaction->update([
+            'refund_status' => 'done'
+        ]);
+    }
+
+    private function denyReturnTransaction($returnTransaction) {
+        $returnTransaction->update([
+            'refund_status' => 'denied'
+        ]);
     }
 }

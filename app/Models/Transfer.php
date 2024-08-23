@@ -16,6 +16,7 @@ class Transfer extends Model
         'created_by',
         'source',
         'destination',
+        'destination_inventory',
         'transfer_schedule',
         'approval_status',
         'approved_by',
@@ -66,5 +67,10 @@ class Transfer extends Model
     public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class);
+    }
+
+    public function destinationInventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class, 'destination_inventory');
     }
 }

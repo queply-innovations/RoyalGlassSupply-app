@@ -21,7 +21,8 @@ class CustomerResource extends JsonResource
             'address' => $this->address,
             'contact_no' => $this->contact_no,
             'total_credit' => $this->vouchers->sum('discounted_price'),
-            'total_balance' => $this->invoices->sum('balance_amount')
+            'total_balance' => $this->invoices->sum('balance_amount'),
+            'total_sales' => round($this->invoices->whereNotIn('payment_method', ['balance_payment', 'purchase_order'])->where('is_paid', true)->sum('total_amount_due'), 2),
         ];
     }
 }
