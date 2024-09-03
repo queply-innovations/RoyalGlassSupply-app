@@ -1,6 +1,6 @@
 import { CreateOrderTable } from '@/features/pos/__test__/components';
 import { Navbar } from '@/features/pos/__test__/components/Navbar/Navbar';
-import { SearchProductItems } from '@/features/pos/__test__/components/Searchbar/SearchProductItems';
+import { SearchItems } from '@/features/pos/__test__/components/Searchbar/SearchItems';
 import {
 	SidebarContainer,
 	DialogContainer,
@@ -15,7 +15,8 @@ export const PointOfSalePage = ({}: PointOfSalePageProps) => {
 				<Navbar />
 				<div className="flex h-full w-screen flex-row">
 					<div className="flex h-full flex-1 flex-col gap-6 p-6">
-						<SearchProductItems />
+						{/* <SearchProductItems /> */}
+						<SearchItems />
 						<CreateOrderTable />
 					</div>
 					<SidebarContainer />

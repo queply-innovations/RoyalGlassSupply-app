@@ -34,7 +34,7 @@ export const SearchProductItems = () => {
 									: 'Enter Product Name'
 							}
 							disabled={
-								sellableItems.length === 0 ||
+								sellableItems?.length === 0 ||
 								currentInvoicePos.payment_method === 'balance_payment'
 							}
 						/>
@@ -42,7 +42,7 @@ export const SearchProductItems = () => {
 							{!search ? null : (
 								<>
 									{sellableItems
-										.filter(
+										?.filter(
 											stocks =>
 												stocks.inventory_product.approved_stocks >
 												(stocks.inventory_product.sold_count ?? 0),
