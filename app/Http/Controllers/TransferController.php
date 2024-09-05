@@ -277,8 +277,8 @@ class TransferController extends Controller
                     ->first();
 
                 $inventoryProduct->update([
-                    'stocks_count' => $item->destinationInventory->stocks_count,
-                    'total_count' => $item->destinationInventory->stocks_count - $item->destinationInventory->damage_count
+                    'stocks_count' => $inventoryProduct->stocks_count + $item->total_quantity, 
+                    'total_count' => $inventoryProduct->stocks_count + ($item->total_quantity - $inventoryProduct->damage_count)
                 ]);
             } else {
                 $this->createInventoryProduct($item, $destinationInventory);
