@@ -134,4 +134,10 @@ class ProductPriceController extends Controller
 
         return new ProductPriceCollection($query->get());
     }
+
+    public function testPaginatePOS(Request $request) {
+        $data = ProductPrice::paginate($request->pageSize ?? 10);
+
+        return response()->json($data);
+    }
 }
