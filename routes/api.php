@@ -110,4 +110,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/reports/most-bought-products', [ReportController::class, 'mostBoughtProducts']);
     Route::post('/reports/inventory-level', [ReportController::class, 'inventoryLevel']);
     Route::post('/reports/total-inventory', [ReportController::class, 'totalInventory']);
+
+    Route::get('/test/product-prices', [ProductPriceController::class, 'testPaginatePOS']);
 });
