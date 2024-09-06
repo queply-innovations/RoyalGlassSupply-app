@@ -268,11 +268,13 @@ class TransferController extends Controller
 
         foreach($transfer->transferProducts as $item) {
             $checkIinventoryProduct = InventoryProduct::where('inventory_id', $destinationInventory->id)
+                ->where('product_id', $item->product_id)
                 ->where('capital_price', $item->capital_price)
                 ->exists();
 
             if($checkIinventoryProduct) {
                 $inventoryProduct = InventoryProduct::where('inventory_id', $destinationInventory->id)
+                    ->where('product_id', $item->product_id)
                     ->where('capital_price', $item->capital_price)
                     ->first();
 
