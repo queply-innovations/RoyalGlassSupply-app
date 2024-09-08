@@ -1,9 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+	keepPreviousData,
+	useInfiniteQuery,
+	useQuery,
+} from '@tanstack/react-query';
 import {
 	fetchApprovedProductPrices,
 	fetchPendingProductPrices,
 	fetchProductPrices,
 	fetchProductPricesFilters,
+	fetchProductPricesPaginated,
+	fetchProductPricesPOS,
 } from '../api/Products';
 import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
@@ -86,4 +92,34 @@ export const useProductPricesFilter = ({
 	});
 
 	return { data, isFetching };
+};
+
+export const useProductPricesPaginatedQuery = (
+	page: number = 1,
+	pageSize: number = 50,
+) => {
+	return useQuery({
+		queryKey: ['productPrices', page, pageSize],
+		queryFn: () => fetchProductPricesPaginated(page, pageSize),
+		placeholderData: keepPreviousData, // Keep previous data when fetching new data to avoid clearing of table data
+		refetchOnWindowFocus: false,
+	});
+};
+
+export const useProductPricesPOSQuery = ({
+	warehouse_id,
+}: {
+	warehouse_id?: number;
+}) => {
+	return useInfiniteQuery({
+		queryKey: ['productPrices', warehouse_id],
+		queryFn: ({ pageParam }) =>
+			fetchProductPricesPOS({ page: pageParam, warehouse_id: warehouse_id }),
+		initialPageParam: 1,
+		getNextPageParam: page => {
+			return page.next_page_url ? page.current_page + 1 : null;
+		},
+		enabled: !!warehouse_id, // Only fetch data when warehouse_id is provided
+		refetchOnWindowFocus: false,
+	});
 };

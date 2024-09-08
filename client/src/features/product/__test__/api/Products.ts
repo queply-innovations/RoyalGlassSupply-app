@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { Product, ProductPrices, ProductPricesDatabase } from '../types';
+import {
+	Product,
+	ProductPrices,
+	ProductPricesDatabase,
+	ProductPricesPaginated,
+} from '../types';
 
 export const fetchProducts = async (): Promise<Product[]> => {
 	return await axios
@@ -323,6 +328,50 @@ export const deleteProductListing = async (id: number) => {
 		.then(response => ({ message: response.data.message }))
 		.catch(error => {
 			console.error('Error deleting product listing:', error);
+			throw error;
+		});
+};
+
+export const fetchProductPricesPaginated = async (
+	page: number,
+	pageSize: number = 10,
+): Promise<ProductPricesPaginated> => {
+	return await axios
+		.get(
+			`https://staging.royalglasssupply.com/api/test/product-prices?page=${page}&pageSize=${pageSize}`,
+			{ headers: API_HEADERS() },
+		)
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error fetching paginated product prices:', error);
+			throw error;
+		});
+};
+
+export const fetchProductPricesPOS = async ({
+	page,
+	pageSize = 100,
+	warehouse_id = 0, // warehouse_id: 0 responds with no data
+}: {
+	page: number;
+	pageSize?: number;
+	warehouse_id?: number;
+}): Promise<ProductPricesPaginated> => {
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts?page=${page}&pageSize=${pageSize}`,
+			{ filter: { warehouse_id: warehouse_id } },
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error fetching product prices:', error);
 			throw error;
 		});
 };

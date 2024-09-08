@@ -1,20 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useInvoice } from '../context/InvoiceContext';
 import { Invoices } from '../types';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import {
 	addInvoice,
 	removeInvoice,
 	updateInvoice,
 	updatePendingInvoice,
 } from '../api';
-import { useAuth } from '@/context/AuthContext';
-import { toast } from 'react-toastify';
 
 export const useInvoiceMutation = () => {
 	const queryClient = useQueryClient();
-	// const { auth } = useAuth();
-	// const { invoices } = useInvoice();
 
 	const [value, setValue] = useState<Partial<Invoices>>(
 		{} as Partial<Invoices>,
@@ -40,7 +35,6 @@ export const useInvoiceMutation = () => {
 			await queryClient.invalidateQueries({ queryKey: ['invoices'] });
 			// Reset form data
 			setValue({} as Invoices);
-			toast.success('Submitted successfully!', { autoClose: 3000 });
 		},
 		onError: (error: Error) => {
 			console.error('Invoices Data failed', error.message);
