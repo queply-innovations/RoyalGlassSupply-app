@@ -1,4 +1,3 @@
-import { Label } from '@/components/ui/label';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { PaidAmount } from './PaidAmount';
 import { PaymentType } from './PaymentType';
@@ -6,20 +5,6 @@ import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const ChangeAmount = () => {
 	const { currentInvoicePos } = useInvoicePos();
-	// function getChange() {
-	// 	if (currentInvoicePos.paid_amount === 0) {
-	// 		return 0;
-	// 	} else {
-	// 		return (
-	// 			(currentInvoicePos.paid_amount ?? 0) -
-	// 			invoiceItemsDatabase.reduce(
-	// 				(acc, item) => acc + item.total_price,
-	// 				0,
-	// 			) +
-	// 			(currentInvoicePos.total_discount ?? 0)
-	// 		);
-	// 	}
-	// }
 
 	return (
 		<>

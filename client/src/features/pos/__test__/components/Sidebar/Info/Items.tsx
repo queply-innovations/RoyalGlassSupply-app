@@ -2,7 +2,7 @@ import { Label } from '@/components/ui/label';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 
 export const Items = () => {
-	const { currentInvoiceItemsQueue } = useInvoicePos();
+	const { cartItems } = useInvoicePos();
 	return (
 		<>
 			<div className="flex w-full flex-row justify-between">
@@ -10,11 +10,7 @@ export const Items = () => {
 					Items
 				</Label>
 				<Label className="font-bold text-slate-700">
-					{currentInvoiceItemsQueue.length > 0 ? (
-						<>{currentInvoiceItemsQueue.length}</>
-					) : (
-						0
-					)}
+					{cartItems.length}
 				</Label>
 			</div>
 		</>

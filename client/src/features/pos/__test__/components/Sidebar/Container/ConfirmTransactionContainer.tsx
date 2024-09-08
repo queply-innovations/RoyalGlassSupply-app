@@ -21,16 +21,14 @@ export const ConfirmTransactionContainer = ({
 	setInvoiceID,
 }: ConfirmTransactionContainerProps) => {
 	const { setDialogOptions } = usePos();
-	const { invoiceItemsDatabase, currentInvoicePos } = useInvoicePos();
+	const { cartItems, currentInvoicePos } = useInvoicePos();
 	const { addInvoiceMutation } = useInvoiceMutation();
 	const { selectedVoucher, setSelectedVoucher } = useCustomer();
 
 	async function handleSubmit() {
 		setisSubmitting(true);
 		const data: any = currentInvoicePos;
-		data['invoice_items'] = invoiceItemsDatabase.map((d: any) => {
-			return { ...d, product_id: d.product_id };
-		});
+		data['invoice_items'] = cartItems.map(({ item, ...rest }) => rest);
 		await addInvoiceMutation(data)
 			.then(res => {
 				selectedVoucher &&
