@@ -1,3 +1,4 @@
+import { InventoryProduct } from '@/features/inventory/types';
 import { Customer } from '@/features/pos/__test__/types';
 import { Product } from '@/features/product/__test__/types';
 
@@ -24,7 +25,18 @@ export interface Invoices {
 	status: string;
 	customer: Customer;
 }
-export interface InvoiceItemDatabase extends Omit<InvoiceItems, 'id'> {}
+export interface InvoiceItemDatabase {
+	product_id: number;
+	product_price_id: number;
+	product_price: number;
+	quantity: number;
+	unit: string;
+	item_discount: number;
+	discount_approval_status: string | null;
+	approved_by: number | null;
+	total_price: number;
+	source_inventory: number;
+}
 
 export interface InvoiceItems {
 	id: number;
@@ -39,6 +51,7 @@ export interface InvoiceItems {
 	approved_by: number | null;
 	total_price: number;
 	source_inventory: number;
+	inventory_product?: InventoryProduct;
 }
 
 export interface ReturnInvoiceDatabase extends Invoices {
