@@ -2,14 +2,15 @@ import { useAuth } from '@/context/AuthContext';
 import { InvoiceItems } from '@/features/invoice/__test__/types';
 import {
 	ProductPricesFilterProps,
-	useProductPricesFilter,
+	useProductPricesPOSQuery,
 } from '@/features/product/__test__/hooks';
-import { ProductPrices } from '@/features/product/__test__/types';
+import { ProductPricesPOS } from '@/features/product/__test__/types';
 import {
 	ReactNode,
 	createContext,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +22,8 @@ interface PosContextProps {
 		React.SetStateAction<ProductPricesFilterProps>
 	>;
 
-	sellableItems: ProductPrices[] | null | undefined;
-	fetchingProducts: boolean;
+	sellableItems: ProductPricesPOS[] | null;
+	isFetching: boolean;
 
 	customerCart: InvoiceItems[];
 	setCustomerCart: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
@@ -58,34 +59,57 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 	);
 
 	useEffect(() => {
-		if (auth.role === 'admin') {
+		if (auth.role?.includes('admin')) {
 			navigate('/pos');
-		} else if (auth.role?.split('_')[1].toLowerCase() === 'cdo') {
+		} else {
+			const warehouseCode = auth.role?.split('_').slice(-1)[0].toLowerCase();
 			setSearchFilterItems({
-				// approval_status: 'approved', //TODO Possible to comment out
-				warehouse_id: 1,
+				warehouse_id: warehouseCode === 'cdo' ? 1 : 2,
 			});
-			setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 1 });
-			navigate('/pos/add-order');
-		} else if (auth.role?.split('_')[1].toLowerCase() === 'ili') {
-			setSearchFilterItems({
-				// approval_status: 'approved', //TODO Possible to comment out
-				warehouse_id: 2,
+			setCurrentInvoicePos({
+				...currentInvoicePos,
+				warehouse_id: warehouseCode === 'cdo' ? 1 : 2,
 			});
-			setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 2 });
 			navigate('/pos/add-order');
 		}
 	}, [auth.role]);
 
-	const { data: sellableItems, isFetching: fetchingProducts } =
-		useProductPricesFilter(searchFilterItems);
+	// Fetching products for POS, paginated
+	const {
+		data,
+		isFetching,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+		isError,
+		refetch,
+	} = useProductPricesPOSQuery({
+		warehouse_id: searchFilterItems.warehouse_id,
+	});
+
+	// Fetch next page if there is a next page and done fetching the current page
+	useEffect(() => {
+		if (hasNextPage && !isFetchingNextPage) {
+			fetchNextPage();
+		}
+
+		// Refetch if there is an error
+		if (isError) {
+			refetch();
+		}
+	}, [hasNextPage, isFetchingNextPage, fetchNextPage, isError, refetch]);
+
+	// Flatten the paginated data
+	const sellableItems = useMemo(() => {
+		return data?.pages.flatMap(page => page.data) || [];
+	}, [data]);
 
 	const value = {
 		searchFilterItems,
 		setSearchFilterItems,
 
 		sellableItems,
-		fetchingProducts,
+		isFetching,
 
 		customerCart,
 		setCustomerCart,

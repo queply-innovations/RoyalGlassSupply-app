@@ -1,10 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import {
-	InvoiceItemDatabase,
-	InvoiceItems,
-	Invoices,
-} from '@/features/invoice/__test__/types';
-import { ProductPrices } from '@/features/product/__test__/types';
+import { Invoices } from '@/features/invoice/__test__/types';
 import {
 	ReactNode,
 	createContext,
@@ -14,23 +9,17 @@ import {
 	useState,
 } from 'react';
 import currency from 'currency.js';
+import { CartItem } from '../../types';
 
 interface InvoicePosContextProps {
 	currentInvoicePos: Partial<Invoices>;
 	setCurrentInvoicePos: React.Dispatch<Partial<Invoices>>;
 
-	currentInvoiceItemsQueue: ProductPrices[];
-	setCurrentInvoiceItemsQueue: React.Dispatch<
-		React.SetStateAction<Partial<Invoices>>
-	>;
+	cartItems: CartItem[];
+	setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
 
-	invoiceItemsDatabase: InvoiceItemDatabase[];
-	setInvoiceItemsDatabase: React.Dispatch<InvoiceItemDatabase[]>;
-
-	addInvoiceItems: (
-		tableIndex: number,
-		item: Partial<InvoiceItemDatabase>,
-	) => void;
+	// invoiceItemsDatabase: InvoiceItemDatabase[];
+	// setInvoiceItemsDatabase: React.Dispatch<InvoiceItemDatabase[]>;
 
 	handleInvoicePosChange: (
 		key: string,
@@ -73,20 +62,23 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		status: 'approved',
 	} as Invoices);
 
-	const [currentInvoiceItemsQueue, setCurrentInvoiceItemsQueue] = useState<
-		Partial<InvoiceItems>[]
-	>([]);
+	// const [currentInvoiceItemsQueue, setCurrentInvoiceItemsQueue] = useState<
+	// 	Partial<InvoiceItems>[]
+	// >([]);
 
-	const [invoiceItemsDatabase, setInvoiceItemsDatabase] = useState<
-		InvoiceItemDatabase[]
-	>([]);
+	// State for cart items
+	const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+	// const [invoiceItemsDatabase, setInvoiceItemsDatabase] = useState<
+	// 	InvoiceItemDatabase[]
+	// >([]);
 
 	const invoiceSubtotal = useMemo(() => {
-		return invoiceItemsDatabase.reduce(
+		return cartItems.reduce(
 			(acc, currentItem) => acc + (currentItem.total_price ?? 0),
 			0,
 		);
-	}, [invoiceItemsDatabase]);
+	}, [cartItems]);
 
 	useEffect(() => {
 		setCurrentInvoicePos(prev => {
@@ -115,10 +107,6 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		currentInvoicePos.delivery_charge,
 	]);
 
-	// useEffect(() => {
-	// 	console.log(currentInvoicePos);
-	// }, [currentInvoicePos]);
-
 	// Change handling
 	useEffect(() => {
 		setCurrentInvoicePos(prev => ({
@@ -128,54 +116,6 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 			).value,
 		}));
 	}, [currentInvoicePos.paid_amount, currentInvoicePos.total_amount_due]);
-
-	function addInvoiceItems(
-		tableIndex: number,
-		item: Partial<InvoiceItemDatabase>,
-	) {
-		if (tableIndex !== -1) {
-			const updatedInvoiceItemsQueue = [...currentInvoiceItemsQueue];
-			updatedInvoiceItemsQueue[tableIndex].quantity++;
-			setCurrentInvoiceItemsQueue(updatedInvoiceItemsQueue);
-			// handleInvoicePosChange(
-			// 	'subtotal',
-			// 	currentInvoiceItemsQueue.reduce(
-			// 		(acc, item) => acc + (item.total_price ?? 0),
-			// 		0,
-			// 	),
-			// );
-		} else {
-			setCurrentInvoiceItemsQueue([
-				...currentInvoiceItemsQueue,
-				{
-					product: {
-						id: item.product?.id,
-						name: item.product?.name,
-						serial_no: item.product?.serial_no,
-						brand: item.product?.brand,
-						size: item.product?.size,
-						color: item.product?.color,
-					},
-					product_price_id: item.product_price_id,
-					product_price: item.product_price,
-					quantity: item.quantity,
-					unit: item.unit,
-					item_discount: item.item_discount,
-					discount_approval_status: item.discount_approval_status,
-					approved_by: item.approved_by,
-					total_price: item.total_price,
-					source_inventory: item.source_inventory,
-				},
-			]);
-			// handleInvoicePosChange(
-			// 	'subtotal',
-			// 	currentInvoiceItemsQueue.reduce(
-			// 		(acc, item) => acc + (item.total_price ?? 0),
-			// 		0,
-			// 	),
-			// );
-		}
-	}
 
 	function handleInvoicePosChange(
 		key: string,
@@ -192,31 +132,8 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		maxQuantity: number,
 		newQuantity: number,
 	) {
-		// setCurrentInvoiceItemsQueue(items =>
-		//    items.map((item, index) => {
-		//       if (index === tableIndex) {
-		//          return {
-		//             ...item,
-		//             quantity: newQuantity,
-		//             total_price:
-		//                Number(
-		//                   Number(item.product_price * newQuantity).toFixed(2),
-		//                ) - item.item_discount,
-		//          };
-		//       }
-		//       return item;
-		//    }),
-		// );
-		// handleInvoicePosChange(
-		//    'total_amount_due',
-		//    currentInvoiceItemsQueue.reduce(
-		//       (acc, item) => acc + (item.total_price ?? 0),
-		//       0,
-		//    ),
-		// );
-
 		if (newQuantity > 0 && newQuantity <= maxQuantity) {
-			setInvoiceItemsDatabase(prev =>
+			setCartItems(prev =>
 				prev.map((item, index) => {
 					if (index === tableIndex) {
 						return {
@@ -231,40 +148,11 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 					return item;
 				}),
 			);
-			// handleInvoicePosChange(
-			// 	'subtotal',
-			// 	invoiceItemsDatabase.reduce(
-			// 		(acc, item) => acc + (item.total_price ?? 0),
-			// 		0,
-			// 	),
-			// );
-		}
-		if (newQuantity > maxQuantity) {
-			setInvoiceItemsDatabase(prev =>
-				prev.map((item, index) => {
-					if (index === tableIndex) {
-						return {
-							...item,
-							quantity: maxQuantity,
-							total_price:
-								Number(
-									Number(item.product_price * maxQuantity).toFixed(2),
-								) - item.item_discount,
-						};
-					}
-					return item;
-				}),
-			);
 		}
 	}
 
 	function removeInvoiceItem(tableIndex: number) {
-		setCurrentInvoiceItemsQueue(prev =>
-			prev.filter((_, index) => index !== tableIndex),
-		);
-		setInvoiceItemsDatabase(prev =>
-			prev.filter((_, index) => index !== tableIndex),
-		);
+		setCartItems(prev => prev.filter((_, index) => index !== tableIndex));
 	}
 
 	// TODO - eyb print invoice
@@ -274,13 +162,16 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		currentInvoicePos,
 		setCurrentInvoicePos,
 
-		currentInvoiceItemsQueue,
-		setCurrentInvoiceItemsQueue,
+		// currentInvoiceItemsQueue,
+		// setCurrentInvoiceItemsQueue,
 
-		invoiceItemsDatabase,
-		setInvoiceItemsDatabase,
+		cartItems,
+		setCartItems,
 
-		addInvoiceItems,
+		// invoiceItemsDatabase,
+		// setInvoiceItemsDatabase,
+
+		// addInvoiceItems,
 		handleInvoiceItemQuantity,
 		handleInvoicePosChange,
 		removeInvoiceItem,
