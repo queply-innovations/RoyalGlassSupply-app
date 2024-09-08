@@ -10,18 +10,15 @@ import {
 } from '@headlessui/react';
 import { formatCurrency } from '@/utils/FormatCurrency';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ProductPrices } from '@/features/product/__test__/types';
+import { ProductPricesPOS } from '@/features/product/__test__/types';
+import { Loader } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 export const SearchItems = () => {
 	// Contexts
-	const { sellableItems, fetchingProducts } = usePos();
-	const {
-		currentInvoiceItemsQueue,
-		setCurrentInvoiceItemsQueue,
-		invoiceItemsDatabase,
-		setInvoiceItemsDatabase,
-		currentInvoicePos,
-	} = useInvoicePos();
+	const { sellableItems, isFetching } = usePos();
+	const { cartItems, setCartItems, currentInvoicePos } = useInvoicePos();
+	const laggedIsFetching = useDebounce(isFetching, 1500);
 
 	// State for storing search value
 	const [search, setSearch] = useState('');
@@ -32,7 +29,7 @@ export const SearchItems = () => {
 		return sellableItems?.filter(
 			stocks =>
 				stocks.inventory_product.approved_stocks >
-				(stocks.inventory_product.sold_count ?? 0),
+				(stocks.inventory_product.purchased_stocks ?? 0),
 		);
 	}, [sellableItems]);
 
@@ -57,141 +54,136 @@ export const SearchItems = () => {
 		overscan: 24, // Number of items to render outside the viewport for smoother scrolling
 	});
 
-	return (
-		<Combobox
-			onClose={() => setSearch('')}
-			onChange={(value: { item: ProductPrices } | null) => {
-				if (value) {
-					const item = value.item;
-					const selectedInvoiceItemIndex =
-						currentInvoiceItemsQueue.findIndex(
-							invoiceItem =>
-								invoiceItem.inventory_product.product.id ===
-								item.inventory_product.product.id,
-						);
+	const handleAddItem = (value: { item: ProductPricesPOS } | null) => {
+		if (value && value.item) {
+			const product = value.item;
 
-					if (selectedInvoiceItemIndex !== -1) {
-						invoiceItemsDatabase[selectedInvoiceItemIndex].quantity += 1;
-						setSearch('');
-					}
-					//If it doesn't exist, add it to the array
-					if (selectedInvoiceItemIndex === -1) {
-						//@ts-expect-error 'item' is of type ProductPrices
-						setCurrentInvoiceItemsQueue([
-							...currentInvoiceItemsQueue,
-							item,
-						]);
-						setInvoiceItemsDatabase([
-							...invoiceItemsDatabase,
-							{
-								//@ts-expect-error outdated type
-								product_id: item.product.id,
-								product_price_id:
-									//@ts-expect-error outdated type
-									item.inventory_product.product_price.id,
-								product_price:
-									//@ts-expect-error outdated type
-									item.inventory_product.product_price.price,
-								quantity: 1,
-								//@ts-expect-error outdated type
-								unit: item.unit,
-								// inventory_product:
-								//    item.inventory_product,
-								item_discount: 0,
-								price: item.price,
-								created_by: item.created_by,
-								active_status: item.active_status,
-								created_at: item.created_at,
-								updated_at: item.updated_at,
-								total_price: item.price, // TODO, total price should be quantity * product_price
-								source_inventory: item.warehouse.id,
-							},
-						]);
-					}
-				}
-			}}
-		>
-			<ComboboxInput
-				aria-label="product-search-box"
-				className="w-full rounded border p-3 text-sm font-medium focus:shadow-lg disabled:cursor-not-allowed disabled:bg-white"
-				onChange={e => setSearch(e.target.value)}
-				placeholder={
-					fetchingProducts
-						? 'Fetching products...'
-						: (filteredSellableItems?.length ?? 0) > 0
+			// Search for the item in the cart
+			const itemIndex = cartItems.findIndex(
+				cartItem =>
+					cartItem.product_price_id ===
+					//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
+					product.inventory_product.product_price_id,
+			);
+
+			if (itemIndex === -1) {
+				setCartItems([
+					...cartItems,
+					{
+						item: product,
+						//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
+						product_price_id: product.inventory_product.product_price_id,
+						product_id: product.product_id,
+						product_price: product.price,
+						quantity: 1,
+						unit: product.unit,
+						source_inventory: product.inventory_product.inventory_id,
+						total_price: product.price,
+						item_discount: 0,
+						discount_approval_status: null,
+						approved_by: null,
+					},
+				]);
+			} else {
+				toast.warn('Item already in cart.');
+			}
+		}
+	};
+
+	return (
+		<div className="relative z-30">
+			<Combobox onClose={() => setSearch('')} onChange={handleAddItem}>
+				{/* Show spinner when products are still fetching */}
+				{isFetching && (
+					<div className="absolute right-0 flex h-full items-center pr-3">
+						<Loader
+							size="1.2rem"
+							className="animate-spin text-slate-400"
+						/>
+					</div>
+				)}
+
+				<ComboboxInput
+					aria-label="product-search-box"
+					className="w-full rounded border p-3 text-sm font-medium focus:shadow-lg disabled:cursor-not-allowed disabled:bg-white"
+					onChange={e => setSearch(e.target.value)}
+					placeholder={
+						(filteredSellableItems?.length ?? 0) > 0
 							? 'Search product name...'
 							: 'No products available'
-				}
-				disabled={
-					fetchingProducts ||
-					filteredSellableItems?.length === 0 ||
-					currentInvoicePos.payment_method === 'balance_payment'
-				}
-			/>
-			<ComboboxOptions
-				ref={containerRef}
-				anchor="bottom"
-				className="w-[var(--input-width)] cursor-pointer overflow-auto rounded-md border bg-white p-1 shadow-lg [--anchor-gap:0.5rem] [--anchor-max-height:60vh] empty:invisible"
-			>
-				{debouncedSearchTerm !== '' && searchedItems?.length === 0 && (
-					<ComboboxOption
-						value=""
-						className="flex h-14 flex-col justify-center px-1 text-sm font-medium"
-						disabled
-					>
-						No products found.
-					</ComboboxOption>
-				)}
-				<div
-					style={{
-						height: `${listVirtualizer.getTotalSize()}px`, // Total height of all virtualized items
-						position: 'relative',
-					}}
+					}
+					disabled={
+						filteredSellableItems?.length === 0 ||
+						currentInvoicePos.payment_method === 'balance_payment'
+					}
+				/>
+				<ComboboxOptions
+					ref={containerRef}
+					anchor="bottom"
+					className="w-[var(--input-width)] cursor-pointer overflow-auto rounded-md border bg-white p-1 shadow-lg [--anchor-gap:0.5rem] [--anchor-max-height:60vh] empty:invisible"
 				>
-					{listVirtualizer.getVirtualItems().map(virtualRow => {
-						const item = searchedItems?.[virtualRow.index];
-						if (!item) return null;
+					{debouncedSearchTerm !== '' && searchedItems?.length === 0 && (
+						<ComboboxOption
+							value=""
+							className="flex h-14 flex-col justify-center px-1 text-sm font-medium"
+							disabled
+						>
+							{laggedIsFetching
+								? 'No items found, yet. Items are still being fetched...'
+								: 'No items found'}
+						</ComboboxOption>
+					)}
+					<div
+						style={{
+							height: `${listVirtualizer.getTotalSize()}px`, // Total height of all virtualized items
+							position: 'relative',
+						}}
+					>
+						{listVirtualizer.getVirtualItems().map(virtualRow => {
+							const item = searchedItems?.[virtualRow.index];
+							if (!item) return null;
 
-						const availableStocks =
-							item.inventory_product.approved_stocks -
-							(item.inventory_product.sold_count ?? 0);
+							const availableStocks =
+								item.inventory_product.approved_stocks -
+								(item.inventory_product.purchased_stocks ?? 0);
 
-						return (
-							<ComboboxOption
-								key={`${item.inventory_product.id}-${item.product.name}`}
-								value={{ item: item as ProductPrices }}
-								className="flex flex-row justify-between rounded-sm px-1 py-2 text-sm font-medium data-[focus]:bg-slate-100"
-								style={{
-									position: 'absolute',
-									top: 0,
-									left: 0,
-									width: '100%',
-									transform: `translateY(${virtualRow.start}px)`,
-								}}
-							>
-								<div className="flex flex-col gap-1">
-									<div className="space-x-2">
-										<span className="font-bold">
-											{item.product.name}
+							return (
+								<ComboboxOption
+									key={`${item.inventory_product.id}-${item.product.name}`}
+									value={{ item: item as ProductPricesPOS }}
+									className="flex flex-row justify-between rounded-sm px-1 py-2 text-sm font-medium data-[focus]:bg-slate-100"
+									style={{
+										position: 'absolute',
+										top: 0,
+										left: 0,
+										width: '100%',
+										transform: `translateY(${virtualRow.start}px)`,
+									}}
+								>
+									<div className="flex flex-col gap-1">
+										<div className="space-x-2">
+											<span className="font-bold">
+												{item.product.name}
+											</span>
+											<span className="">{item.product.size}</span>
+										</div>
+										<span className="text-xs text-slate-700/80">
+											{item.product.brand} - {item.product.color}
 										</span>
-										<span className="">{item.product.size}</span>
 									</div>
-									<span className="text-xs text-slate-700/80">
-										{item.product.brand} - {item.product.color}
-									</span>
-								</div>
 
-								<div className="flex flex-col items-end gap-1">
-									<span>{formatCurrency(item.price)}</span>
-									<span className="text-xs text-slate-700/80">
-										{`${availableStocks} ${availableStocks > 1 ? 'items' : 'item'}`}
-									</span>
-								</div>
-							</ComboboxOption>
-						);
-					})}
-				</div>
-			</ComboboxOptions>
-		</Combobox>
+									<div className="flex flex-col items-end gap-1">
+										<span>{formatCurrency(item.price)}</span>
+										<span className="text-xs text-slate-700/80">
+											{`${availableStocks} ${availableStocks === 1 ? 'item' : 'items'}`}
+										</span>
+									</div>
+								</ComboboxOption>
+							);
+						})}
+					</div>
+				</ComboboxOptions>
+			</Combobox>
+		</div>
 	);
 };
