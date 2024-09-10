@@ -1,5 +1,8 @@
+import { Invoices } from '@/features/invoice/__test__/types';
 import { InvoiceTable } from '../Table/InvoiceTable';
 import { useEffect, useState } from 'react';
+import { CartItem } from '../../types';
+import { formatUTCDate, formatUTCMMDDYYYY } from '@/utils/timeUtils';
 
 interface PrintFormProps {}
 
@@ -10,66 +13,58 @@ declare global {
 }
 
 export const PrintForm = ({}: PrintFormProps) => {
-	const [fullData, setFullData] = useState<any>();
-	const [wholeData, setWholeData] = useState<any>();
-	const [dateInvoice, setDateInvoice] = useState<any>();
-	const [itemsQueue, setItemsQueue] = useState<any>();
-	const [itemsDatabase, setItemsDatabase] = useState<any>();
+	const [invoiceDetails, setInvoiceDetails] = useState<Invoices | undefined>();
+	const [invoiceItems, setInvoiceItems] = useState<CartItem[] | undefined>();
 
-	console.log(window.api.receive());
+	const getData = async () => {
+		return await window.api.receiveInvoice();
+	};
 
 	useEffect(() => {
-		async function fetchData() {
-			setWholeData(await window.api.receive());
-		}
-		fetchData();
+		getData().then(res => {
+			if (res.invoiceDetails) {
+				setInvoiceDetails(res.invoiceDetails);
+			}
+			if (res.invoiceItems) {
+				setInvoiceItems(res.invoiceItems);
+			}
+		});
 	}, []);
-
-	useEffect(() => {
-		if (wholeData) {
-			setFullData(wholeData.fullData);
-			setDateInvoice(new Date(wholeData.fullData.updated_at));
-			setItemsQueue(wholeData.invoiceItems);
-			setItemsDatabase(wholeData.invoiceItemsDatabase);
-		}
-	}, [wholeData]);
 
 	return (
 		<>
-			{fullData && itemsQueue && dateInvoice && (
-				<div className="flex h-full w-screen flex-col p-3">
+			{invoiceDetails && invoiceItems && (
+				<div className="h-full w-screen p-3">
 					<div className="space-y-4">
-						<div className="flex flex-col gap-1 text-sm">
-							<div className="flex flex-row justify-between">
-								<h3>
+						<div className="block text-sm">
+							<div className="block w-full">
+								<h3 className="inline">
 									Date issued:&nbsp;
 									<span className="font-bold">
-										{dateInvoice.toLocaleDateString([], {
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric',
-										})}
+										{formatUTCMMDDYYYY(invoiceDetails.created_at)}
 									</span>
 								</h3>
-								<h3>
+								<h3 className="float-right inline">
 									Invoice number:&nbsp;
-									<span className="font-bold"> {fullData.code} </span>
+									<span className="font-bold">
+										{' '}
+										{invoiceDetails.code}{' '}
+									</span>
 								</h3>
 							</div>
 							<h3>
 								Billed to:&nbsp;
 								<span className="font-bold">
-									{fullData.customer.firstname +
+									{invoiceDetails.customer.firstname +
 										' ' +
-										fullData.customer.lastname}
+										invoiceDetails.customer.lastname}
 								</span>
 							</h3>
 						</div>
-						<div className="flex flex-1 flex-col">
+						<div className="block">
 							<InvoiceTable
-								queue={itemsQueue}
-								itemsDatabase={itemsDatabase}
-								fullData={fullData}
+								invoiceItems={invoiceItems}
+								invoiceDetails={invoiceDetails}
 							/>
 						</div>
 					</div>

@@ -34,7 +34,6 @@ export const CheckoutDialog = () => {
 	const { selectedVoucher, setSelectedVoucher } = useCustomer();
 	async function handleSubmit() {
 		setTransactionStatus('submitting');
-		console.log('Invoice:', currentInvoicePos);
 		const data: any = currentInvoicePos;
 		data['invoice_items'] = cartItems.map(({ item, ...rest }) => rest);
 		// await addInvoiceMutation(data).then(() => window.api.send());
@@ -72,13 +71,13 @@ export const CheckoutDialog = () => {
 
 	const navigate = useNavigate();
 
-	function sendData() {
-		window.api.send({
-			fullData: fullData,
-			// invoiceItems: currentInvoiceItemsQueue,
-			// invoiceItemsDatabase: invoiceItemsDatabase,
+	// Send data to main process
+	const sendInvoiceData = () => {
+		window.api.sendInvoice({
+			invoiceItems: cartItems,
+			invoiceDetails: fullData,
 		});
-	}
+	};
 
 	return (
 		<AlertDialog
@@ -138,7 +137,7 @@ export const CheckoutDialog = () => {
 								type="submit"
 								onClick={e => {
 									e.preventDefault();
-									sendData();
+									sendInvoiceData();
 								}}
 							>
 								Print invoice
