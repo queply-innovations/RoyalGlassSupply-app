@@ -1,5 +1,4 @@
 import { UseModalProps } from '@/utils/Modal';
-import { useProductPrices } from '../..';
 import { useProductPricesMutation } from '../../hooks';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,14 +13,14 @@ import {
 	getPriceValue,
 } from '../../helpers/useProductPriceCalculations';
 import { toast } from 'react-toastify';
+import { useProductPricesPaginated } from '../../context/ProductPricesPaginatedContext';
 
 interface ProductPricesFormProps {
 	onClose: UseModalProps['closeModal'];
 }
 
 export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
-	// const { auth } = useAuth();
-	const { selectedProductPrice } = useProductPrices();
+	const { selectedProductPrice } = useProductPricesPaginated();
 	const {
 		value: FormValue,
 		handleChange,
@@ -34,13 +33,13 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 
 	const [markupPercent, setMarkupPercent] = useState<number>(
 		getMarkupPercentage(
-			selectedProductPrice.capital_price,
-			selectedProductPrice.markup_price,
+			selectedProductPrice?.capital_price ?? 0,
+			selectedProductPrice?.markup_price ?? 0,
 			3,
 		),
 	);
 	const [markupValue, setMarkupValue] = useState<number>(
-		selectedProductPrice.markup_price,
+		selectedProductPrice?.markup_price ?? 0,
 	);
 
 	const handleMarkupPercentChange = (
@@ -48,14 +47,20 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 	) => {
 		const value = Number(e.target.value);
 		setMarkupPercent(value);
-		setMarkupValue(getMarkupValue(selectedProductPrice.capital_price, value));
+		setMarkupValue(
+			getMarkupValue(selectedProductPrice?.capital_price ?? 0, value),
+		);
 	};
 
 	const handleMarkupValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = currency(e.target.value).value;
 		setMarkupValue(value);
 		setMarkupPercent(
-			getMarkupPercentage(selectedProductPrice.capital_price, value, 3),
+			getMarkupPercentage(
+				selectedProductPrice?.capital_price ?? 0,
+				value,
+				3,
+			),
 		);
 	};
 
@@ -63,7 +68,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		handleChange('markup_price', markupValue);
 		handleChange(
 			'cost',
-			getCostValue(selectedProductPrice.capital_price, markupValue),
+			getCostValue(selectedProductPrice?.capital_price ?? 0, markupValue),
 		);
 	}, [markupPercent, markupValue]);
 
@@ -71,8 +76,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 		handleChange(
 			'price',
 			getPriceValue(
-				FormValue.cost ?? selectedProductPrice.cost,
-				FormValue.sale_discount ?? selectedProductPrice.sale_discount,
+				FormValue.cost ?? selectedProductPrice?.cost ?? 0,
+				FormValue.sale_discount ?? selectedProductPrice?.sale_discount ?? 0,
 			),
 		);
 	}, [FormValue.cost, FormValue.sale_discount]);
@@ -85,7 +90,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 					e.preventDefault();
 					handleSubmit({
 						action: 'update',
-						id: selectedProductPrice.id,
+						id: selectedProductPrice?.id ?? -1,
 						data: FormValue,
 					})
 						.then(() => {
@@ -105,15 +110,14 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Name</h3>
 							<p className="text-sm">
-								{selectedProductPrice.product.name}
+								{selectedProductPrice?.product.name ?? 'No name'}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Brand</h3>
 							<p className="text-sm">
-								{selectedProductPrice.product.brand || (
-									<span className="opacity-60">No brand</span>
-								)}
+								{/* Brand is possibly empty string */}
+								{selectedProductPrice?.product.brand || 'No brand'}
 							</p>
 						</div>
 						<div className="col-span-6 flex flex-col justify-center gap-1">
@@ -121,25 +125,27 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Serial Number
 							</h3>
 							<p className="text-sm">
-								{selectedProductPrice.product.serial_no}
+								{selectedProductPrice?.product.serial_no ??
+									'No serial number'}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Unit</h3>
 							<p className="text-sm">
-								{selectedProductPrice.inventory_product.unit}
+								{selectedProductPrice?.inventory_product.unit ??
+									'No unit'}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Size</h3>
 							<p className="text-sm">
-								{selectedProductPrice.product.size}
+								{selectedProductPrice?.product.size ?? 'No size'}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
 							<h3 className="text-sm font-bold text-gray-600">Color</h3>
 							<p className="text-sm">
-								{selectedProductPrice.product.color}
+								{selectedProductPrice?.product.color ?? 'No color'}
 							</p>
 						</div>
 						<div className="col-span-3 flex flex-col justify-center gap-1">
@@ -147,7 +153,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Inventory
 							</h3>
 							<p className="text-sm">
-								{selectedProductPrice.inventory_product.inventory.code}
+								{selectedProductPrice?.inventory_product.inventory
+									.code ?? 'No inventory'}
 							</p>
 						</div>
 					</div>
@@ -167,7 +174,8 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								disabled
 								className="pl-7"
 								value={
-									currency(selectedProductPrice.capital_price).value
+									currency(selectedProductPrice?.capital_price ?? 0)
+										.value
 								}
 							/>
 							<span className="absolute bottom-0 left-0 ml-3 -translate-y-1/2 text-sm font-semibold text-gray-500">
@@ -203,20 +211,22 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 										// Adjusts the markup value so the cost will be rounded to the nearest 0.5
 										const roundedCost =
 											Math.round(
-												(selectedProductPrice.capital_price +
-													selectedProductPrice.capital_price *
+												((selectedProductPrice?.capital_price ??
+													0) +
+													(selectedProductPrice?.capital_price ??
+														0) *
 														(Number(e.target.value) / 100)) *
 													2,
 											) / 2;
 										const adjustedMarkupValue =
 											roundedCost -
-											selectedProductPrice.capital_price;
+											(selectedProductPrice?.capital_price ?? 0);
 										setMarkupValue(
 											currency(adjustedMarkupValue).value,
 										);
 										setMarkupPercent(
 											getMarkupPercentage(
-												selectedProductPrice.capital_price,
+												selectedProductPrice?.capital_price ?? 0,
 												adjustedMarkupValue,
 												3,
 											),
@@ -256,19 +266,20 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 										// Adjusts the markup value so the cost will be rounded to the nearest 0.5
 										const roundedCost =
 											Math.round(
-												(selectedProductPrice.capital_price +
+												((selectedProductPrice?.capital_price ??
+													0) +
 													Number(e.target.value)) *
 													2,
 											) / 2;
 										const adjustedMarkupValue =
 											roundedCost -
-											selectedProductPrice.capital_price;
+											(selectedProductPrice?.capital_price ?? 0);
 										setMarkupValue(
 											currency(adjustedMarkupValue).value,
 										);
 										setMarkupPercent(
 											getMarkupPercentage(
-												selectedProductPrice.capital_price,
+												selectedProductPrice?.capital_price ?? 0,
 												adjustedMarkupValue,
 												3,
 											),
@@ -297,7 +308,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								readOnly
 								value={
 									getCostValue(
-										selectedProductPrice.capital_price,
+										selectedProductPrice?.capital_price ?? 0,
 										markupValue,
 									).toFixed(2) || '0.00'
 								}
@@ -323,18 +334,20 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								max={
 									FormValue.cost !== undefined
 										? FormValue.cost
-										: selectedProductPrice.cost
+										: selectedProductPrice?.cost ?? 0
 								}
 								disabled={
 									FormValue.on_sale === undefined
-										? selectedProductPrice.on_sale === 0
+										? (selectedProductPrice?.on_sale ?? 0) === 0
 										: FormValue.on_sale === 0
 								}
 								required
 								className="pl-7"
 								value={
 									FormValue.sale_discount ??
-									selectedProductPrice.sale_discount?.toFixed(2) ??
+									(selectedProductPrice?.sale_discount ?? 0).toFixed(
+										2,
+									) ??
 									''
 								}
 								onChange={e => {
@@ -347,7 +360,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									e.target.value = Number(
 										FormValue.sale_discount !== undefined
 											? FormValue.sale_discount
-											: selectedProductPrice.sale_discount,
+											: selectedProductPrice?.sale_discount ?? 0,
 									).toFixed(2);
 								}}
 							/>
@@ -361,7 +374,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 									type="checkbox"
 									checked={
 										FormValue.on_sale === undefined
-											? selectedProductPrice.on_sale === 1
+											? (selectedProductPrice?.on_sale ?? 0) === 1
 											: FormValue.on_sale === 1
 									}
 									className="h-4 w-fit"
@@ -402,7 +415,7 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								className="pl-7"
 								value={
 									FormValue.price?.toFixed(2) ||
-									selectedProductPrice.price.toFixed(2) ||
+									(selectedProductPrice?.price ?? 0).toFixed(2) ||
 									'0.00'
 								}
 							/>
@@ -418,9 +431,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Created by
 							</h3>
 							<p className="text-sm">
-								{selectedProductPrice.created_by.firstname +
+								{selectedProductPrice?.created_by.firstname +
 									' ' +
-									selectedProductPrice.created_by.lastname}
+									selectedProductPrice?.created_by.lastname}
 							</p>
 						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">
@@ -428,7 +441,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Created at
 							</h3>
 							<p className="text-sm">
-								{formatUTCDate(selectedProductPrice.created_at)}
+								{selectedProductPrice?.created_at
+									? formatUTCDate(selectedProductPrice.created_at)
+									: 'No data'}
 							</p>
 						</div>
 						<div className="col-span-4 flex flex-col justify-center gap-1">
@@ -436,7 +451,9 @@ export const ProductPricesForm = ({ onClose }: ProductPricesFormProps) => {
 								Updated at
 							</h3>
 							<p className="text-sm">
-								{formatUTCDate(selectedProductPrice.updated_at)}
+								{selectedProductPrice?.updated_at
+									? formatUTCDate(selectedProductPrice.updated_at)
+									: 'No data'}
 							</p>
 						</div>
 					</div>
