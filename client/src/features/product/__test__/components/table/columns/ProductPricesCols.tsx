@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ProductPrices } from '../../../types';
+import { ProductPricesPOS } from '../../../types';
 import {
-	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -14,10 +13,9 @@ import {
 	MoreVertical,
 	Pencil,
 	List,
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
 	Trash2,
+	ArrowDownWideNarrow,
+	ArrowUpNarrowWide,
 } from 'lucide-react';
 import currency from 'currency.js';
 import {
@@ -26,11 +24,13 @@ import {
 	TooltipContent,
 } from '@/components/ui/tooltip';
 import { useAuth } from '@/context/AuthContext';
+import { useProductPricesPaginated } from '../../../context/ProductPricesPaginatedContext';
+import { Button } from '@/components/ui/button';
 
 interface ProductPricesColumnsProps {
-	handleProdPriceDetails: (productPrice: ProductPrices) => void;
-	handleEditProdPrice: (productPrice: ProductPrices) => void;
-	handleDeleteProdPrice: (productPrice: ProductPrices) => void;
+	handleProdPriceDetails: (productPrice: ProductPricesPOS) => void;
+	handleEditProdPrice: (productPrice: ProductPricesPOS) => void;
+	handleDeleteProdPrice: (productPrice: ProductPricesPOS) => void;
 }
 
 /**
@@ -44,34 +44,16 @@ export const ProductPricesColumns = ({
 	handleProdPriceDetails,
 	handleEditProdPrice,
 	handleDeleteProdPrice,
-}: ProductPricesColumnsProps): ColumnDef<ProductPrices>[] => {
+}: ProductPricesColumnsProps): ColumnDef<ProductPricesPOS>[] => {
 	const { permissionListNames } = useAuth();
-	const columnDefinition: ColumnDef<ProductPrices>[] = [
+	const { sorting, setSorting } = useProductPricesPaginated();
+
+	const columnDefinition: ColumnDef<ProductPricesPOS>[] = [
 		{
 			id: 'name',
 			accessorKey: 'product.name',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Name{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
+			header: () => {
+				return <div className="justify-center uppercase">Name</div>;
 			},
 		},
 		{
@@ -88,33 +70,38 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'inventory_product.inventory.code',
-			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Inventory{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
+			header: () => (
+				<div className="justify-center uppercase">Inventory</div>
+			),
 		},
 		{
 			accessorKey: 'capital_price',
-			header: () => <div className="justify-center uppercase">Capital</div>,
+			header: ({ column }) => (
+				<Button
+					variant={'ghost'}
+					onClick={() => {
+						if (column.getNextSortingOrder()) {
+							setSorting([
+								{
+									id: 'capital_price',
+									desc: column.getNextSortingOrder() === 'desc',
+								},
+							]);
+						} else {
+							setSorting([{ id: 'created_at', desc: true }]);
+						}
+					}}
+					className={`flex flex-row items-center gap-1 bg-transparent px-0 text-xs uppercase ${sorting[0]?.id === 'capital_price' && 'font-bold'}`}
+				>
+					Capital{' '}
+					{sorting[0]?.id === 'capital_price' && sorting[0].desc ? (
+						<ArrowDownWideNarrow size={16} strokeWidth={2} />
+					) : sorting[0]?.id === 'capital_price' && !sorting[0]?.desc ? (
+						<ArrowUpNarrowWide size={16} strokeWidth={2} />
+					) : null}
+				</Button>
+			),
 			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
@@ -129,7 +116,31 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'markup_price',
-			header: () => <div className="justify-center uppercase">Markup</div>,
+			header: ({ column }) => (
+				<Button
+					variant={'ghost'}
+					onClick={() => {
+						if (column.getNextSortingOrder()) {
+							setSorting([
+								{
+									id: 'markup_price',
+									desc: column.getNextSortingOrder() === 'desc',
+								},
+							]);
+						} else {
+							setSorting([{ id: 'created_at', desc: true }]);
+						}
+					}}
+					className={`flex flex-row items-center gap-1 bg-transparent px-0 text-xs uppercase ${sorting[0]?.id === 'markup_price' && 'font-bold'}`}
+				>
+					Markup{' '}
+					{sorting[0]?.id === 'markup_price' && sorting[0].desc ? (
+						<ArrowDownWideNarrow size={16} strokeWidth={2} />
+					) : sorting[0]?.id === 'markup_price' && !sorting[0]?.desc ? (
+						<ArrowUpNarrowWide size={16} strokeWidth={2} />
+					) : null}
+				</Button>
+			),
 			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
@@ -151,7 +162,31 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'sale_discount',
-			header: () => <div className="justify-center uppercase">Discount</div>,
+			header: ({ column }) => (
+				<Button
+					variant={'ghost'}
+					onClick={() => {
+						if (column.getNextSortingOrder()) {
+							setSorting([
+								{
+									id: 'sale_discount',
+									desc: column.getNextSortingOrder() === 'desc',
+								},
+							]);
+						} else {
+							setSorting([{ id: 'created_at', desc: true }]);
+						}
+					}}
+					className={`flex flex-row items-center gap-1 bg-transparent px-0 text-xs uppercase ${sorting[0]?.id === 'sale_discount' && 'font-bold'}`}
+				>
+					Discount{' '}
+					{sorting[0]?.id === 'sale_discount' && sorting[0].desc ? (
+						<ArrowDownWideNarrow size={16} strokeWidth={2} />
+					) : sorting[0]?.id === 'sale_discount' && !sorting[0]?.desc ? (
+						<ArrowUpNarrowWide size={16} strokeWidth={2} />
+					) : null}
+				</Button>
+			),
 			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
@@ -160,7 +195,7 @@ export const ProductPricesColumns = ({
 				return (
 					<div className="flex items-center">
 						<span>
-							{!!row.original.on_sale ? (
+							{row.original.on_sale ? (
 								formatted
 							) : (
 								<div className="group relative flex w-fit items-center">
@@ -187,7 +222,31 @@ export const ProductPricesColumns = ({
 		},
 		{
 			accessorKey: 'price',
-			header: () => <div className="justify-center uppercase">Price</div>,
+			header: ({ column }) => (
+				<Button
+					variant={'ghost'}
+					onClick={() => {
+						if (column.getNextSortingOrder()) {
+							setSorting([
+								{
+									id: 'price',
+									desc: column.getNextSortingOrder() === 'desc',
+								},
+							]);
+						} else {
+							setSorting([{ id: 'created_at', desc: true }]);
+						}
+					}}
+					className={`flex flex-row items-center gap-1 bg-transparent px-0 text-xs uppercase ${sorting[0]?.id === 'price' && 'font-bold'}`}
+				>
+					Price{' '}
+					{sorting[0]?.id === 'price' && sorting[0].desc ? (
+						<ArrowDownWideNarrow size={16} strokeWidth={2} />
+					) : sorting[0]?.id === 'price' && !sorting[0]?.desc ? (
+						<ArrowUpNarrowWide size={16} strokeWidth={2} />
+					) : null}
+				</Button>
+			),
 			cell: ({ row }) => {
 				const formatted = new Intl.NumberFormat('en-US', {
 					style: 'currency',
@@ -207,18 +266,20 @@ export const ProductPricesColumns = ({
 			),
 			cell: ({ row }) => {
 				const remainingStocks =
-					row.original.inventory_product.remaining_stocks_count ?? 0;
+					row.original.inventory_product.stocks_count -
+					(row.original.inventory_product.purchased_stocks ?? 0);
 				const stocksCountLow =
 					row.original.inventory_product.stocks_count * 0.2;
 				const stocksCountHalf =
 					row.original.inventory_product.stocks_count * 0.5;
+
 				return (
 					<Tooltip>
 						<TooltipTrigger>
 							<span
 								className={`${stocksCountLow >= remainingStocks ? 'font-bold text-red-700' : stocksCountHalf >= remainingStocks ? 'font-semibold text-amber-700' : ''}`}
 							>
-								{remainingStocks}
+								{remainingStocks > 0 ? remainingStocks : 0}
 							</span>
 						</TooltipTrigger>
 						<TooltipContent>
