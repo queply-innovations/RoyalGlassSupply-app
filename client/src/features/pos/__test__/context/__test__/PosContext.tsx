@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInvoicePos } from './InvoicePosContext';
+import { toast } from 'react-toastify';
 
 interface PosContextProps {
 	searchFilterItems: { warehouse_id: number };
@@ -94,6 +95,9 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 		// Refetch if there is an error
 		if (isError) {
 			refetch();
+			toast.error(
+				'An error occured while fetching products. Refetching again...',
+			);
 		}
 	}, [hasNextPage, isFetchingNextPage, fetchNextPage, isError, refetch]);
 

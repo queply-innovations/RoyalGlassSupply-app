@@ -12,12 +12,11 @@ import { formatCurrency } from '@/utils/FormatCurrency';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ProductPricesPOS } from '@/features/product/__test__/types';
 import { Loader } from 'lucide-react';
-import { toast } from 'react-toastify';
 
 export const SearchItems = () => {
 	// Contexts
 	const { sellableItems, isFetching } = usePos();
-	const { cartItems, setCartItems, currentInvoicePos } = useInvoicePos();
+	const { currentInvoicePos, handleAddItem } = useInvoicePos();
 	const laggedIsFetching = useDebounce(isFetching, 1500);
 
 	// State for storing search value
@@ -54,42 +53,6 @@ export const SearchItems = () => {
 		overscan: 24, // Number of items to render outside the viewport for smoother scrolling
 	});
 
-	const handleAddItem = (value: { item: ProductPricesPOS } | null) => {
-		if (value && value.item) {
-			const product = value.item;
-
-			// Search for the item in the cart
-			const itemIndex = cartItems.findIndex(
-				cartItem =>
-					cartItem.product_price_id ===
-					//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
-					product.inventory_product.product_price_id,
-			);
-
-			if (itemIndex === -1) {
-				setCartItems([
-					...cartItems,
-					{
-						item: product,
-						//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
-						product_price_id: product.inventory_product.product_price_id,
-						product_id: product.product_id,
-						product_price: product.price,
-						quantity: 1,
-						unit: product.unit,
-						source_inventory: product.inventory_product.inventory_id,
-						total_price: product.price,
-						item_discount: 0,
-						discount_approval_status: null,
-						approved_by: null,
-					},
-				]);
-			} else {
-				toast.warn('Item already in cart.');
-			}
-		}
-	};
-
 	return (
 		<div className="relative z-30">
 			<Combobox onClose={() => setSearch('')} onChange={handleAddItem}>
@@ -98,7 +61,7 @@ export const SearchItems = () => {
 					<div className="absolute right-0 flex h-full items-center pr-3">
 						<Loader
 							size="1.2rem"
-							className="animate-spin text-slate-400"
+							className="animate-spin text-slate-500"
 						/>
 					</div>
 				)}
@@ -110,17 +73,15 @@ export const SearchItems = () => {
 					placeholder={
 						(filteredSellableItems?.length ?? 0) > 0
 							? 'Search product name...'
-							: 'No products available'
+							: 'No products to show'
 					}
-					disabled={
-						filteredSellableItems?.length === 0 ||
-						currentInvoicePos.payment_method === 'balance_payment'
-					}
+					disabled={currentInvoicePos.payment_method === 'balance_payment'}
 				/>
 				<ComboboxOptions
 					ref={containerRef}
 					anchor="bottom"
-					className="w-[var(--input-width)] cursor-pointer overflow-auto rounded-md border bg-white p-1 shadow-lg [--anchor-gap:0.5rem] [--anchor-max-height:60vh] empty:invisible"
+					className="w-[var(--input-width)] cursor-pointer overflow-auto rounded-md
+					border bg-white p-1 shadow-lg [--anchor-gap:0.5rem] [--anchor-max-height:60vh] empty:invisible"
 				>
 					{debouncedSearchTerm !== '' && searchedItems?.length === 0 && (
 						<ComboboxOption

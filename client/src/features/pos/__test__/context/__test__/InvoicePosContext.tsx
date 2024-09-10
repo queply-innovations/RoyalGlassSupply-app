@@ -10,6 +10,7 @@ import {
 } from 'react';
 import currency from 'currency.js';
 import { CartItem } from '../../types';
+import { toast } from 'react-toastify';
 
 interface InvoicePosContextProps {
 	currentInvoicePos: Partial<Invoices>;
@@ -21,6 +22,7 @@ interface InvoicePosContextProps {
 	// invoiceItemsDatabase: InvoiceItemDatabase[];
 	// setInvoiceItemsDatabase: React.Dispatch<InvoiceItemDatabase[]>;
 
+	handleAddItem: (value: { item: CartItem['item'] } | null) => void;
 	handleInvoicePosChange: (
 		key: string,
 		value: Invoices[keyof Invoices],
@@ -127,6 +129,42 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		}));
 	}
 
+	function handleAddItem(value: { item: CartItem['item'] } | null) {
+		if (value && value.item) {
+			const product = value.item;
+
+			// Search for the item in the cart
+			const itemIndex = cartItems.findIndex(
+				cartItem =>
+					cartItem.product_price_id ===
+					//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
+					product.inventory_product.product_price_id,
+			);
+
+			if (itemIndex === -1) {
+				setCartItems([
+					...cartItems,
+					{
+						item: product,
+						//@ts-expect-error 'product_price_id' doesn't exist on type 'InventoryProduct'
+						product_price_id: product.inventory_product.product_price_id,
+						product_id: product.product_id,
+						product_price: product.price,
+						quantity: 1,
+						unit: product.unit,
+						source_inventory: product.inventory_product.inventory_id,
+						total_price: product.price,
+						item_discount: 0,
+						discount_approval_status: null,
+						approved_by: null,
+					},
+				]);
+			} else {
+				toast.warn('Item already in cart.');
+			}
+		}
+	}
+
 	function handleInvoiceItemQuantity(
 		tableIndex: number,
 		maxQuantity: number,
@@ -171,7 +209,7 @@ export const InvoicePosProvider = ({ children }: InvoiceProviderProps) => {
 		// invoiceItemsDatabase,
 		// setInvoiceItemsDatabase,
 
-		// addInvoiceItems,
+		handleAddItem,
 		handleInvoiceItemQuantity,
 		handleInvoicePosChange,
 		removeInvoiceItem,

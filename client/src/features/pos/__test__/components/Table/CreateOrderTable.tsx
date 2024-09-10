@@ -132,7 +132,7 @@ export const CreateOrderTable = ({}: CreateOrderTableProps) => {
 		{
 			accessorKey: 'price',
 			enableHiding: false,
-			header: () => <div className="justify-center">Product Price</div>,
+			header: () => <div className="justify-center">Price</div>,
 			cell: ({ row }) => {
 				return (
 					<div className="flex flex-row gap-2 ">
