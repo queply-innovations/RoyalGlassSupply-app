@@ -48,9 +48,25 @@
 
 	@media print {
 		body {
-			overflow: visible !important;
+			overflow: auto;
+			color: black;
 			/* page-break-before: always; */
 		}
+
+		.overflow-hidden {
+			overflow: auto !important;
+		}
+
+		table tbody tr td:before,
+    table tbody tr td:after {
+        content: "";
+        height: 4px;
+        display: block;
+    }
+
+		table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    thead { display:table-header-group }
 	}
 
 	.pagination {
