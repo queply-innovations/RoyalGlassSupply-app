@@ -9,7 +9,6 @@ import {
 	fetchProductPrices,
 	fetchProductPricesFilters,
 	fetchProductPricesPaginated,
-	fetchProductPricesPOS,
 } from '../api/Products';
 import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
@@ -94,13 +93,18 @@ export const useProductPricesFilter = ({
 	return { data, isFetching };
 };
 
-export const useProductPricesPaginatedQuery = (
-	page: number = 1,
-	pageSize: number = 50,
-) => {
+export const useProductPricesPaginatedQuery = ({
+	pagination,
+	filter,
+	sort,
+}: {
+	pagination: { page: number; pageSize: number };
+	filter?: { warehouse_id?: number };
+	sort?: { [key: string]: 'asc' | 'desc' };
+}) => {
 	return useQuery({
-		queryKey: ['productPrices', page, pageSize],
-		queryFn: () => fetchProductPricesPaginated(page, pageSize),
+		queryKey: ['productPrices', pagination, filter, sort],
+		queryFn: () => fetchProductPricesPaginated({ pagination, filter, sort }),
 		placeholderData: keepPreviousData, // Keep previous data when fetching new data to avoid clearing of table data
 		refetchOnWindowFocus: false,
 	});
@@ -109,12 +113,15 @@ export const useProductPricesPaginatedQuery = (
 export const useProductPricesPOSQuery = ({
 	warehouse_id,
 }: {
-	warehouse_id?: number;
+	warehouse_id: number;
 }) => {
 	return useInfiniteQuery({
 		queryKey: ['productPrices', warehouse_id],
 		queryFn: ({ pageParam }) =>
-			fetchProductPricesPOS({ page: pageParam, warehouse_id: warehouse_id }),
+			fetchProductPricesPaginated({
+				pagination: { page: pageParam, pageSize: 100 },
+				filter: { warehouse_id },
+			}),
 		initialPageParam: 1,
 		getNextPageParam: page => {
 			return page.next_page_url ? page.current_page + 1 : null;

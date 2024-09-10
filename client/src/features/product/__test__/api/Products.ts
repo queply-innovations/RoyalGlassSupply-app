@@ -332,37 +332,24 @@ export const deleteProductListing = async (id: number) => {
 		});
 };
 
-export const fetchProductPricesPaginated = async (
-	page: number,
-	pageSize: number = 10,
-): Promise<ProductPricesPaginated> => {
-	return await axios
-		.get(
-			`https://staging.royalglasssupply.com/api/test/product-prices?page=${page}&pageSize=${pageSize}`,
-			{ headers: API_HEADERS() },
-		)
-		.then(response => {
-			return response.data;
-		})
-		.catch(error => {
-			console.error('Error fetching paginated product prices:', error);
-			throw error;
-		});
-};
-
-export const fetchProductPricesPOS = async ({
-	page,
-	pageSize = 100,
-	warehouse_id = 0, // warehouse_id: 0 responds with no data
+export const fetchProductPricesPaginated = async ({
+	pagination,
+	filter,
+	sort,
 }: {
-	page: number;
-	pageSize?: number;
-	warehouse_id?: number;
+	pagination: { page: number; pageSize?: number };
+	filter?: { [key: string]: string | number };
+	sort?: { [key: string]: 'asc' | 'desc' };
 }): Promise<ProductPricesPaginated> => {
+	const data = {
+		...(filter && { filter }),
+		...(sort && { sort }),
+	};
+
 	return await axios
 		.post(
-			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts?page=${page}&pageSize=${pageSize}`,
-			{ filter: { warehouse_id: warehouse_id } },
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts?page=${pagination.page}&pageSize=${pagination.pageSize ?? 25}`,
+			data,
 			{
 				headers: API_HEADERS(),
 			},
