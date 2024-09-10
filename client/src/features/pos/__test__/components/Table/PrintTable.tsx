@@ -89,7 +89,7 @@ export function PrintTable<TData, TValue>({
 									className="border border-gray-400 text-black"
 								>
 									{row.getVisibleCells().map(cell => (
-										<TableCell key={cell.id} className="py-1">
+										<TableCell key={cell.id} className="py-[0.2rem]">
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext(),
@@ -122,7 +122,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										key={'subtotal-label'}
 										colSpan={1}
-										className="border-b border-l border-gray-400 py-1 text-xs font-medium"
+										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-medium"
 									>
 										<span className="flex w-full justify-end">
 											Subtotal
@@ -131,7 +131,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'subtotal-value'}
-										className="border-b border-r border-gray-400 py-1"
+										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
 										<span className="text-left text-xs">
 											{Intl.NumberFormat('en-US', {
@@ -151,7 +151,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'discount-label'}
-										className="border-b border-l border-gray-400 py-1 text-xs font-medium"
+										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-medium"
 									>
 										<span className="flex w-full justify-end">
 											Discount
@@ -160,7 +160,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'discount-value'}
-										className="border-b border-r border-gray-400 py-1"
+										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
 										<span className="text-left text-xs">
 											-{' '}
@@ -181,7 +181,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'deliveryCharge-label'}
-										className="border-b border-l border-gray-400 py-1 text-xs font-medium"
+										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-medium"
 									>
 										<span className="flex w-full justify-end">
 											Delivery fee
@@ -190,7 +190,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'deliveryCharge-value'}
-										className="border-b border-r border-gray-400 py-1"
+										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
 										<span className="text-left text-xs">
 											{Intl.NumberFormat('en-US', {
@@ -210,7 +210,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'totalDue-label'}
-										className="border-b border-l border-gray-400 py-1 text-xs font-bold"
+										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-bold"
 									>
 										<span className="flex w-full justify-end">
 											{!isBalancePayment
@@ -221,7 +221,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'totalDue-value'}
-										className="border-b border-r border-gray-400 py-1"
+										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
 										<span className="text-left text-xs font-bold">
 											{Intl.NumberFormat('en-US', {
@@ -241,7 +241,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key="amountPaid-label"
-										className="border-b border-l border-gray-400 py-1 text-xs font-medium"
+										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-medium"
 									>
 										<span className="flex w-full justify-end">
 											Amount paid
@@ -250,7 +250,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key="amountPaid-value"
-										className="border-b border-r border-gray-400 py-1"
+										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
 										<span className="text-left text-xs">
 											{Intl.NumberFormat('en-US', {
@@ -267,7 +267,7 @@ export function PrintTable<TData, TValue>({
 			</div>
 
 			{invoice && (
-				<div className="mt-4 flex flex-col gap-2">
+				<div className="mt-4 space-y-2">
 					<hr className="w-full border-gray-400" />
 					<div className="mt-4 grid grid-cols-3 text-xs">
 						<p>Issued by: {user.firstname + ' ' + user.lastname}</p>
