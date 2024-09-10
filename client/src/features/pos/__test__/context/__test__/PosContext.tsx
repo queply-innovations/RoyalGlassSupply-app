@@ -1,9 +1,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { InvoiceItems } from '@/features/invoice/__test__/types';
-import {
-	ProductPricesFilterProps,
-	useProductPricesPOSQuery,
-} from '@/features/product/__test__/hooks';
+import { useProductPricesPOSQuery } from '@/features/product/__test__/hooks';
 import { ProductPricesPOS } from '@/features/product/__test__/types';
 import {
 	ReactNode,
@@ -17,9 +14,9 @@ import { useNavigate } from 'react-router-dom';
 import { useInvoicePos } from './InvoicePosContext';
 
 interface PosContextProps {
-	searchFilterItems: ProductPricesFilterProps;
+	searchFilterItems: { warehouse_id: number };
 	setSearchFilterItems: React.Dispatch<
-		React.SetStateAction<ProductPricesFilterProps>
+		React.SetStateAction<{ warehouse_id: number }>
 	>;
 
 	sellableItems: ProductPricesPOS[] | null;
@@ -49,8 +46,9 @@ export const PosProvider = ({ children }: PosProviderProps) => {
 
 	const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
 
-	const [searchFilterItems, setSearchFilterItems] =
-		useState<ProductPricesFilterProps>({});
+	const [searchFilterItems, setSearchFilterItems] = useState<{
+		warehouse_id: number;
+	}>({ warehouse_id: 0 });
 
 	const [customerCart, setCustomerCart] = useState<InvoiceItems[]>([]);
 
