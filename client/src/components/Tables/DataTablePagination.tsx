@@ -3,6 +3,9 @@ import {
 	flexRender,
 	getCoreRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
+	PaginationState,
+	SortingState,
 	useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -41,16 +44,10 @@ export interface DataTablePaginationProps<TData, TValue> {
 	data: TData[];
 	rowCount: number;
 	pageCount: number;
-	pagination: {
-		pageIndex: number;
-		pageSize: number;
-	};
-	setPagination: React.Dispatch<
-		React.SetStateAction<{
-			pageIndex: number;
-			pageSize: number;
-		}>
-	>;
+	pagination: PaginationState;
+	setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+	sorting?: SortingState;
+	setSorting?: React.Dispatch<React.SetStateAction<SortingState>>;
 	isLoading?: boolean; // Loading is for initial data fetch
 	isFetching?: boolean;
 	from?: number;
@@ -64,6 +61,8 @@ export const DataTablePagination = <TData, TValue>({
 	pageCount,
 	pagination,
 	setPagination,
+	sorting,
+	setSorting,
 	from,
 	to,
 	isLoading,
@@ -75,12 +74,19 @@ export const DataTablePagination = <TData, TValue>({
 		data,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		getSortedRowModel: !(sorting && setSorting)
+			? getSortedRowModel() // Use default sorting if sorting state is not provided
+			: undefined,
 		manualPagination: true,
 		rowCount: rowCount,
 		state: {
 			pagination,
+			sorting,
 		},
 		onPaginationChange: setPagination,
+		onSortingChange: setSorting,
+		manualSorting: !!sorting && !!setSorting, // Allow manual sorting if sorting state is provided
+		enableMultiSort: false,
 	});
 
 	// Page input state
@@ -171,12 +177,13 @@ export const DataTablePagination = <TData, TValue>({
 						value={pagination.pageSize.toString()}
 					>
 						<SelectTrigger className="w-[100px]">
-							<SelectValue />
+							<SelectValue placeholder={pagination.pageSize} />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="10">10 rows</SelectItem>
-							<SelectItem value="20">20 rows</SelectItem>
-							<SelectItem value="30">30 rows</SelectItem>
+							<SelectItem value="25">25 rows</SelectItem>
+							<SelectItem value="50">50 rows</SelectItem>
+							<SelectItem value="75">75 rows</SelectItem>
+							<SelectItem value="100">100 rows</SelectItem>
 						</SelectContent>
 					</Select>
 
