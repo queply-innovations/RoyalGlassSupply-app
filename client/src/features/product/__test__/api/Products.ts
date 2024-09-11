@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
-import { Product, ProductPrices, ProductPricesDatabase } from '../types';
+import {
+	Product,
+	ProductPrices,
+	ProductPricesDatabase,
+	ProductPricesPaginated,
+} from '../types';
 
 export const fetchProducts = async (): Promise<Product[]> => {
 	return await axios
@@ -323,6 +328,37 @@ export const deleteProductListing = async (id: number) => {
 		.then(response => ({ message: response.data.message }))
 		.catch(error => {
 			console.error('Error deleting product listing:', error);
+			throw error;
+		});
+};
+
+export const fetchProductPricesPaginated = async ({
+	pagination,
+	filter,
+	sort,
+}: {
+	pagination: { page: number; pageSize?: number };
+	filter?: { [key: string]: string | number };
+	sort?: { [key: string]: 'asc' | 'desc' };
+}): Promise<ProductPricesPaginated> => {
+	const data = {
+		...(filter && { filter }),
+		...(sort && { sort }),
+	};
+
+	return await axios
+		.post(
+			`${API_URLS.PRODUCT_PRICES}/searches-filters-sorts?page=${pagination.page}&pageSize=${pagination.pageSize ?? 25}`,
+			data,
+			{
+				headers: API_HEADERS(),
+			},
+		)
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error('Error fetching product prices:', error);
 			throw error;
 		});
 };

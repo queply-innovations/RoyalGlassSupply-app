@@ -1,105 +1,131 @@
 import { useAuth } from '@/context/AuthContext';
 import { InvoiceItems } from '@/features/invoice/__test__/types';
+import { useProductPricesPOSQuery } from '@/features/product/__test__/hooks';
+import { ProductPricesPOS } from '@/features/product/__test__/types';
 import {
-   ProductPricesFilterProps,
-   useProductPricesFilter,
-} from '@/features/product/__test__/hooks';
-import { ProductPrices } from '@/features/product/__test__/types';
-import {
-   ReactNode,
-   createContext,
-   useContext,
-   useEffect,
-   useState,
+	ReactNode,
+	createContext,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInvoicePos } from './InvoicePosContext';
+import { toast } from 'react-toastify';
 
 interface PosContextProps {
-   searchFilterItems: ProductPricesFilterProps;
-   setSearchFilterItems: React.Dispatch<
-      React.SetStateAction<ProductPricesFilterProps>
-   >;
+	searchFilterItems: { warehouse_id: number };
+	setSearchFilterItems: React.Dispatch<
+		React.SetStateAction<{ warehouse_id: number }>
+	>;
 
-   sellableItems: ProductPrices[];
-   fetchingProducts: boolean;
+	sellableItems: ProductPricesPOS[] | null;
+	isFetching: boolean;
 
-   customerCart: InvoiceItems[];
-   setCustomerCart: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
+	customerCart: InvoiceItems[];
+	setCustomerCart: React.Dispatch<React.SetStateAction<InvoiceItems[]>>;
 
-   dialogOptions: DialogOptions;
-   setDialogOptions: React.Dispatch<React.SetStateAction<DialogOptions>>;
+	dialogOptions: DialogOptions;
+	setDialogOptions: React.Dispatch<React.SetStateAction<DialogOptions>>;
 }
 
 interface PosProviderProps {
-   children: ReactNode;
+	children: ReactNode;
 }
 
 interface DialogOptions {
-   open: boolean;
-   title: string;
+	open: boolean;
+	title: string;
 }
 
 const PosContext = createContext<PosContextProps | undefined>(undefined);
 
 export const PosProvider = ({ children }: PosProviderProps) => {
-   const { auth } = useAuth();
-   const navigate = useNavigate();
+	const { auth } = useAuth();
+	const navigate = useNavigate();
 
-   const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
+	const { currentInvoicePos, setCurrentInvoicePos } = useInvoicePos();
 
-   const [searchFilterItems, setSearchFilterItems] =
-      useState<ProductPricesFilterProps>({});
+	const [searchFilterItems, setSearchFilterItems] = useState<{
+		warehouse_id: number;
+	}>({ warehouse_id: 0 });
 
-   const [customerCart, setCustomerCart] = useState<InvoiceItems[]>([]);
+	const [customerCart, setCustomerCart] = useState<InvoiceItems[]>([]);
 
-   const [dialogOptions, setDialogOptions] = useState<DialogOptions>(
-      {} as DialogOptions,
-   );
+	const [dialogOptions, setDialogOptions] = useState<DialogOptions>(
+		{} as DialogOptions,
+	);
 
-   useEffect(() => {
-      if (auth.role === 'admin') {
-         navigate('/pos');
-      } else if (auth.role?.split('_')[1] === 'CDO') {
-         setSearchFilterItems({
-            // approval_status: 'approved', //TODO Possible to comment out
-            warehouse_id: 1,
-         });
-         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 1 });
-         navigate('/pos/add-order');
-      } else if (auth.role?.split('_')[1] === 'ILI') {
-         setSearchFilterItems({
-            // approval_status: 'approved', //TODO Possible to comment out
-            warehouse_id: 2,
-         });
-         setCurrentInvoicePos({ ...currentInvoicePos, warehouse_id: 2 });
-         navigate('/pos/add-order');
-      }
-   }, [auth.role]);
+	useEffect(() => {
+		if (auth.role?.includes('admin')) {
+			navigate('/pos');
+		} else {
+			const warehouseCode = auth.role?.split('_').slice(-1)[0].toLowerCase();
+			setSearchFilterItems({
+				warehouse_id: warehouseCode === 'cdo' ? 1 : 2,
+			});
+			setCurrentInvoicePos({
+				...currentInvoicePos,
+				warehouse_id: warehouseCode === 'cdo' ? 1 : 2,
+			});
+			navigate('/pos/add-order');
+		}
+	}, [auth.role]);
 
-   const { data: sellableItems, isLoading: fetchingProducts } =
-      useProductPricesFilter(searchFilterItems);
+	// Fetching products for POS, paginated
+	const {
+		data,
+		isFetching,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+		isError,
+		refetch,
+	} = useProductPricesPOSQuery({
+		warehouse_id: searchFilterItems.warehouse_id,
+	});
 
-   const value = {
-      searchFilterItems,
-      setSearchFilterItems,
+	// Fetch next page if there is a next page and done fetching the current page
+	useEffect(() => {
+		if (hasNextPage && !isFetchingNextPage) {
+			fetchNextPage();
+		}
 
-      sellableItems,
-      fetchingProducts,
+		// Refetch if there is an error
+		if (isError) {
+			refetch();
+			toast.error(
+				'An error occured while fetching products. Refetching again...',
+			);
+		}
+	}, [hasNextPage, isFetchingNextPage, fetchNextPage, isError, refetch]);
 
-      customerCart,
-      setCustomerCart,
+	// Flatten the paginated data
+	const sellableItems = useMemo(() => {
+		return data?.pages.flatMap(page => page.data) || [];
+	}, [data]);
 
-      dialogOptions,
-      setDialogOptions,
-   };
-   return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
+	const value = {
+		searchFilterItems,
+		setSearchFilterItems,
+
+		sellableItems,
+		isFetching,
+
+		customerCart,
+		setCustomerCart,
+
+		dialogOptions,
+		setDialogOptions,
+	};
+	return <PosContext.Provider value={value}>{children}</PosContext.Provider>;
 };
 
 export const usePos = () => {
-   const context = useContext(PosContext);
-   if (context === undefined) {
-      throw new Error('usePos must be used within a PosProvider');
-   }
-   return context;
+	const context = useContext(PosContext);
+	if (context === undefined) {
+		throw new Error('usePos must be used within a PosProvider');
+	}
+	return context;
 };

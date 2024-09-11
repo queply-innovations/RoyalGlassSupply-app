@@ -4,7 +4,6 @@ import {
 	Discount,
 	Items,
 	Subtotal,
-	// Tax,
 	TotalAmountDue,
 	ChangeAmount,
 	CustomerBalance,
@@ -22,7 +21,6 @@ export const PaymentInfoContainer = () => {
 							<Items />
 							<Subtotal />
 							<Discount />
-							{/* <Tax /> */}
 							<DeliveryCharge />
 							<TotalAmountDue />
 							<ChangeAmount />

@@ -1,9 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
 import {
-   fetchApprovedProductPrices,
-   fetchPendingProductPrices,
-   fetchProductPrices,
-   fetchProductPricesFilters,
+	keepPreviousData,
+	useInfiniteQuery,
+	useQuery,
+} from '@tanstack/react-query';
+import {
+	fetchApprovedProductPrices,
+	fetchPendingProductPrices,
+	fetchProductPrices,
+	fetchProductPricesFilters,
+	fetchProductPricesPaginated,
 } from '../api/Products';
 import { useEffect, useState } from 'react';
 import { ProductPrices } from '../types';
@@ -14,107 +19,115 @@ import { ProductPrices } from '../types';
  * @returns An object containing the response data and loading state.
  */
 export const useProductPricesQuery = () => {
-   // State of the response data
-   const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
+	// State of the response data
+	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
-   // Query for fetching product prices and isLoading state
-   const { data: result, isFetching: isLoading } = useQuery({
-      queryKey: ['productPrices'],
-      queryFn: () => fetchProductPrices(),
-      refetchOnWindowFocus: false,
-   });
+	// Query for fetching product prices and isLoading state
+	const { data: result, isFetching: isLoading } = useQuery({
+		queryKey: ['productPrices'],
+		queryFn: () => fetchProductPrices(),
+		refetchOnWindowFocus: false,
+	});
 
-   // Update states when query results changes [result, isLoading]
-   useEffect(() => {
-      if (!isLoading && result) {
-         setData(result);
-      }
-   }, [result, isLoading]);
+	// Update states when query results changes [result, isLoading]
+	useEffect(() => {
+		if (!isLoading && result) {
+			setData(result);
+		}
+	}, [result, isLoading]);
 
-   return { data, isLoading };
+	return { data, isLoading };
 };
 
 export const usePendingProductPricesQuery = () => {
-   // State of the response data
-   const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
+	// State of the response data
+	const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
 
-   // Query for fetching product prices and isLoading state
-   const { data: result, isFetching: isLoading } = useQuery({
-      queryKey: ['pendingProductPrices'],
-      queryFn: () => fetchPendingProductPrices(),
-      refetchOnWindowFocus: false,
-   });
+	// Query for fetching product prices and isLoading state
+	const { data: result, isFetching: isLoading } = useQuery({
+		queryKey: ['pendingProductPrices'],
+		queryFn: () => fetchPendingProductPrices(),
+		refetchOnWindowFocus: false,
+	});
 
-   // Update states when query results changes [result, isLoading]
-   useEffect(() => {
-      if (!isLoading && result) {
-         setData(result);
-      }
-   }, [result, isLoading]);
+	// Update states when query results changes [result, isLoading]
+	useEffect(() => {
+		if (!isLoading && result) {
+			setData(result);
+		}
+	}, [result, isLoading]);
 
-   return { data, isLoading };
+	return { data, isLoading };
 };
 export const useProductPricesQueryFilterByApproved = () => {
-   const [data, setData] = useState<ProductPrices[]>([] as ProductPrices[]);
+	// Query for fetching product prices and isLoading state
+	const { data, isFetching: isLoading } = useQuery({
+		queryKey: ['approvedProductPrices'],
+		queryFn: () => fetchApprovedProductPrices(),
+		refetchOnWindowFocus: false,
+	});
 
-   // Query for fetching product prices and isLoading state
-   const { data: result, isFetching: isLoading } = useQuery({
-      queryKey: ['approvedProductPrices'],
-      queryFn: () => fetchApprovedProductPrices(),
-      refetchOnWindowFocus: false,
-   });
-
-   // Update states when query results changes [result, isLoading]
-   useEffect(() => {
-      if (!isLoading && result) {
-         setData(result);
-      }
-   }, [result, isLoading]);
-
-   return { data, isLoading };
+	return { data, isLoading };
 };
 
 export interface ProductPricesFilterProps {
-   approval_status?: string;
-   warehouse_id?: number;
+	approval_status?: string;
+	warehouse_id?: number;
 }
 
 export const useProductPricesFilter = ({
-   // approval_status,
-   warehouse_id,
+	warehouse_id,
 }: ProductPricesFilterProps) => {
-   const [data, setData] = useState<ProductPrices[]>([]);
-   const {
-      data: result,
-      isLoading,
-      refetch,
-   } = useQuery({
-      queryKey: ['FilteredProductPrices'],
-      queryFn: () => {
-         if (warehouse_id) {
-            return fetchProductPricesFilters(warehouse_id);
-         }
-         // if (approval_status && warehouse_id) {
-         // 	return fetchProductPricesFilters(approval_status, warehouse_id);
-         // }
-         // Return a placeholder or null if any of the required parameters are missing
-         return null;
-      },
-      refetchOnWindowFocus: false,
-   });
-   useEffect(() => {
-      if (!isLoading && result) {
-         setData(result);
-      }
-   }, [result, isLoading]);
+	const { data, isFetching } = useQuery({
+		queryKey: ['FilteredProductPrices', warehouse_id],
+		queryFn: () => {
+			if (warehouse_id) {
+				return fetchProductPricesFilters(warehouse_id);
+			}
+			// Return a placeholder or null if any of the required parameters are missing
+			return null;
+		},
+		refetchOnWindowFocus: false,
+	});
 
-   // Refetch data when any of the filter values change
-   // useEffect(() => {
-   //    refetch();
-   // }, [approval_status, warehouse_id, refetch]);
-   useEffect(() => {
-      refetch();
-   }, [warehouse_id, refetch]);
+	return { data, isFetching };
+};
 
-   return { data, isLoading };
+export const useProductPricesPaginatedQuery = ({
+	pagination,
+	filter,
+	sort,
+}: {
+	pagination: { page: number; pageSize: number };
+	filter?: { warehouse_id?: number };
+	sort?: { [key: string]: 'asc' | 'desc' };
+}) => {
+	return useQuery({
+		queryKey: ['productPrices', pagination, filter, sort],
+		queryFn: () => fetchProductPricesPaginated({ pagination, filter, sort }),
+		placeholderData: keepPreviousData, // Keep previous data when fetching new data to avoid clearing of table data
+		refetchOnWindowFocus: false,
+	});
+};
+
+export const useProductPricesPOSQuery = ({
+	warehouse_id,
+}: {
+	warehouse_id: number;
+}) => {
+	return useInfiniteQuery({
+		queryKey: ['productPrices', warehouse_id],
+		queryFn: ({ pageParam }) =>
+			fetchProductPricesPaginated({
+				pagination: { page: pageParam, pageSize: 100 }, // Page size for POS is defined here; 100 is ideal
+				filter: { warehouse_id },
+				sort: { created_at: 'desc' },
+			}),
+		initialPageParam: 1,
+		getNextPageParam: page => {
+			return page.next_page_url ? page.current_page + 1 : null;
+		},
+		enabled: !!warehouse_id, // Only fetch data when warehouse_id is provided
+		refetchOnWindowFocus: false,
+	});
 };

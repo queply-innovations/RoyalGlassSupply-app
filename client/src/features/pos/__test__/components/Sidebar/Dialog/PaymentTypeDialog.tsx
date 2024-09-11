@@ -13,7 +13,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
-import { InvoiceItems } from '@/features/invoice/__test__/types';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
 
 interface PaymentTypeDialogProps {
@@ -26,8 +25,9 @@ export const PaymentTypeDialog = ({}: PaymentTypeDialogProps) => {
 	const {
 		handleInvoicePosChange,
 		currentInvoicePos,
-		setCurrentInvoiceItemsQueue,
-		setInvoiceItemsDatabase,
+		// setCurrentInvoiceItemsQueue,
+		setCartItems,
+		// setInvoiceItemsDatabase,
 	} = useInvoicePos();
 	const [PaymentType, setPaymentType] = useState<string>(
 		currentInvoicePos.type ?? 'payment',
@@ -36,23 +36,6 @@ export const PaymentTypeDialog = ({}: PaymentTypeDialogProps) => {
 		if (currentInvoicePos.type === 'exit') {
 			handleInvoicePosChange('payment_method', 'exit');
 		}
-		// if (currentInvoicePos.type === 'payment') {
-		//   if (
-		//     currentInvoicePos.total_amount_due ??
-		//     0 > (currentInvoicePos.paid_amount ?? 0)
-		//   ) {
-		//     setCurrentInvoicePos({
-		//       ...currentInvoicePos,
-		//       payment_method: 'purchase_order',
-		//       balance_amount:
-		//         (currentInvoicePos.total_amount_due ?? 0) -
-		//         (currentInvoicePos.paid_amount ?? 0),
-		//     });
-		//     console.log('Set to Purchase Order');
-		//   }
-		// } else {
-		//   handleInvoicePosChange('payment_method', 'cash');
-		// }
 	}, [currentInvoicePos.type]);
 
 	return (
@@ -149,10 +132,7 @@ export const PaymentTypeDialog = ({}: PaymentTypeDialogProps) => {
 							disabled={!selectedCustomer?.total_balance}
 							className={`h-16 font-medium ${currentInvoicePos.payment_method === 'balance_payment' && 'bg-primary text-white'}`}
 							onClick={() => {
-								setCurrentInvoiceItemsQueue(
-									[] as Partial<InvoiceItems>,
-								);
-								setInvoiceItemsDatabase([]);
+								setCartItems([]);
 								handleInvoicePosChange(
 									'payment_method',
 									'balance_payment',

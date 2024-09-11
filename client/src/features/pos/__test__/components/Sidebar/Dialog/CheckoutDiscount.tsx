@@ -21,8 +21,8 @@ import { Button } from '@/components/ui/button';
 export const CheckoutDiscount = () => {
 	const { setDialogOptions, dialogOptions } = usePos();
 	const {
-		invoiceItemsDatabase,
-		currentInvoiceItemsQueue,
+		// invoiceItemsDatabase,
+		// cartItems,
 		fullData,
 		currentInvoicePos,
 		setCurrentInvoicePos,
@@ -45,7 +45,7 @@ export const CheckoutDiscount = () => {
 
 	useEffect(() => {
 		if (dialogOptions.title === 'checkout_discount') {
-			//@ts-ignore
+			//@ts-expect-error 'previous' is implicitly any
 			setCurrentInvoicePos(previous => {
 				return { ...previous, status: 'pending' };
 			});
@@ -59,8 +59,8 @@ export const CheckoutDiscount = () => {
 	function sendData() {
 		window.api.send({
 			fullData: fullData,
-			invoiceItems: currentInvoiceItemsQueue,
-			invoiceItemsDatabase: invoiceItemsDatabase,
+			// invoiceItems: cartItems.map(({ item, ...rest }) => rest),
+			// invoiceItemsDatabase: invoiceItemsDatabase,
 		});
 	}
 

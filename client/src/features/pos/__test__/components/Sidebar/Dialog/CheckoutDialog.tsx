@@ -20,12 +20,11 @@ import { setVoucherClaimed } from '@/features/customer/__test__/api/Vouchers';
 export const CheckoutDialog = () => {
 	const { setDialogOptions, dialogOptions } = usePos();
 	const {
-		invoiceItemsDatabase,
-		currentInvoiceItemsQueue,
 		fullData,
 		setFullData,
 		currentInvoicePos,
 		setCurrentInvoicePos,
+		cartItems,
 	} = useInvoicePos();
 
 	const [transactionStatus, setTransactionStatus] = useState<
@@ -35,11 +34,8 @@ export const CheckoutDialog = () => {
 	const { selectedVoucher, setSelectedVoucher } = useCustomer();
 	async function handleSubmit() {
 		setTransactionStatus('submitting');
-		console.log('Invoice:', currentInvoicePos);
 		const data: any = currentInvoicePos;
-		data['invoice_items'] = invoiceItemsDatabase.map((d: any) => {
-			return { ...d, product_id: d.product_id };
-		});
+		data['invoice_items'] = cartItems.map(({ item, ...rest }) => rest);
 		// await addInvoiceMutation(data).then(() => window.api.send());
 		await addInvoiceMutation(data)
 			.then(res => {
@@ -75,13 +71,13 @@ export const CheckoutDialog = () => {
 
 	const navigate = useNavigate();
 
-	function sendData() {
-		window.api.send({
-			fullData: fullData,
-			invoiceItems: currentInvoiceItemsQueue,
-			invoiceItemsDatabase: invoiceItemsDatabase,
+	// Send data to main process
+	const sendInvoiceData = () => {
+		window.api.sendInvoice({
+			invoiceItems: cartItems,
+			invoiceDetails: fullData,
 		});
-	}
+	};
 
 	return (
 		<AlertDialog
@@ -90,7 +86,7 @@ export const CheckoutDialog = () => {
 			}}
 			open={dialogOptions.open}
 		>
-			<AlertDialogContent>
+			<AlertDialogContent onEscapeKeyDown={e => e.preventDefault()}>
 				<AlertDialogHeader className="items-start">
 					<AlertDialogTitle>
 						{transactionStatus !== 'success'
@@ -141,7 +137,7 @@ export const CheckoutDialog = () => {
 								type="submit"
 								onClick={e => {
 									e.preventDefault();
-									sendData();
+									sendInvoiceData();
 								}}
 							>
 								Print invoice

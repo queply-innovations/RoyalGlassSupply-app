@@ -5,7 +5,7 @@ interface TablePlacholderProps {}
 export const TablePlacholder = ({}: TablePlacholderProps) => {
 	return (
 		<>
-			<div className="flex flex-1 flex-col items-center justify-center">
+			<div className="flex h-full flex-1 flex-col items-center justify-center gap-6 opacity-70">
 				<ShoppingCart
 					width={150}
 					height={150}
@@ -13,7 +13,7 @@ export const TablePlacholder = ({}: TablePlacholderProps) => {
 					strokeWidth={-1}
 				/>
 				<span className="max-w-[300px] text-center text-[#888]">
-					Start entering products / product code / serial number / brand
+					Cart is empty. Start adding items by searching products.
 				</span>
 			</div>
 		</>

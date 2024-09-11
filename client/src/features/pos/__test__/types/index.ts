@@ -1,4 +1,8 @@
-import { ProductPrices } from '@/features/product/__test__/types';
+import { InvoiceItemDatabase } from '@/features/invoice/__test__/types';
+import {
+	ProductPrices,
+	ProductPricesPOS,
+} from '@/features/product/__test__/types';
 import { ReactNode } from 'react';
 
 // TODO: Separate to another file? Also verify the values based on the database?
@@ -49,4 +53,8 @@ export interface Customer {
 	contact_no: number;
 	total_credit: number;
 	total_balance: number;
+}
+
+export interface CartItem extends InvoiceItemDatabase {
+	item: ProductPricesPOS;
 }

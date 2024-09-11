@@ -33,10 +33,37 @@ export interface ProductPrices {
 	warehouse: Pick<Warehouse, 'id' | 'code' | 'name'>;
 	created_by: ProductEditor;
 	approval_status: 'pending' | 'approved' | 'rejected' | string;
-	approved_by: ProductEditor;
+	approved_by: ProductEditor | null;
 	active_status: 'active' | 'inactive' | string;
 	created_at: string;
 	updated_at: string;
+}
+
+export interface ProductPricesPOS {
+	id: number;
+	product_id: number;
+	type: string;
+	unit: string;
+	stocks_quantity: number;
+	stocks_unit: string;
+	capital_price: number;
+	markup_price: number;
+	tax_amount: number;
+	cost: number;
+	on_sale: number;
+	sale_discount: number;
+	price: number;
+	warehouse_id: number;
+	created_by: ProductEditor;
+	approval_status: string;
+	approved_by: ProductEditor | number | null;
+	active_status: string;
+	created_at: string;
+	updated_at: string;
+	deleted_at: string | null;
+	product: Omit<Product, 'notes'>;
+	warehouse: Warehouse;
+	inventory_product: InventoryProduct;
 }
 
 export interface ProductPricesDatabase
@@ -48,4 +75,20 @@ export interface ProductPricesDatabase
 	warehouse_id: number;
 	created_by: number;
 	approved_by: number;
+}
+
+export interface ProductPricesPaginated {
+	data: ProductPricesPOS[]; // product prices data
+	path: string; // url path
+	to: number; // last index of current page
+	from: number; // first index of current page
+	per_page: number; // number of items per page
+	last_page: number; // last page number
+	total: number; // total number of items
+	current_page: number; // current page number (non index-based)
+	next_page_url: string | null; // url of next page
+	prev_page_url: string | null; // url of previous page
+	first_page_url: string; // url of first page
+	last_page_url: string; // url of last page
+	links: Array<{ active: boolean; label: string; url: string | null }>; // pagination links
 }

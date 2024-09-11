@@ -1,10 +1,7 @@
-import { useNewTransfer } from '../../context/NewTransferContext';
-import { AddItemButton } from '../primitives';
 import { useState } from 'react';
-import { TransferItemsQueueForm } from './form/ItemsQueueForm';
 import { DataTable } from '@/components/Tables/DataTable';
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ArrowUp, ArrowUpDown, Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import {
 	Tooltip,
@@ -49,74 +46,37 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 
 	const TransferProductTableHeader: ColumnDef<any>[] = [
 		{
-			id: 'select',
-			header: ({ table }) => (
-				<input
-					type="checkbox"
-					checked={table.getIsAllPageRowsSelected()}
-					onChange={e =>
-						table.toggleAllPageRowsSelected(!!e.target.checked)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<input
-					type="checkbox"
-					checked={row.getIsSelected()}
-					onChange={e => row.toggleSelected(!!e.target.checked)}
-					aria-label="Select row"
-					className="justify-center"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
 			id: 'product_name',
 			sortingFn: 'text',
 			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent text-black"
-						>
-							PRODUCT NAME{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown />
-							) : (
-								<ArrowUpDown />
-							)}
-						</Button>
-					</div>
-				);
-			},
+			header: () => <div>Product</div>,
 			cell: ({ row }) => {
 				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						{row.original.product.name}
+					<div className="flex flex-row text-xs font-normal uppercase">
+						<span className="font-bold">
+							{row.original.product.name}&nbsp;
+						</span>
+						<span className="text-xs">
+							{row.original.product.brand || 'No brand'}
+							{' • '}
+							{row.original.product.size} • {row.original.product.color}
+						</span>
 					</div>
 				);
 			},
 		},
 		{
 			accessorKey: 'total_quantity',
-			header: () => <div className="text-center">TOTAL QUANTITY</div>,
+			header: () => <div className="text-right">QTY</div>,
 			cell: ({ row }) => (
 				<div className="text-center">{row.original.total_quantity}</div>
 			),
 		},
 		{
 			accessorKey: 'capital price',
-			header: () => <div className="text-center">Capital Price</div>,
+			header: () => <div className="text-center">Capital</div>,
 			cell: ({ row }) => (
-				<div className="text-center">
+				<div>
 					{Intl.NumberFormat('en-US', {
 						style: 'currency',
 						currency: 'PHP',
@@ -258,6 +218,10 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 		prod => prod.transfer_id === selectedTransfer.id,
 	);
 
+	const totalCapitalPrice = filteredTransferProducts.reduce((acc, item) => {
+		return acc + (item.capital_price ?? 0) * (item.total_quantity ?? 0);
+	}, 0);
+
 	const assignedInventory = filteredInventoriesSrc.find(
 		data => data?.warehouse.id === selectedTransfer.source.id,
 	);
@@ -332,7 +296,7 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 				className={`flex flex-col gap-4 ${isPending || isDeletingProduct || isEditingProduct ? 'blur-sm' : ''}`}
 			>
 				<div className="grid grid-cols-12 gap-4">
-					<div>
+					<div className="col-span-4 flex flex-col gap-1">
 						<Label className="text-sm font-bold text-slate-800">
 							Inventory
 						</Label>
@@ -346,6 +310,18 @@ export const TransferItemTab = ({ onClose }: TransferItemTab) => {
 								? assignedInventory?.code
 								: 'Loading...'}
 						</Button>
+					</div>
+
+					<div className="col-span-3">
+						<Label className="text-sm font-bold text-slate-800">
+							Total capital
+						</Label>
+						<p className="text-sm">
+							{Intl.NumberFormat('en-ph', {
+								style: 'currency',
+								currency: 'PHP',
+							}).format(totalCapitalPrice)}
+						</p>
 					</div>
 
 					<div className="col-span-3 col-start-10 flex h-full items-end">

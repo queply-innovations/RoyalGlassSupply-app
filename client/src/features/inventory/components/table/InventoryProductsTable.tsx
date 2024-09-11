@@ -76,7 +76,7 @@ export const InventoryProductsTable = ({
 				filterWhat={'product_name'}
 				dataType={'Items'}
 				openModal={
-					permissionListNames?.includes('add_inventory_product')
+					permissionListNames?.includes('add_inventory_items')
 						? handleAddInventoryProduct
 						: undefined
 				}

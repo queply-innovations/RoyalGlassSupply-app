@@ -33,6 +33,7 @@ export interface InventoryProduct {
 	approved_stocks: number;
 	remaining_unapproved_stocks: number;
 	inventory: Inventory;
+	purchased_stocks?: number;
 }
 
 export interface InventoryDatabase
