@@ -132,7 +132,9 @@ class ProductPriceController extends Controller
             }
         }
 
-        return new ProductPriceCollection($query->get());
+        $data = $query->paginate($request->input('pageSize', '10'));
+
+        return response()->json($data);
     }
 
     public function testPaginatePOS(Request $request) {
