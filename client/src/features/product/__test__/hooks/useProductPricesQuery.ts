@@ -119,7 +119,7 @@ export const useProductPricesPOSQuery = ({
 		queryKey: ['productPrices', warehouse_id],
 		queryFn: ({ pageParam }) =>
 			fetchProductPricesPaginated({
-				pagination: { page: pageParam, pageSize: 100 }, // Page size for POS is defined here; 100 is ideal
+				pagination: { page: pageParam, pageSize: 150 }, // Page size for POS is defined here; 150 is ideal
 				filter: { warehouse_id },
 				sort: { created_at: 'desc' },
 			}),
