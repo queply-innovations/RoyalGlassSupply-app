@@ -11,8 +11,8 @@ export const UserSalesTable = () => {
 
 	const UserSalesTableHeader: ColumnDef<CustomerSale>[] = [
 		{
-			accessorKey: 'customers.firstname',
 			id: 'customer_name',
+			accessorFn: row => row.firstname + ' ' + row.lastname,
 			sortingFn: 'text',
 			enableSorting: true,
 			header: ({ column }) => {
@@ -34,9 +34,6 @@ export const UserSalesTable = () => {
 					</Button>
 				);
 			},
-			cell: ({ row }) => (
-				<div>{row.original.firstname + ' ' + row.original.lastname}</div>
-			),
 		},
 
 		{
@@ -52,7 +49,7 @@ export const UserSalesTable = () => {
 		},
 
 		{
-			accessorKey: 'customer.total_balance',
+			accessorKey: 'total_balance',
 			id: 'total_balance',
 			sortingFn: 'basic',
 			enableSorting: true,
@@ -86,7 +83,7 @@ export const UserSalesTable = () => {
 		},
 
 		{
-			accessorKey: 'customer.total_credit',
+			accessorKey: 'total_credit',
 			id: 'total_credit',
 			sortingFn: 'basic',
 			enableSorting: true,
