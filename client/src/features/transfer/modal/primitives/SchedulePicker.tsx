@@ -12,6 +12,14 @@ import {
 export const SchedulePicker = () => {
 	const { newTransfer, handleChange } = useNewTransfer();
 
+	const changeDate = (value: Date) => {
+		const year = value.getFullYear();
+		const month = String(value.getMonth() + 1).padStart(2, '0');
+		const day = String(value.getDate()).padStart(2, '0');
+		const formattedDate = `${year}-${month}-${day}`;
+		handleChange('transfer_schedule', formattedDate);
+	};
+
 	return (
 		<>
 			<div className="col-span-11 flex flex-col gap-1">
@@ -46,10 +54,7 @@ export const SchedulePicker = () => {
 							mode="single"
 							disabled={{ before: new Date() }}
 							selected={new Date(newTransfer.transfer_schedule ?? '')}
-							onDayClick={value => {
-								const formattedDate = new Date(value).toISOString(); // full timestamp
-								handleChange('transfer_schedule', formattedDate);
-							}}
+							onDayClick={changeDate}
 							initialFocus
 						/>
 					</PopoverContent>
