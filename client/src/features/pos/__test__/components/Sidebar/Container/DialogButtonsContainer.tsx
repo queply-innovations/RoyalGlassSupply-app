@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { usePos } from '../../../context/__test__/PosContext';
-import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
-import { useEffect } from 'react';
+// import { useInvoiceMutation } from '@/features/invoice/__test__/hooks/useInvoiceMutation';
 import { useInvoicePos } from '../../../context/__test__/InvoicePosContext';
 import { useCustomer } from '@/features/customer/__test__/context/CustomerContext';
 
@@ -10,7 +9,7 @@ interface DialogButtonsContainerProps {}
 
 export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	const { setDialogOptions, dialogOptions } = usePos();
-	const { currentInvoicePos } = useInvoicePos();
+	const { currentInvoicePos, cartItems } = useInvoicePos();
 	// const {
 	// 	currentInvoicePos,
 	// 	currentInvoiceItemsQueue,
@@ -18,7 +17,7 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 	// 	setFullData,
 	// } = useInvoicePos();
 	// const { invoice, invoiceItemsQueue, fullData, setFullData } = useInvoice();
-	const { addInvoiceMutation } = useInvoiceMutation();
+	// const { addInvoiceMutation } = useInvoiceMutation();
 	const { selectedCustomer, selectedVoucher } = useCustomer();
 
 	// async function handleSubmit() {
@@ -131,11 +130,18 @@ export const DialogButtonsContainer = ({}: DialogButtonsContainerProps) => {
 						//   handleSubmit();
 					}}
 					disabled={
-						Object.keys(selectedCustomer).length === 0 ||
+						Object.keys(selectedCustomer).length === 0 || // disable checkout if no customer is selected
+						(currentInvoicePos.type === 'payment' &&
+							currentInvoicePos.payment_method !== 'balance_payment' &&
+							cartItems.length === 0) || // disable checkout if no items in cart for non-balance payment
 						(currentInvoicePos.type === 'payment' &&
 							currentInvoicePos.payment_method !== 'purchase_order' &&
 							currentInvoicePos.payment_method !== 'balance_payment' &&
-							(currentInvoicePos.change_amount ?? 0) < 0)
+							(currentInvoicePos.change_amount ?? 0) < 0) || // disable checkout if change amount is negative for payment methods
+						(currentInvoicePos.type === 'payment' &&
+							currentInvoicePos.payment_method === 'balance_payment' &&
+							(currentInvoicePos.paid_amount ?? 0) <= 0) || // disable checkout if no paid amount for balance payment
+						(currentInvoicePos.type === 'exit' && cartItems.length === 0) // disable checkout if no items in cart for exit
 					}
 				>
 					Checkout

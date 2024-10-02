@@ -11,6 +11,7 @@ export interface Reports {
 	total_overall_capital: number;
 	new_customers: number;
 	returning_customers: number;
+	total_overall_collectibles: number;
 }
 
 export interface ReportAnalytics {

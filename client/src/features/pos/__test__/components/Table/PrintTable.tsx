@@ -210,7 +210,7 @@ export function PrintTable<TData, TValue>({
 									<TableCell
 										colSpan={1}
 										key={'totalDue-label'}
-										className="border-b border-l border-gray-400 py-[0.2rem] text-xs font-bold"
+										className={`border-b border-l border-gray-400 py-[0.2rem] text-xs ${!isBalancePayment && 'font-bold'}`}
 									>
 										<span className="flex w-full justify-end">
 											{!isBalancePayment
@@ -223,7 +223,9 @@ export function PrintTable<TData, TValue>({
 										key={'totalDue-value'}
 										className="border-b border-r border-gray-400 py-[0.2rem]"
 									>
-										<span className="text-left text-xs font-bold">
+										<span
+											className={`text-left text-xs ${!isBalancePayment && 'font-bold'}`}
+										>
 											{Intl.NumberFormat('en-US', {
 												style: 'currency',
 												currency: 'PHP',
