@@ -336,14 +336,17 @@ export const fetchProductPricesPaginated = async ({
 	pagination,
 	filter,
 	sort,
+	search,
 }: {
 	pagination: { page: number; pageSize?: number };
 	filter?: { [key: string]: string | number };
 	sort?: { [key: string]: 'asc' | 'desc' };
+	search?: { [key: string]: string | null | undefined };
 }): Promise<ProductPricesPaginated> => {
 	const data = {
 		...(filter && { filter }),
 		...(sort && { sort }),
+		...(search && { search }),
 	};
 
 	return await axios

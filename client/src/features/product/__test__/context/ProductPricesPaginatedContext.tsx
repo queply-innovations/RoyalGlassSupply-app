@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { ProductPricesPaginated, ProductPricesPOS } from '../types';
 import { useProductPricesPaginatedQuery } from '../hooks';
 import { PaginationState, SortingState } from '@tanstack/react-table';
@@ -16,6 +16,9 @@ interface ProductPricesPaginatedContextProps {
 
 	sorting: SortingState;
 	setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
+
+	productQuery: string | null;
+	setProductQuery: React.Dispatch<React.SetStateAction<string | null>>;
 
 	selectedProductPrice: ProductPricesPOS | undefined;
 	setSelectedProductPrice: React.Dispatch<
@@ -47,6 +50,8 @@ export const ProductPricesPaginatedProvider = ({
 		{ id: 'created_at', desc: true },
 	]);
 
+	const [productQuery, setProductQuery] = useState<string | null>(null);
+
 	const { data, isFetching, isLoading } = useProductPricesPaginatedQuery({
 		pagination: {
 			page: pagination.pageIndex + 1,
@@ -58,6 +63,7 @@ export const ProductPricesPaginatedProvider = ({
 				[sorting[0].id]: sorting[0].desc ? 'desc' : 'asc',
 			},
 		}),
+		...(productQuery && { search: { product_name: productQuery } }),
 	});
 
 	const value = {
@@ -73,6 +79,9 @@ export const ProductPricesPaginatedProvider = ({
 
 		sorting,
 		setSorting,
+
+		productQuery,
+		setProductQuery,
 
 		selectedProductPrice,
 		setSelectedProductPrice,

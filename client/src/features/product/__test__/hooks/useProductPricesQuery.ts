@@ -97,14 +97,17 @@ export const useProductPricesPaginatedQuery = ({
 	pagination,
 	filter,
 	sort,
+	search,
 }: {
 	pagination: { page: number; pageSize: number };
 	filter?: { warehouse_id?: number };
 	sort?: { [key: string]: 'asc' | 'desc' };
+	search?: { [key: string]: string | null | undefined };
 }) => {
 	return useQuery({
-		queryKey: ['productPrices', pagination, filter, sort],
-		queryFn: () => fetchProductPricesPaginated({ pagination, filter, sort }),
+		queryKey: ['productPrices', pagination, filter, sort, search],
+		queryFn: () =>
+			fetchProductPricesPaginated({ pagination, filter, sort, search }),
 		placeholderData: keepPreviousData, // Keep previous data when fetching new data to avoid clearing of table data
 		refetchOnWindowFocus: false,
 	});
