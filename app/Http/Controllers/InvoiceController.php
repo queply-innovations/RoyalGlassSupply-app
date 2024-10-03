@@ -162,6 +162,7 @@ class InvoiceController extends Controller
             $balance = $invoice->total_amount_due - $invoice->paid_amount;
             $invoice->update([
                 'balance_amount' => $balance > 0 ? $balance : 0,
+                'change_amount' => $request->change_amount <= 0 ? 0 : $request->change_amount,
                 'is_paid' => $balance <= 0 
             ]);
         }
@@ -189,8 +190,10 @@ class InvoiceController extends Controller
     private function invoiceBalancePayment($request) {
         $invoices = Invoice::where('customer_id', $request->customer_id)
             ->where('payment_method', 'purchase_order')
-            ->where('is_paid', false)
-            ->orWhere('balance_amount', '>', 0)
+            ->where(function($q) {
+                $q->where('is_paid', false)
+                    ->orWhere('balance_amount', '>', 0);
+            })
             ->get();
 
         if($invoices->count() == 0) {
@@ -228,6 +231,7 @@ class InvoiceController extends Controller
     
         $store = Invoice::create($request->except(['invoice_items', 'is_paid', 'balance_amount']));
         $store->update([
+            'change_amount' => $request->change_amount <= 0 ? 0 : $request->change_amount,
             'code' => 'IVC'.str_pad($request->warehouse_id, 2, 0, STR_PAD_LEFT).'-'.Carbon::now()->format('y').'-'.str_pad($store->id, 6, 0, STR_PAD_LEFT),
             'or_no' => Carbon::now()->format('mdY').$store->id.Auth::id(),
         ]);

@@ -108,7 +108,14 @@ class ProductPriceController extends Controller
 
         if(!empty($request->search)){
             foreach($request->search as $search_key => $search_value){
-                $query->where($search_key, 'like', '%'.$search_value.'%');
+                if($search_key == 'product_name') {
+                    $query->whereHas('product', function($q) use($search_value) {
+                        $q->where('name', 'LIKE', '%'.$search_value.'%')
+                            ->orWhere('brand', 'LIKE', '%'.$search_value.'%');
+                    });
+                } else {
+                    $query->where($search_key, 'like', '%'.$search_value.'%');
+                }
             }
         }
         

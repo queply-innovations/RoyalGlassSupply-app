@@ -166,7 +166,7 @@ class ReportController extends Controller
 
     public function mostBoughtProducts(Request $request)
     {
-        $result = InvoiceItem::selectRaw('invoice_items.product_id, sum(invoice_items.quantity * product_prices.stocks_quantity) as sold_count, product_prices.stocks_unit')
+        $result = InvoiceItem::selectRaw('invoice_items.product_id, sum(invoice_items.quantity) as sold_count, product_prices.stocks_unit')
                             ->leftJoin('product_prices', function($join) {
                                 $join->on('invoice_items.product_price_id', '=', 'product_prices.id');
                             })
@@ -261,6 +261,15 @@ class ReportController extends Controller
             })
             ->sum('balance_amount');
 
+        $overallPurchasOrders = Invoice::where('type', 'payment')
+            ->where('payment_method', 'purchase_order')
+            ->where('is_paid', false)
+            ->where('balance_amount', '>', 0)
+            ->when($request->has('warehouse') && $request->warehouse, function($query) use($request) {
+                return $query->where('warehouse_id', $request->warehouse);
+            })
+            ->sum('balance_amount');
+
         $expenses = OperationExpense::whereBetween('created_at', [
                 Carbon::parse($request->date_from)->startOfDay(),
                 Carbon::parse($request->date_to)->endOfDay()
@@ -302,6 +311,7 @@ class ReportController extends Controller
             'total_expenses' => $expenses,
             'total_profit' => $profit,
             'total_collectibles' => $purchasOrders,
+            'total_overall_collectibles' => $overallPurchasOrders,
             'total_overall_capital' => isset($totalCapital) ? array_sum($totalCapital) : 0
         ];
     }
