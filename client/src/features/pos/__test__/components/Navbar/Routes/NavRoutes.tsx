@@ -50,12 +50,12 @@ export const NavRoutes: NavRouteType[] = [
 			icon: <DatabaseBackupIcon className="h-10 w-10 text-[#CCCCCC]" />,
 		},
 	},
-	{
-		permissions: ['view_transfers_page', 'add_transfer'],
-		navProps: {
-			path: '/pos/transfer',
-			displayText: 'Transfers',
-			icon: <ExternalLink className="h-10 w-10 text-[#CCCCCC]" />,
-		},
-	},
+	// {
+	// 	permissions: ['view_transfers_page', 'add_transfer'],
+	// 	navProps: {
+	// 		path: '/pos/transfer',
+	// 		displayText: 'Transfers',
+	// 		icon: <ExternalLink className="h-10 w-10 text-[#CCCCCC]" />,
+	// 	},
+	// },
 ];
