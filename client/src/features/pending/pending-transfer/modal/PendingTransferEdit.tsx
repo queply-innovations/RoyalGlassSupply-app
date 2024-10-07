@@ -1,8 +1,8 @@
 import { UseModalProps } from '@/utils/Modal';
-import { Button, Inputbox, Loading, Selectbox } from '@/components';
-import { formatUTCDate } from '@/utils/timeUtils';
+import { Button, Loading } from '@/components';
+// import { formatUTCDate } from '@/utils/timeUtils';
 // import { usePendingTransfer } from '../context/PendingTransferContext';
-import { AlertTriangle, Ban, Check, Clock, Loader2 } from 'lucide-react';
+import { AlertTriangle, Ban, Check, Loader2 } from 'lucide-react';
 import {
 	Select,
 	SelectContent,
@@ -23,7 +23,7 @@ import { Button as Button2 } from '@/components/ui/button';
 import { useTransfer } from '@/features/transfer/context/TransferContext';
 import { useTransferMutation } from '@/features/transfer/hooks';
 
-import { Label } from '@/components/ui/label';
+// import { Label } from '@/components/ui/label';
 import {
 	Popover,
 	PopoverContent,
@@ -32,7 +32,7 @@ import {
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
-import { TimePicker } from 'antd';
+// import { TimePicker } from 'antd';
 import { useEffect } from 'react';
 
 interface TransferDetailsProps {
@@ -42,17 +42,17 @@ interface TransferDetailsProps {
 export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 	const {
 		transfer,
-		lastId,
+		// lastId,
 		isChanged,
 		isSubmitting,
 		error,
 		success,
-		dateDisplay,
-		dateDisplayArrived,
+		// dateDisplay,
+		// dateDisplayArrived,
 		handleSubmit,
 		handleChange,
 		handleChangeSelect,
-		handleChangeDateTime,
+		// handleChangeDateTime,
 	} = useTransferMutation();
 
 	const { selectedTransfer, transferProducts } = useTransfer();
@@ -315,6 +315,15 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 
 	const receivedSelect = (
 		<Select
+			value={
+				users.length > 0
+					? transfer.received_by !== undefined
+						? transfer.received_by?.toString()
+						: selectedTransfer.received_by?.id
+							? selectedTransfer.received_by.id.toString()
+							: undefined
+					: undefined
+			}
 			onValueChange={value =>
 				handleChangeSelect('received_by', Number(value))
 			}
@@ -325,25 +334,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 				className="flex flex-row items-center gap-3 truncate bg-white text-sm"
 			>
 				<SelectValue
-					placeholder={
-						users.length <= 0 ? (
-							<div className="flex h-12 w-full items-center justify-center">
-								<Loader2
-									size={22}
-									strokeWidth={2.5}
-									className="animate-spin text-slate-700/50"
-								/>
-							</div>
-						) : (
-							<>
-								{transfer.received_by
-									? users[Number(transfer.received_by) - 1].firstname +
-										' ' +
-										users[Number(transfer.received_by) - 1].lastname
-									: 'Choose user...'}
-							</>
-						)
-					}
+					placeholder={users.length <= 0 ? 'Loading...' : 'Choose user...'}
 				/>
 			</SelectTrigger>
 
@@ -361,8 +352,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 						<SelectItem
 							key={key}
 							value={user.id.toString()}
-							className={`text-sm font-medium text-slate-700 
-								${transfer.received_by && user.id === transfer.received_by && 'selected'}`}
+							className={`text-sm font-medium text-slate-700`}
 						>
 							{user.firstname + ' ' + user.lastname}
 						</SelectItem>
@@ -477,13 +467,13 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 											' ' +
 											users[transfer.approved_by - 1].lastname
 										) : (
-											<div className="flex h-12 w-full items-center justify-center">
+											<span className="flex h-12 w-full items-center justify-center">
 												<Loader2
 													size={22}
 													strokeWidth={2.5}
 													className="animate-spin text-slate-700/50"
 												/>
-											</div>
+											</span>
 										)}
 									</p>
 								</div>
