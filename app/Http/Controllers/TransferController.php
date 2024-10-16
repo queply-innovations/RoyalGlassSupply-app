@@ -161,38 +161,44 @@ class TransferController extends Controller
 
     private function updateTransfers($request, $transfer) {
         if($transfer->approval_status != 'pending') {
-            throw new \Exception("Transfer already {$transfer->approval_status}");
-        }
+            $transfer->update([
+                'transfer_status' => $request->transfer_status, // need to clarify
+                'date_received' => $request->transfer_status == 'arrived' ? Carbon::now() : null, // need to clarify
+                'received_by' => $request->transfer_statis == 'arrived' ? $request->received_by : null // need to clarify
+            ]);
 
-        if($request->has('approval_status')) {
-            switch($request->approval_status) {
-                case 'pending':
-                    $transfer->update($request->all());
-                    $updateTransfer = $transfer;
-                break;
-                case 'approved':
-                    $updateTransfer = $this->approveTransfer($transfer);
-                break;
-                case 'denied':
-                    $updateTransfer = $this->denyTransfer($transfer);
-                break;
-                default:
-                    throw new \Exception('Invalid approval status');
-            }
+            return $transfer;
         } else {
-            throw new \Exception('Invalid data.');
-        }
+            if($request->has('approval_status')) {
+                switch($request->approval_status) {
+                    case 'pending':
+                        $transfer->update($request->all());
+                        $updateTransfer = $transfer;
+                    break;
+                    case 'approved':
+                        $updateTransfer = $this->approveTransfer($request, $transfer);
+                    break;
+                    case 'rejected':
+                        $updateTransfer = $this->denyTransfer($transfer);
+                    break;
+                    default:
+                        throw new \Exception('Invalid approval status');
+                }
+            } else {
+                throw new \Exception('Invalid data.');
+            }
 
-        return $updateTransfer;
+            return $updateTransfer;
+        }
     }
 
-    private function approveTransfer($transfer) {
+    private function approveTransfer($request, $transfer) {
         $transfer->update([
             'approval_status' => 'approved',
             'approved_by' => Auth::id(),
-            'transfer_status' => 'arrived', // need to clarify
-            'date_received' => Carbon::now(), // need to clarify
-            'received_by' => Auth::id() // need to clarify
+            'transfer_status' => $request->transfer_status, // need to clarify
+            'date_received' => $request->transfer_status == 'arrived' ? $request->Carbon::now() : null, // need to clarify
+            'received_by' => $request->transfer_statis == 'arrived' ? Auth::id() : null // need to clarify
         ]);
 
         $this->approveTransferProduct($transfer);
@@ -202,7 +208,7 @@ class TransferController extends Controller
 
     private function denyTransfer($transfer) {
         $transfer->update([
-            'approval_status' => 'denied',
+            'approval_status' => 'rejected',
         ]);
 
         foreach($transfer->transferProducts as $item) {
