@@ -78,7 +78,9 @@ class TransferController extends Controller
             $update = $this->updateTransfers($request, $transfer);
 
             DB::commit();
-            return new TransferResource($update);
+
+            $newTransfer = Transfer::find($transfer->id);
+            return new TransferResource($newTransfer);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError($e->getMessage());
@@ -164,7 +166,8 @@ class TransferController extends Controller
             $transfer->update([
                 'transfer_status' => $request->transfer_status, // need to clarify
                 'date_received' => $request->transfer_status == 'arrived' ? Carbon::now() : null, // need to clarify
-                'received_by' => $request->transfer_statis == 'arrived' ? $request->received_by : null // need to clarify
+                'received_by' => $request->transfer_status == 'arrived' ? $request->received_by : null, // need to clarify
+                'notes' => $request->notes ?? $transfer->notes
             ]);
 
             return $transfer;
