@@ -95,7 +95,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">
+				<div className="">
 					{row.original.code ? row.original.code : 'N/A'}
 				</div>
 			),
@@ -103,13 +103,13 @@ export const TransferTable: FC<TransferTableProps> = ({
 
 		{
 			accessorKey: 'source',
-			header: () => <div className="text-center">SOURCE-DESTINATION</div>,
+			header: () => <div className="">SRC {`->`} DEST</div>,
 			cell: ({ row }) => {
 				const source: any = row.original.source;
 				const destination: any = row.original.destination;
 				return (
-					<div className="text-center">
-						{source.code}-{destination.code}
+					<div className="">
+						{source.code} {`->`} {destination.code}
 					</div>
 				);
 			},
@@ -148,7 +148,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 							}
 							className="flex flex-row items-center bg-transparent text-black"
 						>
-							TRANSFER STATUS{' '}
+							STATUS{' '}
 							{column.getIsSorted() === 'asc' ? (
 								<ArrowUp />
 							) : column.getIsSorted() === 'desc' ? (
@@ -161,7 +161,7 @@ export const TransferTable: FC<TransferTableProps> = ({
 				);
 			},
 			cell: ({ row }) => (
-				<div className="text-center">
+				<div className="capitalize">
 					{row.original.transfer_status
 						? row.original.transfer_status
 						: 'N/A'}
@@ -203,9 +203,9 @@ export const TransferTable: FC<TransferTableProps> = ({
 						day: 'numeric',
 					};
 					const format = new Date(sched).toLocaleDateString([], details);
-					return <div className="text-center">{format}</div>;
+					return <div className="">{format}</div>;
 				} else {
-					return <div className="text-center">N/A</div>;
+					return <div className="">N/A</div>;
 				}
 			},
 		},
@@ -235,26 +235,30 @@ export const TransferTable: FC<TransferTableProps> = ({
 				);
 			},
 			cell: ({ row }) => {
-				const sched: any = row.getValue('date_received');
-				if (sched) {
-					const details = {
+				const received: any = row.getValue('date_received');
+				if (received) {
+					const details: Intl.DateTimeFormatOptions = {
 						year: 'numeric',
 						month: 'long',
 						day: 'numeric',
 						hour: 'numeric',
 						minute: 'numeric',
 					};
-					const format = new Date(sched).toLocaleDateString([], details);
-					return <div className="text-center">{format}</div>;
+					const receivedISO = new Date(received.replace(' ', 'T') + 'Z'); // Convert to ISO format and append 'Z' to indicate UTC
+					return (
+						<div className="">
+							{receivedISO.toLocaleDateString([], details)}
+						</div>
+					);
 				} else {
-					return <div className="text-center">N/A</div>;
+					return <div className="">N/A</div>;
 				}
 			},
 		},
 
 		{
 			accessorKey: 'approval_status',
-			header: () => <div className="text-center">APPROVAL STATUS</div>,
+			header: () => <div className="text-center">APPROVED</div>,
 			cell: ({ row }) => {
 				return (
 					<div className="mx-auto flex items-center justify-center">

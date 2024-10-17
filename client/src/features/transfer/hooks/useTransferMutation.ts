@@ -258,9 +258,13 @@ export const useTransferMutation = () => {
 		setIsSubmitting(true);
 		if (checker[0]) {
 			if (arrived) {
-				await editTransferMutation(transfer); //UPDATE TRANSFER DETAILS
+				await editTransferMutation(transfer)
+					.then(() => setSuccess('Transfer info has been edited'))
+					.finally(() => setIsSubmitting(false)); //UPDATE TRANSFER DETAILS
 			} else {
-				return await editTransferMutation(transfer);
+				return await editTransferMutation(transfer)
+					.then(() => setSuccess('Transfer info has been edited'))
+					.finally(() => setIsSubmitting(false));
 			}
 		} else {
 			setError(checker[1]);

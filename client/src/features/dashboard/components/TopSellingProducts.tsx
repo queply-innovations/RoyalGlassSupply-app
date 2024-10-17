@@ -11,8 +11,11 @@ export const TopSellingProducts = () => {
 		<>
 			<Card className="flex min-h-[28rem] w-full flex-col gap-4">
 				<CardHeader className="flex flex-none flex-row items-center justify-between gap-4 pb-2">
-					<CardTitle className="flex w-full flex-row justify-between text-base font-bold">
-						Top Selling Products
+					<CardTitle className="flex w-full flex-col text-base font-bold">
+						<h3>Top-Selling Products</h3>
+						<span className="text-sm text-slate-800/50">
+							in the last 30 days
+						</span>
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="w-full flex-1 overflow-hidden">
