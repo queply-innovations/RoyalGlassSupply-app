@@ -33,7 +33,6 @@ import { CalendarDays } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
 // import { TimePicker } from 'antd';
-import { useEffect } from 'react';
 
 interface TransferDetailsProps {
 	onClose: UseModalProps['closeModal'];
@@ -59,10 +58,6 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 	const { warehouses } = useWarehouseQuery();
 	const { users } = useUserInfoQuery();
 	const { auth } = useAuth();
-
-	useEffect(() => {
-		console.log(transfer);
-	}, [transfer]);
 
 	const approvalStatusChange = (
 		<>
@@ -595,6 +590,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 															mode="single"
 															initialFocus
 															required
+															toDate={new Date()}
 															onDayClick={value => {
 																const date = new Date(value!);
 																const formattedDate = `${date.getFullYear()}-${(
@@ -683,7 +679,7 @@ export const PendingTransferEdit = ({ onClose }: TransferDetailsProps) => {
 									disabled={isChanged ? false : true}
 									onClick={handleSubmit}
 								>
-									{!isSubmitting ? 'Edit Transfer' : 'Submitting'}
+									{!isSubmitting ? 'Submit changes' : 'Submitting'}
 								</Button>
 							</div>
 						</div>
