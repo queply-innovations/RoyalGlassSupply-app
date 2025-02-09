@@ -2,15 +2,14 @@
 import { Warehouse } from '@/entities/Warehouse';
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { API_BASE_URL } from './Url';
 
-const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
-
-// const fetchWarehouses = async (query = ''): Promise<Warehouse[]> => {
-// 	await new Promise(resolve => setTimeout(resolve, 100));
-// 	const response = await axios.get(`${API_BASE_URL}/Warehouse`);
-// 	console.log('fetched warehouses');
-// 	return response.data;
-// };
+const fetchWarehouses = async (): Promise<Warehouse[]> => {
+	await new Promise(resolve => setTimeout(resolve, 100));
+	const response = await axios.get(`${API_BASE_URL}/Warehouse`);
+	console.log('fetched warehouses');
+	return response.data;
+};
 
 export const useWarehouses = () => {
 	return useQuery({
@@ -19,10 +18,6 @@ export const useWarehouses = () => {
 		refetchOnWindowFocus: false,
 	});
 };
-
-// export const getWarehouses = () => {
-// 	return axios.get(`${API_BASE_URL}/Warehouse`);
-// };
 
 export const useWarehouseMutation = (selectedWarehouse: any) => {
 	const queryClient = useQueryClient();
@@ -57,21 +52,3 @@ export const updateWarehouse = (data: any) => {
 	const response = axios.put(`${API_BASE_URL}/Warehouse/${data.id}`, data);
 	return response;
 };
-
-// export const TestaddWarehouse = async (data: any[]): Promise<Warehouse> => {
-// 	await new Promise(resolve => setTimeout(resolve, 100));
-
-// 	const newWarehouse = {
-// 		id: data.id.length + 1,
-// 		warehouse_name: data.warehouse_name,
-// 		warehouse_location: data.warehouse_location,
-// 	};
-// };
-// axios
-// 				.get(
-// 					'https://65956d2504335332df82b67a.mockapi.io/rgs/api/Warehouse',
-// 				)
-// 				.then(data => {
-// 					console.log(data);
-// 					return data;
-// 				}),

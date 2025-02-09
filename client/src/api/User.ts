@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { RolePermissions, Roles, User, UserRoles } from '@/entities/User';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-const API_BASE_URL = 'https://65956d2504335332df82b67a.mockapi.io/rgs/api';
+import { useQuery } from '@tanstack/react-query';
+import { API_BASE_URL } from './Url';
 
 const fetchUserInformation = async (): Promise<{
 	user: User[];
@@ -109,7 +108,7 @@ export const useLoginUser = (data: any) => {
 	console.log(`Username: ${username}, Password: ${password}, Role: ${role}`);
 };
 
-export const loginUser = async (username: String, password: String) => {
+export const loginUser = async (username: string, password: string) => {
 	try {
 		const result = await axios.get(`${API_BASE_URL}/users`, {
 			headers: {
@@ -126,44 +125,3 @@ export const loginUser = async (username: String, password: String) => {
 		return null;
 	}
 };
-
-// export const getUserInfo = async (username: string, password: string) => {
-// 	await axios.get(`${API_BASE_URL}/UserInfo`)
-// 		.then(function (response){
-// 			// console.log(response.data);
-// 			const user = response.data.find((user: User) => user.username === username && user.password === password);
-// 			console.log(user);
-// 			// console.log(user);
-// 			return user;
-// 		})
-// };
-
-// await new Promise(resolve => setTimeout(resolve, 1000));
-// try {
-// 	const response = await axios.get(
-// 		'https://my.api.mockaroo.com/rgs/user_information?key=a499edc0',
-// 		{ params: { query } },
-// 	);
-// 	return response.data;
-// } catch (error) {
-// 	console.error('Error fetching user information:', error);
-// 	throw error;
-// }
-// await new Promise(resolve => setTimeout(resolve, 1000));
-
-// alert(response);
-// return response.data;
-// return response;
-// return response.data;
-// return useQuery({
-// 	queryKey: ['user_info'],
-// 	queryFn: () => fetchUserInfo(),
-// 	refetchOnWindowFocus: false,
-// });
-
-// export const fetchUserInfo = async () => {
-// 	const result = await axios.get(
-// 		'https://my.api.mockaroo.com/rgs/user_information?key=a499edc0',
-// 	);
-// 	return result.data;
-// };

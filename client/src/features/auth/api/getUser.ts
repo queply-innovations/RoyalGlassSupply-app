@@ -13,7 +13,7 @@ export const getUser = async (id: number): Promise<User[]> => {
 	});
 };
 
-export const getUserRole = async (id: number, updateProgress: any): Promise<Roles> => {
+export const getUserRole = async (id: number, _updateProgress = ''): Promise<Roles> => {
 	try {
 		const response = await axios.post(
 			`${API_URLS.USER_ROLES}/searches-filters-sorts`,

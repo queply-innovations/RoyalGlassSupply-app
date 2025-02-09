@@ -10,8 +10,6 @@ export const useUserInfoAddition = () => {
    const { users } = useUserInfo();
    const { roles } = useUserInfo();
 
-   const lastId = users[users.length - 1].id + 1;
-
    const [user, setUser] = useState({} as UserAdd);
    useEffect(() => {
       setUser(prev => ({

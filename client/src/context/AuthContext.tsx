@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LoginCredentials, LoginUser } from '@/features/auth/api/Login';
 import {
 	User,
@@ -16,6 +17,7 @@ import {
 } from 'react';
 import storage from '@/utils/storage';
 import { RolePermissions } from '@/features/userinfo/types';
+import { fetchRolePermissions } from '@/api/RolePermissions/RolePermissions';
 
 interface AuthProps {
 	user: User;
@@ -47,6 +49,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [auth, setAuth] = useState(() => {
 		return JSON.parse(localStorage.getItem('auth') || '{}');
 	});
+
+	useEffect(() => {
+		const updatePermissions = async () => {
+			try {
+				const userRole = await getUserRole(auth.user.id);
+				const roleDetails = await getUserRolePermissions(userRole.id);
+				setAuth((prev: any) => ({
+					...prev,
+					rolePermissions: roleDetails,
+				}));
+			} catch (error) {
+				console.error('Error fetching role permissions:', error);
+			}
+		};
+
+		if (auth.user) {
+			updatePermissions();
+		}
+	}, []);
 
 	useEffect(() => {
 		localStorage.setItem('auth', JSON.stringify(auth));
@@ -88,10 +109,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					rolePermissions: roleDetails,
 					// assignedAt: assignedAt ? assignedAt[0].warehouse_id : 0,
 				} as AuthProps);
-
-				useEffect(() => {
-					console.log(auth);
-				}, [auth]);
 			}
 			return response;
 		} catch (error: any) {
@@ -100,7 +117,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	}
 
 	const permissionListNames = useMemo(() => {
-		//@ts-ignore
+		//@ts-expect-error WOW
 		return auth.rolePermissions?.map(permission => {
 			return permission.permission.title;
 		});

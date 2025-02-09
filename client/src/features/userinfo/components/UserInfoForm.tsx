@@ -160,7 +160,7 @@ const UserInfoForm = ({
 								</SelectTrigger>
 
 								<SelectContent className="bg-white font-medium text-md">
-									{roles.length > 0 ? (
+									{roles?.length > 0 ? (
 										roles.map((role: Roles) => {
 											if (role.title !== 'super_admin'){
 												return (

@@ -1,9 +1,7 @@
-import { Inputbox } from '@/components/Inputbox';
-import { Button } from '@/components/Button';
 import LayoutWrapper from '@/layouts/Layout';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserInfoTable from '@/components/Tables/User/UserInfoTable';
-import { getRoles, getUsers } from '@/features/auth/api/getUser';
+import { getUsers } from '@/features/auth/api/getUser';
 import { ProgressBar } from '@/components';
 
 export const UserInfo = () => {

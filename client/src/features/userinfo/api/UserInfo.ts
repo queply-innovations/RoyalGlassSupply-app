@@ -1,6 +1,6 @@
-import { API_HEADERS, API_URLS } from '@/api';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {  API_URLS } from '@/api';
 import { User, UserAdd } from '../types';
-import { User as IUser } from '@/entities';
 import storage from '@/utils/storage';
 import axios from 'axios';
 import { RolePermissions, Permissions, Roles } from '../types';
@@ -11,10 +11,11 @@ export const fetchUsers = async (updateProgress: any): Promise<User[]> => {
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
          onDownloadProgress: progress => {
-            let percentCompleted = Math.round(
-               (progress.loaded / progress.total) * 100,
+            const percentCompleted = Math.round(
+               (progress.loaded / (progress.total ?? 1)) * 100,
             );
             updateProgress(percentCompleted);
          },
@@ -33,6 +34,7 @@ export const getUser = async (id: number): Promise<User[]> => {
       headers: {
          Authorization: `Bearer ${storage.getToken()}`,
          'Content-Type': 'application/json',
+         'ngrok-skip-browser-warning': '69420',
       },
    });
 };
@@ -46,6 +48,7 @@ export const getUserRole = async (id: number): Promise<Roles['title']> => {
             headers: {
                Authorization: `Bearer ${storage.getToken()}`,
                'Content-Type': 'application/json',
+               'ngrok-skip-browser-warning': '69420',
             },
          },
       );
@@ -64,6 +67,7 @@ export const getUserRolePermissions = async (
       headers: {
          Authorization: `Bearer ${storage.getToken()}`,
          'Content-Type': 'application/json',
+         'ngrok-skip-browser-warning': '69420',
       },
    });
 };
@@ -73,16 +77,18 @@ export const getUsers = async (): Promise<User[]> => {
       headers: {
          Authorization: `Bearer ${storage.getToken()}`,
          'Content-Type': 'application/json',
+         'ngrok-skip-browser-warning': '69420',
       },
    });
 };
 
-export const getRoles = async (updateProgress: any): Promise<Roles> => {
+export const getRoles = async (): Promise<Roles> => {
    return await axios
       .get(`${API_URLS.ROLES}`, {
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
       })
       .then(response => {
@@ -101,9 +107,10 @@ export const editUser = async (data: any) => {
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
       })
-      .then(async response => {
+      .then(async () => {
          return await axios
             .post(
                `${API_URLS.USER_ROLES}/searches-filters-sorts`,
@@ -112,6 +119,7 @@ export const editUser = async (data: any) => {
                   headers: {
                      Authorization: `Bearer ${storage.getToken()}`,
                      'Content-Type': 'application/json',
+                     'ngrok-skip-browser-warning': '69420',
                   },
                },
             )
@@ -126,6 +134,7 @@ export const editUser = async (data: any) => {
                            headers: {
                               Authorization: `Bearer ${storage.getToken()}`,
                               'Content-Type': 'application/json',
+                              'ngrok-skip-browser-warning': '69420',
                            },
                         },
                      )
@@ -143,6 +152,7 @@ export const editUser = async (data: any) => {
                         headers: {
                            Authorization: `Bearer ${storage.getToken()}`,
                            Accept: 'application/json',
+                           'ngrok-skip-browser-warning': '69420',
                         },
                      })
                      .then(async response2 => {
@@ -167,11 +177,12 @@ export const editUser = async (data: any) => {
 
 export const addUser = async (data: UserAdd) => {
    try {
-      const response = await axios
+      await axios
          .post(API_URLS.REGISTER, data, {
             headers: {
                // Authorization: `Bearer ${storage.getToken()}`,
                Accept: 'application/json',
+               'ngrok-skip-browser-warning': '69420',
             },
          })
          .then(async response => {
@@ -184,6 +195,7 @@ export const addUser = async (data: UserAdd) => {
                   headers: {
                      Authorization: `Bearer ${storage.getToken()}`,
                      Accept: 'application/json',
+                     'ngrok-skip-browser-warning': '69420',
                   },
                })
                .then(async response2 => {
@@ -206,6 +218,7 @@ export const fetchPermissions = async (): Promise<Permissions[]> => {
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
       })
       .then(response => {
@@ -229,6 +242,7 @@ export const getPermissions = async (
             headers: {
                Authorization: `Bearer ${storage.getToken()}`,
                'Content-Type': 'application/json',
+               'ngrok-skip-browser-warning': '69420',
             },
          },
       )
@@ -249,6 +263,7 @@ export const addPermissions = async (data: any): Promise<RolePermissions[]> => {
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
       })
       .then(response => {
@@ -268,6 +283,7 @@ export const removePermissions = async (
          headers: {
             Authorization: `Bearer ${storage.getToken()}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
          },
       })
       .then(response => {
