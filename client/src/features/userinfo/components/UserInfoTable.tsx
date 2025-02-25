@@ -178,20 +178,6 @@ export const UserInfoTable: FC<UserTableProps> = ({
 										<span>Edit User</span>
 									</DropdownMenuItem>
 								)}
-
-								{permissionListNames?.includes(
-									'modify_access_users',
-								) && (
-									<DropdownMenuItem
-										onClick={() => handleEditPerms(userRow)}
-										className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-									>
-										<span className="flex w-6 items-center justify-center">
-											<List size={16} strokeWidth={2.25} />
-										</span>
-										<span>Edit User Permission</span>
-									</DropdownMenuItem>
-								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>

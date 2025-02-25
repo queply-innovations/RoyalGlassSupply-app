@@ -43,6 +43,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
     setIsChanged(true);
     setSuccess(null);
     setError(null);
+    console.log(key, _value);
     setUser(prev => ({
       ...prev,
       [key]: _value,
@@ -53,6 +54,7 @@ export const useUserInfoMutation = (selectedUser: User, roles: any) => {
     setIsChanged(true);
     setSuccess(null);
     if (e.target.name === 'position') {
+      
       setUser(prev => ({
         ...prev,
         [e.target.name]: e.target.value,

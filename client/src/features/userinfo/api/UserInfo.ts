@@ -101,7 +101,7 @@ export const getRoles = async (): Promise<Roles> => {
 };
 
 export const editUser = async (data: any) => {
-   // console.log(data);
+   console.log(data);
    return await axios
       .put(`${API_URLS.USERS}/${data.user_id}`, data, {
          headers: {
@@ -258,6 +258,7 @@ export const getPermissions = async (
 };
 
 export const addPermissions = async (data: any): Promise<RolePermissions[]> => {
+   console.log("FUCK YOU MSU IIT GRADUATES BITCHES BUGOK", data);
    return await axios
       .post(API_URLS.ROLE_PERMISSIONS, data, {
          headers: {
