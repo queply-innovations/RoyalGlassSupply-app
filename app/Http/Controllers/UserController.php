@@ -7,6 +7,8 @@ use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+use App\Models\UserRole;
 
 class UserController extends Controller
 {
@@ -16,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         //return all users in json
+        
         return new UserCollection(User::all());
     }
 
@@ -57,11 +60,28 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
-    {
-        $user->update($request->all());
+{
+        // Update basic user information (except position)
+        $userData = $request->except('position');
+        $user->update($userData);
+        
+        // Handle position/role update
+        $position = $request->input('position');
+        if ($position) {
+            // Find the role by title
+            $role = Role::where('title', $position)->first();
+            
+            if ($role) {
+                // Update or create the user role
+                UserRole::updateOrCreate(
+                    ['user_id' => $user->id],
+                    ['role_id' => $role->id]
+                );
+            }
+        }
 
         return new UserResource($user);
-    }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -84,7 +104,8 @@ class UserController extends Controller
             'position' => 'required|string',
             'active_status' => 'required|string'
         ]);
-
+    
+        // Create user without position field
         $user = User::create([
             'username' => $fields['username'],
             'email' => $fields['email'],
@@ -92,17 +113,25 @@ class UserController extends Controller
             'firstname' => $fields['firstname'],
             'lastname' => $fields['lastname'],
             'contact_no' => $fields['contact_no'],
-            'position' => $fields['position'],
             'active_status' => $fields['active_status']
         ]);
-
+    
+        // Assign role based on position
+        $role = Role::where('title', $fields['position'])->first();
+        if ($role) {
+            UserRole::create([
+                'user_id' => $user->id,
+                'role_id' => $role->id
+            ]);
+        }
+    
         $token = $user->createToken('myapptoken')->plainTextToken;
-
+    
         $response = [
             'user' => $user,
             'token' => $token
         ];
-
+    
         return response($response, 201);
     }
 
