@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserRole;
+use App\Models\Role;
 use App\Http\Resources\UserRoleCollection;
 use App\Http\Resources\UserRoleResource;
 use Illuminate\Http\Request;
@@ -57,7 +58,27 @@ class UserRoleController extends Controller
      */
     public function update(Request $request, UserRole $userRole)
     {
-        $userRole->update($request->all());
+        // $userRole->update($request->all());
+
+        $user = $userRole->user;
+
+        $position = $user->position;
+
+        if ($position) {
+            // Find the role by title
+            $role = Role::where('title', $position)->first();
+            
+            if ($role) {
+                // Update or create the user role
+                UserRole::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        ...$request->all(),
+                        'role_id' => $role->id
+                    ]
+                );
+            }
+        }
         
         return new UserRoleResource($userRole);
     }
