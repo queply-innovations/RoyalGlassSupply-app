@@ -86,7 +86,7 @@ class InvoiceController extends Controller
     {
         $invoice->delete();
 
-        return new InvoiceCollection(Invoice::all());
+        return new InvoiceCollection(Invoice::paginate($request->per_page ?? 10));
     }
 
     /**
