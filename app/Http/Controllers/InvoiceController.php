@@ -17,10 +17,10 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //return all invoices in json
-        return new InvoiceCollection(Invoice::all());
+        return new InvoiceCollection(Invoice::paginate($request->per_page ?? 10));
     }
 
     /**
