@@ -132,7 +132,7 @@ class InvoiceController extends Controller
             }
         }
 
-        return new InvoiceCollection($query->get());
+        return new InvoiceCollection($query->paginate($request->per_page ?? 10));
     }
 
     /**
