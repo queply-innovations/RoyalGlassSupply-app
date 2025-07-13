@@ -2,8 +2,10 @@ import React, { FC } from 'react';
 
 export const TopSellingProducts: FC = () => {
 	return (
-		<div className="flex w-[30%] flex-col items-center gap-y-5 rounded-md border-black/10 bg-white p-4 ">
-			<h2 className="uppercase text-black">Top Selling Products</h2>
+		<div className="flex w-[50%] flex-col items-center gap-y-5 rounded-md border-black/10 bg-white p-4 ">
+			<h2 className="w-full font-bold text-slate-800">
+				Top selling products
+			</h2>
 			<div className="h-full w-full rounded-md border border-solid">
 				<table className="w-full rounded-md">
 					<tbody>
@@ -14,26 +16,26 @@ export const TopSellingProducts: FC = () => {
 							</th>
 							<th className="border-b p-2 text-[15px]">Total</th>
 						</tr>
-						<tr>
+						{/* <tr>
 							<td
 								id="TopProduct_Product"
-								className="table-data text-center"
+								className="text-center table-data"
 							>
 								001
 							</td>
 							<td
 								id="TopProduct_Quantity"
-								className="table-data border-x text-center"
+								className="text-center table-data border-x"
 							>
 								10pcs
 							</td>
 							<td
 								id="TopProduct_Total"
-								className="table-data text-center"
+								className="text-center table-data"
 							>
 								10pcs
 							</td>
-						</tr>
+						</tr> */}
 					</tbody>
 				</table>
 			</div>

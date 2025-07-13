@@ -1,9 +1,33 @@
-import { Button } from '@/components/Button';
-import { Form } from '@/components/Form';
-import { Inputbox } from '@/components/Inputbox';
+import { Button, Form, Inputbox } from '@/components';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { loginUser, useUserInfo } from '@/api/User';
+import { useNavigate } from 'react-router-dom';
+import { useFetchUserInformation } from '@/api/User/hooks/useFetchUserInformation';
+import { LoginTest } from './Login/Login';
 
-const Login = () => {
+export const Login = () => {
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	// const navigate = useNavigate();
+
+	// const { data: userInformation } = useFetchUserInformation();
+	// console.log(userInformation);
+
+	const { data } = useUserInfo();
+	const handleLogin = async () => {
+		if (username && password) {
+			const data = await loginUser(username, password);
+			if (data) {
+				alert('Welcome, ' + data.datas[0]['firstname'] + '!');
+				console.log(data);
+				navigate('/Dashboard', { state: data.datas[0] });
+			} else {
+				alert('Invalid username or password');
+			}
+		}
+	};
+
 	return (
 		<>
 			<div className="flex h-screen w-screen items-center justify-center">
@@ -16,20 +40,45 @@ const Login = () => {
 						/>
 					</div>
 					<div className="text-3xl font-bold">Royal Glass Supply</div>
-					<Form>
-						<Inputbox placeholder={'Username'} required />
-						<Inputbox placeholder={'Password'} type="password" required />
-						<Button className="w-1/2" fill={'green'} type="submit">
+					<Form
+						className="py-6"
+						onSubmit={e => {
+							e.preventDefault();
+						}}
+					>
+						<Inputbox
+							id="username"
+							name="username"
+							placeholder={'Username'}
+							value={username}
+							required
+							onChange={e => setUsername(e.target.value)}
+						/>
+						<Inputbox
+							id="password"
+							name="password"
+							placeholder={'Password'}
+							type="password"
+							value={password}
+							required
+							onChange={e => setPassword(e.target.value)}
+						/>
+						<Button
+							className="w-1/2"
+							fill={'green'}
+							onClick={handleLogin}
+						>
+							{/* This part, specifically. Need i-insert type="button" and delete again to run. */}
+							{/* onClick={handleLogin} */}
 							Login
 						</Button>
 					</Form>
-					<Link to="/Dashboard">
+					{/* <Link to="/Dashboard">
 						<Button>Register</Button>
-					</Link>
+					</Link> */}
 				</div>
 			</div>
+			{/* <LoginTest /> */}
 		</>
 	);
 };
-
-export default Login;

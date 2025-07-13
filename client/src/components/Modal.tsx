@@ -9,7 +9,7 @@ interface ModalProps {
 	closeButton?: boolean;
 }
 
-const Modal: FC<ModalProps> = ({
+export const Modal: FC<ModalProps> = ({
 	title,
 	isOpen,
 	onClose,
@@ -75,5 +75,3 @@ const Modal: FC<ModalProps> = ({
 		</>
 	);
 };
-
-export default Modal;

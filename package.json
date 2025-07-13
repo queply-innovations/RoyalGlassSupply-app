@@ -1,6 +1,6 @@
 {
     "name": "royalglasssupply",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Queply Innovations",
     "description": "test app build",
     "private": true,
@@ -10,7 +10,7 @@
         "dev": "vite",
         "build": "vite build",
         "electron": "electron . ",
-        "start": "concurrently \"php artisan serve\" \"npm run dev\" \"npm run electron\"",
+        "start": "concurrently \"php artisan serve\" \"cd client && npm run dev\"",
         "dist": "electron-builder --win --mac"
     },
     "devDependencies": {
@@ -28,5 +28,16 @@
     "build": {
         "appId": "com.electron.royalglasssupply",
         "productName": "RoyalGlassSupply"
+    },
+    "dependencies": {
+        "@radix-ui/react-dialog": "^1.0.5",
+        "@radix-ui/react-label": "^2.0.2",
+        "@radix-ui/react-popover": "^1.0.7",
+        "@radix-ui/react-scroll-area": "^1.0.5",
+        "@radix-ui/react-select": "^2.0.0",
+        "@radix-ui/react-switch": "^1.0.3",
+        "@radix-ui/react-tabs": "^1.0.4",
+        "cmdk": "^0.2.1",
+        "react-toastify": "^10.0.5"
     }
 }

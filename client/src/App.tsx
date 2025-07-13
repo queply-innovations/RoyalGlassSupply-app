@@ -1,17 +1,35 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import RoutesWrapper from '@utils/Routes';
-
-const queryClient = new QueryClient();
+import { AppProvider } from './provider/app';
+// import AppRoutes from './routes';
+import AppRouter from './routes/root';
+// import { TestRoute } from './routes/testRoute';
+import { ToastContainer, toast } from 'react-toastify';
+import useNetwork from './useNetwork';
+import { useEffect } from 'react';
 
 function App() {
+	const networkState = useNetwork();
+	const { online } = networkState;
+
+	useEffect(() => {
+		toast.dismiss();
+		if (online) {
+			// toast.success('You are currently online!', { autoClose: 3000 });
+		} else {
+			toast.error('You are currently offline.', {
+				autoClose: false,
+				closeButton: false,
+			});
+		}
+	}, [online]);
+
 	return (
-		<>
-			<QueryClientProvider client={queryClient}>
-				<RoutesWrapper />
-				<ReactQueryDevtools />
-			</QueryClientProvider>
-		</>
+		<AppProvider>
+			{/* uncomment this to preview the app routes*/}
+			<AppRouter />
+			{/* //! PANG TEST LANG NI */}
+			{/* <TestRoute /> */}
+			<ToastContainer position="top-right" limit={1} />
+		</AppProvider>
 	);
 }
 

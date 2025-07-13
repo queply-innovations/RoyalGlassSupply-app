@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconFinance = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconFinance = () => {
 		</svg>
 	);
 };
-
 export default iconFinance;

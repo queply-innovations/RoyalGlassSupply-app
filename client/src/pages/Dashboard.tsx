@@ -1,55 +1,62 @@
-import GrossAndNetProfit from '@/components/Chart/GrossandNetProfit';
-import { InfoCard } from '@/components/InfoCard';
-import InventoryTable from '@/components/Tables/Inventory/inventory';
-import TopSellingProducts from '@/components/Tables/TopSellingProducts/topSellingProducts';
 import TransferStatus from '@/components/Tables/Transfer/Transfer';
-import LayoutWrapper from '@/layouts/Layout';
+import { useAuth } from '@/context/AuthContext';
+import { DashboardReportsProvider } from '@/features/dashboard';
+import {
+	SalesCard,
+	ProfitCard,
+	CapitalCard,
+	ExpensesCard,
+	CollectiblesCard,
+} from '@/features/dashboard/components/cards';
+import { MainLayout } from '@/layouts/MainLayout';
+import { ReportsAnalytics } from '@/features/dashboard/components';
+import { TopSellingProducts } from '@/features/dashboard/components/TopSellingProducts';
+import { LayoutDashboard } from 'lucide-react';
 
-const Dashboard = () => {
+export const Dashboard = () => {
+	const { auth } = useAuth();
+
 	return (
-		<LayoutWrapper>
-			<div className="flex h-screen flex-col gap-y-4">
-				<h1 className="page-title text-primary-dark-gray text-3xl font-bold">
-					Dashboard
-				</h1>
-				<div className="infobox-container flex flex-row justify-between gap-8">
-					<InfoCard background={'gradient'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-					<InfoCard background={'default'}>
-						<span className="text-sm font-bold uppercase text-white">
-							Gross Income
-						</span>
-						<span className="text-2xl font-bold text-white">999</span>
-					</InfoCard>
-				</div>
-				<div className="row-container flex h-full flex-col gap-6 ">
-					<div className="row-container flex flex-row justify-between gap-8">
-						<GrossAndNetProfit />
-						<TransferStatus />
+		<MainLayout title="Dashboard">
+			<DashboardReportsProvider>
+				{auth.role?.includes('admin') ? (
+					<>
+						<div className="flex h-full w-full flex-1 flex-col gap-5 rounded-xl">
+							<div className="flex h-full max-h-full w-full max-w-full flex-col gap-4 overflow-auto">
+								<div className="flex flex-none flex-row gap-2 rounded-lg border bg-white p-2 shadow-sm">
+									<SalesCard />
+									<ProfitCard />
+									<CapitalCard />
+									<ExpensesCard />
+									<CollectiblesCard />
+								</div>
+								<div className="row-container flex flex-1 flex-col gap-4">
+									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
+										<ReportsAnalytics />
+										<TransferStatus />
+									</div>
+									<div className="row-container flex h-[480px] flex-row justify-between gap-4">
+										<TopSellingProducts />
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				) : (
+					<div className="flex h-full w-full items-center justify-center">
+						<div className="flex flex-col items-center gap-6">
+							<LayoutDashboard
+								strokeWidth={2}
+								size={142}
+								className="text-slate-700/30"
+							/>
+							<p className="text-slate-700/60">
+								Welcome to dashboard. Navigate to the items on the left.
+							</p>
+						</div>
 					</div>
-					<div className="row-container flex h-full flex-row justify-between gap-8">
-						<InventoryTable />
-						<TopSellingProducts />
-					</div>
-				</div>
-			</div>
-		</LayoutWrapper>
+				)}
+			</DashboardReportsProvider>
+		</MainLayout>
 	);
 };
-export default Dashboard;

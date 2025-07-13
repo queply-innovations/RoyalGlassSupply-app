@@ -20,12 +20,14 @@ interface SelectboxProps
 	options: string[];
 	hasFrequency?: boolean;
 	frequencyOptions?: string[];
+	placeholder: string;
 }
 
 const Selectbox: FC<SelectboxProps> = ({
 	className,
 	variant,
 	options,
+	placeholder,
 	hasFrequency,
 	frequencyOptions,
 	...props
@@ -38,17 +40,17 @@ const Selectbox: FC<SelectboxProps> = ({
 				{...props}
 			>
 				<option value="DEFAULT" hidden>
-					Sort By
+					{placeholder}
 				</option>
-				{options.map((option, index) => (
+				{options.length > 1 ? options.map((option, index) => (
 					<option
 						className="hover:bg-primary-red flex cursor-pointer rounded-none border-none"
 						key={index}
 						value={option}
 					>
-						{option}
+						{option.charAt(0).toUpperCase() + option.slice(1)}
 					</option>
-				))}
+				)) : options}
 			</select>
 			{hasFrequency && (
 				<select

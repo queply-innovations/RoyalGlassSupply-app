@@ -1,0 +1,22 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "index",
+  "steps": [
+    {
+      "file": "client/src/routes/index.tsx",
+      "description": "Not sure if useEffect is the most viable option for navigation",
+      "line": 14
+    },
+    {
+      "file": "client/src/routes/index.tsx",
+      "description": "Since it doesnt redirect after refresh",
+      "line": 23
+    },
+    {
+      "file": "client/src/features/auth/components/LoginForm.tsx",
+      "description": "doesnt check if it is null",
+      "line": 34
+    }
+  ],
+  "ref": "dev-frontend"
+}

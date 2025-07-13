@@ -22,6 +22,44 @@ export default {
 				'primary-background':
 					'rgb(var(--primary-background) / <alpha-value>)',
 				'border-color': 'rgb(var(--border-color) / 0.1)',
+				'login-button': '#1E293B',
+
+				// Shad/cn custom colors
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
+				primary: {
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))',
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
+				},
+				destructive: {
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))',
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))',
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))',
+				},
+				'pos-primary-background':
+					'rgb(var(--pos-primary-background) / <alpha-value>)',
 			},
 			keyframes: {
 				'fade-in': {
@@ -32,11 +70,23 @@ export default {
 					'0%': { opacity: '1' },
 					'100%': { opacity: '0' },
 				},
+				ping: {
+					'75%': { transform: '200%', opacity: '0' },
+					'100%': { transform: '200%', opacity: '0' },
+				},
+				pulse: {
+					'0%': { opacity: '1' },
+					'50%': { opacity: '0.3' },
+					'100%': { opacity: '1' },
+				},
 			},
 		},
 		animation: {
 			'fade-in': 'fade-in 0.3s ease-in-out',
 			'fade-out': 'fade-out 0.3s ease-in-out',
+			spin: 'spin 1s linear infinite',
+			ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 		},
 	},
 	plugins: [],

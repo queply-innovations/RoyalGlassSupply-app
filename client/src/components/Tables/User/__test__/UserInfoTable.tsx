@@ -2,8 +2,13 @@ import { Button } from '@/components/Button';
 import { useQuery } from '@tanstack/react-query';
 
 import axios from 'axios';
+import { FC } from 'react';
 
-export const UserInfoTable = () => {
+interface UserTableProps {
+	data: any;
+}
+
+export const UserInfoTable: FC<UserTableProps> = ({ data }) =>{
 	const userInfoTableHeader: string[] = [
 		'',
 		'Complete Name',
@@ -13,17 +18,6 @@ export const UserInfoTable = () => {
 		'Emergency #',
 		'Action',
 	];
-
-	const { data, isLoading } = useQuery({
-		queryKey: ['userInformation'],
-		queryFn: () =>
-			axios
-				.get('https://65956d2504335332df82b67a.mockapi.io/rgs/api/UserInfo')
-				.then(data => {
-					console.log(data);
-					return data;
-				}),
-	});
 
 	return (
 		<>
@@ -42,7 +36,7 @@ export const UserInfoTable = () => {
 				</thead>
 
 				<tbody className="bg-primary-white h-full overflow-y-auto">
-					{data?.data.map((userInfo: any) => {
+					{data?.map((userInfo: any) => {
 						return (
 							<tr key={userInfo.id} className="text-center">
 								<td className="w-16">
@@ -50,11 +44,11 @@ export const UserInfoTable = () => {
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
 									<span>
-										{`${userInfo.last_name} ${userInfo.first_name}`}
+										{`${userInfo.lastname} ${userInfo.firstname}`}
 									</span>
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
-									{userInfo.role}
+									{userInfo.role} {/* to inner join with roles table */}
 								</td>
 								<td className="py-2 text-xs font-normal uppercase">
 									{userInfo.username}
@@ -75,11 +69,6 @@ export const UserInfoTable = () => {
 					})}
 				</tbody>
 			</table>
-			{isLoading && (
-				<div className="flex items-center justify-center">
-					Fetching User Information Data...
-				</div>
-			)}
 		</>
 	);
 };

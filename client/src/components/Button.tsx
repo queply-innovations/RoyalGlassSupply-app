@@ -14,6 +14,7 @@ const buttonVariants = cva('button', {
 			red: 'bg-primary-red hover:bg-primary-red/80',
 			green: 'bg-primary-green hover:bg-primary-green/80',
 			yellow: 'bg-primary-yellow hover:bg-primary-yellow/80',
+			empty: 'bg-transparent hover:bg-gray-200',
 		},
 		textColor: {
 			default: 'text-white',

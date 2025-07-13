@@ -1,5 +1,3 @@
-import React from 'react';
-
 const iconTransfer = () => {
 	return (
 		<svg
@@ -16,5 +14,4 @@ const iconTransfer = () => {
 		</svg>
 	);
 };
-
 export default iconTransfer;
