@@ -1,0 +1,24 @@
+workflows:
+  electron-app-release:
+    name: Electron App Build
+    environment:
+      node: 18.16.0
+      xcode: latest
+      vars:
+        BUILD_DIR: "client/release"
+    scripts:
+      - name: Install dependencies and build
+        working_directory: client
+        script: |
+          npm install
+          npm run build
+
+      - name: List build artifacts
+        script: |
+          echo "Build files in $BUILD_DIR"
+          ls -R $BUILD_DIR
+
+    artifacts:
+      - client/release/**/*.dmg
+      - client/release/**/*.exe
+      - client/release/**/*.AppImage
