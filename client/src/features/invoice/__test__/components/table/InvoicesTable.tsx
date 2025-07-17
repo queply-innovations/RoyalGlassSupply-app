@@ -1,241 +1,177 @@
+'use client';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchInvoices } from '../../api';
 import { DataTable } from '@/components/Tables/DataTable';
-import { useInvoice } from '../../context/InvoiceContext';
 import { ColumnDef } from '@tanstack/react-table';
 import { Invoices } from '../../types';
 import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+    Button,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/components';
 import {
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	Ban,
-	Check,
-	Clock,
-	List,
-	MoreVertical,
-	Pencil,
-	ShoppingBasket,
+    MoreVertical,
+    ShoppingBasket,
+    ArrowUp,
+    ArrowDown,
+    ArrowUpDown,
+    Clock,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '@/utils/FormatCurrency';
 
-import { useNavigate } from 'react-router-dom';
-
 interface InvoicesTableProps {
-	openModal: (data: any, action: string) => void;
+    openModal: (data: any, action: string) => void;
 }
 
 export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
-	const { invoices } = useInvoice();
+    const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const limit = 10;
 
-	const navigate = useNavigate();
+    const { data, isLoading } = useQuery({
+        queryKey: ['invoices', page],
+        queryFn: () => fetchInvoices(page, limit),
+        placeholderData: (prev) => prev,
+    });
 
-	const columns: ColumnDef<Invoices>[] = [
-		{
-			accessorKey: 'code',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Code{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</>
-				);
-			},
-			cell: ({ row }) => {
-				return (
-					<div className="flex flex-row items-center gap-2">
-						<span className="font-bold">{row.original.code}</span>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'warehouse.code',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Warehouse{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
-		},
-		{
-			accessorKey: 'payment_method',
-			sortingFn: 'text',
-			enableSorting: true,
-			header: ({ column }) => {
-				return (
-					<div>
-						<Button
-							onClick={() =>
-								column.toggleSorting(column.getIsSorted() === 'asc')
-							}
-							className="flex flex-row items-center bg-transparent uppercase text-slate-700"
-						>
-							Type{' '}
-							{column.getIsSorted() === 'asc' ? (
-								<ArrowUp size={18} strokeWidth={2} />
-							) : column.getIsSorted() === 'desc' ? (
-								<ArrowDown size={18} strokeWidth={2} />
-							) : (
-								<ArrowUpDown size={18} strokeWidth={2} />
-							)}
-						</Button>
-					</div>
-				);
-			},
-			cell: ({ row }) => {
-				const paymentMethod = row.original.payment_method
-					.split('_')
-					.join(' ');
-				return (
-					<>
-						<span className="capitalize">{paymentMethod}</span>
-					</>
-				);
-			},
-		},
-		{
-			accessorKey: 'is_paid',
-			header: ({}) => {
-				return <span>Balance Amount</span>;
-			},
-			cell: ({ row }) => {
-				const status = row.original.is_paid;
-				return (
-					<>
-						<div className="group relative flex w-fit items-center justify-center">
-							{status === 1 ? (
-								<span>——</span>
-							) : status === 0 ? (
-								<span className="">
-									{formatCurrency(row.original.balance_amount)}
-								</span>
-							) : (
-								<Clock
-									size={20}
-									strokeWidth={2}
-									className="text-amber-500"
-								/>
-							)}
-						</div>
-					</>
-				);
-			},
-		},
-		{
-			accessorKey: 'total_amount_due',
-			header: ({ column }) => {
-				return <span>Total Amount</span>;
-			},
-			cell: ({ row }) => {
-				return formatCurrency(row.original.total_amount_due);
-			},
-		},
-		{
-			id: 'actions',
-			cell: ({ row }) => {
-				return (
-					<div className="flex flex-row justify-center text-xs font-normal uppercase">
-						<DropdownMenu>
-							<DropdownMenuTrigger className="overflow-clip rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
-								<MoreVertical size={16} strokeWidth={2.25} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="relative z-50 w-44 bg-white">
-								<DropdownMenuLabel>Actions</DropdownMenuLabel>
-								<DropdownMenuSeparator className="bg-gray-200" />
+    const invoices = data?.data || [];
+    const meta = data?.meta;
 
-								<DropdownMenuItem
-									onClick={() => {
-										//TODO view invoice items
-										navigate(`/transaction/items/${row.original.id}`);
-										// fetchInvoiceItemsById(row.original.id);
-										// setInvoiceSelected(row.original);
-										// setOpenDialog(true);
-										// console.log(row.original.id);
-									}}
-									className="flex flex-row items-center gap-3 rounded-md p-2 hover:bg-gray-200"
-								>
-									<span className="flex w-6 items-center justify-center">
-										<ShoppingBasket size={16} strokeWidth={2} />
-									</span>
-									<span>View Invoice</span>
-								</DropdownMenuItem>
+    const columns: ColumnDef<Invoices>[] = [
+        {
+            accessorKey: 'code',
+            header: ({ column }) => (
+                <Button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                    className="flex items-center bg-transparent uppercase text-slate-700"
+                >
+                    Code{' '}
+                    {column.getIsSorted() === 'asc' ? (
+                        <ArrowUp size={18} />
+                    ) : column.getIsSorted() === 'desc' ? (
+                        <ArrowDown size={18} />
+                    ) : (
+                        <ArrowUpDown size={18} />
+                    )}
+                </Button>
+            ),
+            cell: ({ row }) => <span className="font-bold">{row.original.code}</span>,
+        },
+        {
+            accessorKey: 'warehouse.code',
+            header: ({ column }) => (
+                <Button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                    className="flex items-center bg-transparent uppercase text-slate-700"
+                >
+                    Warehouse{' '}
+                    {column.getIsSorted() === 'asc' ? (
+                        <ArrowUp size={18} />
+                    ) : column.getIsSorted() === 'desc' ? (
+                        <ArrowDown size={18} />
+                    ) : (
+                        <ArrowUpDown size={18} />
+                    )}
+                </Button>
+            ),
+        },
+        {
+            accessorKey: 'payment_method',
+            header: ({ column }) => (
+                <Button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                    className="flex items-center bg-transparent uppercase text-slate-700"
+                >
+                    Type{' '}
+                    {column.getIsSorted() === 'asc' ? (
+                        <ArrowUp size={18} />
+                    ) : column.getIsSorted() === 'desc' ? (
+                        <ArrowDown size={18} />
+                    ) : (
+                        <ArrowUpDown size={18} />
+                    )}
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <span className="capitalize">
+					{row.original.payment_method.split('_').join(' ')}
+				</span>
+            ),
+        },
+        {
+            accessorKey: 'is_paid',
+            header: () => <span>Balance Amount</span>,
+            cell: ({ row }) => {
+                const status = row.original.is_paid;
+                return status === 1 ? (
+                    <span>——</span>
+                ) : status === 0 ? (
+                    <span>{formatCurrency(row.original.balance_amount)}</span>
+                ) : (
+                    <Clock size={20} className="text-amber-500" />
+                );
+            },
+        },
+        {
+            accessorKey: 'total_amount_due',
+            header: () => <span>Total Amount</span>,
+            cell: ({ row }) => formatCurrency(row.original.total_amount_due),
+        },
+        {
+            id: 'actions',
+            cell: ({ row }) => (
+                <div className="text-xs uppercase">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="rounded-full bg-gray-100 p-1.5 hover:bg-gray-300">
+                            <MoreVertical size={16} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="z-50 w-44 bg-white">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator className="bg-gray-200" />
+                            <DropdownMenuItem
+                                onClick={() => navigate(`/transaction/items/${row.original.id}`)}
+                                className="flex items-center gap-3 p-2 hover:bg-gray-200"
+                            >
+                                <ShoppingBasket size={16} />
+                                <span>View Invoice</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            ),
+        },
+    ];
 
-								{/* <DropdownMenuItem
-                           onClick={() => {}}
-                           className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200">
-                           <span className="flex items-center justify-center w-6">
-                              <List size={16} strokeWidth={2.25} />
-                           </span>
-                           <span>Details</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                           onClick={() => {}}
-                           className="flex flex-row items-center gap-3 p-2 rounded-md hover:bg-gray-200">
-                           <span className="flex items-center justify-center w-6">
-                              <Pencil size={16} strokeWidth={2.25} />
-                           </span>
-                           <span>Edit</span>
-                        </DropdownMenuItem> */}
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
-				);
-			},
-			enableGlobalFilter: false,
-		},
-	];
+    return (
+        <div className="w-full max-w-full px-2 space-y-4 border bg-white rounded-md">
+            {/* Make table horizontally scrollable if needed */}
+            <div className=" rounded-md border shadow-sm">
+                <DataTable
+                    columns={columns}
+                    data={invoices}
+                    filterWhat="code"
+                    dataType="Invoices"
+                    isLoading={isLoading}
+                    openModal={openModal}
+                    autoResetPageIndex={false}
+                    onPageChange={setPage}
+                    page={page}
+                    meta={meta} // ✅ Add this line to support pagination
+                />
+            </div>
 
-	return (
-		<>
-			<DataTable
-				columns={columns}
-				data={invoices.sort((a, b) => {
-					const dateA = new Date(a.updated_at ?? a.created_at);
-					const dateB = new Date(b.updated_at ?? b.created_at);
-					return dateB.getTime() - dateA.getTime();
-				})}
-				filterWhat={'code'}
-				dataType={'Invoices'}
-			/>
-		</>
-	);
+        </div>
+    );
 };

@@ -16,6 +16,7 @@ class InvoiceItem extends Model
         'product_id',
         'product_price_id',
         'product_price',
+        'product_sold_price',
         'quantity',
         'unit',
         'item_discount',
@@ -29,6 +30,9 @@ class InvoiceItem extends Model
 
     protected $with = [
         'product:id,name,serial_no,brand,size,color'
+    ];
+    protected $appends = [
+        'sold_price'
     ];
 
     public function returnTransactionItems(): HasMany
@@ -90,4 +94,10 @@ class InvoiceItem extends Model
             return 0;
         }
     }
+
+    public function getSoldPriceAttribute()
+    {
+        return $this->attributes['product_price']; // or use $this->product_price;
+    }
+
 }

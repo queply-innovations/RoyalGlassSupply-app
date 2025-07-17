@@ -71,7 +71,7 @@ export const InvoiceItemsTable = ({ items }: InvoiceItemsTableProps) => {
 							style: 'currency',
 							currency: 'PHP',
 							//@ts-expect-error 'type not updated'
-						}).format(row.original.product_price.price ?? 0)}
+						}).format(row.original.sold_price ?? 0)}
 					</div>
 				);
 			},

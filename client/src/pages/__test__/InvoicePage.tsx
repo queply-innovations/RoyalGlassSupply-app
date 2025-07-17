@@ -10,30 +10,30 @@ import { useState } from 'react';
 import { ProductPricesProvider } from '@/features/product/__test__';
 import { InvoicesTable } from '@/features/invoice/__test__/components/table/InvoicesTable';
 
-interface InvoiceProps {}
+interface InvoiceProps { }
 
-export const Invoice = ({}: InvoiceProps) => {
-   const { isOpen, openModal, closeModal } = useModal();
-   const [modalAction, setModalAction] = useState<string>('');
+export const Invoice = ({ }: InvoiceProps) => {
+    const { isOpen, openModal, closeModal } = useModal();
+    const [modalAction, setModalAction] = useState<string>('');
 
-   const modalHandler = (data: Invoices, action: string) => {
-      openModal();
-      setModalAction(action);
-      console.log('modalAction:', modalAction);
-   };
-   return (
-      <>
-         <MainLayout title="Transactions">
-            <ProductPricesProvider>
-               <InvoiceProvider>
-                  <div className="flex h-full flex-1 flex-col gap-5 rounded-xl border border-black/10 bg-white p-4">
-                     <div className="max-h-full w-full flex-1 rounded-md border border-black/10">
-                        <InvoicesTable openModal={modalHandler} />
-                     </div>
-                  </div>
-               </InvoiceProvider>
-            </ProductPricesProvider>
-         </MainLayout>
-      </>
-   );
+    const modalHandler = (data: Invoices, action: string) => {
+        openModal();
+        setModalAction(action);
+        console.log('modalAction:', modalAction);
+    };
+    return (
+        <>
+            <MainLayout title="Transactions">
+                <ProductPricesProvider>
+                    <InvoiceProvider>
+                        <div className="flex h-full flex-1 flex-col gap-5 overflow-auto rounded-xl p-4">
+                            <div className="max-h-full w-full flex-1 rounded-md">
+                                <InvoicesTable openModal={modalHandler} />
+                            </div>
+                        </div>
+                    </InvoiceProvider>
+                </ProductPricesProvider>
+            </MainLayout>
+        </>
+    );
 };
