@@ -104,7 +104,7 @@ class InvoiceItemController extends Controller
                 $query->orderBy($sort_key, $sort_value);
             }
         }
-
-        return new InvoiceItemCollection($query->get());
+        $data = $query->with('productPrice')->get()->append('sold_price');
+        return compact('data');
     }
 }

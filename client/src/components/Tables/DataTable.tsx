@@ -1,225 +1,260 @@
 import * as React from 'react';
-import { Button, Inputbox, Pagination2 } from '@/components';
-
+import { Button, Inputbox } from '@/components';
 import {
-	ColumnDef,
-	ColumnFiltersState,
-	SortingState,
-	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	useReactTable,
+    ColumnDef,
+    ColumnFiltersState,
+    SortingState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
 } from '@tanstack/react-table';
 
 import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import { Loader2, Plus, Printer } from 'lucide-react';
+
+import { Loader2, Plus } from 'lucide-react';
+
+interface MetaType {
+    current_page: number;
+    last_page: number;
+}
 
 interface DataTableProps<TData, TValue> {
-	columns: ColumnDef<TData, TValue>[];
-	data: TData[];
-	filterWhat: string;
-	dataType: string;
-	openModal?: () => void;
-	isLoading?: boolean;
-	hidePagination?: boolean;
-	hideFilter?: boolean;
-	autoResetPageIndex?: boolean;
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    filterWhat: string;
+    dataType: string;
+    openModal?: any;
+    isLoading?: boolean;
+    hidePagination?: boolean;
+    hideFilter?: boolean;
+    autoResetPageIndex?: boolean;
+    onPageChange?: (page: number) => void;
+    page?: number;
+    meta?: MetaType;
 }
 
 export function DataTable<TData, TValue>({
-	columns,
-	data,
-	filterWhat,
-	dataType,
-	openModal,
-	isLoading,
-	hidePagination,
-	hideFilter,
-	autoResetPageIndex = false,
-}: DataTableProps<TData, TValue>) {
-	const [sorting, setSorting] = React.useState<SortingState>([]);
+                                             columns,
+                                             data,
+                                             filterWhat,
+                                             dataType,
+                                             openModal,
+                                             isLoading,
+                                             hidePagination,
+                                             hideFilter,
+                                             autoResetPageIndex = false,
+                                             onPageChange,
+                                             page,
+                                             meta,
+                                         }: DataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-		[],
-	);
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        enableSortingRemoval: false,
+        state: {
+            sorting,
+            columnFilters,
+        },
+        autoResetPageIndex: autoResetPageIndex,
+    });
 
-	// ! This code below calls the openModal function,
-	// ! making some pages to open the modal when DataTable is mounted
-	// ! Check other pages that use DataTable and see if error occurs opening modal
-	// ? const modalHandler = openModal();
+    const label =
+        (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) +
+        ' ' +
+        (filterWhat.split('_')[1] === 'no' ? 'number' : filterWhat.split('_')[1] ?? '');
 
-	const table = useReactTable({
-		data,
-		columns,
-		getCoreRowModel: getCoreRowModel(),
-		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
-		onColumnFiltersChange: setColumnFilters,
-		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		enableSortingRemoval: false,
-		state: {
-			sorting,
-			columnFilters,
-		},
-		autoResetPageIndex: autoResetPageIndex,
-	});
+    const placeholderLabel = `Filter ${label.trim()}...`;
 
-	const label =
-		(filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) +
-		' ' +
-		(filterWhat.split('_')[1] === 'no'
-			? 'number'
-			: filterWhat.split('_')[1]
-				? filterWhat.split('_')[1]
-				: '');
+    return (
+        <div className="flex max-h-full flex-col divide-y w-full border">
+            {!hideFilter && (
+                <div className="flex flex-none justify-between p-4 ">
+                    <div className="w-1/2">
+                        <Inputbox
+                            placeholder={placeholderLabel}
+                            value={(table.getColumn(filterWhat)?.getFilterValue() as string) ?? ''}
+                            onChange={(event) =>
+                                table.getColumn(filterWhat)?.setFilterValue(event.target.value)
+                            }
+                            variant={'searchbar'}
+                            buttonIcon={'outside'}
+                        />
+                    </div>
+                    {openModal && (
+                        <div className="flex flex-row-reverse">
+                            <Button
+                                fill={'green'}
+                                onClick={openModal}
+                                disabled={isLoading}
+                                className="flex h-8 flex-row items-center pl-2 pr-3 disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                                <Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            )}
 
-	const placeholderLabel = `Filter ${label.trim()}...`;
+            <div className="w-full overflow-x-auto">
+                <Table className="min-w-full table-fixed">
+                    <TableHeader className="z-10 bg-slate-50 hover:bg-slate-50">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead
+                                        key={header.id}
+                                        className="text-xs font-bold uppercase text-slate-800"
+                                    >
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
 
-	return (
-		<div className="flex max-h-full flex-col divide-y">
-			{!hideFilter && (
-				<div className="flex flex-none justify-between p-4">
-					{hideFilter ? null : (
-						<div className="w-1/2">
-							<Inputbox
-								placeholder={placeholderLabel}
-								value={
-									(table
-										.getColumn(filterWhat)
-										?.getFilterValue() as string) ?? ''
-								}
-								onChange={event =>
-									table
-										.getColumn(filterWhat)
-										?.setFilterValue(event.target.value)
-								}
-								variant={'searchbar'}
-								buttonIcon={'outside'}
-							/>
-						</div>
-					)}
-					{/* Made this render conditionally, so that if
-							no openModal prop passed, this would not render.
-							Useful for view-only table. */}
-					{openModal && (
-						<div className="flex flex-row-reverse">
-							<Button
-								fill={'green'}
-								onClick={openModal}
-								disabled={isLoading}
-								className="flex h-8 flex-row items-center pl-2 pr-3 disabled:cursor-not-allowed disabled:opacity-40"
-							>
-								<Plus size={26} strokeWidth={2} /> {`Add ${dataType}`}
-							</Button>
-						</div>
-					)}
-				</div>
-			)}
-			<Table className="flex-1 overflow-auto">
-				<TableHeader className="z-10 bg-slate-50 hover:bg-slate-50">
-					{table.getHeaderGroups().map(headerGroup => (
-						<TableRow key={headerGroup.id}>
-							{headerGroup.headers.map(header => {
-								return (
-									<TableHead
-										key={header.id}
-										className="text-xs font-bold uppercase text-slate-800"
-									>
-										{header.isPlaceholder
-											? null
-											: flexRender(
-													header.column.columnDef.header,
-													header.getContext(),
-												)}
-									</TableHead>
-								);
-							})}
-						</TableRow>
-					))}
-				</TableHeader>
-				<TableBody>
-					{table.getRowModel().rows?.length ? (
-						table.getRowModel().rows.map(row => (
-							<TableRow
-								key={row.id}
-								data-state={row.getIsSelected() && 'selected'}
-								className="text-xs font-medium text-slate-950"
-							>
-								{row.getVisibleCells().map(cell => (
-									<TableCell key={cell.id} className="py-3">
-										{flexRender(
-											cell.column.columnDef.cell,
-											cell.getContext(),
-										)}
-									</TableCell>
-								))}
-							</TableRow>
-						))
-					) : isLoading ? (
-						<TableRow className="hover:bg-white">
-							<TableCell
-								colSpan={columns.length}
-								className="h-24 items-center justify-center space-y-0 px-20 text-center"
-							>
-								<div className="flex items-center justify-center text-slate-800/60">
-									<Loader2
-										size={28}
-										strokeWidth={2}
-										className="animate-spin"
-									/>
-								</div>
-							</TableCell>
-						</TableRow>
-					) : (
-						<TableRow>
-							<TableCell
-								colSpan={columns.length}
-								className="h-24 text-center font-medium hover:bg-white"
-							>
-								No results.
-							</TableCell>
-						</TableRow>
-					)}
-				</TableBody>
-			</Table>
-			{hidePagination ? null : (
-				<div className="flex flex-none flex-row items-center justify-between p-4">
-					<div className="text-sm font-semibold">
-						{table.getFilteredSelectedRowModel().rows?.length > 0 ? (
-							<>
-								{table.getFilteredSelectedRowModel().rows?.length} of{' '}
-								{table.getFilteredRowModel().rows?.length} row(s)
-								selected
-							</>
-						) : (
-							<>
-								{table.getFilteredRowModel().rows?.length}{' '}
-								{table.getFilteredRowModel().rows?.length !== 1
-									? 'rows'
-									: 'row'}
-							</>
-						)}
-					</div>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className="text-xs font-medium text-slate-950"
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id} className="py-3">
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : isLoading ? (
+                            <TableRow className="hover:bg-white">
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 items-center justify-center space-y-0 px-20 text-center"
+                                >
+                                    <div className="flex items-center justify-center text-slate-800/60">
+                                        <Loader2 size={28} strokeWidth={2} className="animate-spin" />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center font-medium hover:bg-white"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
 
-					<div>
-						<Pagination2
-							onClickPrev={() => table.previousPage()}
-							onClickNext={() => table.nextPage()}
-							table={table}
-						/>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+            {!hidePagination && meta && (
+                <div className="flex flex-row items-center justify-between p-4 gap-2">
+                    <div className="text-sm font-semibold">
+                        {table.getFilteredSelectedRowModel().rows?.length > 0 ? (
+                            <>
+                                {table.getFilteredSelectedRowModel().rows?.length} of{' '}
+                                {table.getFilteredRowModel().rows?.length} row(s) selected
+                            </>
+                        ) : (
+                            <>
+                                {/*{table.getFilteredRowModel().rows?.length}{'  '}*/}
+                                {/*{table.getFilteredRowModel().rows?.length !== 1 ? 'rows' : 'row'}*/}
+                            </>
+                        )}
+                    </div>
+
+                    {/* ✅ Pagination */}
+                    <div className="flex items-center gap-2">
+                        {/* First */}
+                        {meta.current_page > 1 && (
+                            <Button
+                                className="bg-white text-black flex flex-row gap-1 items-center"
+                                onClick={() => onPageChange?.(1)}
+                            >
+                                <span>«</span> First
+                            </Button>
+                        )}
+
+                        {/* Ellipsis before */}
+                        {meta.current_page > 3 && <span className="text-gray-500">...</span>}
+
+                        {/* Previous page */}
+                        {meta.current_page > 1 && (
+                            <Button
+                                className="w-8 h-8 px-0 bg-white text-black"
+                                onClick={() => onPageChange?.(meta.current_page - 1)}
+                            >
+                                {meta.current_page - 1}
+                            </Button>
+                        )}
+
+                        {/* Current page */}
+                        <div className="border-[3px] p-0.5 border-slate-400 rounded-md">
+                            <button className="w-10 h-10 rounded-md bg-slate-900 text-white">
+                                {meta.current_page}
+                            </button>
+                        </div>
+
+                        {/* Next page */}
+                        {meta.current_page < meta.last_page && (
+                            <Button
+                                className="w-8 h-8 px-0 bg-white text-black"
+                                onClick={() => onPageChange?.(meta.current_page + 1)}
+                            >
+                                {meta.current_page + 1}
+                            </Button>
+                        )}
+
+                        {meta.current_page + 1 < meta.last_page && meta.current_page == 1 && (
+                            <Button
+                                className="w-8 h-8 px-0 bg-white text-black"
+                                onClick={() => onPageChange?.(meta.current_page + 1)}
+                            >
+                                {meta.current_page + 2}
+                            </Button>
+                        )}
+
+                        {/* Ellipsis after */}
+                        {meta.current_page + 2 < meta.last_page && <span className="text-gray-500">...</span>}
+
+                        {/* Last */}
+                        {meta.current_page < meta.last_page && (
+                            <Button
+                                className="bg-white text-black flex flex-row items-center"
+                                onClick={() => onPageChange?.(meta.last_page)}
+                            >
+                                Last »
+                            </Button>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
