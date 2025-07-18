@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchInvoices } from '../../api';
 import { DataTable } from '@/components/Tables/DataTable';
@@ -29,19 +29,45 @@ interface InvoicesTableProps {
     openModal: (data: any, action: string) => void;
 }
 
-export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
-    const navigate = useNavigate();
-    const [page, setPage] = useState(1);
-    const limit = 10;
+// Debounce hook
+const useDebounce = (value: string, delay = 500) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(() => {
+        const handler = setTimeout(() => setDebouncedValue(value), delay);
+        return () => clearTimeout(handler);
+    }, [value, delay]);
+    return debouncedValue;
+};
 
+export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
+    const [invoices, setInvoices] = useState<any>([]);
+    const [meta, setMeta] = useState<any>({});
+    const [page, setPage] = useState(1);
+    const [limit] = useState(10);
+    const [search, setSearch] = useState<string>('');
+    const navigate = useNavigate();
+
+    // Debounced search
+    const debouncedSearch = useDebounce(search, 600);
+
+    // Fetch invoices (including search if present)
     const { data, isLoading } = useQuery({
-        queryKey: ['invoices', page],
-        queryFn: () => fetchInvoices(page, limit),
+        queryKey: ['invoices', page, debouncedSearch],
+        queryFn: () => fetchInvoices(page, limit, debouncedSearch || null),
         placeholderData: (prev) => prev,
+        keepPreviousData: true,
     });
 
-    const invoices = data?.data || [];
-    const meta = data?.meta;
+    // Update local state when API returns
+    useEffect(() => {
+        setInvoices(data?.data || []);
+        setMeta(data?.meta || {});
+    }, [data]);
+
+    const handleClearSearch = () => {
+        setSearch('');
+        setPage(1); // Reset to first page when clearing search
+    };
 
     const columns: ColumnDef<Invoices>[] = [
         {
@@ -155,12 +181,12 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
     ];
 
     return (
-        <div className="w-full max-w-full px-2 space-y-4 border bg-white rounded-md">
-            {/* Make table horizontally scrollable if needed */}
-            <div className=" rounded-md border shadow-sm">
+        <div className="w-full max-w-full px-2 space-y-4  bg-white rounded-md">
+            <div className="rounded-md border shadow-sm">
                 <DataTable
                     columns={columns}
                     data={invoices}
+                    setData={setInvoices}
                     filterWhat="code"
                     dataType="Invoices"
                     isLoading={isLoading}
@@ -168,10 +194,12 @@ export const InvoicesTable = ({ openModal }: InvoicesTableProps) => {
                     autoResetPageIndex={false}
                     onPageChange={setPage}
                     page={page}
-                    meta={meta} // ✅ Add this line to support pagination
+                    meta={meta}
+                    onSearchChange={setSearch}  // Handle search typing
+                    onClearSearch={handleClearSearch} // Handle reset
+                    searchValue={search}  // Pass down search text to sync with input
                 />
             </div>
-
         </div>
     );
 };

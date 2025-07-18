@@ -2,11 +2,13 @@ import axios from 'axios';
 import { API_HEADERS, API_URLS } from '@/api';
 import { InvoiceItems, InvoiceProps, Invoices } from '../types';
 
-export const fetchInvoices = async (page = 1, limit = 10) => {
+export const fetchInvoices = async (page = 1, limit = 10, search = null) => {
+
     try {
-        const response = await axios.get(`${API_URLS.INVOICE}?page=${page}&limit=${limit}`, {
+        const response = await axios.get(`${API_URLS.INVOICE}?page=${page}&limit=${limit}&search=${search}`, {
             headers: API_HEADERS(),
         });
+        console.log('response of axios: ', response);
         return response.data; // this includes: data, meta, links
     } catch (error: any) {
         console.error('Error fetching invoices:', error.message);

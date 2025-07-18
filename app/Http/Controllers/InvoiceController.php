@@ -19,8 +19,11 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        //return all invoices in json
-        return new InvoiceCollection(Invoice::latest()->paginate($request->per_page ?? 10));
+        $invoices = Invoice::latest()->when(!empty($request->search) && $request->search !== "null", function($q) use ($request) {
+            $q->where('code', 'like', '%'.$request->search.'%');
+        })
+            ->paginate($request->per_page ?? 10);
+        return new InvoiceCollection($invoices);
     }
 
     /**
@@ -138,7 +141,7 @@ class InvoiceController extends Controller
     /**
      * Search code
      */
-    public function searchCode(Request $request) 
+    public function searchCode(Request $request)
     {
         $query = Invoice::with('invoiceItems')->where('code', $request->search)->first();
 
@@ -163,7 +166,7 @@ class InvoiceController extends Controller
             $invoice->update([
                 'balance_amount' => $balance > 0 ? $balance : 0,
                 'change_amount' => $request->change_amount <= 0 ? 0 : $request->change_amount,
-                'is_paid' => $balance <= 0 
+                'is_paid' => $balance <= 0
             ]);
         }
 
@@ -206,7 +209,7 @@ class InvoiceController extends Controller
             if($payableAmount <= 0) {
                 break;
             }
-            
+
             $balance = $invoice->balance_amount;
             if($payableAmount >= $balance) {
                 $payableAmount = $payableAmount - $balance;
@@ -228,7 +231,7 @@ class InvoiceController extends Controller
                 $payableAmount = 0;
             }
         }
-    
+
         $store = Invoice::create($request->except(['invoice_items', 'is_paid', 'balance_amount']));
         $store->update([
             'change_amount' => $request->change_amount <= 0 ? 0 : $request->change_amount,

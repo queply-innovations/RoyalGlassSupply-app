@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Button, Inputbox } from '@/components';
+import { Button } from '@/components';
+import { VscSearch } from "react-icons/vsc";
+import { IoMdClose } from "react-icons/io";  // close icon
+
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -31,6 +34,7 @@ interface MetaType {
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    setData?: any;
     filterWhat: string;
     dataType: string;
     openModal?: any;
@@ -39,6 +43,9 @@ interface DataTableProps<TData, TValue> {
     hideFilter?: boolean;
     autoResetPageIndex?: boolean;
     onPageChange?: (page: number) => void;
+    onSearchChange?: (value: string) => void;
+    onClearSearch?: () => void;
+    searchValue?: string;
     page?: number;
     meta?: MetaType;
 }
@@ -46,6 +53,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
+                                             setData,
                                              filterWhat,
                                              dataType,
                                              openModal,
@@ -54,6 +62,9 @@ export function DataTable<TData, TValue>({
                                              hideFilter,
                                              autoResetPageIndex = false,
                                              onPageChange,
+                                             onSearchChange,
+                                             onClearSearch,
+                                             searchValue = "",
                                              page,
                                              meta,
                                          }: DataTableProps<TData, TValue>) {
@@ -77,6 +88,11 @@ export function DataTable<TData, TValue>({
         autoResetPageIndex: autoResetPageIndex,
     });
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        onSearchChange?.(value);
+    };
+
     const label =
         (filterWhat.split('_')[0] === 'or' ? 'OR' : filterWhat.split('_')[0]) +
         ' ' +
@@ -89,15 +105,27 @@ export function DataTable<TData, TValue>({
             {!hideFilter && (
                 <div className="flex flex-none justify-between p-4 ">
                     <div className="w-1/2">
-                        <Inputbox
-                            placeholder={placeholderLabel}
-                            value={(table.getColumn(filterWhat)?.getFilterValue() as string) ?? ''}
-                            onChange={(event) =>
-                                table.getColumn(filterWhat)?.setFilterValue(event.target.value)
-                            }
-                            variant={'searchbar'}
-                            buttonIcon={'outside'}
-                        />
+                        <div className="flex items-center bg-slate-100 rounded-full px-3 relative">
+                            <input
+                                type="text"
+                                placeholder={placeholderLabel}
+                                value={searchValue}
+                                onChange={handleInputChange}
+                                className="flex-1 bg-slate-100 focus:outline-none py-2 pr-8"
+                            />
+                            {/* Clear Button */}
+                            {searchValue && (
+                                <button
+                                    onClick={onClearSearch}
+                                    className="absolute right-10 text-gray-500 hover:text-black"
+                                >
+                                    <IoMdClose size={18} />
+                                </button>
+                            )}
+                            <button className="rounded-r-full relative left-2 flex justify-self-center items-center p-2 bg-gray-400">
+                                <VscSearch className='text-white' />
+                            </button>
+                        </div>
                     </div>
                     {openModal && (
                         <div className="flex flex-row-reverse">
@@ -114,8 +142,9 @@ export function DataTable<TData, TValue>({
                 </div>
             )}
 
+            {/* Table */}
             <div className="w-full overflow-x-auto">
-                <Table className="min-w-full table-fixed">
+                <Table className="w-full table-fixed">
                     <TableHeader className="z-10 bg-slate-50 hover:bg-slate-50">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -173,6 +202,7 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
 
+            {/* Pagination */}
             {!hidePagination && meta && (
                 <div className="flex flex-row items-center justify-between p-4 gap-2">
                     <div className="text-sm font-semibold">
@@ -183,15 +213,13 @@ export function DataTable<TData, TValue>({
                             </>
                         ) : (
                             <>
-                                {/*{table.getFilteredRowModel().rows?.length}{'  '}*/}
-                                {/*{table.getFilteredRowModel().rows?.length !== 1 ? 'rows' : 'row'}*/}
+                                {table.getFilteredRowModel().rows?.length}{' '}
+                                {table.getFilteredRowModel().rows?.length !== 1 ? 'rows' : 'row'}
                             </>
                         )}
                     </div>
 
-                    {/* ✅ Pagination */}
                     <div className="flex items-center gap-2">
-                        {/* First */}
                         {meta.current_page > 1 && (
                             <Button
                                 className="bg-white text-black flex flex-row gap-1 items-center"
@@ -200,11 +228,7 @@ export function DataTable<TData, TValue>({
                                 <span>«</span> First
                             </Button>
                         )}
-
-                        {/* Ellipsis before */}
                         {meta.current_page > 3 && <span className="text-gray-500">...</span>}
-
-                        {/* Previous page */}
                         {meta.current_page > 1 && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
@@ -213,15 +237,11 @@ export function DataTable<TData, TValue>({
                                 {meta.current_page - 1}
                             </Button>
                         )}
-
-                        {/* Current page */}
                         <div className="border-[3px] p-0.5 border-slate-400 rounded-md">
                             <button className="w-10 h-10 rounded-md bg-slate-900 text-white">
                                 {meta.current_page}
                             </button>
                         </div>
-
-                        {/* Next page */}
                         {meta.current_page < meta.last_page && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
@@ -230,7 +250,6 @@ export function DataTable<TData, TValue>({
                                 {meta.current_page + 1}
                             </Button>
                         )}
-
                         {meta.current_page + 1 < meta.last_page && meta.current_page == 1 && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
@@ -239,11 +258,9 @@ export function DataTable<TData, TValue>({
                                 {meta.current_page + 2}
                             </Button>
                         )}
-
-                        {/* Ellipsis after */}
-                        {meta.current_page + 2 < meta.last_page && <span className="text-gray-500">...</span>}
-
-                        {/* Last */}
+                        {meta.current_page + 2 < meta.last_page && (
+                            <span className="text-gray-500">...</span>
+                        )}
                         {meta.current_page < meta.last_page && (
                             <Button
                                 className="bg-white text-black flex flex-row items-center"
