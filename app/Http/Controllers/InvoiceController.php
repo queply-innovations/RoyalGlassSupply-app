@@ -20,7 +20,7 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         //return all invoices in json
-        return new InvoiceCollection(Invoice::paginate($request->per_page ?? 10));
+        return new InvoiceCollection(Invoice::latest()->paginate($request->per_page ?? 10));
     }
 
     /**
