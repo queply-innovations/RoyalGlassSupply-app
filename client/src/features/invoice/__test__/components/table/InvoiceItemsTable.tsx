@@ -95,14 +95,34 @@ export const InvoiceItemsTable = ({ items }: InvoiceItemsTableProps) => {
 		},
 	];
 	return (
-		<>
-			<DataTable
-				columns={colums}
-				data={items}
-				dataType="orderItem"
-				filterWhat="price"
-				hideFilter
-			/>
-		</>
-	);
+        <>
+            <style>
+                {`
+          table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+          }
+          th, td {
+            overflow-wrap: break-word;
+          }
+          th:nth-child(1),
+          td:nth-child(1) {
+            width: 32%;
+          }
+          th:nth-child(n+2),
+          td:nth-child(n+2) {
+            width: calc((100% - 32%) / 5);
+          }
+        `}
+            </style>
+            <DataTable
+                columns={colums}
+                data={items}
+                dataType="orderItem"
+                filterWhat="price"
+                hideFilter
+            />
+        </>
+    );
 };
