@@ -213,8 +213,7 @@ export function DataTable<TData, TValue>({
                             </>
                         ) : (
                             <>
-                                {table.getFilteredRowModel().rows?.length}{' '}
-                                {table.getFilteredRowModel().rows?.length !== 1 ? 'rows' : 'row'}
+                                Total Records: {meta?.total ?? 0}
                             </>
                         )}
                     </div>
