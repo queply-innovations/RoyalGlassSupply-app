@@ -31,9 +31,6 @@ class InvoiceItem extends Model
     protected $with = [
         'product:id,name,serial_no,brand,size,color'
     ];
-    protected $appends = [
-        'sold_price'
-    ];
 
     public function returnTransactionItems(): HasMany
     {
@@ -97,7 +94,7 @@ class InvoiceItem extends Model
 
     public function getSoldPriceAttribute()
     {
-        return $this->attributes['product_price']; // or use $this->product_price;
+        return $this->attributes['product_price'] ?? ""; // or use $this->product_price;
     }
 
 }
