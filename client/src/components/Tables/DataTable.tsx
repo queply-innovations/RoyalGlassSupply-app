@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from '@/components';
+import { Button,Pagination2 } from '@/components';
 import { VscSearch } from "react-icons/vsc";
 import { IoMdClose } from "react-icons/io";  // close icon
 
@@ -201,6 +201,36 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
+
+
+            {hidePagination || meta ? null : (
+                <div className="flex flex-none flex-row items-center justify-between p-4">
+                    <div className="text-sm font-semibold">
+                        {table.getFilteredSelectedRowModel().rows?.length > 0 ? (
+                            <>
+                                {table.getFilteredSelectedRowModel().rows?.length} of{' '}
+                                {table.getFilteredRowModel().rows?.length} row(s)
+                                selected
+                            </>
+                        ) : (
+                            <>
+                                {table.getFilteredRowModel().rows?.length}{' '}
+                                {table.getFilteredRowModel().rows?.length !== 1
+                                    ? 'rows'
+                                    : 'row'}
+                            </>
+                        )}
+                    </div>
+
+                    <div>
+                        <Pagination2
+                            onClickPrev={() => table.previousPage()}
+                            onClickNext={() => table.nextPage()}
+                            table={table}
+                        />
+                    </div>
+                </div>
+            )}
 
             {/* Pagination */}
             {!hidePagination && meta && (
