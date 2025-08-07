@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button,Pagination2 } from '@/components';
+import { Button,Pagination2,Inputbox } from '@/components';
 import { VscSearch } from "react-icons/vsc";
 import { IoMdClose } from "react-icons/io";  // close icon
 
@@ -89,8 +89,26 @@ export function DataTable<TData, TValue>({
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        onSearchChange?.(value);
+
+        if(meta){
+
+            const value = e.target.value;
+            onSearchChange?.(value);
+        }else{
+            table.getColumn(filterWhat)?.setFilterValue(e.target.value)
+
+        }
+
+    };
+
+    const handleInputvalue = () => {
+
+        if(meta){
+            return searchValue;
+        }else{
+return (table.getColumn(filterWhat)?.getFilterValue() as string) ?? '';
+        }
+
     };
 
     const label =
@@ -105,27 +123,18 @@ export function DataTable<TData, TValue>({
             {!hideFilter && (
                 <div className="flex flex-none justify-between p-4 ">
                     <div className="w-1/2">
-                        <div className="flex items-center bg-slate-100 rounded-full px-3 relative">
-                            <input
-                                type="text"
-                                placeholder={placeholderLabel}
-                                value={searchValue}
-                                onChange={handleInputChange}
-                                className="flex-1 bg-slate-100 focus:outline-none py-2 pr-8"
-                            />
-                            {/* Clear Button */}
-                            {searchValue && (
-                                <button
-                                    onClick={onClearSearch}
-                                    className="absolute right-10 text-gray-500 hover:text-black"
-                                >
-                                    <IoMdClose size={18} />
-                                </button>
-                            )}
-                            <button className="rounded-r-full relative left-2 flex justify-self-center items-center p-2 bg-gray-400">
-                                <VscSearch className='text-white' />
-                            </button>
-                        </div>
+                        <Inputbox
+                            placeholder={placeholderLabel}
+                            value={
+                                meta ?
+                                    searchValue
+                                    :
+                                    ((table.getColumn(filterWhat)?.getFilterValue() as string) ?? '')
+                            }
+                            onChange={handleInputChange}
+                            variant={'searchbar'}
+                            buttonIcon={'outside'}
+                        />
                     </div>
                     {openModal && (
                         <div className="flex flex-row-reverse">
@@ -248,7 +257,9 @@ export function DataTable<TData, TValue>({
                         )}
                     </div>
 
+                    {/* ✅ Pagination */}
                     <div className="flex items-center gap-2">
+                        {/* First */}
                         {meta.current_page > 1 && (
                             <Button
                                 className="bg-white text-black flex flex-row gap-1 items-center"
@@ -257,7 +268,11 @@ export function DataTable<TData, TValue>({
                                 <span>«</span> First
                             </Button>
                         )}
+
+                        {/* Ellipsis before */}
                         {meta.current_page > 3 && <span className="text-gray-500">...</span>}
+
+                        {/* Previous page */}
                         {meta.current_page > 1 && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
@@ -266,11 +281,15 @@ export function DataTable<TData, TValue>({
                                 {meta.current_page - 1}
                             </Button>
                         )}
+
+                        {/* Current page */}
                         <div className="border-[3px] p-0.5 border-slate-400 rounded-md">
                             <button className="w-10 h-10 rounded-md bg-slate-900 text-white">
                                 {meta.current_page}
                             </button>
                         </div>
+
+                        {/* Next page */}
                         {meta.current_page < meta.last_page && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
@@ -279,6 +298,7 @@ export function DataTable<TData, TValue>({
                                 {meta.current_page + 1}
                             </Button>
                         )}
+
                         {meta.current_page + 1 < meta.last_page && meta.current_page == 1 && (
                             <Button
                                 className="w-8 h-8 px-0 bg-white text-black"
