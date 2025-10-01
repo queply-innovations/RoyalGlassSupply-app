@@ -200,8 +200,8 @@ class TransferController extends Controller
             'approval_status' => 'approved',
             'approved_by' => Auth::id(),
             'transfer_status' => $request->transfer_status, // need to clarify
-            'date_received' => $request->transfer_status == 'arrived' ? $request->Carbon::now() : null, // need to clarify
-            'received_by' => $request->transfer_statis == 'arrived' ? Auth::id() : null // need to clarify
+            'date_received' => $request->transfer_status == 'arrived' ? $request->date_received : null, // need to clarify
+            'received_by' => $request->transfer_status == 'arrived' ? Auth::id() : null // need to clarify
         ]);
 
         $this->approveTransferProduct($transfer);
